@@ -1,13 +1,16 @@
 {
-  "version": "2.0.12",
-  "notes": "Atualização cumulativa do Garra Vip. Ativa o canal oficial automático sem token no cliente, remove a configuração técnica do GitHub da interface, mantém o ZIP manual como contingência e corrige a persistência do tipo da chave PIX (CPF, CNPJ, Celular, E-mail ou Aleatória).",
-  "sha256": "887431eb2765e2f0d7cd4e6217633a12c605398f4cfa8e781d720a4471dc4d72",
+  "version": "2.0.14",
+  "notes": "Revisão responsiva global do Garra Vip: página de vendas, painel administrativo, menus, formulários, tabelas, checkout e modais adaptados para desktop, tablet e celular. Aumenta legibilidade e áreas de toque e inclui a correção de rolagem do modal Editar Cliente com o botão Salvar acessível.",
+  "sha256": "fe1d3347a6cea803be87fb8ef539239b046316d6bf34fc39532648faa41d88ac",
   "package_parts": [
-    "garra-vip/2.0.12/part-001.b64",
-    "garra-vip/2.0.12/part-002.b64",
-    "garra-vip/2.0.12/part-003.b64",
-    "garra-vip/2.0.12/part-004.b64",
-    "garra-vip/2.0.12/part-005.b64"
+    "garra-vip/2.0.14/chunk-00.b64",
+    "garra-vip/2.0.14/chunk-01.b64",
+    "garra-vip/2.0.14/chunk-02.b64",
+    "garra-vip/2.0.14/chunk-03.b64",
+    "garra-vip/2.0.14/chunk-04.b64",
+    "garra-vip/2.0.14/chunk-05.b64",
+    "garra-vip/2.0.14/chunk-06.b64",
+    "garra-vip/2.0.14/chunk-07.b64"
   ],
-  "released_at": "2026-08-30T13:00:00-03:00"
+  "released_at": "2026-08-30T16:00:00-03:00"
 }
