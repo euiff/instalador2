@@ -1,9 +1,13 @@
 {
   "version": "2.0.12",
-  "notes": "Canal oficial de atualizações automáticas ativo e pré-configurado. Nenhum token ou repositório precisa ser informado pelo comprador. Inclui as correções anteriores do canal 2.0.11, incluindo persistência do tipo da chave PIX.",
-  "sha256": "456dfa4b88ce4bdc351d21f68f090ca2e9c0a8b3bbd353936886cb5939a51634",
+  "notes": "Atualização cumulativa do Garra Vip. Ativa o canal oficial automático sem token no cliente, remove a configuração técnica do GitHub da interface, mantém o ZIP manual como contingência e corrige a persistência do tipo da chave PIX (CPF, CNPJ, Celular, E-mail ou Aleatória).",
+  "sha256": "887431eb2765e2f0d7cd4e6217633a12c605398f4cfa8e781d720a4471dc4d72",
   "package_parts": [
-    "garra-vip/2.0.12/package.b64"
+    "garra-vip/2.0.12/part-001.b64",
+    "garra-vip/2.0.12/part-002.b64",
+    "garra-vip/2.0.12/part-003.b64",
+    "garra-vip/2.0.12/part-004.b64",
+    "garra-vip/2.0.12/part-005.b64"
   ],
-  "released_at": "2026-08-30T11:30:00-03:00"
+  "released_at": "2026-08-30T13:00:00-03:00"
 }
