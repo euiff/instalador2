@@ -1,17 +1,14 @@
 {
-  "version": "2.0.14",
-  "notes": "Revisão responsiva global do Garra Vip: página de vendas, painel administrativo, menus, formulários, tabelas, checkout e modais adaptados para desktop, tablet e celular. Aumenta legibilidade e áreas de toque e inclui a correção de rolagem do modal Editar Cliente com o botão Salvar acessível.",
-  "sha256": "fe1d3347a6cea803be87fb8ef539239b046316d6bf34fc39532648faa41d88ac",
+  "version": "2.0.15",
+  "notes": "Renovação Sigma vinculada ao pagamento: calcula o período pelo plano (mensal, trimestral, semestral, anual etc.), usa o usuário IPTV como referência sem exigir ID remoto, tenta autenticação por token ou usuário/senha quando a API suportar e registra o retorno da renovação. Inclui a migração que ativa renovação integrada para clientes Sigma existentes com usuário IPTV.",
+  "sha256": "6b44ce405e9d71f90929f06b11b57ef2c2b72b2bacc3630b3f1a82ffd3a772e1",
   "package_parts": [
-    "garra-vip/2.0.14/chunk-00.b64",
-    "garra-vip/2.0.14/chunk-01a.b64",
-    "garra-vip/2.0.14/chunk-01b.b64",
-    "garra-vip/2.0.14/chunk-02.b64",
-    "garra-vip/2.0.14/chunk-03.b64",
-    "garra-vip/2.0.14/chunk-04.b64",
-    "garra-vip/2.0.14/chunk-05.b64",
-    "garra-vip/2.0.14/chunk-06.b64",
-    "garra-vip/2.0.14/chunk-07.b64"
+    "garra-vip/2.0.15/inc-part-001.b64",
+    "garra-vip/2.0.15/inc-part-002.b64",
+    "garra-vip/2.0.15/inc-part-003.b64",
+    "garra-vip/2.0.15/inc-part-004.b64",
+    "garra-vip/2.0.15/inc-part-005.b64",
+    "garra-vip/2.0.15/inc-part-006.b64"
   ],
-  "released_at": "2026-08-30T16:00:00-03:00"
+  "released_at": "2026-08-30T16:35:00-03:00"
 }
