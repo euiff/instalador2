@@ -1,18 +1,9 @@
 {
-  "version": "2.0.19",
-  "notes": "Corrige a renovação automática do kOfficePanel com perfil de compatibilidade token + secret: valida em /profile/{TOKEN}, localiza o cliente pelo usuário IPTV em /get_client/{TOKEN} e renova em /renew_client/{TOKEN} enviando a quantidade de meses do plano. Mantém o modo avançado como fallback para APIs diferentes e preserva todas as correções cumulativas do Sigma e versões anteriores.",
-  "sha256": "89be5903fcf5e28b3549a9507bf0398f2f1a45ed6a9e74a8e5ad8996a254ab19",
+  "version": "2.0.20",
+  "notes": "Corrige o menu dos três pontinhos na lista de clientes: o menu aberto passa a ficar acima das outras linhas da tabela, deixa de ser recortado pelo container rolável e ganha itens maiores no celular. Patch visual sobre a 2.0.19; não altera banco, cobranças, Sigma ou kOfficePanel.",
+  "sha256": "779ca3cb5a47b3d56b180fd13ac96a7bdf85da65ded0e4d9a642ce343f6fd05a",
   "package_parts": [
-    "garra-vip/2.0.19/part-000.b64",
-    "garra-vip/2.0.19/part-001.b64",
-    "garra-vip/2.0.19/part-002.b64",
-    "garra-vip/2.0.19/part-003.b64",
-    "garra-vip/2.0.19/part-004.b64",
-    "garra-vip/2.0.19/part-005.b64",
-    "garra-vip/2.0.19/part-006.b64",
-    "garra-vip/2.0.19/part-007.b64",
-    "garra-vip/2.0.19/part-008.b64",
-    "garra-vip/2.0.19/part-009.b64"
+    "garra-vip/2.0.20/patch.b64"
   ],
-  "released_at": "2026-08-30T22:35:00-03:00"
+  "released_at": "2026-08-31T08:31:00-03:00"
 }
