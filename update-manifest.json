@@ -1,17 +1,18 @@
 {
-  "version": "2.0.17",
-  "notes": "Adiciona kOfficePanel como tipo de servidor integrado, preserva todas as correções da 2.0.16 para Sigma e responsividade e usa pacote cumulativo para instalações ainda na 2.0.15. No kOfficePanel, o Gestor aceita URL + usuário/senha ou chave de API, testa a conexão, localiza o cliente pelo usuário IPTV quando a instalação expõe essa consulta e renova conforme a duração do plano usando a rota configurada/disponível, sem exigir ID remoto manual.",
-  "sha256": "1735c22da62cba5175f628f3a48855f330d365bfb5708024a5896442b0262efb",
+  "version": "2.0.18",
+  "notes": "Corrige a renovação Sigma pelo fluxo SIGMAN documentado: consulta /users e renovação /user-renew com API Key + Token do painel (x-painel-token), sem exigir ID do cliente. Mantém kOfficePanel e todas as correções cumulativas anteriores.",
+  "sha256": "2af54d5b729861af3955e645df95b1c835ea416571b367c5457f37f293a474ce",
   "package_parts": [
-    "garra-vip/2.0.17/part-001.b64",
-    "garra-vip/2.0.17/part-002.b64",
-    "garra-vip/2.0.17/part-003.b64",
-    "garra-vip/2.0.17/part-004.b64",
-    "garra-vip/2.0.17/part-005.b64",
-    "garra-vip/2.0.17/part-006.b64",
-    "garra-vip/2.0.17/part-007.b64",
-    "garra-vip/2.0.17/part-008.b64",
-    "garra-vip/2.0.17/part-009.b64"
+    "garra-vip/2.0.18/part-000.b64",
+    "garra-vip/2.0.18/part-001.b64",
+    "garra-vip/2.0.18/part-002.b64",
+    "garra-vip/2.0.18/part-003a.b64",
+    "garra-vip/2.0.18/part-003b.b64",
+    "garra-vip/2.0.18/part-004.b64",
+    "garra-vip/2.0.18/part-005.b64",
+    "garra-vip/2.0.18/part-006.b64",
+    "garra-vip/2.0.18/part-007.b64",
+    "garra-vip/2.0.18/part-008.b64"
   ],
-  "released_at": "2026-08-30T21:23:00-03:00"
+  "released_at": "2026-08-30T21:55:00-03:00"
 }
