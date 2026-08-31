@@ -1,9 +1,24 @@
 {
-  "version": "2.0.20",
-  "notes": "Corrige o menu dos três pontinhos na lista de clientes: o menu aberto passa a ficar acima das outras linhas da tabela, deixa de ser recortado pelo container rolável e ganha itens maiores no celular. Patch visual sobre a 2.0.19; não altera banco, cobranças, Sigma ou kOfficePanel.",
-  "sha256": "779ca3cb5a47b3d56b180fd13ac96a7bdf85da65ded0e4d9a642ce343f6fd05a",
+  "version": "2.0.21",
+  "notes": "Corrige a cobrança por quantidade de telas: valor final = valor do plano x número de telas, sem alterar a duração do plano. A regra passa a valer na lista de clientes, cobranças manuais, Mercado Pago e cobrança automática. Também melhora fortemente o uso no celular com fontes, campos e botões maiores, cards de clientes, modais adaptados ao toque e layout mais responsivo. Mantém as correções anteriores de Sigma, kOfficePanel e menu de ações.",
+  "sha256": "d63ba8c8e73887be3988acfbb915ddef4b68bb103ff26a01de31888f62bd73b0",
   "package_parts": [
-    "garra-vip/2.0.20/patch.b64"
+    "garra-vip/2.0.21/part-000.b64",
+    "garra-vip/2.0.21/part-001.b64",
+    "garra-vip/2.0.21/part-002.b64",
+    "garra-vip/2.0.21/part-003.b64",
+    "garra-vip/2.0.21/part-004.b64",
+    "garra-vip/2.0.21/part-005.b64",
+    "garra-vip/2.0.21/part-006.b64",
+    "garra-vip/2.0.21/part-007.b64",
+    "garra-vip/2.0.21/part-008.b64",
+    "garra-vip/2.0.21/part-009.b64",
+    "garra-vip/2.0.21/part-010a.b64",
+    "garra-vip/2.0.21/part-010b.b64",
+    "garra-vip/2.0.21/part-010c.b64",
+    "garra-vip/2.0.21/part-011.b64",
+    "garra-vip/2.0.21/part-012.b64",
+    "garra-vip/2.0.21/part-013.b64"
   ],
-  "released_at": "2026-08-31T08:31:00-03:00"
+  "released_at": "2026-08-31T10:14:00-03:00"
 }
