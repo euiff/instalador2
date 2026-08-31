@@ -1,18 +1,18 @@
 {
-  "version": "2.0.18",
-  "notes": "Corrige a renovação Sigma pelo fluxo SIGMAN documentado: consulta /users e renovação /user-renew com API Key + Token do painel (x-painel-token), sem exigir ID do cliente. Mantém kOfficePanel e todas as correções cumulativas anteriores.",
-  "sha256": "2af54d5b729861af3955e645df95b1c835ea416571b367c5457f37f293a474ce",
+  "version": "2.0.19",
+  "notes": "Corrige a renovação automática do kOfficePanel com perfil de compatibilidade token + secret: valida em /profile/{TOKEN}, localiza o cliente pelo usuário IPTV em /get_client/{TOKEN} e renova em /renew_client/{TOKEN} enviando a quantidade de meses do plano. Mantém o modo avançado como fallback para APIs diferentes e preserva todas as correções cumulativas do Sigma e versões anteriores.",
+  "sha256": "89be5903fcf5e28b3549a9507bf0398f2f1a45ed6a9e74a8e5ad8996a254ab19",
   "package_parts": [
-    "garra-vip/2.0.18/part-000.b64",
-    "garra-vip/2.0.18/part-001.b64",
-    "garra-vip/2.0.18/part-002.b64",
-    "garra-vip/2.0.18/part-003a.b64",
-    "garra-vip/2.0.18/part-003b.b64",
-    "garra-vip/2.0.18/part-004.b64",
-    "garra-vip/2.0.18/part-005.b64",
-    "garra-vip/2.0.18/part-006.b64",
-    "garra-vip/2.0.18/part-007.b64",
-    "garra-vip/2.0.18/part-008.b64"
+    "garra-vip/2.0.19/part-000.b64",
+    "garra-vip/2.0.19/part-001.b64",
+    "garra-vip/2.0.19/part-002.b64",
+    "garra-vip/2.0.19/part-003.b64",
+    "garra-vip/2.0.19/part-004.b64",
+    "garra-vip/2.0.19/part-005.b64",
+    "garra-vip/2.0.19/part-006.b64",
+    "garra-vip/2.0.19/part-007.b64",
+    "garra-vip/2.0.19/part-008.b64",
+    "garra-vip/2.0.19/part-009.b64"
   ],
-  "released_at": "2026-08-30T21:55:00-03:00"
+  "released_at": "2026-08-30T22:35:00-03:00"
 }
