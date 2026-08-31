@@ -1,0 +1,1 @@
+Garra Vip 2.0.17 - pacote cumulativo com suporte kOfficePanel. O ZIP binário da atualização é publicado nesta pasta e validado por SHA-256 antes de o manifesto ser ativado.
