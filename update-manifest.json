@@ -1,14 +1,16 @@
 {
-  "version": "2.0.15",
-  "notes": "Renovação Sigma vinculada ao pagamento: calcula o período pelo plano (mensal, trimestral, semestral, anual etc.), usa o usuário IPTV como referência sem exigir ID remoto, tenta autenticação por token ou usuário/senha quando a API suportar e registra o retorno da renovação. Inclui a migração que ativa renovação integrada para clientes Sigma existentes com usuário IPTV.",
-  "sha256": "6b44ce405e9d71f90929f06b11b57ef2c2b72b2bacc3630b3f1a82ffd3a772e1",
+  "version": "2.0.16",
+  "notes": "Integração Sigma simplificada e automática: servidor com URL + usuário + senha, descoberta segura de rotas, ID remoto oculto/localizado pelo usuário IPTV, pacote escolhido conforme a duração do plano, sincronização pós-renovação e melhorias responsivas em clientes, vendas, formulários e modais. Publicação de integridade corrigida.",
+  "sha256": "f9c14b604e37bf7679345d7ca4da3854d9c86dec5caeffad45ba9bded712b00d",
   "package_parts": [
-    "garra-vip/2.0.15/inc-part-001.b64",
-    "garra-vip/2.0.15/inc-part-002.b64",
-    "garra-vip/2.0.15/inc-part-003.b64",
-    "garra-vip/2.0.15/inc-part-004.b64",
-    "garra-vip/2.0.15/inc-part-005.b64",
-    "garra-vip/2.0.15/inc-part-006.b64"
+    "garra-vip/2.0.16/inc-part-001.b64",
+    "garra-vip/2.0.16/inc-part-002.b64",
+    "garra-vip/2.0.16/inc-part-003.b64",
+    "garra-vip/2.0.16/inc-part-004.b64",
+    "garra-vip/2.0.16/inc-part-005.b64",
+    "garra-vip/2.0.16/inc-part-006a.b64",
+    "garra-vip/2.0.16/inc-part-006b.b64",
+    "garra-vip/2.0.16/inc-part-007.b64"
   ],
-  "released_at": "2026-08-30T16:35:00-03:00"
+  "released_at": "2026-08-30T21:05:00-03:00"
 }
