@@ -1,0 +1,31 @@
+name: Inspect AdminIgreja 2.3.1 UI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-adminigreja-231-ui.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract UI files
+        run: |
+          mkdir -p .inspect231 inspect-adminigreja-231-ui
+          cat adminigreja-updates/releases/v2.3.1.*.b64.txt | tr -d '\r\n' | base64 -d > .inspect231/pkg.tgz
+          tar -xzf .inspect231/pkg.tgz -C .inspect231
+          cp .inspect231/app/layout.php inspect-adminigreja-231-ui/layout.php
+          cp .inspect231/public/index.php inspect-adminigreja-231-ui/public-index.php
+          cp .inspect231/assets/app.css inspect-adminigreja-231-ui/app.css
+      - name: Save UI files
+        run: |
+          git config user.name "AdminIgreja UI Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add inspect-adminigreja-231-ui
+          git commit -m "Inspect AdminIgreja UI" || exit 0
+          git push
