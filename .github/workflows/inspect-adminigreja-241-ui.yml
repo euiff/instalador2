@@ -1,0 +1,38 @@
+name: Inspect AdminIgreja 2.4.1 UI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-adminigreja-241-ui.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract 2.4.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .inspect241 inspect-adminigreja-241-ui
+          mkdir -p .inspect241 inspect-adminigreja-241-ui
+          cat adminigreja-updates/releases/v2.4.1.*.b64.txt | tr -d '\r\n' | base64 -d > .inspect241/pkg.tgz
+          echo "2338ee937093ce6e65a82495889f4830f54ab459ccbd9c0d1cfd6f0d2611183e  .inspect241/pkg.tgz" | sha256sum -c -
+          tar -xzf .inspect241/pkg.tgz -C .inspect241
+          cp .inspect241/app/layout.php inspect-adminigreja-241-ui/layout.php
+          cp .inspect241/assets/app.css inspect-adminigreja-241-ui/app.css
+          cp .inspect241/public/index.php inspect-adminigreja-241-ui/public-index.php
+      - name: Save inspection
+        shell: bash
+        run: |
+          git config user.name "AdminIgreja Inspect Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add inspect-adminigreja-241-ui
+          git commit -m "Inspect AdminIgreja 2.4.1 UI" || exit 0
+          git push
