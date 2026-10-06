@@ -1,99 +1,15 @@
 {
-  "version": "2.1.1",
+  "version": "2.1.2",
   "min_php": "8.0",
   "encoding": "hex",
   "parts": [
-    "releases/v2.1.1.hex01.txt",
-    "releases/v2.1.1.hex02.txt",
-    "releases/v2.1.1.hex03.txt",
-    "releases/v2.1.1.hex04.txt",
-    "releases/v2.1.1.hex05.txt",
-    "releases/v2.1.1.hex06.txt",
-    "releases/v2.1.1.hex07.txt",
-    "releases/v2.1.1.hex08.txt",
-    "releases/v2.1.1.hex09.txt",
-    "releases/v2.1.1.hex10.txt",
-    "releases/v2.1.1.hex11.txt",
-    "releases/v2.1.1.hex12a.txt",
-    "releases/v2.1.1.hex12b.txt"
+    "releases/v2.1.2.hex.txt"
   ],
-  "sha256": "559fd7a04fad9468468c238bc994ed9f982b3a25b8be3f338a12a9febd44be52",
+  "sha256": "08df446870279b0e50d54300c03854f456c6d5f1265d601b79c8ade026781fc7",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "7b3ff271f1373cfb97e9e53349794e1450f3794e4c0788c54a2060c7596da821"
-    },
-    {
-      "path": "index.php",
-      "sha256": "b82a399b5c0672e35af08ee0df01b9159e2fa54b57863daf074792f47cafc8f0"
-    },
-    {
-      "path": "install.php",
-      "sha256": "3a4b66a1b508b2eb6a6d04b4ec80e60c1b8b9f2b1ba0e42ad075103e47809e27"
-    },
-    {
-      "path": "reparar.php",
-      "sha256": "39e8fd4eb4d2391173daf9f17a2c362124b6a5a9e9fe8d6df317e07e13a75fbe"
-    },
-    {
-      "path": ".htaccess",
-      "sha256": "6bd36881d91ed3d3447711f06a1c6b30bebef98e38d10fa8d11285cfe76285b1"
-    },
-    {
-      "path": "app/auth.php",
-      "sha256": "6a121fc91c4ee104127cd6bcf732a91d2aca82a12cb5f1a3a41e731150db7625"
-    },
-    {
-      "path": "app/bootstrap.php",
-      "sha256": "c0b2cec9be40304052949245dad3eaf17072618152aa3a69c856ce1019764ad4"
-    },
-    {
-      "path": "app/db.php",
-      "sha256": "0284576291f68bf24c48c82e04b9aea3cca3d9fab1dc055e21281ba56a166363"
-    },
-    {
-      "path": "app/layout.php",
-      "sha256": "66ab52c89d5df4e74a7afd8ed462fb94bf41e31b427e37b085e146c41bf90be6"
-    },
-    {
-      "path": "app/security.php",
-      "sha256": "25e8fa79987c32f4d5e583678f28efdf0f07f49e3125941e49d1e2d0759ce205"
-    },
-    {
-      "path": "app/migrations.php",
-      "sha256": "1f9f62660daa284d8838c1a4f8d57ce3289499d18903bd9e4a48714930b01d1f"
-    },
-    {
-      "path": "app/updater.php",
-      "sha256": "8072dab56e5beebf67c7f65bb85a99935550ee39c87640ef555e7d5769a1bee3"
-    },
-    {
-      "path": "app/files.php",
-      "sha256": "80b808d92ef485656de81806b41d9793f436bc604d19bfabbbe8cca30f6f0316"
-    },
-    {
-      "path": "app/.htaccess",
-      "sha256": "f19e0a6ec4db41ce29fa249819d1121707608a25e2f697f023d94788f9751a0b"
-    },
-    {
-      "path": "assets/app.css",
-      "sha256": "9d2e81aca1df7a1920b4fab379d05e7d13a3480ea2a8a675b24cb8a5f83cb4ec"
-    },
-    {
-      "path": "public/index.php",
-      "sha256": "9eafee3e92ecc9c276ab1ed2ebbd0397ca87856e1124af3f368ac5d5ce6514b1"
-    },
-    {
-      "path": "public/assets/app.css",
-      "sha256": "9d2e81aca1df7a1920b4fab379d05e7d13a3480ea2a8a675b24cb8a5f83cb4ec"
-    },
-    {
-      "path": "database/schema.sql",
-      "sha256": "3fc578dc819c5703e1d47e5b2e44e3f4ad136276d55633d250e1ab3c265e1fb8"
-    },
-    {
-      "path": "database/.htaccess",
-      "sha256": "f19e0a6ec4db41ce29fa249819d1121707608a25e2f697f023d94788f9751a0b"
+      "sha256": "9f6271951edca02e0c8a669a79930626717b77f0443ad8a327b93a52e4194829"
     }
   ]
 }
