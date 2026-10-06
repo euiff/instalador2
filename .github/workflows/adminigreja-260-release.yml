@@ -1,0 +1,57 @@
+name: AdminIgreja 2.6.0 Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/adminigreja-260-release.yml"
+      - "adminigreja-build/v2.6.0/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct base
+        run: |
+          set -euo pipefail
+          rm -rf .build260
+          mkdir -p .build260/work
+          cat adminigreja-updates/releases/v2.5.0.*.b64.txt | tr -d '\r\n' | base64 -d > .build260/base.tar.gz
+          echo "40fbedd7dcb811f66595c0dfd1b65a435e920506f2203c0ca3841c2a5f8a2cb5  .build260/base.tar.gz" | sha256sum -c -
+          tar -xzf .build260/base.tar.gz -C .build260/work
+
+      - name: Build release
+        run: python3 adminigreja-build/v2.6.0/build.py .build260/work
+
+      - name: Validate PHP
+        run: |
+          set -euo pipefail
+          php -l .build260/work/app/bootstrap.php
+          php -l .build260/work/app/layout.php
+          php -l .build260/work/app/finance_schema.php
+          php -l .build260/work/app/finance_core.php
+          php -l .build260/work/app/finance_public.php
+          php -l .build260/work/app/finance_report.php
+          php -l .build260/work/app/finance_routes.php
+          php -l .build260/work/public/index.php
+          grep -q "finance_pro_handle" .build260/work/public/index.php
+          grep -q "finance_public_handle" .build260/work/public/index.php
+          grep -q "Painel da Tesouraria" .build260/work/app/layout.php
+          grep -q "app.css?v=2.6.0" .build260/work/app/layout.php
+
+      - name: Publish
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v2.6.0.*.b64.txt
+          git commit -m "Publish AdminIgreja 2.6.0 Treasury Pro"
+          git push
