@@ -1,0 +1,188 @@
+name: Publish AdminIgreja 2.4.0 Modern UI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-adminigreja-240.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct 2.3.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .build240
+          mkdir -p .build240/work
+          cat adminigreja-updates/releases/v2.3.1.*.b64.txt | tr -d '\r\n' | base64 -d > .build240/base.tar.gz
+          tar -xzf .build240/base.tar.gz -C .build240/work
+
+      - name: Apply modern UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp adminigreja-build/v2.4.0/layout.php .build240/work/app/layout.php
+          cp adminigreja-build/v2.4.0/app.css .build240/work/assets/app.css
+          cp adminigreja-build/v2.4.0/app.css .build240/work/public/assets/app.css
+          cat >> .build240/work/assets/app.css <<'CSS'
+          .metric-sub{display:block;color:#8392a2;font-size:11px;margin-top:8px}
+          .dashboard-simple{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+          @media(max-width:900px){.dashboard-simple{grid-template-columns:1fr}}
+          CSS
+          cp .build240/work/assets/app.css .build240/work/public/assets/app.css
+          printf '2.4.0\n' > .build240/work/VERSION
+
+      - name: Upgrade dashboard
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p=Path('.build240/work/public/index.php')
+          src=p.read_text(encoding='utf-8')
+          dashboard=r'''if ($route === 'dashboard') {
+              $members=0;$inactive=0;$visitors=0;$inc=0.0;$exp=0.0;
+              if(can_secretary()){
+                  $members=(int)(one("SELECT COUNT(*) c FROM members WHERE church_id=? AND status='active'",[$cid])['c']??0);
+                  $inactive=(int)(one("SELECT COUNT(*) c FROM members WHERE church_id=? AND status='inactive'",[$cid])['c']??0);
+                  $visitors=(int)(one("SELECT COUNT(*) c FROM visitors WHERE church_id=?",[$cid])['c']??0);
+              }
+              if(can_treasury()){
+                  $inc=(float)(one("SELECT COALESCE(SUM(amount),0) s FROM transactions WHERE church_id=? AND direction='income' AND status='posted' AND MONTH(transaction_date)=MONTH(CURDATE()) AND YEAR(transaction_date)=YEAR(CURDATE())",[$cid])['s']??0);
+                  $exp=(float)(one("SELECT COALESCE(SUM(amount),0) s FROM transactions WHERE church_id=? AND direction='expense' AND status='posted' AND MONTH(transaction_date)=MONTH(CURDATE()) AND YEAR(transaction_date)=YEAR(CURDATE())",[$cid])['s']??0);
+              }
+              $church=one('SELECT name FROM churches WHERE id=?',[$cid])?:['name'=>'sua igreja'];
+              $hour=(int)date('G');$greeting=$hour<12?'Bom dia':($hour<18?'Boa tarde':'Boa noite');
+              page_top('Painel','Visão rápida da sua igreja');flash();
+
+              echo '<div class="card dashboard-welcome"><div><h2>'.e($greeting).', '.e((string)(user()['name']??'')).'!</h2><p>Veja rapidamente o que precisa de atenção em '.e((string)$church['name']).' e acesse as tarefas mais usadas.</p></div><div class="welcome-date"><b>'.e(date('d/m/Y')).'</b><small>Resumo atualizado</small></div></div>';
+
+              echo '<div class="grid">';
+              if(can_secretary()){
+                  echo '<div class="card metric"><small>Membros ativos</small><strong>'.$members.'</strong><span class="metric-sub">Cadastros ativos</span></div>';
+                  echo '<div class="card metric"><small>Visitantes</small><strong>'.$visitors.'</strong><span class="metric-sub">Para acompanhamento</span></div>';
+              }
+              if(can_treasury()){
+                  echo '<div class="card metric"><small>Entradas no mês</small><strong class="money in">'.money_br($inc).'</strong><span class="metric-sub">Receitas lançadas</span></div>';
+                  echo '<div class="card metric"><small>Saldo do mês</small><strong class="money balance">'.money_br($inc-$exp).'</strong><span class="metric-sub">Entradas menos saídas</span></div>';
+              }
+              echo '</div>';
+
+              echo '<div class="dashboard-section"><div class="dashboard-section-head"><div><h3>Acesso rápido</h3><p>Ações disponíveis para o seu perfil.</p></div></div><div class="quick-actions">';
+              if(can_secretary()){
+                  echo '<a class="quick-action" href="/?r=members"><span class="quick-action-icon">M</span><span><b>Membros</b><small>Cadastrar e consultar</small></span></a>';
+                  echo '<a class="quick-action" href="/?r=documents"><span class="quick-action-icon">DOC</span><span><b>Documentos</b><small>Carteiras e certificados</small></span></a>';
+                  echo '<a class="quick-action" href="/?r=visitors"><span class="quick-action-icon">V</span><span><b>Visitantes</b><small>Acompanhar contatos</small></span></a>';
+              }
+              if(can_treasury()){
+                  echo '<a class="quick-action" href="/?r=finance"><span class="quick-action-icon">R$</span><span><b>Novo lançamento</b><small>Entrada ou saída</small></span></a>';
+                  echo '<a class="quick-action" href="/?r=reports"><span class="quick-action-icon">PDF</span><span><b>Relatórios</b><small>Consultar e imprimir</small></span></a>';
+              }
+              if(can_manage_users()){
+                  echo '<a class="quick-action" href="/?r=church-settings"><span class="quick-action-icon">IG</span><span><b>Dados da igreja</b><small>Logo e liderança</small></span></a>';
+              }
+              echo '</div></div>';
+
+              echo '<div class="dashboard-simple">';
+              if(can_secretary()){
+                  $birthdays=all("SELECT name,birth_date,MOD(DAYOFYEAR(birth_date)-DAYOFYEAR(CURDATE())+366,366) next_days FROM members WHERE church_id=? AND status='active' AND birth_date IS NOT NULL ORDER BY next_days,name LIMIT 5",[$cid]);
+                  echo '<div class="card dashboard-card"><div class="card-title-row"><div><h3>Próximos aniversários</h3><p class="muted">Datas importantes da comunidade.</p></div></div><div class="birthday-list">';
+                  if(!$birthdays)echo '<div class="dashboard-empty">Nenhum aniversário cadastrado.</div>';
+                  foreach($birthdays as $b){
+                      $parts=preg_split('/\\s+/',trim((string)$b['name']))?:[];$initials='';
+                      foreach(array_slice($parts,0,2) as $part)$initials.=strtoupper(substr($part,0,1));
+                      $days=(int)$b['next_days'];$when=$days===0?'Hoje':($days===1?'Amanhã':'Em '.$days.' dias');
+                      echo '<div class="birthday-item"><span class="birthday-avatar">'.e($initials?:'M').'</span><div><b>'.e($b['name']).'</b><small>'.e(br_date($b['birth_date'])).'</small></div><span class="birthday-days">'.e($when).'</span></div>';
+                  }
+                  echo '</div><div class="summary-line"><span>Membros inativos</span><b>'.$inactive.'</b></div></div>';
+              }
+              if(can_treasury()){
+                  $recent=all("SELECT direction,category,description,amount,transaction_date FROM transactions WHERE church_id=? ORDER BY transaction_date DESC,id DESC LIMIT 5",[$cid]);
+                  echo '<div class="card dashboard-card"><div class="card-title-row"><div><h3>Movimentações recentes</h3><p class="muted">Últimos lançamentos da Tesouraria.</p></div><a class="btn light" href="/?r=finance">Ver todos</a></div><div class="recent-list">';
+                  if(!$recent)echo '<div class="dashboard-empty">Ainda não há movimentações financeiras.</div>';
+                  foreach($recent as $tx){
+                      $isIn=$tx['direction']==='income';$title=trim((string)$tx['description'])?:trim((string)$tx['category']);
+                      echo '<div class="recent-item"><span class="birthday-avatar">'.($isIn?'↑':'↓').'</span><div><b>'.e(cut_text($title,34)).'</b><small>'.e(br_date($tx['transaction_date'])).' · '.e($tx['category']).'</small></div><span class="recent-amount money '.($isIn?'in':'out').'">'.($isIn?'+ ':'- ').e(money_br((float)$tx['amount'])).'</span></div>';
+                  }
+                  echo '</div></div>';
+              }
+              echo '</div>';
+              page_bottom();exit;
+          }
+
+          if ($route === 'members') {'''
+          pattern=r"if \(\$route === 'dashboard'\) \{.*?\n\}\n\nif \(\$route === 'members'\) \{"
+          out,n=re.subn(pattern,dashboard,src,count=1,flags=re.S)
+          if n!=1:
+              raise SystemExit('Dashboard block not found')
+          p.write_text(out,encoding='utf-8')
+
+      - name: Validate PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l .build240/work/app/layout.php
+          php -l .build240/work/public/index.php
+
+      - name: Build legacy-compatible USTAR package
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64,hashlib,json,tarfile,io,gzip
+
+          root=Path('.build240/work')
+          files=sorted([p for p in root.rglob('*') if p.is_file()],key=lambda p:p.relative_to(root).as_posix())
+          tb=io.BytesIO()
+          with tarfile.open(fileobj=tb,mode='w',format=tarfile.USTAR_FORMAT) as tf:
+              for p in files:
+                  rel=p.relative_to(root).as_posix()
+                  info=tf.gettarinfo(str(p),arcname=rel)
+                  info.uid=0;info.gid=0;info.uname='';info.gname='';info.mtime=0
+                  with p.open('rb') as fh: tf.addfile(info,fh)
+          tar=tb.getvalue()
+
+          pos=0;seen=[]
+          while pos+512<=len(tar):
+              h=tar[pos:pos+512];pos+=512
+              if h.strip(b'\0')==b'':break
+              name=h[:100].rstrip(b'\0 ').decode()
+              prefix=h[345:500].rstrip(b'\0 ').decode()
+              if prefix:name=prefix+'/'+name
+              size=int((h[124:136].rstrip(b'\0 ').strip() or b'0'),8)
+              typ=h[156:157]
+              if typ not in (b'0',b'\0'):raise SystemExit(f'Forbidden TAR type {typ!r} for {name}')
+              seen.append(name);pos+=((size+511)//512)*512
+
+          package=Path('.build240/v2.4.0.tar.gz')
+          with package.open('wb') as out:
+              with gzip.GzipFile(filename='',mode='wb',fileobj=out,mtime=0) as gz:gz.write(tar)
+          raw=package.read_bytes();enc=base64.b64encode(raw).decode()
+          channel=Path('adminigreja-updates');rel=channel/'releases';rel.mkdir(parents=True,exist_ok=True)
+          for old in rel.glob('v2.4.0.*.b64.txt'):old.unlink()
+          parts=[]
+          for idx,start in enumerate(range(0,len(enc),8000),1):
+              name=f'releases/v2.4.0.{idx:02d}.b64.txt'
+              (channel/name).write_text(enc[start:start+8000],encoding='utf-8');parts.append(name)
+          manifest={'version':'2.4.0','min_php':'8.0','encoding':'base64','parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),'files':[{'path':p.relative_to(root).as_posix(),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files]}
+          (channel/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('USTAR entries:',len(seen),'parts:',len(parts),'sha256:',manifest['sha256'])
+
+      - name: Publish channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v2.4.0.*.b64.txt
+          git commit -m "Publish AdminIgreja 2.4.0 modern interface"
+          git push
