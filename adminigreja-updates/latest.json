@@ -1,36 +1,61 @@
 {
-  "version": "2.5.0",
+  "version": "2.6.0",
   "min_php": "8.0",
   "encoding": "base64",
   "parts": [
-    "releases/v2.5.0.01.b64.txt",
-    "releases/v2.5.0.02.b64.txt",
-    "releases/v2.5.0.03.b64.txt",
-    "releases/v2.5.0.04.b64.txt",
-    "releases/v2.5.0.05.b64.txt",
-    "releases/v2.5.0.06.b64.txt",
-    "releases/v2.5.0.07.b64.txt",
-    "releases/v2.5.0.08.b64.txt",
-    "releases/v2.5.0.09.b64.txt",
-    "releases/v2.5.0.10.b64.txt"
+    "releases/v2.6.0.01.b64.txt",
+    "releases/v2.6.0.02.b64.txt",
+    "releases/v2.6.0.03.b64.txt",
+    "releases/v2.6.0.04.b64.txt",
+    "releases/v2.6.0.05.b64.txt",
+    "releases/v2.6.0.06.b64.txt",
+    "releases/v2.6.0.07.b64.txt",
+    "releases/v2.6.0.08.b64.txt",
+    "releases/v2.6.0.09.b64.txt",
+    "releases/v2.6.0.10.b64.txt",
+    "releases/v2.6.0.11.b64.txt",
+    "releases/v2.6.0.12.b64.txt",
+    "releases/v2.6.0.13.b64.txt",
+    "releases/v2.6.0.14.b64.txt",
+    "releases/v2.6.0.15.b64.txt"
   ],
-  "sha256": "40fbedd7dcb811f66595c0dfd1b65a435e920506f2203c0ca3841c2a5f8a2cb5",
+  "sha256": "2081fc7f97dc8e9664f714e0a3ea90305db1687f0f89028697d55c1bb4440e79",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "732f64d874f90788c0199b0c19bfd9b3b6436e140114e53e462832532d74c61c"
+      "sha256": "6693435eadb673dda297a0652d241e293e361200bc40db949cf2501d18dd01ee"
     },
     {
       "path": "app/bootstrap.php",
-      "sha256": "96c3fac09b7a081e4a167ccab74094a21719d697c6c39e338bbaa21bbfb66e01"
+      "sha256": "1e38ae640130810d03940f514d75aa6be08c6b6117b085a49d25a1e626f560fc"
     },
     {
       "path": "app/files.php",
       "sha256": "5f7057c35982ffef53eaf9382ddfb1f9f315ff0f9557ec90ca2cc48834d1b476"
     },
     {
+      "path": "app/finance_core.php",
+      "sha256": "528f46087e95e1dd446d119faba2199a63b0c7671e0fdab971897fe2b64b3279"
+    },
+    {
+      "path": "app/finance_public.php",
+      "sha256": "a7638cd9c1e243107fdbe57d2c93a89514595baa61991d858a76b04f97eb3d7d"
+    },
+    {
+      "path": "app/finance_report.php",
+      "sha256": "a2303dc8ae1784d2652493abccef5ac4f14aafc3557730a9486de01ac94c830f"
+    },
+    {
+      "path": "app/finance_routes.php",
+      "sha256": "71e0b3e8e303bd187b2b7e8242006867224a2cc4b8284da6b4e7cbe51d1dc3cd"
+    },
+    {
+      "path": "app/finance_schema.php",
+      "sha256": "2ac76e98e95e0d29d28b2e1de5835b2fd70c921b7d348d88ac63fee596d0a8ee"
+    },
+    {
       "path": "app/layout.php",
-      "sha256": "bec1cf104481bfcc47480766a714af790dfe11b0cc3781e63a8584844081bfa5"
+      "sha256": "1b9aca788ace0bec49684cc43bab41c45da1493521ca9c96765e3a93d952bea0"
     },
     {
       "path": "app/migrations.php",
@@ -42,7 +67,7 @@
     },
     {
       "path": "assets/app.css",
-      "sha256": "c96678f201834eb44c64d8df35683b4b1895ca5b7d7a65a6aba16bbcac064cb5"
+      "sha256": "137a4e657de60304d670b644cedacb631b59e36496379b52ad3c6a1babf1f0ea"
     },
     {
       "path": "assets/site.css",
@@ -50,7 +75,7 @@
     },
     {
       "path": "database/schema.sql",
-      "sha256": "3fc578dc819c5703e1d47e5b2e44e3f4ad136276d55633d250e1ab3c265e1fb8"
+      "sha256": "78b82d859002f57f5b337cecc4b4ce79f2823cc87112a5964ffccd27cbf1f43a"
     },
     {
       "path": "index.php",
@@ -58,7 +83,7 @@
     },
     {
       "path": "public/assets/app.css",
-      "sha256": "c96678f201834eb44c64d8df35683b4b1895ca5b7d7a65a6aba16bbcac064cb5"
+      "sha256": "137a4e657de60304d670b644cedacb631b59e36496379b52ad3c6a1babf1f0ea"
     },
     {
       "path": "public/assets/site.css",
@@ -66,7 +91,7 @@
     },
     {
       "path": "public/index.php",
-      "sha256": "1819ce8a19d0a3214425734a9302b900b0439760e0ab09874122c8e207454b8e"
+      "sha256": "71396332f1215d0f7404a2302dbdd40f4899241d17508b5e3eff07b9dd43e84b"
     },
     {
       "path": "public/landing.php",
