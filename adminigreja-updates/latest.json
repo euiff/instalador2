@@ -3,25 +3,19 @@
   "min_php": "8.0",
   "encoding": "hex",
   "parts": [
-    "releases/v2.1.3.hex.txt"
+    "releases/v2.1.3.01.hex.txt",
+    "releases/v2.1.3.02.hex.txt",
+    "releases/v2.1.3.03.hex.txt",
+    "releases/v2.1.3.04.hex.txt",
+    "releases/v2.1.3.05.hex.txt",
+    "releases/v2.1.3.06.hex.txt",
+    "releases/v2.1.3.07.hex.txt"
   ],
-  "sha256": "ffebc258f3e340eb5dcce5e4ca34b8704a1ae9a8d1ccb7637545a6455ac01fb0",
+  "sha256": "fafe9db6f4e0db5deb15e9310abf479bcf15a974b0510406b1f95267e65c1341",
   "files": [
-    {
-      "path": "VERSION",
-      "sha256": "eb01a4e8e8922406f15a22cadc3fae28d4f513afe11b4734788eb2ea73cf034e"
-    },
-    {
-      "path": "public/index.php",
-      "sha256": "af269f590bd7ab18340d5baef4cff0b42d2c486e7540fdbf246114d5187aad56"
-    },
-    {
-      "path": "assets/app.css",
-      "sha256": "4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"
-    },
-    {
-      "path": "public/assets/app.css",
-      "sha256": "4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"
-    }
+    {"path":"VERSION","sha256":"eb01a4e8e8922406f15a22cadc3fae28d4f513afe11b4734788eb2ea73cf034e"},
+    {"path":"public/index.php","sha256":"af269f590bd7ab18340d5baef4cff0b42d2c486e7540fdbf246114d5187aad56"},
+    {"path":"assets/app.css","sha256":"4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"},
+    {"path":"public/assets/app.css","sha256":"4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"}
   ]
 }
