@@ -1,0 +1,41 @@
+name: Inspect AdminIgreja 2.5.0 finance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-adminigreja-250-finance.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .inspect250 inspect-adminigreja-250-finance
+          mkdir -p .inspect250 inspect-adminigreja-250-finance
+          cat adminigreja-updates/releases/v2.5.0.*.b64.txt | tr -d '\r\n' | base64 -d > .inspect250/pkg.tgz
+          echo "40fbedd7dcb811f66595c0dfd1b65a435e920506f2203c0ca3841c2a5f8a2cb5  .inspect250/pkg.tgz" | sha256sum -c -
+          tar -xzf .inspect250/pkg.tgz -C .inspect250
+          cp .inspect250/database/schema.sql inspect-adminigreja-250-finance/schema.sql
+          cp .inspect250/app/migrations.php inspect-adminigreja-250-finance/migrations.php
+          cp .inspect250/public/index.php inspect-adminigreja-250-finance/public-index.php
+          cp .inspect250/app/layout.php inspect-adminigreja-250-finance/layout.php
+          cp .inspect250/app/pdf.php inspect-adminigreja-250-finance/pdf.php
+          cp .inspect250/app/bootstrap.php inspect-adminigreja-250-finance/bootstrap.php
+      - name: Save inspection
+        shell: bash
+        run: |
+          git config user.name "AdminIgreja Inspect Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add inspect-adminigreja-250-finance
+          git commit -m "Inspect AdminIgreja 2.5.0 finance source" || exit 0
+          git push
