@@ -1,15 +1,20 @@
 {
   "version": "2.1.1",
   "min_php": "8.0",
+  "encoding": "hex",
   "parts": [
-    "releases/v2.1.1.part01.txt",
-    "releases/v2.1.1.part02.txt",
-    "releases/v2.1.1.part03.txt",
-    "releases/v2.1.1.part04.txt",
-    "releases/v2.1.1.part05.txt",
-    "releases/v2.1.1.part06.txt",
-    "releases/v2.1.1.part07.txt",
-    "releases/v2.1.1.part08.txt"
+    "releases/v2.1.1.hex01.txt",
+    "releases/v2.1.1.hex02.txt",
+    "releases/v2.1.1.hex03.txt",
+    "releases/v2.1.1.hex04.txt",
+    "releases/v2.1.1.hex05.txt",
+    "releases/v2.1.1.hex06.txt",
+    "releases/v2.1.1.hex07.txt",
+    "releases/v2.1.1.hex08.txt",
+    "releases/v2.1.1.hex09.txt",
+    "releases/v2.1.1.hex10.txt",
+    "releases/v2.1.1.hex11.txt",
+    "releases/v2.1.1.hex12.txt"
   ],
   "sha256": "559fd7a04fad9468468c238bc994ed9f982b3a25b8be3f338a12a9febd44be52",
   "files": [
@@ -59,7 +64,7 @@
     },
     {
       "path": "app/updater.php",
-      "sha256": "1b3c5bcf896ae951575e6f9aec313104319ec04135eae313b4577039e4b3c8e9"
+      "sha256": "8072dab56e5beebf67c7f65bb85a99935550ee39c87640ef555e7d5769a1bee3"
     },
     {
       "path": "app/files.php",
