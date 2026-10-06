@@ -1,0 +1,148 @@
+name: Publish AdminIgreja 2.3.1 USTAR
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-adminigreja-231.yml'
+      - 'adminigreja-build/v2.3.0/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct current code base
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .build231
+          mkdir -p .build231/work
+          cat adminigreja-updates/releases/v2.2.1.0*.b64.txt | tr -d '\r\n' | base64 -d > .build231/base.tar.gz
+          echo "f41ff6589af4d6cb73a027140fe207251ae43a18a0c5c2a219ec5b551d482fea  .build231/base.tar.gz" | sha256sum -c -
+          tar -xzf .build231/base.tar.gz -C .build231/work
+
+      - name: Add public sales page
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp adminigreja-build/v2.3.0/index.php .build231/work/index.php
+          cp adminigreja-build/v2.3.0/landing.php .build231/work/public/landing.php
+          cp adminigreja-build/v2.3.0/site.css .build231/work/assets/site.css
+          mkdir -p .build231/work/public/assets
+          cp adminigreja-build/v2.3.0/site.css .build231/work/public/assets/site.css
+          printf '2.3.1\n' > .build231/work/VERSION
+          php -l .build231/work/index.php
+          php -l .build231/work/public/landing.php
+
+      - name: Build USTAR-only package
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64, hashlib, json, tarfile, io, gzip, os
+
+          root = Path('.build231/work')
+          files = sorted([p for p in root.rglob('*') if p.is_file()], key=lambda p: p.relative_to(root).as_posix())
+
+          tar_buf = io.BytesIO()
+          with tarfile.open(fileobj=tar_buf, mode='w', format=tarfile.USTAR_FORMAT) as tf:
+              for p in files:
+                  rel = p.relative_to(root).as_posix()
+                  info = tf.gettarinfo(str(p), arcname=rel)
+                  info.uid = 0
+                  info.gid = 0
+                  info.uname = ''
+                  info.gname = ''
+                  info.mtime = 0
+                  with p.open('rb') as fh:
+                      tf.addfile(info, fh)
+
+          tar_raw = tar_buf.getvalue()
+
+          # Validate exactly what the PHP 2.2.0 updater accepts:
+          # only regular file entries, typeflag 0/NUL.
+          pos = 0
+          seen = []
+          while pos + 512 <= len(tar_raw):
+              h = tar_raw[pos:pos+512]
+              pos += 512
+              if h.strip(b'\0') == b'':
+                  break
+              name = h[0:100].rstrip(b'\0 ').decode('utf-8')
+              prefix = h[345:500].rstrip(b'\0 ').decode('utf-8')
+              if prefix:
+                  name = prefix + '/' + name
+              size_raw = h[124:136].rstrip(b'\0 ').strip() or b'0'
+              size = int(size_raw, 8)
+              typ = h[156:157]
+              if typ not in (b'0', b'\0'):
+                  raise SystemExit(f'Forbidden TAR type {typ!r} for {name}')
+              seen.append(name)
+              pos += ((size + 511) // 512) * 512
+
+          expected_names = [p.relative_to(root).as_posix() for p in files]
+          if seen != expected_names:
+              raise SystemExit('USTAR file order/content mismatch')
+
+          package = Path('.build231/v2.3.1.tar.gz')
+          with package.open('wb') as out:
+              with gzip.GzipFile(filename='', mode='wb', fileobj=out, mtime=0) as gz:
+                  gz.write(tar_raw)
+
+          raw = package.read_bytes()
+          encoded = base64.b64encode(raw).decode('ascii')
+          channel = Path('adminigreja-updates')
+          release_dir = channel/'releases'
+          release_dir.mkdir(parents=True, exist_ok=True)
+
+          for old in release_dir.glob('v2.3.1.*.b64.txt'):
+              old.unlink()
+
+          parts=[]
+          for idx, start in enumerate(range(0, len(encoded), 8000), 1):
+              rel=f'releases/v2.3.1.{idx:02d}.b64.txt'
+              (channel/rel).write_text(encoded[start:start+8000], encoding='utf-8')
+              parts.append(rel)
+
+          manifest={
+              'version':'2.3.1',
+              'min_php':'8.0',
+              'encoding':'base64',
+              'parts':parts,
+              'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[
+                  {'path':p.relative_to(root).as_posix(),
+                   'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+                  for p in files
+              ]
+          }
+          (channel/'latest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          print('USTAR validated entries:', len(seen))
+          print('package sha256:', manifest['sha256'])
+          print('parts:', len(parts))
+
+      - name: Final validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '"version": "2.3.1"' adminigreja-updates/latest.json
+          grep -q '"path": "public/landing.php"' adminigreja-updates/latest.json
+          grep -q '"path": "assets/site.css"' adminigreja-updates/latest.json
+          grep -q '"path": "index.php"' adminigreja-updates/latest.json
+
+      - name: Publish update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v2.3.1.*.b64.txt
+          git commit -m "Publish AdminIgreja 2.3.1 USTAR-compatible update"
+          git push
