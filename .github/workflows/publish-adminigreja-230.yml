@@ -1,0 +1,115 @@
+name: Publish AdminIgreja 2.3.0
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-adminigreja-230.yml'
+      - 'adminigreja-build/v2.3.0/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct current 2.2.1 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .build230
+          mkdir -p .build230/work
+          cat adminigreja-updates/releases/v2.2.1.0*.b64.txt | tr -d '\r\n' | base64 -d > .build230/base.tar.gz
+          echo "f41ff6589af4d6cb73a027140fe207251ae43a18a0c5c2a219ec5b551d482fea  .build230/base.tar.gz" | sha256sum -c -
+          tar -xzf .build230/base.tar.gz -C .build230/work
+
+      - name: Add public sales page
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp adminigreja-build/v2.3.0/index.php .build230/work/index.php
+          cp adminigreja-build/v2.3.0/landing.php .build230/work/public/landing.php
+          cp adminigreja-build/v2.3.0/site.css .build230/work/assets/site.css
+          mkdir -p .build230/work/public/assets
+          cp adminigreja-build/v2.3.0/site.css .build230/work/public/assets/site.css
+          printf '2.3.0\n' > .build230/work/VERSION
+          php -l .build230/work/index.php
+          php -l .build230/work/public/landing.php
+
+      - name: Build signed manifest and release parts
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64, hashlib, json, tarfile
+
+          root = Path('.build230/work')
+          package = Path('.build230/v2.3.0.tar.gz')
+          files = [p for p in root.rglob('*') if p.is_file()]
+          files.sort(key=lambda p: p.relative_to(root).as_posix())
+
+          with tarfile.open(package, 'w:gz') as tf:
+              for p in files:
+                  tf.add(p, arcname=p.relative_to(root).as_posix())
+
+          raw = package.read_bytes()
+          encoded = base64.b64encode(raw).decode('ascii')
+          release_dir = Path('adminigreja-updates/releases')
+          release_dir.mkdir(parents=True, exist_ok=True)
+
+          for old in release_dir.glob('v2.3.0.*.b64.txt'):
+              old.unlink()
+
+          parts=[]
+          for idx, start in enumerate(range(0, len(encoded), 8000), 1):
+              rel=f'releases/v2.3.0.{idx:02d}.b64.txt'
+              (Path('adminigreja-updates')/rel).write_text(encoded[start:start+8000], encoding='utf-8')
+              parts.append(rel)
+
+          manifest={
+              'version':'2.3.0',
+              'min_php':'8.0',
+              'encoding':'base64',
+              'parts':parts,
+              'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[
+                  {
+                      'path':p.relative_to(root).as_posix(),
+                      'sha256':hashlib.sha256(p.read_bytes()).hexdigest()
+                  } for p in files
+              ]
+          }
+          Path('adminigreja-updates/latest.json').write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',
+              encoding='utf-8'
+          )
+          print('package sha256:', manifest['sha256'])
+          print('files:', len(files), 'parts:', len(parts))
+
+      - name: Verify landing files are in release
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '"version": "2.3.0"' adminigreja-updates/latest.json
+          grep -q '"path": "public/landing.php"' adminigreja-updates/latest.json
+          grep -q '"path": "assets/site.css"' adminigreja-updates/latest.json
+          grep -q '"path": "index.php"' adminigreja-updates/latest.json
+
+      - name: Publish update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v2.3.0.*.b64.txt
+          if git diff --cached --quiet; then
+            echo "No release changes"
+          else
+            git commit -m "Publish AdminIgreja 2.3.0 sales page"
+            git push
+          fi
