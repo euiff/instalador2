@@ -1,22 +1,22 @@
 {
-  "version": "2.3.0",
+  "version": "2.3.1",
   "min_php": "8.0",
   "encoding": "base64",
   "parts": [
-    "releases/v2.3.0.01.b64.txt",
-    "releases/v2.3.0.02.b64.txt",
-    "releases/v2.3.0.03.b64.txt",
-    "releases/v2.3.0.04.b64.txt",
-    "releases/v2.3.0.05.b64.txt",
-    "releases/v2.3.0.06.b64.txt",
-    "releases/v2.3.0.07.b64.txt",
-    "releases/v2.3.0.08.b64.txt"
+    "releases/v2.3.1.01.b64.txt",
+    "releases/v2.3.1.02.b64.txt",
+    "releases/v2.3.1.03.b64.txt",
+    "releases/v2.3.1.04.b64.txt",
+    "releases/v2.3.1.05.b64.txt",
+    "releases/v2.3.1.06.b64.txt",
+    "releases/v2.3.1.07.b64.txt",
+    "releases/v2.3.1.08.b64.txt"
   ],
-  "sha256": "0b2debf764ce25723da9d4fba2d5f9284106e14f66af45bf2b30807c6eef96b4",
+  "sha256": "188e0dd5381f2f6e6d8268b70f81820037c0f5acfac15aa9cb86f455e6b911ae",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "a42caf4a54bbbe27aa45b6efbc6356c5e299b19763e728b6cdb7201b02ebbe36"
+      "sha256": "ad8650bc9057d9dfd809961b69dbad640c288d809fa44437d44d83d3b118c821"
     },
     {
       "path": "app/bootstrap.php",
