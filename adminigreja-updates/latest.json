@@ -3,19 +3,54 @@
   "min_php": "8.0",
   "encoding": "base64",
   "parts": [
-    "releases/v2.2.1.b64.txt"
+    "releases/v2.2.1.01.b64.txt",
+    "releases/v2.2.1.02.b64.txt",
+    "releases/v2.2.1.03.b64.txt",
+    "releases/v2.2.1.04.b64.txt",
+    "releases/v2.2.1.05.b64.txt",
+    "releases/v2.2.1.06.b64.txt"
   ],
   "sha256": "f41ff6589af4d6cb73a027140fe207251ae43a18a0c5c2a219ec5b551d482fea",
   "files": [
-    {"path":"VERSION","sha256":"fe650098093fad42070e8a2cacfb216a6c416af57bd26dd6ff479fef69f8bc71"},
-    {"path":"app/bootstrap.php","sha256":"96c3fac09b7a081e4a167ccab74094a21719d697c6c39e338bbaa21bbfb66e01"},
-    {"path":"app/files.php","sha256":"5f7057c35982ffef53eaf9382ddfb1f9f315ff0f9557ec90ca2cc48834d1b476"},
-    {"path":"app/layout.php","sha256":"a614abee46d342d1a78dc8123cc7664dc0a43b7d1d89d1664766d6e35c9cc285"},
-    {"path":"app/migrations.php","sha256":"cba84a072005f132e8fdb9116017a81586bfe060c6bebaca11b0830a6fed35fe"},
-    {"path":"app/pdf.php","sha256":"d99416d690b9a7020e7abfaed1cd408466fa3951dee87c3295a30e2a3a48d453"},
-    {"path":"assets/app.css","sha256":"9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"},
-    {"path":"public/assets/app.css","sha256":"9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"},
-    {"path":"public/index.php","sha256":"3d2b6f0707e386f19bfb75809fadd6839f97672bac23a7cb2151f3385a888be8"},
-    {"path":"database/schema.sql","sha256":"3fc578dc819c5703e1d47e5b2e44e3f4ad136276d55633d250e1ab3c265e1fb8"}
+    {
+      "path": "VERSION",
+      "sha256": "fe650098093fad42070e8a2cacfb216a6c416af57bd26dd6ff479fef69f8bc71"
+    },
+    {
+      "path": "app/bootstrap.php",
+      "sha256": "96c3fac09b7a081e4a167ccab74094a21719d697c6c39e338bbaa21bbfb66e01"
+    },
+    {
+      "path": "app/files.php",
+      "sha256": "5f7057c35982ffef53eaf9382ddfb1f9f315ff0f9557ec90ca2cc48834d1b476"
+    },
+    {
+      "path": "app/layout.php",
+      "sha256": "a614abee46d342d1a78dc8123cc7664dc0a43b7d1d89d1664766d6e35c9cc285"
+    },
+    {
+      "path": "app/migrations.php",
+      "sha256": "cba84a072005f132e8fdb9116017a81586bfe060c6bebaca11b0830a6fed35fe"
+    },
+    {
+      "path": "app/pdf.php",
+      "sha256": "d99416d690b9a7020e7abfaed1cd408466fa3951dee87c3295a30e2a3a48d453"
+    },
+    {
+      "path": "assets/app.css",
+      "sha256": "9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"
+    },
+    {
+      "path": "public/assets/app.css",
+      "sha256": "9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"
+    },
+    {
+      "path": "public/index.php",
+      "sha256": "3d2b6f0707e386f19bfb75809fadd6839f97672bac23a7cb2151f3385a888be8"
+    },
+    {
+      "path": "database/schema.sql",
+      "sha256": "3fc578dc819c5703e1d47e5b2e44e3f4ad136276d55633d250e1ab3c265e1fb8"
+    }
   ]
 }
