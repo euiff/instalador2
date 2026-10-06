@@ -1,23 +1,23 @@
 {
-  "version": "2.4.1",
+  "version": "2.4.2",
   "min_php": "8.0",
   "encoding": "base64",
   "parts": [
-    "releases/v2.4.1.01.b64.txt",
-    "releases/v2.4.1.02.b64.txt",
-    "releases/v2.4.1.03.b64.txt",
-    "releases/v2.4.1.04.b64.txt",
-    "releases/v2.4.1.05.b64.txt",
-    "releases/v2.4.1.06.b64.txt",
-    "releases/v2.4.1.07.b64.txt",
-    "releases/v2.4.1.08.b64.txt",
-    "releases/v2.4.1.09.b64.txt"
+    "releases/v2.4.2.01.b64.txt",
+    "releases/v2.4.2.02.b64.txt",
+    "releases/v2.4.2.03.b64.txt",
+    "releases/v2.4.2.04.b64.txt",
+    "releases/v2.4.2.05.b64.txt",
+    "releases/v2.4.2.06.b64.txt",
+    "releases/v2.4.2.07.b64.txt",
+    "releases/v2.4.2.08.b64.txt",
+    "releases/v2.4.2.09.b64.txt"
   ],
-  "sha256": "2338ee937093ce6e65a82495889f4830f54ab459ccbd9c0d1cfd6f0d2611183e",
+  "sha256": "5beb74eda010115abdb1cf0079b061d665edf7694eb72c9c04b972fe215ac392",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "2ad7b0c3f0ede58c3165b7a8a5479e890a758d39bfe8683eaef50ce6afad7232"
+      "sha256": "7df73b8e407cc08ce7babfd544ab4ad92a7f62cf73a21468d2bfae85c0508c7c"
     },
     {
       "path": "app/bootstrap.php",
@@ -29,7 +29,7 @@
     },
     {
       "path": "app/layout.php",
-      "sha256": "b85a001b8edf313fdfd024068955e5c1f362bc2d57ddf07d2a6d4b8b79c4dd28"
+      "sha256": "d411872362e759cd791a0630a506d2c3805fdce75392579ab548c79f59f2269e"
     },
     {
       "path": "app/migrations.php",
@@ -41,7 +41,7 @@
     },
     {
       "path": "assets/app.css",
-      "sha256": "a427ae95eeda58354163974a49c3bf31e6208263d9f9c58a02749b593ebccf3d"
+      "sha256": "6f174c6d6857959d1e2cc2a19475c758871f92d9ee87d2e23d78f81f91c4f36b"
     },
     {
       "path": "assets/site.css",
@@ -57,7 +57,7 @@
     },
     {
       "path": "public/assets/app.css",
-      "sha256": "a427ae95eeda58354163974a49c3bf31e6208263d9f9c58a02749b593ebccf3d"
+      "sha256": "6f174c6d6857959d1e2cc2a19475c758871f92d9ee87d2e23d78f81f91c4f36b"
     },
     {
       "path": "public/assets/site.css",
