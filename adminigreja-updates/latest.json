@@ -12,7 +12,7 @@
     "releases/v2.3.0.07.b64.txt",
     "releases/v2.3.0.08.b64.txt"
   ],
-  "sha256": "c472a69938ddd83beab0042ea7cad0895a9de9ad53fb864a6f154b89d4685be4",
+  "sha256": "0b2debf764ce25723da9d4fba2d5f9284106e14f66af45bf2b30807c6eef96b4",
   "files": [
     {
       "path": "VERSION",
@@ -68,7 +68,7 @@
     },
     {
       "path": "public/landing.php",
-      "sha256": "c30d776dc820b19162a12db6a5bcdb4173cde0c0961d9b4b3185d422abb6f4ef"
+      "sha256": "148a66cd7b318cb801d76ae489398a77c2d5d6b466c4d39a79df353efa84eaeb"
     }
   ]
 }
