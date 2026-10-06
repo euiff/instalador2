@@ -5,11 +5,23 @@
   "parts": [
     "releases/v2.1.2.hex.txt"
   ],
-  "sha256": "08df446870279b0e50d54300c03854f456c6d5f1265d601b79c8ade026781fc7",
+  "sha256": "803cb459db2766bb3269448fb0992e9d8711a22f052f17b5f4ab4a762728d0bf",
   "files": [
     {
       "path": "VERSION",
       "sha256": "9f6271951edca02e0c8a669a79930626717b77f0443ad8a327b93a52e4194829"
+    },
+    {
+      "path": "public/index.php",
+      "sha256": "af269f590bd7ab18340d5baef4cff0b42d2c486e7540fdbf246114d5187aad56"
+    },
+    {
+      "path": "assets/app.css",
+      "sha256": "4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"
+    },
+    {
+      "path": "public/assets/app.css",
+      "sha256": "4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"
     }
   ]
 }
