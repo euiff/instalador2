@@ -1,0 +1,140 @@
+name: Publish AdminIgreja 2.5.0 Professional Blue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-adminigreja-250.yml'
+      - 'adminigreja-build/v2.5.0/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct 2.4.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .build250
+          mkdir -p .build250/work
+          cat adminigreja-updates/releases/v2.4.2.*.b64.txt | tr -d '\r\n' | base64 -d > .build250/base.tar.gz
+          echo "5beb74eda010115abdb1cf0079b061d665edf7694eb72c9c04b972fe215ac392  .build250/base.tar.gz" | sha256sum -c -
+          tar -xzf .build250/base.tar.gz -C .build250/work
+
+      - name: Apply new visual identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp adminigreja-build/v2.5.0/landing.php .build250/work/public/landing.php
+          cp adminigreja-build/v2.5.0/site.css .build250/work/assets/site.css
+          cp adminigreja-build/v2.5.0/site.css .build250/work/public/assets/site.css
+          cat adminigreja-build/v2.5.0/app-overrides.css >> .build250/work/assets/app.css
+          cp .build250/work/assets/app.css .build250/work/public/assets/app.css
+          printf '2.5.0\n' > .build250/work/VERSION
+
+      - name: Bust application cache
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('.build250/work/app/layout.php')
+          s=p.read_text(encoding='utf-8')
+          import re
+          s=re.sub(r'href="/assets/app\.css(?:\?v=[^"]*)?"', 'href="/assets/app.css?v=2.5.0"', s)
+          p.write_text(s,encoding='utf-8')
+
+      - name: Validate PHP and key design rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l .build250/work/app/layout.php
+          php -l .build250/work/public/index.php
+          php -l .build250/work/public/landing.php
+          grep -q 'app.css?v=2.5.0' .build250/work/app/layout.php
+          grep -q 'GESTÃO INTEGRADA PARA IGREJAS' .build250/work/public/landing.php
+          grep -q 'grid-template-columns:repeat(auto-fit,minmax(175px,1fr))' .build250/work/public/assets/app.css
+
+      - name: Build USTAR package compatible with installed updater
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64,hashlib,json,tarfile,io,gzip
+
+          root=Path('.build250/work')
+          files=sorted([p for p in root.rglob('*') if p.is_file()],key=lambda p:p.relative_to(root).as_posix())
+
+          tb=io.BytesIO()
+          with tarfile.open(fileobj=tb,mode='w',format=tarfile.USTAR_FORMAT) as tf:
+              for p in files:
+                  rel=p.relative_to(root).as_posix()
+                  info=tf.gettarinfo(str(p),arcname=rel)
+                  info.uid=0; info.gid=0; info.uname=''; info.gname=''; info.mtime=0
+                  with p.open('rb') as fh:
+                      tf.addfile(info,fh)
+
+          tar=tb.getvalue()
+          pos=0; count=0
+          while pos+512<=len(tar):
+              h=tar[pos:pos+512]; pos+=512
+              if h.strip(b'\0')==b'': break
+              name=h[:100].rstrip(b'\0 ').decode()
+              prefix=h[345:500].rstrip(b'\0 ').decode()
+              if prefix: name=prefix+'/'+name
+              size=int((h[124:136].rstrip(b'\0 ').strip() or b'0'),8)
+              typ=h[156:157]
+              if typ not in (b'0',b'\0'):
+                  raise SystemExit(f'Forbidden TAR type {typ!r} for {name}')
+              count+=1
+              pos+=((size+511)//512)*512
+
+          pkg=Path('.build250/v2.5.0.tar.gz')
+          with pkg.open('wb') as out:
+              with gzip.GzipFile(filename='',mode='wb',fileobj=out,mtime=0) as gz:
+                  gz.write(tar)
+
+          raw=pkg.read_bytes()
+          enc=base64.b64encode(raw).decode()
+          channel=Path('adminigreja-updates')
+          releases=channel/'releases'
+          releases.mkdir(parents=True,exist_ok=True)
+          for old in releases.glob('v2.5.0.*.b64.txt'):
+              old.unlink()
+
+          parts=[]
+          for idx,start in enumerate(range(0,len(enc),8000),1):
+              name=f'releases/v2.5.0.{idx:02d}.b64.txt'
+              (channel/name).write_text(enc[start:start+8000],encoding='utf-8')
+              parts.append(name)
+
+          manifest={
+              'version':'2.5.0',
+              'min_php':'8.0',
+              'encoding':'base64',
+              'parts':parts,
+              'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[
+                  {'path':p.relative_to(root).as_posix(),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+                  for p in files
+              ]
+          }
+          (channel/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('validated entries:',count)
+          print('parts:',len(parts))
+          print('sha256:',manifest['sha256'])
+
+      - name: Publish update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v2.5.0.*.b64.txt
+          git commit -m "Publish AdminIgreja 2.5.0 professional blue interface"
+          git push
