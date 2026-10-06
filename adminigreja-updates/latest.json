@@ -1,23 +1,24 @@
 {
-  "version": "2.4.2",
+  "version": "2.5.0",
   "min_php": "8.0",
   "encoding": "base64",
   "parts": [
-    "releases/v2.4.2.01.b64.txt",
-    "releases/v2.4.2.02.b64.txt",
-    "releases/v2.4.2.03.b64.txt",
-    "releases/v2.4.2.04.b64.txt",
-    "releases/v2.4.2.05.b64.txt",
-    "releases/v2.4.2.06.b64.txt",
-    "releases/v2.4.2.07.b64.txt",
-    "releases/v2.4.2.08.b64.txt",
-    "releases/v2.4.2.09.b64.txt"
+    "releases/v2.5.0.01.b64.txt",
+    "releases/v2.5.0.02.b64.txt",
+    "releases/v2.5.0.03.b64.txt",
+    "releases/v2.5.0.04.b64.txt",
+    "releases/v2.5.0.05.b64.txt",
+    "releases/v2.5.0.06.b64.txt",
+    "releases/v2.5.0.07.b64.txt",
+    "releases/v2.5.0.08.b64.txt",
+    "releases/v2.5.0.09.b64.txt",
+    "releases/v2.5.0.10.b64.txt"
   ],
-  "sha256": "5beb74eda010115abdb1cf0079b061d665edf7694eb72c9c04b972fe215ac392",
+  "sha256": "40fbedd7dcb811f66595c0dfd1b65a435e920506f2203c0ca3841c2a5f8a2cb5",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "7df73b8e407cc08ce7babfd544ab4ad92a7f62cf73a21468d2bfae85c0508c7c"
+      "sha256": "732f64d874f90788c0199b0c19bfd9b3b6436e140114e53e462832532d74c61c"
     },
     {
       "path": "app/bootstrap.php",
@@ -29,7 +30,7 @@
     },
     {
       "path": "app/layout.php",
-      "sha256": "d411872362e759cd791a0630a506d2c3805fdce75392579ab548c79f59f2269e"
+      "sha256": "bec1cf104481bfcc47480766a714af790dfe11b0cc3781e63a8584844081bfa5"
     },
     {
       "path": "app/migrations.php",
@@ -41,11 +42,11 @@
     },
     {
       "path": "assets/app.css",
-      "sha256": "6f174c6d6857959d1e2cc2a19475c758871f92d9ee87d2e23d78f81f91c4f36b"
+      "sha256": "c96678f201834eb44c64d8df35683b4b1895ca5b7d7a65a6aba16bbcac064cb5"
     },
     {
       "path": "assets/site.css",
-      "sha256": "85e98855aa32b5e858e2ab11b7d2dd1db3823924a87f7b9ab2403fd0853152be"
+      "sha256": "98e97f0c9677324e78cbe0ea809fcfbde53b4c0aacc9a0ee1a6c6575b0825b91"
     },
     {
       "path": "database/schema.sql",
@@ -57,11 +58,11 @@
     },
     {
       "path": "public/assets/app.css",
-      "sha256": "6f174c6d6857959d1e2cc2a19475c758871f92d9ee87d2e23d78f81f91c4f36b"
+      "sha256": "c96678f201834eb44c64d8df35683b4b1895ca5b7d7a65a6aba16bbcac064cb5"
     },
     {
       "path": "public/assets/site.css",
-      "sha256": "85e98855aa32b5e858e2ab11b7d2dd1db3823924a87f7b9ab2403fd0853152be"
+      "sha256": "98e97f0c9677324e78cbe0ea809fcfbde53b4c0aacc9a0ee1a6c6575b0825b91"
     },
     {
       "path": "public/index.php",
@@ -69,7 +70,7 @@
     },
     {
       "path": "public/landing.php",
-      "sha256": "148a66cd7b318cb801d76ae489398a77c2d5d6b466c4d39a79df353efa84eaeb"
+      "sha256": "a652890724fe5cbae89bfbccef29d30612fea66bf3770e9d3f4f241f76a7e49d"
     }
   ]
 }
