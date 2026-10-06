@@ -1,0 +1,30 @@
+name: Inspect AdminIgreja auth
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-adminigreja-auth.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract auth
+        run: |
+          mkdir -p .inspectauth inspect-adminigreja-auth
+          cat adminigreja-updates/releases/v2.5.0.*.b64.txt | tr -d '\r\n' | base64 -d > .inspectauth/pkg.tgz
+          tar -xzf .inspectauth/pkg.tgz -C .inspectauth
+          cp .inspectauth/app/auth.php inspect-adminigreja-auth/auth.php
+          cp .inspectauth/app/db.php inspect-adminigreja-auth/db.php
+      - name: Save
+        run: |
+          git config user.name "AdminIgreja Inspect Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add inspect-adminigreja-auth
+          git commit -m "Inspect AdminIgreja auth" || exit 0
+          git push
