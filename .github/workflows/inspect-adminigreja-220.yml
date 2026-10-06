@@ -1,0 +1,38 @@
+name: Inspect AdminIgreja 2.2.0 updater
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-adminigreja-220.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reconstruct 2.2.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .inspect220 inspect-adminigreja-220
+          mkdir -p .inspect220 inspect-adminigreja-220
+          cat adminigreja-updates/releases/v2.2.0.p*.hex.txt | tr -d '\r\n' | xxd -r -p > .inspect220/v220.tar.gz
+          tar -xzf .inspect220/v220.tar.gz -C .inspect220
+          cp .inspect220/app/updater.php inspect-adminigreja-220/updater.php
+          cp .inspect220/VERSION inspect-adminigreja-220/VERSION
+          find .inspect220 -maxdepth 3 -type f | sed 's#^.inspect220/##' | sort > inspect-adminigreja-220/files.txt
+      - name: Commit inspection
+        shell: bash
+        run: |
+          git config user.name "AdminIgreja Inspect Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add inspect-adminigreja-220
+          git commit -m "Inspect AdminIgreja 2.2.0 updater" || exit 0
+          git push
