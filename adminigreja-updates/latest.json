@@ -1,22 +1,23 @@
 {
-  "version": "2.3.1",
+  "version": "2.4.1",
   "min_php": "8.0",
   "encoding": "base64",
   "parts": [
-    "releases/v2.3.1.01.b64.txt",
-    "releases/v2.3.1.02.b64.txt",
-    "releases/v2.3.1.03.b64.txt",
-    "releases/v2.3.1.04.b64.txt",
-    "releases/v2.3.1.05.b64.txt",
-    "releases/v2.3.1.06.b64.txt",
-    "releases/v2.3.1.07.b64.txt",
-    "releases/v2.3.1.08.b64.txt"
+    "releases/v2.4.1.01.b64.txt",
+    "releases/v2.4.1.02.b64.txt",
+    "releases/v2.4.1.03.b64.txt",
+    "releases/v2.4.1.04.b64.txt",
+    "releases/v2.4.1.05.b64.txt",
+    "releases/v2.4.1.06.b64.txt",
+    "releases/v2.4.1.07.b64.txt",
+    "releases/v2.4.1.08.b64.txt",
+    "releases/v2.4.1.09.b64.txt"
   ],
-  "sha256": "188e0dd5381f2f6e6d8268b70f81820037c0f5acfac15aa9cb86f455e6b911ae",
+  "sha256": "2338ee937093ce6e65a82495889f4830f54ab459ccbd9c0d1cfd6f0d2611183e",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "ad8650bc9057d9dfd809961b69dbad640c288d809fa44437d44d83d3b118c821"
+      "sha256": "2ad7b0c3f0ede58c3165b7a8a5479e890a758d39bfe8683eaef50ce6afad7232"
     },
     {
       "path": "app/bootstrap.php",
@@ -28,7 +29,7 @@
     },
     {
       "path": "app/layout.php",
-      "sha256": "a614abee46d342d1a78dc8123cc7664dc0a43b7d1d89d1664766d6e35c9cc285"
+      "sha256": "b85a001b8edf313fdfd024068955e5c1f362bc2d57ddf07d2a6d4b8b79c4dd28"
     },
     {
       "path": "app/migrations.php",
@@ -40,7 +41,7 @@
     },
     {
       "path": "assets/app.css",
-      "sha256": "9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"
+      "sha256": "a427ae95eeda58354163974a49c3bf31e6208263d9f9c58a02749b593ebccf3d"
     },
     {
       "path": "assets/site.css",
@@ -56,7 +57,7 @@
     },
     {
       "path": "public/assets/app.css",
-      "sha256": "9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"
+      "sha256": "a427ae95eeda58354163974a49c3bf31e6208263d9f9c58a02749b593ebccf3d"
     },
     {
       "path": "public/assets/site.css",
@@ -64,7 +65,7 @@
     },
     {
       "path": "public/index.php",
-      "sha256": "3d2b6f0707e386f19bfb75809fadd6839f97672bac23a7cb2151f3385a888be8"
+      "sha256": "1819ce8a19d0a3214425734a9302b900b0439760e0ab09874122c8e207454b8e"
     },
     {
       "path": "public/landing.php",
