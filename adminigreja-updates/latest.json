@@ -1,20 +1,22 @@
 {
-  "version": "2.2.1",
+  "version": "2.3.0",
   "min_php": "8.0",
   "encoding": "base64",
   "parts": [
-    "releases/v2.2.1.01.b64.txt",
-    "releases/v2.2.1.02.b64.txt",
-    "releases/v2.2.1.03.b64.txt",
-    "releases/v2.2.1.04.b64.txt",
-    "releases/v2.2.1.05.b64.txt",
-    "releases/v2.2.1.06.b64.txt"
+    "releases/v2.3.0.01.b64.txt",
+    "releases/v2.3.0.02.b64.txt",
+    "releases/v2.3.0.03.b64.txt",
+    "releases/v2.3.0.04.b64.txt",
+    "releases/v2.3.0.05.b64.txt",
+    "releases/v2.3.0.06.b64.txt",
+    "releases/v2.3.0.07.b64.txt",
+    "releases/v2.3.0.08.b64.txt"
   ],
-  "sha256": "f41ff6589af4d6cb73a027140fe207251ae43a18a0c5c2a219ec5b551d482fea",
+  "sha256": "c472a69938ddd83beab0042ea7cad0895a9de9ad53fb864a6f154b89d4685be4",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "fe650098093fad42070e8a2cacfb216a6c416af57bd26dd6ff479fef69f8bc71"
+      "sha256": "a42caf4a54bbbe27aa45b6efbc6356c5e299b19763e728b6cdb7201b02ebbe36"
     },
     {
       "path": "app/bootstrap.php",
@@ -41,16 +43,32 @@
       "sha256": "9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"
     },
     {
+      "path": "assets/site.css",
+      "sha256": "85e98855aa32b5e858e2ab11b7d2dd1db3823924a87f7b9ab2403fd0853152be"
+    },
+    {
+      "path": "database/schema.sql",
+      "sha256": "3fc578dc819c5703e1d47e5b2e44e3f4ad136276d55633d250e1ab3c265e1fb8"
+    },
+    {
+      "path": "index.php",
+      "sha256": "1edbb985354f7ca7e6dc2e12a1397d15ec355ce4b0f8d7a17e9789106c4c1e93"
+    },
+    {
       "path": "public/assets/app.css",
       "sha256": "9b7a70b342b1007cb9ff015e028ed5107dc8adfb0489c3a0fa4e56a8a7d663fc"
+    },
+    {
+      "path": "public/assets/site.css",
+      "sha256": "85e98855aa32b5e858e2ab11b7d2dd1db3823924a87f7b9ab2403fd0853152be"
     },
     {
       "path": "public/index.php",
       "sha256": "3d2b6f0707e386f19bfb75809fadd6839f97672bac23a7cb2151f3385a888be8"
     },
     {
-      "path": "database/schema.sql",
-      "sha256": "3fc578dc819c5703e1d47e5b2e44e3f4ad136276d55633d250e1ab3c265e1fb8"
+      "path": "public/landing.php",
+      "sha256": "c30d776dc820b19162a12db6a5bcdb4173cde0c0961d9b4b3185d422abb6f4ef"
     }
   ]
 }
