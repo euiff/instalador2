@@ -1,15 +1,15 @@
 {
-  "version": "2.1.2",
+  "version": "2.1.3",
   "min_php": "8.0",
   "encoding": "hex",
   "parts": [
-    "releases/v2.1.2.hex.txt"
+    "releases/v2.1.3.hex.txt"
   ],
-  "sha256": "803cb459db2766bb3269448fb0992e9d8711a22f052f17b5f4ab4a762728d0bf",
+  "sha256": "ffebc258f3e340eb5dcce5e4ca34b8704a1ae9a8d1ccb7637545a6455ac01fb0",
   "files": [
     {
       "path": "VERSION",
-      "sha256": "9f6271951edca02e0c8a669a79930626717b77f0443ad8a327b93a52e4194829"
+      "sha256": "eb01a4e8e8922406f15a22cadc3fae28d4f513afe11b4734788eb2ea73cf034e"
     },
     {
       "path": "public/index.php",
