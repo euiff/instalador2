@@ -1,21 +1,23 @@
 {
-  "version": "2.1.3",
+  "version": "2.2.0",
   "min_php": "8.0",
   "encoding": "hex",
   "parts": [
-    "releases/v2.1.3.01.hex.txt",
-    "releases/v2.1.3.02.hex.txt",
-    "releases/v2.1.3.03.hex.txt",
-    "releases/v2.1.3.04.hex.txt",
-    "releases/v2.1.3.05.hex.txt",
-    "releases/v2.1.3.06.hex.txt",
-    "releases/v2.1.3.07.hex.txt"
+    "releases/v2.2.0.p1.hex.txt",
+    "releases/v2.2.0.p2.hex.txt",
+    "releases/v2.2.0.p3.hex.txt",
+    "releases/v2.2.0.p4.hex.txt"
   ],
-  "sha256": "fafe9db6f4e0db5deb15e9310abf479bcf15a974b0510406b1f95267e65c1341",
+  "sha256": "052fd584e1596822f3427da12a1e7920765b76af70260ecc1a0f8f061998ac1b",
   "files": [
-    {"path":"VERSION","sha256":"eb01a4e8e8922406f15a22cadc3fae28d4f513afe11b4734788eb2ea73cf034e"},
-    {"path":"public/index.php","sha256":"af269f590bd7ab18340d5baef4cff0b42d2c486e7540fdbf246114d5187aad56"},
-    {"path":"assets/app.css","sha256":"4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"},
-    {"path":"public/assets/app.css","sha256":"4fdc7d7136351bec98864a09d40db8651369a18cf463285611fdcbdc4d52c205"}
+    {"path":"VERSION","sha256":"c4a2383a03bdb6739d16a0e24058e4b9c7da4e63d203e0be2f448868cc03c530"},
+    {"path":"app/files.php","sha256":"5f7057c35982ffef53eaf9382ddfb1f9f315ff0f9557ec90ca2cc48834d1b476"},
+    {"path":"app/layout.php","sha256":"f47aa232bc106672a5dfd350fbf4870ed55c43b41dde45b1b430e0f800835763"},
+    {"path":"app/migrations.php","sha256":"5b73ebe335519cc2377b919bee57fca77797dd1698323d6526d79b15ffd9127c"},
+    {"path":"app/pdf.php","sha256":"c689a8353f81a6097cb28de315c0e091922c9fa2aa54774fad62b511df6b8d1c"},
+    {"path":"assets/app.css","sha256":"502be316824117f290f288337d9064122971cbdde11a0e6e0feb395ac854d502"},
+    {"path":"public/assets/app.css","sha256":"502be316824117f290f288337d9064122971cbdde11a0e6e0feb395ac854d502"},
+    {"path":"public/index.php","sha256":"34c80b341670c2c3355d33a32066b0bc76af7811699b16ada0d7e24fead16614"},
+    {"path":"database/schema.sql","sha256":"3fc578dc819c5703e1d47e5b2e44e3f4ad136276d55633d250e1ab3c265e1fb8"}
   ]
 }
