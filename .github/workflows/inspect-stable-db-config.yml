@@ -1,0 +1,35 @@
+name: Inspect stable AdminIgreja database config
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-stable-db-config.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct stable 2.5.0 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat adminigreja-updates/releases/v2.5.0.*.b64.txt | tr -d '\r\n\t ' | base64 -d > /tmp/adminigreja-250.tar.gz
+          mkdir -p /tmp/adminigreja-250
+          tar -xzf /tmp/adminigreja-250.tar.gz -C /tmp/adminigreja-250
+          find /tmp/adminigreja-250 -maxdepth 3 -type f | sort | sed -n '1,120p'
+
+      - name: Show database configuration contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in /tmp/adminigreja-250/install.php /tmp/adminigreja-250/app/db.php /tmp/adminigreja-250/app/bootstrap.php; do
+            echo "===== $file ====="
+            if [ -f "$file" ]; then
+              sed -n '1,260p' "$file" | sed -E "s/(password|pass|secret|token)([^=]*=[[:space:]]*)'[^']*'/\1\2'[REDACTED]'/Ig"
+            else
+              echo "MISSING"
+            fi
+          done
