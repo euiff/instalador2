@@ -1,0 +1,57 @@
+name: Diagnose installed AdminIgreja 2.6 updater
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-adminigreja-260.yml'
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct exact 2.6.0 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat adminigreja-updates/releases/v2.6.0.*.b64.txt | tr -d '\r\n\t ' | base64 -d > /tmp/adminigreja-260.tar.gz
+          mkdir -p /tmp/adminigreja-260
+          tar -xzf /tmp/adminigreja-260.tar.gz -C /tmp/adminigreja-260
+          test -f /tmp/adminigreja-260/app/updater.php
+          echo "PACKAGE_SHA=$(sha256sum /tmp/adminigreja-260.tar.gz | awk '{print $1}')"
+          echo "UPDATER_SHA=$(sha256sum /tmp/adminigreja-260/app/updater.php | awk '{print $1}')"
+
+      - name: Show exact update channel and validation expression
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -nE 'UPDATE_CHANNEL_URL|UPDATE_REPO_LABEL|function remote_release|Manifesto de atualização inválido' /tmp/adminigreja-260/app/updater.php
+
+      - name: Fetch raw manifest exactly as updater does
+        shell: bash
+        run: |
+          set -euo pipefail
+          php <<'PHP'
+          <?php
+          require '/tmp/adminigreja-260/app/updater.php';
+          $ref=new ReflectionFunction('remote_release');
+          echo "updater file: ".$ref->getFileName()."\n";
+          echo "channel: ".UPDATE_CHANNEL_URL."\n";
+          $raw=update_http_get(update_url('latest.json').'?t='.time());
+          echo "raw_length=".strlen($raw)."\n";
+          echo "raw_sha256=".hash('sha256',$raw)."\n";
+          echo "raw_prefix=".substr($raw,0,300)."\n";
+          $decoded=json_decode($raw,true);
+          echo "json_error=".json_last_error_msg()."\n";
+          echo "is_array=".(is_array($decoded)?'yes':'no')."\n";
+          if(is_array($decoded)){
+              echo "version=".($decoded['version']??'')."\n";
+              echo "parts=".(is_array($decoded['parts']??null)?count($decoded['parts']):0)."\n";
+              echo "files=".(is_array($decoded['files']??null)?count($decoded['files']):0)."\n";
+              echo "sha256=".($decoded['sha256']??'')."\n";
+          }
+          $release=remote_release();
+          echo "REMOTE_RELEASE_OK version=".$release['version']." files=".count($release['files'])." parts=".count($release['parts'])."\n";
+          PHP
