@@ -1,0 +1,118 @@
+name: Publish validated PHP 3.0.0 bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-validated-php-300.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download validated bridge artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-099c-820e-a8a3-d55a5cd48080/raw?se=2026-10-07T21%3A14%3A20Z&sp=r&sv=2026-02-06&sr=b&scid=f80a5766-dc1c-5fda-a257-b15fb9f5e995&skoid=db6dad9e-03ee-465b-aef6-ce0f63a161dc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-07T13%3A15%3A38Z&ske=2026-10-08T13%3A15%3A38Z&sks=b&skv=2026-02-06&sig=tajqWNghYBKqTIHOpD6e/sVDlRTB/niXFBXIK8Rx8C0%3D' -o /tmp/bridge.zip
+          echo '88e26340ae1760365821a9d5b758101ee1b342b8c1b3bfd92b22b375388f5f73  /tmp/bridge.zip' | sha256sum -c -
+          rm -rf /tmp/bridge-src
+          mkdir -p /tmp/bridge-src
+          unzip -q /tmp/bridge.zip -d /tmp/bridge-src
+
+      - name: Validate and stage public channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import base64, hashlib, io, json, pathlib, shutil, tarfile
+
+          repo=pathlib.Path('.')
+          candidates=list(pathlib.Path('/tmp/bridge-src').rglob('latest.json'))
+          if len(candidates)!=1:
+              raise SystemExit(f'expected one latest.json, got {len(candidates)}')
+          src_latest=candidates[0]
+          src_root=src_latest.parent
+          m=json.loads(src_latest.read_text(encoding='utf-8'))
+
+          if m.get('version')!='3.0.0':
+              raise SystemExit('unexpected bridge version')
+          if not m.get('files') or not m.get('parts') or not m.get('sha256'):
+              raise SystemExit('bridge manifest incomplete')
+
+          encoded=''.join((src_root/p).read_text(encoding='utf-8').strip() for p in m['parts'])
+          gz=base64.b64decode(encoded,validate=True)
+          digest=hashlib.sha256(gz).hexdigest()
+          if digest.lower()!=str(m['sha256']).lower():
+              raise SystemExit(f'bridge package sha mismatch: {digest}')
+
+          hashes={}
+          with tarfile.open(fileobj=io.BytesIO(gz),mode='r:gz') as tf:
+              for member in tf.getmembers():
+                  if not member.isfile():
+                      continue
+                  fh=tf.extractfile(member)
+                  data=fh.read() if fh else b''
+                  hashes[member.name.replace('\\','/')]=hashlib.sha256(data).hexdigest()
+
+          critical={
+              'public/bootstrap.php':'8639d2b73440c8a65fffde4b2f585ebbbbc568cbfacdec4a526789fd9f4cde87',
+              'public/lib/LegacyDataMigrator.php':'02622b15242f2b299c8bd11c82a23782f385fc6a1452ff659bf59a6fe76fe439',
+              'public/updates/takeover.php':'5691b98038c5950e45b4e0222116a36f62fbb3de058f111f591a41c15e248010',
+              'public/lib/Auth.php':'188fc2f56f2ca7fb311340aa4cae52a713c9e07c36cc28e6ac13d92f2095ae01',
+              'public/users.php':'1ded8d1aa02c8d6dca52b0be94a9e4f3bfee5925a9b14147475d6a2a631a0d19',
+          }
+          for path,want in critical.items():
+              got=hashes.get(path)
+              if got!=want:
+                  raise SystemExit(f'critical mismatch {path}: {got}')
+
+          dst_root=repo/'adminigreja-updates'
+          dst_release=dst_root/'releases'
+          dst_release.mkdir(parents=True,exist_ok=True)
+
+          new_parts=[]
+          for idx,old in enumerate(m['parts'],1):
+              new=f'releases/v3.0.0-final.{idx:02d}.b64.txt'
+              shutil.copyfile(src_root/old,dst_root/new)
+              new_parts.append(new)
+
+          m['parts']=new_parts
+          (dst_root/'latest.json').write_text(
+              json.dumps(m,ensure_ascii=False,separators=(',',':'))+'\n',
+              encoding='utf-8'
+          )
+          print(f'prepared {len(new_parts)} parts, {len(m["files"])} files, package {digest}')
+          PY
+
+      - name: Revalidate staged public channel
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import base64, hashlib, json, pathlib
+          root=pathlib.Path('adminigreja-updates')
+          m=json.loads((root/'latest.json').read_text())
+          encoded=''.join((root/p).read_text().strip() for p in m['parts'])
+          gz=base64.b64decode(encoded,validate=True)
+          got=hashlib.sha256(gz).hexdigest()
+          if got.lower()!=m['sha256'].lower():
+              raise SystemExit('staged package checksum mismatch')
+          if len(m.get('files',[]))<90:
+              raise SystemExit('staged file manifest incomplete')
+          print('public channel validation ok')
+          PY
+
+      - name: Commit final public channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.0.0-final.*.b64.txt
+          git commit -m "Publish validated PHP 3.0.0 takeover bridge"
+          git push
