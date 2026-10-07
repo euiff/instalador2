@@ -1,0 +1,85 @@
+name: Repair AdminIgreja update manifest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/repair-adminigreja-manifest.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild and validate manifest
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import base64, gzip, hashlib, io, json, pathlib, tarfile
+
+          root=pathlib.Path('adminigreja-updates')
+          path=root/'latest.json'
+          m=json.loads(path.read_text(encoding='utf-8'))
+
+          required=('version','parts','sha256')
+          for key in required:
+              if not m.get(key):
+                  raise SystemExit(f'missing {key}')
+
+          encoded=''.join((root/p).read_text(encoding='utf-8').strip() for p in m['parts'])
+          gz=base64.b64decode(encoded, validate=True)
+          digest=hashlib.sha256(gz).hexdigest()
+          if digest.lower()!=str(m['sha256']).lower():
+              raise SystemExit(f'package sha mismatch: {digest}')
+
+          expected_critical={
+              'public/bootstrap.php':'8639d2b73440c8a65fffde4b2f585ebbbbc568cbfacdec4a526789fd9f4cde87',
+              'public/lib/LegacyDataMigrator.php':'02622b15242f2b299c8bd11c82a23782f385fc6a1452ff659bf59a6fe76fe439',
+              'public/updates/takeover.php':'5691b98038c5950e45b4e0222116a36f62fbb3de058f111f591a41c15e248010',
+              'public/lib/Auth.php':'188fc2f56f2ca7fb311340aa4cae52a713c9e07c36cc28e6ac13d92f2095ae01',
+              'public/users.php':'1ded8d1aa02c8d6dca52b0be94a9e4f3bfee5925a9b14147475d6a2a631a0d19',
+          }
+
+          files=[]
+          hashes={}
+          with tarfile.open(fileobj=io.BytesIO(gz),mode='r:gz') as tf:
+              for member in tf.getmembers():
+                  if not member.isfile():
+                      continue
+                  name=member.name.replace('\\','/')
+                  if not name or name.startswith('/') or '..' in pathlib.PurePosixPath(name).parts:
+                      raise SystemExit(f'unsafe tar path: {name}')
+                  fh=tf.extractfile(member)
+                  data=fh.read() if fh else b''
+                  sha=hashlib.sha256(data).hexdigest()
+                  hashes[name]=sha
+                  files.append({'path':name,'sha256':sha})
+
+          for name,want in expected_critical.items():
+              got=hashes.get(name)
+              if got!=want:
+                  raise SystemExit(f'critical file differs: {name} got={got} expected={want}')
+
+          files.sort(key=lambda x:x['path'])
+          m['files']=files
+          path.write_text(json.dumps(m,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          print(f"manifest repaired: {len(files)} files, package {digest}")
+          PY
+
+      - name: Commit repaired manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json
+          if git diff --cached --quiet; then
+            echo "Manifest already valid."
+            exit 0
+          fi
+          git commit -m "Repair AdminIgreja 3.0.0 update manifest"
+          git push
