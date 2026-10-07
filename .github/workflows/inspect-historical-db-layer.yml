@@ -1,0 +1,43 @@
+name: Inspect historical AdminIgreja database layer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-historical-db-layer.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct historical packages and inspect
+        shell: bash
+        run: |
+          set -euo pipefail
+          for v in 2.3.0 2.3.1 2.4.1 2.4.2; do
+            echo "===== VERSION $v ====="
+            rm -rf "/tmp/pkg-$v"
+            mkdir -p "/tmp/pkg-$v"
+            parts=(adminigreja-updates/releases/v${v}.*.b64.txt)
+            if [ ! -e "${parts[0]}" ]; then
+              echo "NO PARTS"
+              continue
+            fi
+            cat "${parts[@]}" | tr -d '\r\n\t ' | base64 -d > "/tmp/pkg-$v.tar.gz"
+            if ! tar -tzf "/tmp/pkg-$v.tar.gz" >/dev/null 2>&1; then
+              echo "INVALID PACKAGE"
+              continue
+            fi
+            tar -xzf "/tmp/pkg-$v.tar.gz" -C "/tmp/pkg-$v"
+            find "/tmp/pkg-$v" -maxdepth 2 -type f | sort | sed -n '1,120p'
+            for file in "/tmp/pkg-$v/install.php" "/tmp/pkg-$v/app/db.php" "/tmp/pkg-$v/app/bootstrap.php"; do
+              echo "--- $file ---"
+              if [ -f "$file" ]; then
+                sed -n '1,260p' "$file"
+              else
+                echo MISSING
+              fi
+            done
+          done
