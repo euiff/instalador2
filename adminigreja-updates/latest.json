@@ -1,1 +1,409 @@
-{"version":"3.0.0","min_php":"8.1","encoding":"base64","parts":["releases/v3.0.0-final.01.b64.txt","releases/v3.0.0-final.02.b64.txt","releases/v3.0.0-final.03.b64.txt","releases/v3.0.0-final.04.b64.txt","releases/v3.0.0-final.05.b64.txt","releases/v3.0.0-final.06.b64.txt","releases/v3.0.0-final.07.b64.txt","releases/v3.0.0-final.08.b64.txt","releases/v3.0.0-final.09.b64.txt","releases/v3.0.0-final.10.b64.txt","releases/v3.0.0-final.11.b64.txt","releases/v3.0.0-final.12.b64.txt","releases/v3.0.0-final.13.b64.txt","releases/v3.0.0-final.14.b64.txt","releases/v3.0.0-final.15.b64.txt","releases/v3.0.0-final.16.b64.txt","releases/v3.0.0-final.17.b64.txt","releases/v3.0.0-final.18.b64.txt"],"sha256":"73c94ea7d0df34214f0a17bc7ee21701fc2fa09675f07aabf9ab8f4452a449af","files":[{"path":".htaccess","sha256":"a8a1b56850ca61b6f3fb4b8920ff61b0788b1a754c56bdcc9446832738315689"},{"path":"VERSION","sha256":"2985be8b28d3ade858e8d8fb4bc22f565b1bf6020dff982dce141f7721b9999c"},{"path":"index.php","sha256":"991067b9013f9b33e458775a747d4b18d1e6930becd486cff4981fc98549dae7"},{"path":"public/.htaccess","sha256":"553dcb68ae8c6f7c7b3b9a46837dbc6ed19b7854f25ca3f83144764158531328"},{"path":"public/404.php","sha256":"abbd94068ae464bcef8ec4003358229cdc33735646d6917c272ca011e29504b6"},{"path":"public/RELEASE-3.0.0.md","sha256":"469daea78ce74051d41a38040c645fe52fe5a6915e8b35b7bd62ecc6255ce960"},{"path":"public/VERSION","sha256":"2985be8b28d3ade858e8d8fb4bc22f565b1bf6020dff982dce141f7721b9999c"},{"path":"public/api/generate-event-poster.php","sha256":"9207c9070e4bb60452f7d209d926340b106b951067aa8731bde791abf03f273a"},{"path":"public/api/generate-service-poster.php","sha256":"4ac446fb1926f9cd59fcbd93946befa3c6f751000000792ffdff08e5872ade65"},{"path":"public/api/whatsapp-webhook.php","sha256":"75a477d3d57a400522e79cece195659f666db3718b6e8ace6f79033f984d02fe"},{"path":"public/assets/app.css","sha256":"7b3eb027b19797e863fb27e0c211fd9685fcfe72d1222ef2b6de4da7867886d6"},{"path":"public/assets/public.css","sha256":"9f67560de26d6d157957ffa97a20885b6770da90698cbac1faae2691ebb48c35"},{"path":"public/bootstrap.php","sha256":"8639d2b73440c8a65fffde4b2f585ebbbbc568cbfacdec4a526789fd9f4cde87"},{"path":"public/bot-settings.php","sha256":"281c5590fe456098e14cae17f3bf67f9864c80f6914f800501907dcf78496893"},{"path":"public/cadastro.php","sha256":"2148151213052d00324c452de0114b1c8dd6c095b1b35dc4c8d2eb2e842801b5"},{"path":"public/config/database.example.php","sha256":"e4d5e16b5d005c240a7d392cdab0ed22bc4dd22fed9869bb6f71433e51493e9c"},{"path":"public/config/update.php","sha256":"4b98f5bc76509528014c4731bd66b1bbb996a1939025551e7eb48e2d6e40fad6"},{"path":"public/congregations.php","sha256":"da06dc441d61f125f198aa603a23f5661735027b20d87d5a3705697996930af7"},{"path":"public/cron.php","sha256":"bff4baed515fe48fb295b60440dfcae59a89d1b756577f556bddbde078e5b33e"},{"path":"public/dashboard.php","sha256":"d28667c59298b7cb3542d7375b5ebe8afa890f2960e5c22d63757efc24824450"},{"path":"public/database/001_core.sql","sha256":"5dae41ad3e6a0623193abd0748f27894ebc2f49e063ba06cf28090d9cc6d3d4b"},{"path":"public/database/002_finance_events.sql","sha256":"f5382fa7ab0927cf19a670885dd14cd9b95d19ca3f227e497cee0f4ac91fe882"},{"path":"public/database/003_bot_communications.sql","sha256":"842f2e8479d77b80549733169cfe8a0c5b25a9e7f57cbe19e0862bbd8927776e"},{"path":"public/database/004_engagement.sql","sha256":"c3333507aec3c4997c710a7b14576afbf1a987402d98097541ff5ffe37aca5df"},{"path":"public/database/005_documents.sql","sha256":"7b618834758596f7447625f5e443ea02e1e74fa82cf8207de045f68f58e23cc8"},{"path":"public/database/006_automation_history.sql","sha256":"12ff134715f4d530337b336d540ca871062cf176a397880e96a02d048f42f00e"},{"path":"public/database/007_contact_leads.sql","sha256":"5d28511b3122c02e7c1e3ae59981df434b5cb778e786570f9d72e59fabf82054"},{"path":"public/database/008_platform_master.sql","sha256":"00b82bdd4d2988fe7f754475649aa76b4b4d80bf8665db9f451781b26540ca7d"},{"path":"public/database/009_finance_ledger.sql","sha256":"ae6ab09e0a7f92f17350820ffa086953bd215e7a9bfba8178c6788c511c54457"},{"path":"public/database/010_legacy_import.sql","sha256":"08aba1ef7b0bd0070b6cac7abbe368967a7a720c49c9d959751ee56714a7b26a"},{"path":"public/database/011_pix_ledger.sql","sha256":"dff71aa173627820d77f9ec61576c2b59b514873b27cac14b555956f5839d4f4"},{"path":"public/database/012_payables_ledger.sql","sha256":"d3dd68d83158fa3258b3423f22754290d2f2db2aaac5163f6a1c64b3503fdb3c"},{"path":"public/database/013_transparency.sql","sha256":"8f27967b97448283afc1c672a02e46e898f7043b0da11b9ff271d09e8c8b3cab"},{"path":"public/database/014_church_permissions.sql","sha256":"fd6e0a64a79ecb7b0eb74e7350fff1479b267a078d3a1cd2eaee785924956357"},{"path":"public/event-registrations.php","sha256":"3887e1af1adce7d4f075cdb628ca677ee8c734d7cb63cddbe800d759dfbd9966"},{"path":"public/events.php","sha256":"d7096eda450badff7c07cb46868ed37c59370762b19b02ff814c70c271829df6"},{"path":"public/finance.php","sha256":"2d1ad8a1cc81100d8cd121eb892945682e0267ac0b0a4696963d53dd4235434d"},{"path":"public/group-moderation.php","sha256":"e1d6f5215532741389a5ff56fb5d66ae9d8693b657b2dd3d5d8fc319fd4fdf6f"},{"path":"public/index.php","sha256":"99f47cac4fdb3e37ffca7781a13d4231c40f7c4e655765f259345beaa77ce4cb"},{"path":"public/install.php","sha256":"55d3befda6b7ee9335eb2d5cbbc4bdec1d694d4ba0ecbc0dc93434e12b2da84b"},{"path":"public/landing.php","sha256":"0201d04187a3357293f1c021c7d807d43c3971441a48c166455231679db89492"},{"path":"public/lib/AdvancedCronTasks.php","sha256":"3a7480a986394f29a56e3532c620fb38b20068a18ed73802f1dd427e78b4c3b3"},{"path":"public/lib/AiClient.php","sha256":"2d9c693bb38d650dd866a1cb1b2200364e642715e25a2a87d97c05ef54b3a544"},{"path":"public/lib/Auth.php","sha256":"188fc2f56f2ca7fb311340aa4cae52a713c9e07c36cc28e6ac13d92f2095ae01"},{"path":"public/lib/BibleReadingService.php","sha256":"ca6f96f5365fbde7381d077fae1993b63835ecf4dee62ca333e49046b21035c2"},{"path":"public/lib/BotEditFlow.php","sha256":"575cc218e159f13429c5dc2ccecd22ebfd196dcc85f2160c08c5c643852b4bf1"},{"path":"public/lib/BotRegistrationFlow.php","sha256":"03882806e4aac18b9d09544148c84bea7945349a544795180577e8370e3a59f2"},{"path":"public/lib/BotWebhookHandler.php","sha256":"02823c947f5e69a12038d4d3946c7eb784ab7a03b479c693123a836a799857a3"},{"path":"public/lib/CronTasks.php","sha256":"11bbdafe040305d02bdaabd73112db81f210687e5189c5107293a01c27046c10"},{"path":"public/lib/DashboardService.php","sha256":"8f2f80927e72f0dd683de3ce1388e4893cc68fcb01c9fbdd1c315a632e3bcf2c"},{"path":"public/lib/Database.php","sha256":"2983e901059a8ff2f07206048a65995e5da36b906872698226c786a26542a7c2"},{"path":"public/lib/EvolutionClient.php","sha256":"25456a845be8ea46786e39695ad2ade9c02cc8df23711d09fe265581fc839d23"},{"path":"public/lib/GroupMessageHandler.php","sha256":"3117b81dd7ed0ae0b2317865bdb696bbe7455662bd427308346382f8c48826c6"},{"path":"public/lib/LegacyDataMigrator.php","sha256":"02622b15242f2b299c8bd11c82a23782f385fc6a1452ff659bf59a6fe76fe439"},{"path":"public/lib/NotificationService.php","sha256":"ed387eea82f2c131b71b51a53dff07db54cc0b427e6409efb92ae643e4f76d03"},{"path":"public/lib/PosterGenerator.php","sha256":"b1d68ca859d852e4101e6ae7b5f16cfe6557601c7e1960ef114ca94e5cdb02ba"},{"path":"public/lib/Schema.php","sha256":"61333e98cf216c4361cf5a01624c079eb604dcaed9986d38fa84ae77ad7f2768"},{"path":"public/lib/SpiritualFlow.php","sha256":"fd7275ad069e71ba8501379ba1c96af3b72087255ec16429b8cd10d1e5490f53"},{"path":"public/lib/TtsClient.php","sha256":"717ae57a32cbdebf3e612d0046f8a4b66845315265886ee8c65a59e91e7e78a5"},{"path":"public/lib/Updater.php","sha256":"25af7f413346528553d340fb4c7b0be7acd39ab36478e7f1adbafa4e649f9c07"},{"path":"public/lib/View.php","sha256":"d2d22c6aa97b78940ede32cf90183cc00126faa1a2c9e29fad40f335d292de7a"},{"path":"public/lib/helpers.php","sha256":"6cf43c70cdeed539e4745ec740599efe5e32bfebfcef7fe69ae7c305a245b279"},{"path":"public/login.php","sha256":"715fd9ee8f64dca30a1ea2fb5bf4faf9f0d41e2cd81ecf927bc836bc8e9afb3a"},{"path":"public/logout.php","sha256":"74d5ab590707630a925a4c4ddc1f62d274461a8c9664d406453c6144a9234a2d"},{"path":"public/logs.php","sha256":"2a568a2e8d0855919b312e2a7859f440dcda7996991b69db028510c1472d78a6"},{"path":"public/master.php","sha256":"c75f7d91988fdf07e6c0b462bc6501fff660bda50cf495c9d500e7407901fa8b"},{"path":"public/member-document.php","sha256":"03caff3977af288d75e3c0fa8e8a650aaf0db42c9d59623353abad593d56fb44"},{"path":"public/member-profile.php","sha256":"e92fe2c0beb44ec8a6404ed9ea3592cb2e11db93090e94e6ed05af615e9ba08d"},{"path":"public/members.php","sha256":"262493e55390ea905e20af6cd497ec64fa46abe1bdfd7cad878e9216ac4f73ad"},{"path":"public/messages.php","sha256":"a80aba9c5aaed88ce2f3f316733157d0017897b427cd184135cd4b89eff97b94"},{"path":"public/needs.php","sha256":"d2c1a9284e3c96c7c7e4a62c4b88292b629143f23d640cb4f64bebdd68f84781"},{"path":"public/onboarding.php","sha256":"ad362bc2bb9c7967c20e377f432c1a7b07fa9a2b2a2141bb2b21b15c5c30035c"},{"path":"public/payments.php","sha256":"22964ec6d17e2b1bfeda3986b0d64dd3a4a88160365d525a8eee9c65b919f9f0"},{"path":"public/polls.php","sha256":"cf69cce5be98e860fbcad4d104d9cde1856fada4c51c51f7eb6cb2a303189d33"},{"path":"public/prayer-clock.php","sha256":"6b01e5d3784b733b28c66d3dcfbaf979b42d0649e63bce37fba1b8ab8d7e72a3"},{"path":"public/prayers.php","sha256":"c2d9d7c625a1cce335242d87e35655a63111b26ea2faa690c7bd37e4719c28ed"},{"path":"public/pricing.php","sha256":"ca015b90573cc59ffca95a111e7968760cc6808e36461e0d4ac3d1c68703f3b2"},{"path":"public/raffles.php","sha256":"a69aef79253c537368dd5dc1b9cf56427a3082c12d9846b1b481fde4677e9f45"},{"path":"public/register.php","sha256":"772f0f3053b4bedae578d15e198c81a332a134f61ddb895815d8390d357278df"},{"path":"public/reports.php","sha256":"7aa2915d990cefc760b56392672d06b14fe0c5bbd989c4da3fdfbaa140bf8dd6"},{"path":"public/service-types.php","sha256":"afd2694cdaac5ade2ee9b9bef15bac16edd8effd676e941f3dd6aaa352ab3175"},{"path":"public/settings.php","sha256":"da3ae480574d074e96a8ea018fed83be9b6725fe3fee81333e4f81667771dc7f"},{"path":"public/switch-church.php","sha256":"62c8f7b9e0e5afe2e84a9e45de4bce83d33d714562cd8f614ba0083171796720"},{"path":"public/tools/build-legacy-bridge.php","sha256":"740dbe2907fd73477c5670c9871d0820364bc9be29e07c1602bef3074a15e37f"},{"path":"public/tools/build-manifest.php","sha256":"b6133e55586a9de66e86038f705ce33a9f6874a9f78b3b7760641c5f6483b54b"},{"path":"public/transparency.php","sha256":"eb91455fb18118286ddb6682a20b2bb8396c0765cd7ead617f49c9d46d0d8961"},{"path":"public/updates.php","sha256":"ccfac4b993f49c595db8c18d9eeced3331c8cce280c13873d9cf1f98c9974a44"},{"path":"public/updates/TAKEOVER-ESCALADEPROPOSITO.md","sha256":"8cb7ae7f35d8ba332349e5fb36100a3b1e91ad6841e0c25da13505b30a417c6f"},{"path":"public/updates/delete-list.json","sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"},{"path":"public/updates/manifest.json","sha256":"13b6b8c69f78659aad01e3df82049abeb8f5941b63c06938690ad9f179e8f8b4"},{"path":"public/updates/migrations/0.2.0.sql","sha256":"95bf1eae513900b31b5f8071bcd59e689123b87a3a6474881f5aac4484f537f8"},{"path":"public/updates/takeover.php","sha256":"5691b98038c5950e45b4e0222116a36f62fbb3de058f111f591a41c15e248010"},{"path":"public/users.php","sha256":"1ded8d1aa02c8d6dca52b0be94a9e4f3bfee5925a9b14147475d6a2a631a0d19"},{"path":"public/verify.php","sha256":"bc30f0c768f25caa71bd70685ec1a5a42812c7969ff224b1393c4ce23acf5ed7"}]}
+{
+    "version": "3.0.2",
+    "min_php": "8.1",
+    "encoding": "base64",
+    "parts": [
+        "releases/v3.0.2.01.b64.txt",
+        "releases/v3.0.2.02.b64.txt",
+        "releases/v3.0.2.03.b64.txt",
+        "releases/v3.0.2.04.b64.txt",
+        "releases/v3.0.2.05.b64.txt",
+        "releases/v3.0.2.06.b64.txt",
+        "releases/v3.0.2.07.b64.txt",
+        "releases/v3.0.2.08.b64.txt",
+        "releases/v3.0.2.09.b64.txt",
+        "releases/v3.0.2.10.b64.txt",
+        "releases/v3.0.2.11.b64.txt",
+        "releases/v3.0.2.12.b64.txt",
+        "releases/v3.0.2.13.b64.txt",
+        "releases/v3.0.2.14.b64.txt",
+        "releases/v3.0.2.15.b64.txt",
+        "releases/v3.0.2.16.b64.txt",
+        "releases/v3.0.2.17.b64.txt",
+        "releases/v3.0.2.18.b64.txt",
+        "releases/v3.0.2.19.b64.txt"
+    ],
+    "sha256": "4dba88a0e78e4369067b933efa8928370e34be3012c6b6b146465993f5e24857",
+    "files": [
+        {
+            "path": ".htaccess",
+            "sha256": "a8a1b56850ca61b6f3fb4b8920ff61b0788b1a754c56bdcc9446832738315689"
+        },
+        {
+            "path": "VERSION",
+            "sha256": "3fc0bf8d7ddbfe77eb4074c0b03d6567d7874a25ea4144aadea6686fcd5f6feb"
+        },
+        {
+            "path": "index.php",
+            "sha256": "991067b9013f9b33e458775a747d4b18d1e6930becd486cff4981fc98549dae7"
+        },
+        {
+            "path": "public/.htaccess",
+            "sha256": "553dcb68ae8c6f7c7b3b9a46837dbc6ed19b7854f25ca3f83144764158531328"
+        },
+        {
+            "path": "public/404.php",
+            "sha256": "abbd94068ae464bcef8ec4003358229cdc33735646d6917c272ca011e29504b6"
+        },
+        {
+            "path": "public/RELEASE-3.0.0.md",
+            "sha256": "469daea78ce74051d41a38040c645fe52fe5a6915e8b35b7bd62ecc6255ce960"
+        },
+        {
+            "path": "public/VERSION",
+            "sha256": "3fc0bf8d7ddbfe77eb4074c0b03d6567d7874a25ea4144aadea6686fcd5f6feb"
+        },
+        {
+            "path": "public/api/generate-event-poster.php",
+            "sha256": "9207c9070e4bb60452f7d209d926340b106b951067aa8731bde791abf03f273a"
+        },
+        {
+            "path": "public/api/generate-service-poster.php",
+            "sha256": "4ac446fb1926f9cd59fcbd93946befa3c6f751000000792ffdff08e5872ade65"
+        },
+        {
+            "path": "public/api/whatsapp-webhook.php",
+            "sha256": "bfa44a55e88142b6a9420e89a5bba00b6453c2ee2d6007341b42510081101373"
+        },
+        {
+            "path": "public/assets/app.css",
+            "sha256": "c2affdb6c4b5667b6c49b3855a5b5151c982c61c9f53ab67706396938fe4d4a4"
+        },
+        {
+            "path": "public/assets/public.css",
+            "sha256": "9f67560de26d6d157957ffa97a20885b6770da90698cbac1faae2691ebb48c35"
+        },
+        {
+            "path": "public/bootstrap.php",
+            "sha256": "7ad5011ce292eec5e6a1925d3923032c918d2a015ae63e5559780bff5341e458"
+        },
+        {
+            "path": "public/bot-settings.php",
+            "sha256": "00663a1be1285ab829eee2493c895040d52bc3277e2a7f4a7d17483537663ad9"
+        },
+        {
+            "path": "public/cadastro.php",
+            "sha256": "2148151213052d00324c452de0114b1c8dd6c095b1b35dc4c8d2eb2e842801b5"
+        },
+        {
+            "path": "public/config/database.example.php",
+            "sha256": "e4d5e16b5d005c240a7d392cdab0ed22bc4dd22fed9869bb6f71433e51493e9c"
+        },
+        {
+            "path": "public/config/update.php",
+            "sha256": "b1486590f17f2f3a3f89fd8342b961ad404fdc7a3cc94c953a8d2e3bf6956e6f"
+        },
+        {
+            "path": "public/congregations.php",
+            "sha256": "da06dc441d61f125f198aa603a23f5661735027b20d87d5a3705697996930af7"
+        },
+        {
+            "path": "public/cron.php",
+            "sha256": "bff4baed515fe48fb295b60440dfcae59a89d1b756577f556bddbde078e5b33e"
+        },
+        {
+            "path": "public/dashboard.php",
+            "sha256": "d28667c59298b7cb3542d7375b5ebe8afa890f2960e5c22d63757efc24824450"
+        },
+        {
+            "path": "public/database/001_core.sql",
+            "sha256": "5dae41ad3e6a0623193abd0748f27894ebc2f49e063ba06cf28090d9cc6d3d4b"
+        },
+        {
+            "path": "public/database/002_finance_events.sql",
+            "sha256": "f5382fa7ab0927cf19a670885dd14cd9b95d19ca3f227e497cee0f4ac91fe882"
+        },
+        {
+            "path": "public/database/003_bot_communications.sql",
+            "sha256": "842f2e8479d77b80549733169cfe8a0c5b25a9e7f57cbe19e0862bbd8927776e"
+        },
+        {
+            "path": "public/database/004_engagement.sql",
+            "sha256": "c3333507aec3c4997c710a7b14576afbf1a987402d98097541ff5ffe37aca5df"
+        },
+        {
+            "path": "public/database/005_documents.sql",
+            "sha256": "7b618834758596f7447625f5e443ea02e1e74fa82cf8207de045f68f58e23cc8"
+        },
+        {
+            "path": "public/database/006_automation_history.sql",
+            "sha256": "12ff134715f4d530337b336d540ca871062cf176a397880e96a02d048f42f00e"
+        },
+        {
+            "path": "public/database/007_contact_leads.sql",
+            "sha256": "5d28511b3122c02e7c1e3ae59981df434b5cb778e786570f9d72e59fabf82054"
+        },
+        {
+            "path": "public/database/008_platform_master.sql",
+            "sha256": "00b82bdd4d2988fe7f754475649aa76b4b4d80bf8665db9f451781b26540ca7d"
+        },
+        {
+            "path": "public/database/009_finance_ledger.sql",
+            "sha256": "ae6ab09e0a7f92f17350820ffa086953bd215e7a9bfba8178c6788c511c54457"
+        },
+        {
+            "path": "public/database/010_legacy_import.sql",
+            "sha256": "08aba1ef7b0bd0070b6cac7abbe368967a7a720c49c9d959751ee56714a7b26a"
+        },
+        {
+            "path": "public/database/011_pix_ledger.sql",
+            "sha256": "dff71aa173627820d77f9ec61576c2b59b514873b27cac14b555956f5839d4f4"
+        },
+        {
+            "path": "public/database/012_payables_ledger.sql",
+            "sha256": "d3dd68d83158fa3258b3423f22754290d2f2db2aaac5163f6a1c64b3503fdb3c"
+        },
+        {
+            "path": "public/database/013_transparency.sql",
+            "sha256": "8f27967b97448283afc1c672a02e46e898f7043b0da11b9ff271d09e8c8b3cab"
+        },
+        {
+            "path": "public/database/014_church_permissions.sql",
+            "sha256": "fd6e0a64a79ecb7b0eb74e7350fff1479b267a078d3a1cd2eaee785924956357"
+        },
+        {
+            "path": "public/database/015_whatsapp_webhook_security.sql",
+            "sha256": "935a8acee70bbf245488cde2c316daef4e274979849a7b2da2b7bf852b413350"
+        },
+        {
+            "path": "public/event-registrations.php",
+            "sha256": "3887e1af1adce7d4f075cdb628ca677ee8c734d7cb63cddbe800d759dfbd9966"
+        },
+        {
+            "path": "public/events.php",
+            "sha256": "d7096eda450badff7c07cb46868ed37c59370762b19b02ff814c70c271829df6"
+        },
+        {
+            "path": "public/finance.php",
+            "sha256": "2d1ad8a1cc81100d8cd121eb892945682e0267ac0b0a4696963d53dd4235434d"
+        },
+        {
+            "path": "public/group-moderation.php",
+            "sha256": "e1d6f5215532741389a5ff56fb5d66ae9d8693b657b2dd3d5d8fc319fd4fdf6f"
+        },
+        {
+            "path": "public/index.php",
+            "sha256": "99f47cac4fdb3e37ffca7781a13d4231c40f7c4e655765f259345beaa77ce4cb"
+        },
+        {
+            "path": "public/install.php",
+            "sha256": "8a83f5403a46e75dc62a18bcd32241c97ca77f1f516fe25380b0b879981d8f90"
+        },
+        {
+            "path": "public/landing.php",
+            "sha256": "0201d04187a3357293f1c021c7d807d43c3971441a48c166455231679db89492"
+        },
+        {
+            "path": "public/lib/AdvancedCronTasks.php",
+            "sha256": "3a7480a986394f29a56e3532c620fb38b20068a18ed73802f1dd427e78b4c3b3"
+        },
+        {
+            "path": "public/lib/AiClient.php",
+            "sha256": "2d9c693bb38d650dd866a1cb1b2200364e642715e25a2a87d97c05ef54b3a544"
+        },
+        {
+            "path": "public/lib/Auth.php",
+            "sha256": "188fc2f56f2ca7fb311340aa4cae52a713c9e07c36cc28e6ac13d92f2095ae01"
+        },
+        {
+            "path": "public/lib/BibleReadingService.php",
+            "sha256": "ca6f96f5365fbde7381d077fae1993b63835ecf4dee62ca333e49046b21035c2"
+        },
+        {
+            "path": "public/lib/BotEditFlow.php",
+            "sha256": "575cc218e159f13429c5dc2ccecd22ebfd196dcc85f2160c08c5c643852b4bf1"
+        },
+        {
+            "path": "public/lib/BotRegistrationFlow.php",
+            "sha256": "03882806e4aac18b9d09544148c84bea7945349a544795180577e8370e3a59f2"
+        },
+        {
+            "path": "public/lib/BotWebhookHandler.php",
+            "sha256": "02823c947f5e69a12038d4d3946c7eb784ab7a03b479c693123a836a799857a3"
+        },
+        {
+            "path": "public/lib/CronTasks.php",
+            "sha256": "11bbdafe040305d02bdaabd73112db81f210687e5189c5107293a01c27046c10"
+        },
+        {
+            "path": "public/lib/DashboardService.php",
+            "sha256": "8f2f80927e72f0dd683de3ce1388e4893cc68fcb01c9fbdd1c315a632e3bcf2c"
+        },
+        {
+            "path": "public/lib/Database.php",
+            "sha256": "2983e901059a8ff2f07206048a65995e5da36b906872698226c786a26542a7c2"
+        },
+        {
+            "path": "public/lib/EvolutionClient.php",
+            "sha256": "678ad541cb004f20c3fb868e712300fdbcad338adc584293e770e6839a3ca0cf"
+        },
+        {
+            "path": "public/lib/GroupMessageHandler.php",
+            "sha256": "3117b81dd7ed0ae0b2317865bdb696bbe7455662bd427308346382f8c48826c6"
+        },
+        {
+            "path": "public/lib/LegacyDataMigrator.php",
+            "sha256": "02622b15242f2b299c8bd11c82a23782f385fc6a1452ff659bf59a6fe76fe439"
+        },
+        {
+            "path": "public/lib/NotificationService.php",
+            "sha256": "ed387eea82f2c131b71b51a53dff07db54cc0b427e6409efb92ae643e4f76d03"
+        },
+        {
+            "path": "public/lib/PosterGenerator.php",
+            "sha256": "b1d68ca859d852e4101e6ae7b5f16cfe6557601c7e1960ef114ca94e5cdb02ba"
+        },
+        {
+            "path": "public/lib/Schema.php",
+            "sha256": "61333e98cf216c4361cf5a01624c079eb604dcaed9986d38fa84ae77ad7f2768"
+        },
+        {
+            "path": "public/lib/SpiritualFlow.php",
+            "sha256": "fd7275ad069e71ba8501379ba1c96af3b72087255ec16429b8cd10d1e5490f53"
+        },
+        {
+            "path": "public/lib/TtsClient.php",
+            "sha256": "717ae57a32cbdebf3e612d0046f8a4b66845315265886ee8c65a59e91e7e78a5"
+        },
+        {
+            "path": "public/lib/Updater.php",
+            "sha256": "b0572e14f6169f409f0031a2049d7f6ce4ff332295ca747d684510c3cc92ff46"
+        },
+        {
+            "path": "public/lib/View.php",
+            "sha256": "24e4803dfa8a7e3d53f26a8c172df5fb9abc345c2bf1fe447c36f5a39426d9c9"
+        },
+        {
+            "path": "public/lib/helpers.php",
+            "sha256": "6cf43c70cdeed539e4745ec740599efe5e32bfebfcef7fe69ae7c305a245b279"
+        },
+        {
+            "path": "public/login.php",
+            "sha256": "715fd9ee8f64dca30a1ea2fb5bf4faf9f0d41e2cd81ecf927bc836bc8e9afb3a"
+        },
+        {
+            "path": "public/logout.php",
+            "sha256": "74d5ab590707630a925a4c4ddc1f62d274461a8c9664d406453c6144a9234a2d"
+        },
+        {
+            "path": "public/logs.php",
+            "sha256": "2a568a2e8d0855919b312e2a7859f440dcda7996991b69db028510c1472d78a6"
+        },
+        {
+            "path": "public/master.php",
+            "sha256": "c75f7d91988fdf07e6c0b462bc6501fff660bda50cf495c9d500e7407901fa8b"
+        },
+        {
+            "path": "public/member-document.php",
+            "sha256": "03caff3977af288d75e3c0fa8e8a650aaf0db42c9d59623353abad593d56fb44"
+        },
+        {
+            "path": "public/member-profile.php",
+            "sha256": "e92fe2c0beb44ec8a6404ed9ea3592cb2e11db93090e94e6ed05af615e9ba08d"
+        },
+        {
+            "path": "public/members.php",
+            "sha256": "262493e55390ea905e20af6cd497ec64fa46abe1bdfd7cad878e9216ac4f73ad"
+        },
+        {
+            "path": "public/messages.php",
+            "sha256": "a80aba9c5aaed88ce2f3f316733157d0017897b427cd184135cd4b89eff97b94"
+        },
+        {
+            "path": "public/needs.php",
+            "sha256": "d2c1a9284e3c96c7c7e4a62c4b88292b629143f23d640cb4f64bebdd68f84781"
+        },
+        {
+            "path": "public/onboarding.php",
+            "sha256": "ad362bc2bb9c7967c20e377f432c1a7b07fa9a2b2a2141bb2b21b15c5c30035c"
+        },
+        {
+            "path": "public/payments.php",
+            "sha256": "22964ec6d17e2b1bfeda3986b0d64dd3a4a88160365d525a8eee9c65b919f9f0"
+        },
+        {
+            "path": "public/polls.php",
+            "sha256": "cf69cce5be98e860fbcad4d104d9cde1856fada4c51c51f7eb6cb2a303189d33"
+        },
+        {
+            "path": "public/prayer-clock.php",
+            "sha256": "6b01e5d3784b733b28c66d3dcfbaf979b42d0649e63bce37fba1b8ab8d7e72a3"
+        },
+        {
+            "path": "public/prayers.php",
+            "sha256": "c2d9d7c625a1cce335242d87e35655a63111b26ea2faa690c7bd37e4719c28ed"
+        },
+        {
+            "path": "public/pricing.php",
+            "sha256": "ca015b90573cc59ffca95a111e7968760cc6808e36461e0d4ac3d1c68703f3b2"
+        },
+        {
+            "path": "public/raffles.php",
+            "sha256": "a69aef79253c537368dd5dc1b9cf56427a3082c12d9846b1b481fde4677e9f45"
+        },
+        {
+            "path": "public/register.php",
+            "sha256": "772f0f3053b4bedae578d15e198c81a332a134f61ddb895815d8390d357278df"
+        },
+        {
+            "path": "public/reports.php",
+            "sha256": "7aa2915d990cefc760b56392672d06b14fe0c5bbd989c4da3fdfbaa140bf8dd6"
+        },
+        {
+            "path": "public/service-types.php",
+            "sha256": "afd2694cdaac5ade2ee9b9bef15bac16edd8effd676e941f3dd6aaa352ab3175"
+        },
+        {
+            "path": "public/settings.php",
+            "sha256": "bbc20a544b212309d44fe0c9aeda3bcd1b4bc3df600078b7850a96007138d01b"
+        },
+        {
+            "path": "public/switch-church.php",
+            "sha256": "62c8f7b9e0e5afe2e84a9e45de4bce83d33d714562cd8f614ba0083171796720"
+        },
+        {
+            "path": "public/tools/build-legacy-bridge.php",
+            "sha256": "740dbe2907fd73477c5670c9871d0820364bc9be29e07c1602bef3074a15e37f"
+        },
+        {
+            "path": "public/tools/build-manifest.php",
+            "sha256": "b6133e55586a9de66e86038f705ce33a9f6874a9f78b3b7760641c5f6483b54b"
+        },
+        {
+            "path": "public/transparency.php",
+            "sha256": "eb91455fb18118286ddb6682a20b2bb8396c0765cd7ead617f49c9d46d0d8961"
+        },
+        {
+            "path": "public/updates.php",
+            "sha256": "2eb45bcc7781ca5165ed2f771d32e40867cdadfb1b91aceeea71144ae2c29dfa"
+        },
+        {
+            "path": "public/updates/TAKEOVER-ESCALADEPROPOSITO.md",
+            "sha256": "8cb7ae7f35d8ba332349e5fb36100a3b1e91ad6841e0c25da13505b30a417c6f"
+        },
+        {
+            "path": "public/updates/delete-list.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+            "path": "public/updates/manifest.json",
+            "sha256": "3c1b862b3615dcdd100a5b61cf88c01a81bb639b93e8acc87854a383ec6bccf5"
+        },
+        {
+            "path": "public/updates/migrations/0.2.0.sql",
+            "sha256": "95bf1eae513900b31b5f8071bcd59e689123b87a3a6474881f5aac4484f537f8"
+        },
+        {
+            "path": "public/updates/takeover.php",
+            "sha256": "5987555d2e1a98e7086fd4c0fd3fe8d2a2ffeb0bb5f1b1c4ab9451bc3f7a0009"
+        },
+        {
+            "path": "public/users.php",
+            "sha256": "1ded8d1aa02c8d6dca52b0be94a9e4f3bfee5925a9b14147475d6a2a631a0d19"
+        },
+        {
+            "path": "public/verify.php",
+            "sha256": "bc30f0c768f25caa71bd70685ec1a5a42812c7969ff224b1393c4ce23acf5ed7"
+        }
+    ]
+}
