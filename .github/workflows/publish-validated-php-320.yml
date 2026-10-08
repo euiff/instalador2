@@ -19,8 +19,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -L --fail --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-44e4-820e-b348-33ab3b4db9c1/raw?se=2026-10-08T01%3A45%3A05Z&sp=r&sv=2026-02-06&sr=b&scid=9353fd42-df60-50f3-9946-05cb61a496e1&skoid=db6dad9e-03ee-465b-aef6-ce0f63a161dc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-07T13%3A16%3A21Z&ske=2026-10-08T13%3A16%3A21Z&sks=b&skv=2026-02-06&sig=ImBJV2Czupexc%2BL7L1swJRgOh3PKrvIyg0%2BFdtW7V18%3D' -o /tmp/bridge320.zip
-          echo 'fc1729e740a35c8cc0dc61013167231b3a51eec296887514588f62815615d188  /tmp/bridge320.zip' | sha256sum -c -
+          curl -L --fail --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-b21c-820e-b5aa-e2aa7671fb5e/raw?se=2026-10-08T08%3A44%3A39Z&sp=r&sv=2026-02-06&sr=b&scid=bf673db7-80ed-5e4c-98e6-6464d6385aff&skoid=db6dad9e-03ee-465b-aef6-ce0f63a161dc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-07T23%3A46%3A52Z&ske=2026-10-08T23%3A46%3A52Z&sks=b&skv=2026-02-06&sig=wqsq9VGZTneZgWuPGhJsI6wQg5nOoQYP%2BO2xgclycP4%3D' -o /tmp/bridge320.zip
+          echo 'a1b5db05302a35d6ff83c27f41560e29384231748b93395f9cfabe14388725b4  /tmp/bridge320.zip' | sha256sum -c -
           rm -rf /tmp/bridge320
           mkdir -p /tmp/bridge320
           unzip -q /tmp/bridge320.zip -d /tmp/bridge320
@@ -41,15 +41,15 @@ jobs:
 
           if m.get('version')!='3.2.0':
               raise SystemExit(f"unexpected version: {m.get('version')}")
-          if len(m.get('parts',[]))!=26:
+          if len(m.get('parts',[]))!=28:
               raise SystemExit('unexpected part count')
-          if len(m.get('files',[]))!=111:
+          if len(m.get('files',[]))!=119:
               raise SystemExit('unexpected file count')
 
           encoded=''.join((src/p).read_text(encoding='utf-8').strip() for p in m['parts'])
           gz=base64.b64decode(encoded,validate=True)
           got=hashlib.sha256(gz).hexdigest()
-          if got!='41519cd979cc1e56a74a85628178f09f2be55f067fa5c5a21e35219e7e2085fd':
+          if got!='3ef389b7822e4962c9d7d1674aa4853825899f6125d6e826be97a4b7db0a40ba':
               raise SystemExit(f'package sha mismatch: {got}')
           if got.lower()!=str(m['sha256']).lower():
               raise SystemExit('manifest package sha mismatch')
@@ -57,14 +57,19 @@ jobs:
           paths={f.get('path'):f.get('sha256') for f in m['files'] if isinstance(f,dict)}
           required=[
               'public/VERSION',
-              'public/finance.php',
-              'public/finance-document.php',
-              'public/report.php',
-              'public/lib/SimplePdf.php',
-              'public/lib/UploadService.php',
+              'public/CHANGELOG.md',
+              'public/bible.php',
+              'public/documents.php',
+              'public/member-document-pdf.php',
+              'public/lib/BotBibleFlow.php',
+              'public/lib/BotEventFlow.php',
+              'public/lib/BotDocumentFlow.php',
+              'public/lib/MemberDocumentService.php',
               'public/lib/EngagementNotificationService.php',
-              'public/lib/GroupBroadcastService.php',
-              'public/lib/EvolutionClient.php',
+              'public/lib/UploadService.php',
+              'public/lib/SimplePdf.php',
+              'public/finance.php',
+              'public/report.php',
               'public/prayer-clock.php',
               'public/raffles.php',
               'public/events.php',
@@ -74,7 +79,9 @@ jobs:
           for path in required:
               if path not in paths:
                   raise SystemExit(f'missing required file {path}')
-          print('bridge 3.2.0 validated')
+          if 'public/config/database.php' in paths:
+              raise SystemExit('local database config leaked into bridge')
+          print('final bridge 3.2.0 validated')
           PY
 
       - name: Stage public update channel
@@ -95,10 +102,11 @@ jobs:
           gz=base64.b64decode(encoded,validate=True)
           got=hashlib.sha256(gz).hexdigest()
           assert m['version']=='3.2.0'
-          assert len(m['parts'])==26
-          assert len(m['files'])==111
+          assert len(m['parts'])==28
+          assert len(m['files'])==119
+          assert got=='3ef389b7822e4962c9d7d1674aa4853825899f6125d6e826be97a4b7db0a40ba'
           assert got==m['sha256'].lower()
-          print('staged channel ok',got)
+          print('final staged channel ok',got)
           PY
 
       - name: Commit public channel
@@ -108,5 +116,5 @@ jobs:
           git config user.name "AdminIgreja Update Bot"
           git config user.email "actions@users.noreply.github.com"
           git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.0.*.b64.txt
-          git commit -m "Publish Igreja Master 3.2.0 update channel"
+          git commit -m "Refresh Igreja Master 3.2.0 final update channel"
           git push
