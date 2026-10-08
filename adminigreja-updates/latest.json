@@ -6,7 +6,7 @@
         "releases/v3.2.6.01.b64.txt",
         "releases/v3.2.6.02.b64.txt"
     ],
-    "sha256": "1d8c3dba277a978f76180ae59449639326c862a8f4ecc7786a438f240331e1d4",
+    "sha256": "77dc6a36d1b208430edaf0a927db0028b6fc9d84f7fcebf5ba7b47ba7c775493",
     "files": [
         {
             "path": "public/member-document.php",
