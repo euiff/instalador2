@@ -25,7 +25,20 @@ jobs:
           echo "360f414e8aebc82370207ce0eb2f8385dbee244c2da55ea1fe36baac9e82558a  /tmp/adminigreja-3.2.2.zip" | sha256sum -c -
           rm -rf /tmp/adminigreja-322
           mkdir -p /tmp/adminigreja-322
-          unzip -q /tmp/adminigreja-3.2.2.zip -d /tmp/adminigreja-322
+          file /tmp/adminigreja-3.2.2.zip
+          xxd -l 64 /tmp/adminigreja-3.2.2.zip || true
+          if unzip -tq /tmp/adminigreja-3.2.2.zip >/dev/null 2>&1; then
+            unzip -q /tmp/adminigreja-3.2.2.zip -d /tmp/adminigreja-322
+          elif tar -tf /tmp/adminigreja-3.2.2.zip >/dev/null 2>&1; then
+            tar -xf /tmp/adminigreja-3.2.2.zip -C /tmp/adminigreja-322
+          elif gzip -t /tmp/adminigreja-3.2.2.zip >/dev/null 2>&1; then
+            gzip -dc /tmp/adminigreja-3.2.2.zip > /tmp/adminigreja-3.2.2.inner
+            file /tmp/adminigreja-3.2.2.inner
+            tar -xf /tmp/adminigreja-3.2.2.inner -C /tmp/adminigreja-322
+          else
+            echo "Unknown package format"
+            exit 12
+          fi
 
       - name: Publish current card-related source to work branch
         shell: bash
