@@ -98,9 +98,11 @@ jobs:
           cd channel
           git config user.name "AdminIgreja Update Bot"
           git config user.email "actions@github.com"
-          git pull --rebase origin main
           git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.5.*.b64.txt
           git commit -m "Publish AdminIgreja 3.2.5 logo upload fix"
+          git pull --rebase origin main
           git push origin main
 
 # trigger publish 3.2.5
+
+# retry publish order fix
