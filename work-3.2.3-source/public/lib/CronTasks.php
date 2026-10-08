@@ -171,10 +171,17 @@ final class CronTasks
 
             foreach($q->fetchAll() as $poll){
                 $opts=json_decode((string)$poll['options'],true)?:[];
-                $lines=['📊 *Enquete*',trim((string)$poll['question'])];
+                $lines=['📊 *ENQUETE*','', '❓ *'.trim((string)$poll['question']).'*',''];
                 foreach($opts as $i=>$opt){
                     $lines[]='*'.($i+1).'.* '.(is_array($opt)?($opt['text']??json_encode($opt)):$opt);
                 }
+                if(!empty($poll['validity'])){
+                    $lines[]='';
+                    $lines[]='⏳ Validade: *'.trim((string)$poll['validity']).'*';
+                }
+                $lines[]='';
+                $lines[]='🗳️ *COMO VOTAR:* responda neste grupo com *VOTO 1*, *VOTO 2* e assim por diante.';
+                $lines[]='Seu voto será salvo. Se votar novamente, o voto anterior será substituído.';
                 $msg=implode("\n",$lines);
                 $ok=0;
                 $errorMessage=null;
