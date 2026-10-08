@@ -1,5 +1,15 @@
 # Changelog · Igreja Master
 
+## 3.2.7
+
+- Corrigido o envio de enquetes para grupos do WhatsApp: “Enviar agora” passa a executar o envio de verdade.
+- Enquetes só são marcadas como enviadas quando pelo menos um grupo recebe a mensagem.
+- Falhas de envio passam a ficar visíveis como “Erro de envio”.
+- Adicionado botão de reenviar enquete.
+- Tela de criação de enquetes redesenhada em etapas: pergunta, opções, grupos e momento do envio.
+- Opções agora possuem campos separados e mais claros, com mínimo de 2 e máximo de 8 respostas.
+- Mantido o envio agendado pelo cron, agora com tratamento correto de falhas.
+
 ## 3.2.6
 
 - Certificados redesenhados com moldura azul/dourada, nome em destaque, selo visual, QR Code e autenticação.
