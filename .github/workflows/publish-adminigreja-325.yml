@@ -102,3 +102,5 @@ jobs:
           git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.5.*.b64.txt
           git commit -m "Publish AdminIgreja 3.2.5 logo upload fix"
           git push origin main
+
+# trigger publish 3.2.5
