@@ -1,39 +1,39 @@
 {
-    "version": "3.2.1",
+    "version": "3.2.2",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.2.1.01.b64.txt",
-        "releases/v3.2.1.02.b64.txt",
-        "releases/v3.2.1.03.b64.txt",
-        "releases/v3.2.1.04.b64.txt",
-        "releases/v3.2.1.05.b64.txt",
-        "releases/v3.2.1.06.b64.txt",
-        "releases/v3.2.1.07.b64.txt",
-        "releases/v3.2.1.08.b64.txt",
-        "releases/v3.2.1.09.b64.txt",
-        "releases/v3.2.1.10.b64.txt",
-        "releases/v3.2.1.11.b64.txt",
-        "releases/v3.2.1.12.b64.txt",
-        "releases/v3.2.1.13.b64.txt",
-        "releases/v3.2.1.14.b64.txt",
-        "releases/v3.2.1.15.b64.txt",
-        "releases/v3.2.1.16.b64.txt",
-        "releases/v3.2.1.17.b64.txt",
-        "releases/v3.2.1.18.b64.txt",
-        "releases/v3.2.1.19.b64.txt",
-        "releases/v3.2.1.20.b64.txt",
-        "releases/v3.2.1.21.b64.txt",
-        "releases/v3.2.1.22.b64.txt",
-        "releases/v3.2.1.23.b64.txt",
-        "releases/v3.2.1.24.b64.txt",
-        "releases/v3.2.1.25.b64.txt",
-        "releases/v3.2.1.26.b64.txt",
-        "releases/v3.2.1.27.b64.txt",
-        "releases/v3.2.1.28.b64.txt",
-        "releases/v3.2.1.29.b64.txt"
+        "releases/v3.2.2.01.b64.txt",
+        "releases/v3.2.2.02.b64.txt",
+        "releases/v3.2.2.03.b64.txt",
+        "releases/v3.2.2.04.b64.txt",
+        "releases/v3.2.2.05.b64.txt",
+        "releases/v3.2.2.06.b64.txt",
+        "releases/v3.2.2.07.b64.txt",
+        "releases/v3.2.2.08.b64.txt",
+        "releases/v3.2.2.09.b64.txt",
+        "releases/v3.2.2.10.b64.txt",
+        "releases/v3.2.2.11.b64.txt",
+        "releases/v3.2.2.12.b64.txt",
+        "releases/v3.2.2.13.b64.txt",
+        "releases/v3.2.2.14.b64.txt",
+        "releases/v3.2.2.15.b64.txt",
+        "releases/v3.2.2.16.b64.txt",
+        "releases/v3.2.2.17.b64.txt",
+        "releases/v3.2.2.18.b64.txt",
+        "releases/v3.2.2.19.b64.txt",
+        "releases/v3.2.2.20.b64.txt",
+        "releases/v3.2.2.21.b64.txt",
+        "releases/v3.2.2.22.b64.txt",
+        "releases/v3.2.2.23.b64.txt",
+        "releases/v3.2.2.24.b64.txt",
+        "releases/v3.2.2.25.b64.txt",
+        "releases/v3.2.2.26.b64.txt",
+        "releases/v3.2.2.27.b64.txt",
+        "releases/v3.2.2.28.b64.txt",
+        "releases/v3.2.2.29.b64.txt"
     ],
-    "sha256": "6ad28eac5730bc15932c708b3ced88c2b10d276d12adc7c7801fc78211646c19",
+    "sha256": "360f414e8aebc82370207ce0eb2f8385dbee244c2da55ea1fe36baac9e82558a",
     "files": [
         {
             "path": ".htaccess",
@@ -41,7 +41,7 @@
         },
         {
             "path": "VERSION",
-            "sha256": "3822728783049fc2f22a56d1ee74d62352c49fbf81c6b54b50830d6f61c3af22"
+            "sha256": "79b9fb49a71869140833837e3a27ae1722a41faf59746519fde5e1346f9dd5b8"
         },
         {
             "path": "index.php",
@@ -73,7 +73,7 @@
         },
         {
             "path": "public/VERSION",
-            "sha256": "3822728783049fc2f22a56d1ee74d62352c49fbf81c6b54b50830d6f61c3af22"
+            "sha256": "79b9fb49a71869140833837e3a27ae1722a41faf59746519fde5e1346f9dd5b8"
         },
         {
             "path": "public/api/generate-event-poster.php",
@@ -216,12 +216,16 @@
             "sha256": "cc19bcfd3a91e177197792207c81b54b774eb7c147a5cd8fecd50e3c94d3d5a3"
         },
         {
+            "path": "public/database/020_finance_reversals.sql",
+            "sha256": "75f6b1c3af77aceccd9a2181f2d3f35680690c06f43c89a0838395054bead88a"
+        },
+        {
             "path": "public/documents.php",
             "sha256": "9b2d4d3a50c25e98f0c8826cec078dcaa48ba56253686427abcf49bd1c7e2dc2"
         },
         {
             "path": "public/event-registrations.php",
-            "sha256": "3887e1af1adce7d4f075cdb628ca677ee8c734d7cb63cddbe800d759dfbd9966"
+            "sha256": "cd8df768bbd00f4b035f3a6b9417fac41ff818073bd9b4049c9ded01ceb9647c"
         },
         {
             "path": "public/events.php",
@@ -233,7 +237,7 @@
         },
         {
             "path": "public/finance.php",
-            "sha256": "77135c06daa8b32de0b263a01fef1d91627613b6a048c139d1b1179d43f934f7"
+            "sha256": "60942be4227f420264f0b0908b271891464869f574764855e8930e67598a4a8c"
         },
         {
             "path": "public/group-moderation.php",
@@ -313,7 +317,7 @@
         },
         {
             "path": "public/lib/EngagementNotificationService.php",
-            "sha256": "4573af0699efa03073b628c9f7342d91b21c50ef415cb0795ba39836c740e12f"
+            "sha256": "16e6875eea47f8efd05cb0d3b3e727b92e9676c7de98820400de3e6530f7684a"
         },
         {
             "path": "public/lib/EvolutionClient.php",
@@ -497,7 +501,7 @@
         },
         {
             "path": "public/updates/manifest.json",
-            "sha256": "cd3368a6b35467786f408baa25cdb029d2b34003067be3e0eafdf03e28d52d29"
+            "sha256": "60d8272058fbbee8022e2366748f1811f3bc0aa88bd16620b15d04886348eb62"
         },
         {
             "path": "public/updates/migrations/0.2.0.sql",
