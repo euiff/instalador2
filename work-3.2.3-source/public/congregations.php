@@ -71,6 +71,7 @@ if(!empty($_GET['edit'])){
     $edit=$q->fetch()?:null;
 }
 $showEditor=$edit||isset($_GET['new']);
+if($edit&&!empty($edit['logo_url']))$uploads->repairPublicImage((string)$edit['logo_url']);
 
 $q=$pdo->prepare('
     SELECT c.*,
