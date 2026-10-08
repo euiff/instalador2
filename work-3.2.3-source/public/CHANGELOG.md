@@ -1,5 +1,13 @@
 # Changelog · Igreja Master
 
+## 3.2.6
+
+- Certificados redesenhados com moldura azul/dourada, nome em destaque, selo visual, QR Code e autenticação.
+- Cartas e declarações redesenhadas com cabeçalho institucional, tipografia melhor, assinatura, QR Code e bloco de autenticidade.
+- Documentos passam a usar primeiro a logo da congregação e, na falta dela, a logo geral da igreja.
+- Assinatura usa primeiro a assinatura da congregação e, na falta dela, a assinatura geral da igreja.
+- Mantidas as funcionalidades de geração, impressão, PDF e verificação existentes.
+
 ## 3.2.5
 
 - Corrigidas as permissões dos arquivos públicos enviados para logo de congregação.
