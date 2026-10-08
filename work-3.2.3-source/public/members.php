@@ -35,20 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'department'=>trim((string)($_POST['department'] ?? '')) ?: null,
                 'membership_date'=>trim((string)($_POST['membership_date'] ?? '')) ?: null,
                 'marital_status'=>trim((string)($_POST['marital_status'] ?? '')) ?: null,
+                'naturalness'=>trim((string)($_POST['naturalness'] ?? '')) ?: null,
                 'address_city'=>trim((string)($_POST['address_city'] ?? '')) ?: null,
                 'address_state'=>trim((string)($_POST['address_state'] ?? '')) ?: null,
                 'notes'=>trim((string)($_POST['notes'] ?? '')) ?: null,
                 'is_baptized'=>isset($_POST['is_baptized']) ? 1 : 0,
             ];
             if ($id !== '') {
-                $sql = 'UPDATE members SET congregation_id=?,name=?,phone=?,email=?,birth_date=?,cpf=?,rg=?,role=?,department=?,membership_date=?,marital_status=?,address_city=?,address_state=?,notes=?,is_baptized=? WHERE id=? AND church_id=?';
+                $sql = 'UPDATE members SET congregation_id=?,name=?,phone=?,email=?,birth_date=?,cpf=?,rg=?,role=?,department=?,membership_date=?,marital_status=?,naturalness=?,address_city=?,address_state=?,notes=?,is_baptized=? WHERE id=? AND church_id=?';
                 $q = $pdo->prepare($sql);
-                $q->execute([$data['congregation_id'],$data['name'],$data['phone'],$data['email'],$data['birth_date'],$data['cpf'],$data['rg'],$data['role'],$data['department'],$data['membership_date'],$data['marital_status'],$data['address_city'],$data['address_state'],$data['notes'],$data['is_baptized'],$id,$cid]);
+                $q->execute([$data['congregation_id'],$data['name'],$data['phone'],$data['email'],$data['birth_date'],$data['cpf'],$data['rg'],$data['role'],$data['department'],$data['membership_date'],$data['marital_status'],$data['naturalness'],$data['address_city'],$data['address_state'],$data['notes'],$data['is_baptized'],$id,$cid]);
                 $success = 'Cadastro atualizado com sucesso.';
             } else {
                 $sql = 'INSERT INTO members(id,church_id,congregation_id,name,phone,email,birth_date,cpf,rg,role,department,membership_date,marital_status,address_city,address_state,notes,is_baptized,registration_status,registration_step,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,\'approved\',\'complete\',1)';
                 $q = $pdo->prepare($sql);
-                $q->execute([app_uuid(),$cid,$data['congregation_id'],$data['name'],$data['phone'],$data['email'],$data['birth_date'],$data['cpf'],$data['rg'],$data['role'],$data['department'],$data['membership_date'],$data['marital_status'],$data['address_city'],$data['address_state'],$data['notes'],$data['is_baptized']]);
+                $q->execute([app_uuid(),$cid,$data['congregation_id'],$data['name'],$data['phone'],$data['email'],$data['birth_date'],$data['cpf'],$data['rg'],$data['role'],$data['department'],$data['membership_date'],$data['marital_status'],$data['naturalness'],$data['address_city'],$data['address_state'],$data['notes'],$data['is_baptized']]);
                 $success = 'Membro cadastrado com sucesso.';
             }
         }
@@ -99,6 +100,7 @@ View::header('Membros', $auth, 'members.php');
     <div class="field"><label>Função / Cargo</label><input class="input" name="role" value="<?=e($edit['role'] ?? '')?>"></div>
     <div class="field"><label>Departamento</label><input class="input" name="department" value="<?=e($edit['department'] ?? '')?>"></div>
     <div class="field"><label>Estado civil</label><input class="input" name="marital_status" value="<?=e($edit['marital_status'] ?? '')?>"></div>
+    <div class="field"><label>Naturalidade</label><input class="input" name="naturalness" value="<?=e($edit['naturalness'] ?? '')?>" placeholder="Ex.: Catalão - GO"></div>
     <div class="field"><label>Cidade</label><input class="input" name="address_city" value="<?=e($edit['address_city'] ?? '')?>"></div>
     <div class="field"><label>Estado</label><input class="input" name="address_state" value="<?=e($edit['address_state'] ?? '')?>"></div>
     <div class="field" style="display:flex;align-items:end"><label style="display:flex;gap:8px;align-items:center;margin-bottom:11px"><input type="checkbox" name="is_baptized" value="1" <?=!empty($edit['is_baptized'])?'checked':''?>> Batizado(a)</label></div>
