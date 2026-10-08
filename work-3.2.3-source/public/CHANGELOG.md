@@ -1,5 +1,15 @@
 # Changelog · Igreja Master
 
+## 3.2.3
+
+- Nova carteirinha de membro em formato frente e verso, inspirada em credencial PVC profissional.
+- Foto, logo da igreja, nome, cargo/função, CPF, RG, estado civil, congregação, data de ingresso e emissão na frente.
+- Filiação, data de batismo, nacionalidade, naturalidade, departamento, pastor/responsável e endereço da igreja no verso.
+- QR Code aponta para a verificação de autenticidade já existente no sistema.
+- Impressão preparada em tamanho aproximado de 85,6 × 54 mm, preservando os demais documentos e funcionalidades existentes.
+
+# Changelog · Igreja Master
+
 ## 3.2.1
 
 - Fechamento de caixa diário ou mensal, consolidado ou por conta financeira.
