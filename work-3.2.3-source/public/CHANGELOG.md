@@ -1,5 +1,13 @@
 # Changelog · Igreja Master
 
+## 3.2.4
+
+- Congregações agora possuem upload de logo própria em JPG, PNG ou WebP.
+- A carteirinha usa primeiro a logo da congregação do membro; se não houver, usa a logo geral da igreja.
+- Removido o campo Nacionalidade da carteirinha.
+- Adicionado o campo Naturalidade ao cadastro e edição de membros.
+- Mantidas as demais funcionalidades e o layout profissional da carteirinha introduzido na 3.2.3.
+
 ## 3.2.3
 
 - Nova carteirinha de membro em formato frente e verso, inspirada em credencial PVC profissional.
