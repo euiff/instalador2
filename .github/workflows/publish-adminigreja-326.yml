@@ -1,0 +1,104 @@
+name: Publish AdminIgreja 3.2.6 document redesign
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-326.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.2.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate redesigned documents
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.2.3-source/public/member-document.php
+          grep -q 'cert-title' source/work-3.2.3-source/public/member-document.php
+          grep -q 'letter-auth' source/work-3.2.3-source/public/member-document.php
+          grep -q 'certQr' source/work-3.2.3-source/public/member-document.php
+          grep -q 'docQr' source/work-3.2.3-source/public/member-document.php
+          grep -q 'congregation_logo' source/work-3.2.3-source/public/member-document.php
+
+      - name: Build package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.2.3-source
+          tar -czf /tmp/adminigreja-3.2.6.tar.gz             public/member-document.php             public/VERSION             public/CHANGELOG.md
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.2.6.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.2.6.tar.gz > /tmp/adminigreja-3.2.6.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.2.6.b64 /tmp/v3.2.6.
+          i=1
+          for f in /tmp/v3.2.6.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.2.6.$n.b64.txt"
+            i=$((i+1))
+          done
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.2.3-source")
+          release=channel/"releases"
+          parts=sorted(release.glob("v3.2.6.*.b64.txt"))
+          package=Path("/tmp/adminigreja-3.2.6.tar.gz")
+          file_paths=[
+              "public/member-document.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+          manifest={
+              "version":"3.2.6",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "files":files,
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=4)+"\n",encoding="utf-8")
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.2.6.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.2.6.tar.gz
+          test "$(sha256sum /tmp/rebuilt-3.2.6.tar.gz | awk '{print $1}')" = "$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          rm -rf /tmp/test326 && mkdir -p /tmp/test326
+          tar -xzf /tmp/rebuilt-3.2.6.tar.gz -C /tmp/test326
+          php -l /tmp/test326/public/member-document.php
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.6.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.2.6 document redesign"
+          git pull --rebase origin main
+          git push origin main
