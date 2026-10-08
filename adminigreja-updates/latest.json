@@ -1,27 +1,24 @@
 {
-    "version": "3.2.5",
+    "version": "3.2.6",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.2.5.01.b64.txt"
+        "releases/v3.2.6.01.b64.txt",
+        "releases/v3.2.6.02.b64.txt"
     ],
-    "sha256": "fd3b10894fce5dfa3224ee40bf9dfcecda06f71619de7da1e2c2a4e4c7168b63",
+    "sha256": "1d8c3dba277a978f76180ae59449639326c862a8f4ecc7786a438f240331e1d4",
     "files": [
         {
-            "path": "public/congregations.php",
-            "sha256": "811f5054b056b4d44470afff051876be823a9e510f0c6380f37c0fa93c0ca926"
-        },
-        {
-            "path": "public/lib/UploadService.php",
-            "sha256": "c97fcff0f085e0b795a1b36b9afaab56b3e5850b7b169acf13df30475167b1c8"
+            "path": "public/member-document.php",
+            "sha256": "8366b4cbc95cdc756be86bb1e87fab7e8afc60be91604fd0eff49c7a11947341"
         },
         {
             "path": "public/VERSION",
-            "sha256": "a37fa49d02e50f3371b05c5046958650772ecbedb21882a542229792b81578b2"
+            "sha256": "c17fbb4bde718de57b503e111478cd6035c936d2c440c6a9b49b446733472355"
         },
         {
             "path": "public/CHANGELOG.md",
-            "sha256": "6516755a15c63a5d44d284ae0411968123ad4de3fba448c5b102c6c03a97e045"
+            "sha256": "0b7a86cb83fc069b21b6614ed569a06fb4a7ebf38eb22e2da06a3739444cca6b"
         }
     ]
 }
