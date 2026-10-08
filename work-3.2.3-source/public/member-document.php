@@ -199,7 +199,7 @@ linear-gradient(135deg,var(--blue1) 0%,var(--blue2) 48%,#032a68 100%)}
   </section>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07JSE6tS1R2o8egT4j9cQ9Y7L2Fpz4uTo8lLzzE2wQOwJk2pPBIoZ43m2LxM7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" referrerpolicy="no-referrer"></script>
 <script>
 (function(){
   var target=document.getElementById('qr');
