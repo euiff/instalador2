@@ -261,6 +261,8 @@ if($docLogo==='')$docLogo=trim((string)($church['logo_url']??''));
 $docChurch=trim((string)($church['name']??'Igreja'));
 $docCongregation=trim((string)($m['congregation_name']??''));
 $docChurchLine=$docCongregation!==''?$docChurch.' · '.$docCongregation:$docChurch;
+$docSignature=trim((string)($m['congregation_signature']??''));
+if($docSignature==='')$docSignature=trim((string)($church['pastor_signature_url']??''));
 
 $scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
 $host=(string)($_SERVER['HTTP_HOST']??'');
@@ -316,7 +318,7 @@ body{margin:0;background:#edf1f5;color:var(--ink);font-family:Arial,Helvetica,sa
 .signature-image{display:block;max-width:180px;max-height:58px;margin:0 auto -2px;object-fit:contain}
 .signature-line{border-top:1px solid #334155;padding-top:7px;font-weight:800;color:#172033}
 .signature-role{margin-top:3px;font-size:10px;color:#64748b}
-.cert-seal{width:120px;height:120px;border-radius:50%;margin:auto;display:grid;place-items:center;text-align:center;color:#fff;font-weight:900;font-size:11px;line-height:1.15;background:radial-gradient(circle,#194f83 0 44%,var(--gold) 45% 54%,#12395e 55% 100%);box-shadow:0 0 0 4px #fff,0 0 0 5px #e4c96f}
+.cert-seal{width:120px;height:120px;border-radius:50%;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:900;font-size:10px;line-height:1.1;background:radial-gradient(circle,#194f83 0 44%,var(--gold) 45% 54%,#12395e 55% 100%);box-shadow:0 0 0 4px #fff,0 0 0 5px #e4c96f}.cert-seal .mini-qr{background:#fff;padding:4px;border-radius:5px;margin-bottom:4px}.cert-seal .mini-qr img,.cert-seal .mini-qr canvas{width:48px!important;height:48px!important;display:block}
 .cert-date{border-top:1px solid #334155;padding-top:7px;font-size:12px;color:#172033}
 .auth-strip{position:absolute;left:32px;right:32px;bottom:20px;display:flex;justify-content:space-between;gap:14px;align-items:center;font-size:9px;color:#607086;z-index:3}
 .auth-strip strong{color:var(--navy)}
@@ -383,12 +385,12 @@ body{margin:0;background:#edf1f5;color:var(--ink);font-family:Arial,Helvetica,sa
 
       <div class="cert-bottom">
         <div class="signature-area">
-          <?php if(!empty($m['congregation_signature'])):?><img class="signature-image" src="<?=e($m['congregation_signature'])?>" alt="Assinatura"><?php endif?>
+          <?php if($docSignature!==''):?><img class="signature-image" src="<?=e($docSignature)?>" alt="Assinatura"><?php endif?>
           <div class="signature-line"><?=e($pastor?:'Responsável / Pastor')?></div>
           <div class="signature-role">Responsável eclesiástico</div>
         </div>
 
-        <div class="cert-seal">DOCUMENTO<br>OFICIAL<br>✦</div>
+        <div class="cert-seal"><div class="mini-qr" id="certQr"></div><span>OFICIAL</span></div>
 
         <div class="signature-area">
           <div class="cert-date"><?=e($today)?></div>
@@ -423,7 +425,7 @@ body{margin:0;background:#edf1f5;color:var(--ink);font-family:Arial,Helvetica,sa
     <div class="letter-place"><?=e($docCongregation?:$docChurch)?>, <?=e($today)?></div>
 
     <div class="letter-signature">
-      <?php if(!empty($m['congregation_signature'])):?><img src="<?=e($m['congregation_signature'])?>" alt="Assinatura"><?php endif?>
+      <?php if($docSignature!==''):?><img src="<?=e($docSignature)?>" alt="Assinatura"><?php endif?>
       <div class="line"><?=e($pastor?:'Responsável / Pastor')?></div>
       <div class="role">Responsável eclesiástico</div>
     </div>
@@ -442,15 +444,16 @@ body{margin:0;background:#edf1f5;color:var(--ink);font-family:Arial,Helvetica,sa
 <?php endif?>
 </div>
 
-<?php if(!$isCertificate):?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" referrerpolicy="no-referrer"></script>
 <script>
 (function(){
-  var el=document.getElementById('docQr');
   var url=<?=json_encode($verifyUrl,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)?>;
-  if(window.QRCode&&el)new QRCode(el,{text:url,width:100,height:100,correctLevel:QRCode.CorrectLevel.M});
+  if(!window.QRCode)return;
+  var doc=document.getElementById('docQr');
+  if(doc)new QRCode(doc,{text:url,width:100,height:100,correctLevel:QRCode.CorrectLevel.M});
+  var cert=document.getElementById('certQr');
+  if(cert)new QRCode(cert,{text:url,width:64,height:64,correctLevel:QRCode.CorrectLevel.M});
 })();
 </script>
-<?php endif?>
 </body>
 </html>
