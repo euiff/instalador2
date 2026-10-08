@@ -217,72 +217,240 @@ linear-gradient(135deg,var(--blue1) 0%,var(--blue2) 48%,#032a68 100%)}
 }
 
 $title='Documento';
+$subtitle='';
 $body='';
+$isCertificate=false;
+
 switch($type){
     case 'baptism_certificate':
         $title='Certificado de Batismo';
+        $subtitle='Testemunho de fé e compromisso cristão';
+        $isCertificate=true;
         $body="Certificamos que <strong>".e($m['name'])."</strong>, nascido(a) em ".e($fmt($m['birth_date'])).", foi batizado(a) nas águas em <strong>".e($fmt($m['baptism_date']))."</strong>, na igreja ".e($m['baptism_church']?:$church['name']).", pelo Pastor ".e($m['baptism_pastor']?:$pastor).".";
         break;
     case 'membership_certificate':
         $title='Certificado de Membro';
-        $body="Certificamos, para os devidos fins, que <strong>".e($m['name'])."</strong> é membro ativo desta igreja desde <strong>".e($fmt($m['membership_date']))."</strong>, participando das atividades eclesiásticas, exercendo a função de ".e($m['role']?:'membro').".";
+        $subtitle='Reconhecimento de membresia e comunhão';
+        $isCertificate=true;
+        $body="Certificamos, para os devidos fins, que <strong>".e($m['name'])."</strong> é membro ativo desta igreja desde <strong>".e($fmt($m['membership_date']))."</strong>, participando das atividades eclesiásticas e exercendo a função de <strong>".e($m['role']?:'membro')."</strong>.";
         break;
     case 'recommendation_letter':
         $title='Carta de Recomendação';
+        $subtitle='Documento eclesiástico';
         $body="A Paz do Senhor! Pela presente, recomendamos o(a) irmão(ã) <strong>".e($m['name'])."</strong>, membro desta igreja desde ".e($fmt($m['membership_date'])).", de bom testemunho e conduta cristã, para que seja recebido(a) com amor fraternal.";
         break;
     case 'dismissal_letter':
         $title='Carta de Desligamento';
+        $subtitle='Documento eclesiástico';
         $body="Declaramos que o(a) irmão(ã) <strong>".e($m['name'])."</strong>, membro desta igreja desde ".e($fmt($m['membership_date'])).", solicita seu desligamento nesta data, ficando livre para congregar em outra comunidade de fé.";
         break;
     case 'visitor_presentation':
         $title='Carta de Apresentação';
-        $body="É com alegria que apresentamos <strong>".e($m['name'])."</strong>. Desejamos que seja recebido(a) com amor e comunhão cristã.";
+        $subtitle='Documento de apresentação e comunhão';
+        $body="É com alegria que apresentamos <strong>".e($m['name'])."</strong>. Desejamos que seja recebido(a) com amor, consideração e comunhão cristã.";
         break;
     case 'attendance_declaration':
         $title='Declaração de Frequência';
+        $subtitle='Declaração eclesiástica';
         $body="Declaramos, para os devidos fins, que <strong>".e($m['name'])."</strong> é membro ativo desta igreja desde ".e($fmt($m['membership_date']))." e frequenta regularmente os cultos e atividades eclesiásticas.";
         break;
 }
+
+$docLogo=trim((string)($m['congregation_logo']??''));
+if($docLogo==='')$docLogo=trim((string)($church['logo_url']??''));
+$docChurch=trim((string)($church['name']??'Igreja'));
+$docCongregation=trim((string)($m['congregation_name']??''));
+$docChurchLine=$docCongregation!==''?$docChurch.' · '.$docCongregation:$docChurch;
+
+$scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
+$host=(string)($_SERVER['HTTP_HOST']??'');
+$basePath=rtrim(str_replace('\\','/',dirname((string)($_SERVER['SCRIPT_NAME']??'/'))),'/');
+if($basePath==='.'||$basePath==='/')$basePath='';
+$verifyUrl=$host!==''?$scheme.'://'.$host.$basePath.'/verify.php?code='.rawurlencode((string)$verification):'/verify.php?code='.rawurlencode((string)$verification);
 
 ?><!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title><?=e($title)?></title>
+<title><?=e($title)?> · <?=e($m['name'])?></title>
 <style>
-body{font-family:Arial,sans-serif;background:#f3f5f8;margin:0;padding:24px;color:#1c2430}
-.sheet{max-width:820px;margin:auto;background:white;padding:64px;min-height:980px;box-shadow:0 8px 30px #0002}
-.head{text-align:center;border-bottom:2px solid #222;padding-bottom:24px;margin-bottom:54px}
-.logo{max-width:90px;max-height:90px;border-radius:18px}.head h1{font-size:24px;margin:12px 0 4px}
-.doc-title{text-align:center;text-transform:uppercase;font-size:28px;letter-spacing:1px;margin:0 0 50px}
-.body{font-size:18px;line-height:1.9;text-align:justify}.footer{margin-top:100px;text-align:center}
-.signature{margin:80px auto 0;border-top:1px solid #333;width:320px;padding-top:8px}
-.verify{margin-top:50px;border:1px solid #ccd3dd;background:#f8fafc;padding:14px;text-align:center;font-size:12px}
-.actions{max-width:820px;margin:16px auto;text-align:right}.btn{padding:10px 16px;border:0;border-radius:8px;background:#1f6feb;color:white;cursor:pointer}
-@media print{body{background:white;padding:0}.sheet{box-shadow:none;max-width:none;min-height:auto}.actions{display:none}}
+:root{
+  --navy:#092f63;
+  --blue:#0c4f91;
+  --blue-soft:#eaf2fb;
+  --gold:#d4aa37;
+  --gold-light:#f4df9b;
+  --ink:#172033;
+  --muted:#64748b;
+  --paper:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#edf1f5;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+.actions{max-width:1120px;margin:18px auto 10px;padding:0 18px;display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:800;cursor:pointer}.btn-primary{background:var(--blue);color:#fff}.btn-light{background:#fff;border:1px solid #d7dee8;color:#263246}
+.document-wrap{max-width:1120px;margin:0 auto 34px;padding:0 18px}
+.paper{position:relative;background:var(--paper);box-shadow:0 20px 60px rgba(15,23,42,.16);overflow:hidden}
+
+/* CERTIFICADOS */
+.certificate{min-height:750px;padding:56px 68px 58px;border:3px solid var(--navy)}
+.certificate:before,.certificate:after{content:"";position:absolute;pointer-events:none}
+.certificate:before{inset:12px;border:1px solid var(--gold)}
+.certificate:after{inset:20px;border:1px solid rgba(9,47,99,.22)}
+.corner{position:absolute;width:190px;height:190px;z-index:0}
+.corner.tl{left:-42px;top:-60px;background:linear-gradient(135deg,var(--navy) 0 45%,transparent 46%),linear-gradient(135deg,transparent 0 53%,var(--gold) 54% 58%,transparent 59%)}
+.corner.br{right:-42px;bottom:-60px;transform:rotate(180deg);background:linear-gradient(135deg,var(--navy) 0 45%,transparent 46%),linear-gradient(135deg,transparent 0 53%,var(--gold) 54% 58%,transparent 59%)}
+.cert-content{position:relative;z-index:2;text-align:center;min-height:630px;display:flex;flex-direction:column;align-items:center}
+.cert-head{display:flex;align-items:center;justify-content:center;gap:16px;min-height:76px}
+.cert-logo{width:72px;height:72px;object-fit:contain;border-radius:14px}
+.cert-church{font-size:17px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.08em}
+.cert-cong{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.04em}
+.cert-kicker{margin-top:34px;font-size:13px;color:var(--gold);font-weight:900;text-transform:uppercase;letter-spacing:.24em}
+.cert-title{margin:6px 0 0;color:var(--navy);font-family:Georgia,'Times New Roman',serif;font-size:54px;line-height:1;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.cert-subtitle{margin-top:11px;color:#475569;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+.cert-presented{margin-top:34px;font-size:13px;color:#64748b}
+.cert-name{margin:8px 0 18px;padding:0 30px 9px;border-bottom:1px solid #9cb2ca;color:#173e72;font-family:'Brush Script MT','Segoe Script',cursive;font-size:50px;line-height:1.1}
+.cert-body{max-width:760px;font-family:Georgia,'Times New Roman',serif;font-size:18px;line-height:1.75;color:#27364a;text-align:center}
+.cert-bottom{margin-top:auto;width:100%;display:grid;grid-template-columns:1fr 150px 1fr;gap:28px;align-items:end}
+.signature-area{font-size:12px;color:#475569}
+.signature-image{display:block;max-width:180px;max-height:58px;margin:0 auto -2px;object-fit:contain}
+.signature-line{border-top:1px solid #334155;padding-top:7px;font-weight:800;color:#172033}
+.signature-role{margin-top:3px;font-size:10px;color:#64748b}
+.cert-seal{width:120px;height:120px;border-radius:50%;margin:auto;display:grid;place-items:center;text-align:center;color:#fff;font-weight:900;font-size:11px;line-height:1.15;background:radial-gradient(circle,#194f83 0 44%,var(--gold) 45% 54%,#12395e 55% 100%);box-shadow:0 0 0 4px #fff,0 0 0 5px #e4c96f}
+.cert-date{border-top:1px solid #334155;padding-top:7px;font-size:12px;color:#172033}
+.auth-strip{position:absolute;left:32px;right:32px;bottom:20px;display:flex;justify-content:space-between;gap:14px;align-items:center;font-size:9px;color:#607086;z-index:3}
+.auth-strip strong{color:var(--navy)}
+
+/* CARTAS E DECLARAÇÕES */
+.letter{min-height:1040px;padding:0 72px 58px}
+.letter-top{height:16px;background:linear-gradient(90deg,var(--navy),var(--blue),var(--gold))}
+.letter-head{display:grid;grid-template-columns:88px 1fr;gap:20px;align-items:center;padding:34px 0 22px;border-bottom:2px solid var(--navy)}
+.letter-logo{width:78px;height:78px;object-fit:contain;border-radius:12px}
+.letter-church{font-size:22px;font-weight:900;color:var(--navy);text-transform:uppercase}.letter-cong{font-size:13px;color:#526277;margin-top:5px}.letter-address{font-size:11px;color:#7a8798;margin-top:5px}
+.letter-title{text-align:center;margin:52px 0 6px;color:var(--navy);font-family:Georgia,'Times New Roman',serif;font-size:30px;text-transform:uppercase;letter-spacing:.05em}
+.letter-subtitle{text-align:center;color:var(--gold);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.18em}
+.letter-recipient{margin:48px 0 0;font-size:15px;color:#344256}.letter-recipient strong{color:#18263a}
+.letter-body{margin-top:30px;font-family:Georgia,'Times New Roman',serif;font-size:18px;line-height:1.95;text-align:justify;color:#283649}
+.letter-place{text-align:right;margin-top:52px;font-size:14px;color:#526277}
+.letter-signature{margin:78px auto 0;width:340px;text-align:center}
+.letter-signature img{display:block;max-width:210px;max-height:68px;margin:0 auto -3px;object-fit:contain}
+.letter-signature .line{border-top:1px solid #334155;padding-top:8px;font-weight:800}.letter-signature .role{margin-top:3px;color:#64748b;font-size:12px}
+.letter-auth{margin-top:78px;border:1px solid #d9e1ea;border-left:5px solid var(--gold);background:#f8fafc;padding:16px 18px;display:grid;grid-template-columns:1fr 92px;gap:20px;align-items:center}
+.auth-title{font-size:12px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.08em}.auth-text{margin-top:5px;font-size:11px;line-height:1.55;color:#64748b}.auth-code{font-family:monospace;font-size:11px;color:#22324a;font-weight:800}
+.qr-box{background:#fff;padding:6px;border:1px solid #d7dee8;border-radius:8px;text-align:center}#docQr{display:flex;justify-content:center}#docQr img,#docQr canvas{width:78px!important;height:78px!important}
+.doc-footer{margin-top:26px;text-align:center;font-size:9px;color:#94a3b8}
+
+@media(max-width:760px){
+  .certificate{padding:38px 26px}.cert-title{font-size:34px}.cert-name{font-size:36px}.cert-body{font-size:15px}.cert-bottom{grid-template-columns:1fr}.cert-seal{display:none}
+  .letter{padding:0 28px 38px}.letter-head{grid-template-columns:64px 1fr}.letter-logo{width:58px;height:58px}.letter-body{font-size:16px}.letter-auth{grid-template-columns:1fr}.qr-box{width:100px}
+}
+@media print{
+  @page{size:A4 portrait;margin:8mm}
+  body{background:#fff}
+  .actions{display:none!important}
+  .document-wrap{max-width:none;margin:0;padding:0}
+  .paper{box-shadow:none;width:100%;min-height:0}
+  .certificate{height:190mm;min-height:190mm;padding:14mm 18mm 15mm}.cert-content{min-height:157mm}.cert-title{font-size:31pt}.cert-name{font-size:29pt}.cert-body{font-size:12pt}.corner{width:45mm;height:45mm}
+  .letter{min-height:270mm;padding:0 18mm 12mm}.letter-body{font-size:12pt}.letter-title{margin-top:14mm}
+}
 </style>
 </head>
 <body>
-<div class="actions"><button class="btn" onclick="window.print()">Imprimir / Salvar PDF</button></div>
-<article class="sheet">
-  <div class="head">
-    <?php if(!empty($church['logo_url'])):?><img class="logo" src="<?=e($church['logo_url'])?>"><?php endif?>
-    <h1><?=e($church['name'])?></h1>
-    <div><?=e($address)?></div>
-  </div>
-  <h2 class="doc-title"><?=e($title)?></h2>
-  <div class="body"><?=$body?></div>
-  <div class="footer">
-    <p><?=e($today)?></p>
-    <div class="signature"><?=e($pastor?:'Responsável / Pastor')?></div>
-    <div class="verify">
-      <strong>Verificação de autenticidade</strong><br>
-      Código: <strong><?=e($verification)?></strong><br>
-      Acesse <strong>/verify.php?code=<?=e($verification)?></strong>
+<div class="actions">
+  <button class="btn btn-light" onclick="history.back()">Voltar</button>
+  <button class="btn btn-primary" onclick="window.print()">Imprimir / Salvar PDF</button>
+</div>
+
+<div class="document-wrap">
+<?php if($isCertificate):?>
+  <article class="paper certificate">
+    <span class="corner tl"></span><span class="corner br"></span>
+    <div class="cert-content">
+      <div class="cert-head">
+        <?php if($docLogo!==''):?><img class="cert-logo" src="<?=e($docLogo)?>" alt="Logo"><?php endif?>
+        <div>
+          <div class="cert-church"><?=e($docChurch)?></div>
+          <?php if($docCongregation!==''):?><div class="cert-cong"><?=e($docCongregation)?></div><?php endif?>
+        </div>
+      </div>
+
+      <div class="cert-kicker">Documento Oficial</div>
+      <h1 class="cert-title">Certificado</h1>
+      <div class="cert-subtitle"><?=e($title)?></div>
+      <div class="cert-presented">confere o presente certificado a</div>
+      <div class="cert-name"><?=e($m['name'])?></div>
+      <div class="cert-body"><?=$body?></div>
+
+      <div class="cert-bottom">
+        <div class="signature-area">
+          <?php if(!empty($m['congregation_signature'])):?><img class="signature-image" src="<?=e($m['congregation_signature'])?>" alt="Assinatura"><?php endif?>
+          <div class="signature-line"><?=e($pastor?:'Responsável / Pastor')?></div>
+          <div class="signature-role">Responsável eclesiástico</div>
+        </div>
+
+        <div class="cert-seal">DOCUMENTO<br>OFICIAL<br>✦</div>
+
+        <div class="signature-area">
+          <div class="cert-date"><?=e($today)?></div>
+          <div class="signature-role">Data de emissão</div>
+        </div>
+      </div>
     </div>
-  </div>
-</article>
+
+    <div class="auth-strip">
+      <span>Autenticidade: <strong><?=e($verification)?></strong></span>
+      <span><?=e($docChurchLine)?></span>
+    </div>
+  </article>
+<?php else:?>
+  <article class="paper letter">
+    <div class="letter-top"></div>
+    <header class="letter-head">
+      <div><?php if($docLogo!==''):?><img class="letter-logo" src="<?=e($docLogo)?>" alt="Logo"><?php endif?></div>
+      <div>
+        <div class="letter-church"><?=e($docChurch)?></div>
+        <?php if($docCongregation!==''):?><div class="letter-cong"><?=e($docCongregation)?></div><?php endif?>
+        <div class="letter-address"><?=e($address?:'Endereço não informado')?></div>
+      </div>
+    </header>
+
+    <h1 class="letter-title"><?=e($title)?></h1>
+    <div class="letter-subtitle"><?=e($subtitle)?></div>
+
+    <div class="letter-recipient"><strong>Referência:</strong> <?=e($m['name'])?></div>
+    <div class="letter-body"><?=$body?></div>
+
+    <div class="letter-place"><?=e($docCongregation?:$docChurch)?>, <?=e($today)?></div>
+
+    <div class="letter-signature">
+      <?php if(!empty($m['congregation_signature'])):?><img src="<?=e($m['congregation_signature'])?>" alt="Assinatura"><?php endif?>
+      <div class="line"><?=e($pastor?:'Responsável / Pastor')?></div>
+      <div class="role">Responsável eclesiástico</div>
+    </div>
+
+    <div class="letter-auth">
+      <div>
+        <div class="auth-title">Verificação de autenticidade</div>
+        <div class="auth-text">Este documento possui código único de verificação. Aponte a câmera para o QR Code ou utilize o código no portal de validação.</div>
+        <div class="auth-code"><?=e($verification)?></div>
+      </div>
+      <div class="qr-box"><div id="docQr"></div></div>
+    </div>
+
+    <div class="doc-footer"><?=e($docChurchLine)?> · Documento gerado pelo sistema de gestão da igreja</div>
+  </article>
+<?php endif?>
+</div>
+
+<?php if(!$isCertificate):?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" referrerpolicy="no-referrer"></script>
+<script>
+(function(){
+  var el=document.getElementById('docQr');
+  var url=<?=json_encode($verifyUrl,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)?>;
+  if(window.QRCode&&el)new QRCode(el,{text:url,width:100,height:100,correctLevel:QRCode.CorrectLevel.M});
+})();
+</script>
+<?php endif?>
 </body>
 </html>
