@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/MemberDocumentService.php';
+require_once __DIR__.'/UnifiedMemberDocumentService.php';
 
 final class BotDocumentFlow
 {
@@ -10,7 +10,7 @@ final class BotDocumentFlow
 
     public function start(string $churchId,string $phone): string
     {
-        $service=new MemberDocumentService($this->pdo,$this->appRoot);
+        $service=new UnifiedMemberDocumentService($this->pdo,$this->appRoot);
         $member=$service->memberByPhone($churchId,$phone);
         if(!$member){
             return "📄 *Documentos*
@@ -49,7 +49,7 @@ Digite *7* para fazer seu cadastro ou fale com a secretaria.";
         $type=$data['types'][$value]??null;
         if(!$type)return ['done'=>false,'reply'=>'Opção inválida. Digite o número do documento desejado ou *0* para voltar.'];
 
-        $service=new MemberDocumentService($this->pdo,$this->appRoot);
+        $service=new UnifiedMemberDocumentService($this->pdo,$this->appRoot);
         $member=$service->member($churchId,(string)($data['member_id']??''));
         if(!$member){$this->clear((string)$state['id']);return ['done'=>true,'reply'=>'Seu cadastro não foi encontrado. Fale com a secretaria.'];}
 
