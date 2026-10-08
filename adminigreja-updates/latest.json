@@ -1,24 +1,28 @@
 {
-    "version": "3.2.6",
+    "version": "3.2.7",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.2.6.01.b64.txt",
-        "releases/v3.2.6.02.b64.txt"
+        "releases/v3.2.7.01.b64.txt",
+        "releases/v3.2.7.02.b64.txt"
     ],
-    "sha256": "77dc6a36d1b208430edaf0a927db0028b6fc9d84f7fcebf5ba7b47ba7c775493",
+    "sha256": "1d0030800585e78f7c98719cd43a6c4630969cd6f45b782ebdb7c8a027ac283d",
     "files": [
         {
-            "path": "public/member-document.php",
-            "sha256": "8366b4cbc95cdc756be86bb1e87fab7e8afc60be91604fd0eff49c7a11947341"
+            "path": "public/polls.php",
+            "sha256": "1e20f53ff54fb5ddb4d588831d0fed67ccb5e989f65e8bef95dd9713ac8cd9aa"
+        },
+        {
+            "path": "public/lib/CronTasks.php",
+            "sha256": "a64e9a1e14938eb70d63473c62dc531a0199981d86cff194662d8eda7bacac9e"
         },
         {
             "path": "public/VERSION",
-            "sha256": "c17fbb4bde718de57b503e111478cd6035c936d2c440c6a9b49b446733472355"
+            "sha256": "cabddc69a89f2cd735bc13b603cd0760990fc244ab1e4d4c432e8f6c421a695c"
         },
         {
             "path": "public/CHANGELOG.md",
-            "sha256": "0b7a86cb83fc069b21b6614ed569a06fb4a7ebf38eb22e2da06a3739444cca6b"
+            "sha256": "48302baf9bd239b2858f446cd32da9342be856649ceb5f4e5239897ae6780494"
         }
     ]
 }
