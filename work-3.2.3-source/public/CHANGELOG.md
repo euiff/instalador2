@@ -1,5 +1,15 @@
 # Changelog · Igreja Master
 
+## 3.2.9
+
+- Enquetes passam a ser votações reais no WhatsApp.
+- Participantes votam respondendo VOTO 1, VOTO 2 e assim por diante no grupo.
+- O sistema identifica o participante e salva um único voto por pessoa/enquete.
+- Se a pessoa votar novamente, o voto anterior é atualizado em vez de duplicado.
+- Painel passa a mostrar total de votos, percentuais por opção e lista de votantes.
+- Enquetes expiradas deixam de aceitar votos.
+- Enquetes agendadas também passam a enviar instruções corretas de votação.
+
 ## 3.2.8
 
 - Unificado o gerador de documentos do painel e do WhatsApp.
