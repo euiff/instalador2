@@ -177,6 +177,7 @@ final class CronTasks
                 }
                 $msg=implode("\n",$lines);
                 $ok=0;
+                $errorMessage=null;
 
                 $groupIds=json_decode((string)($poll['target_groups']??'[]'),true);
                 if(!is_array($groupIds))$groupIds=[];
@@ -185,19 +186,18 @@ final class CronTasks
                     $result=$groupIds
                         ?$service->sendIds($church,$groupIds,$msg)
                         :$service->sendPurpose($church,'polls',$msg);
-                    $ok+=(int)$result['sent'];
-                }catch(Throwable){}
-
-                if($ok===0){
-                    $members=$this->pdo->prepare('SELECT phone FROM members WHERE church_id=? AND active=1');
-                    $members->execute([$church['id']]);
-                    foreach(array_unique(array_column($members->fetchAll(),'phone')) as $phone){
-                        if($phone&&$this->send($church,$phone,$msg))$ok++;
-                    }
+                    $ok+=(int)($result['sent']??0);
+                    if($ok===0)$errorMessage=$result['errors'][0]['error']??'Nenhum grupo recebeu a enquete.';
+                }catch(Throwable $e){
+                    $errorMessage=$e->getMessage();
                 }
 
-                $this->pdo->prepare('UPDATE polls SET status="sent",sent_at=NOW() WHERE id=?')->execute([$poll['id']]);
-                $sent+=$ok;
+                if($ok>0){
+                    $this->pdo->prepare('UPDATE polls SET status="sent",sent_at=NOW() WHERE id=?')->execute([$poll['id']]);
+                    $sent+=$ok;
+                }else{
+                    $this->pdo->prepare('UPDATE polls SET status="error" WHERE id=?')->execute([$poll['id']]);
+                }
             }
         }
         return $sent;
