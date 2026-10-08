@@ -24,6 +24,24 @@ final class UploadService
         );
     }
 
+    public function congregationLogo(array $file,string $churchId): ?array
+    {
+        if(($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_NO_FILE)return null;
+
+        return $this->store(
+            $file,
+            $churchId,
+            'storage/uploads/congregations',
+            [
+                'image/jpeg'=>'jpg',
+                'image/png'=>'png',
+                'image/webp'=>'webp',
+            ],
+            5*1024*1024,
+            false
+        );
+    }
+
     public function financeDocument(array $file,string $churchId): ?array
     {
         if(($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_NO_FILE)return null;
