@@ -1,33 +1,33 @@
 {
-    "version": "3.1.1",
+    "version": "3.1.3",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.1.1.01.b64.txt",
-        "releases/v3.1.1.02.b64.txt",
-        "releases/v3.1.1.03.b64.txt",
-        "releases/v3.1.1.04.b64.txt",
-        "releases/v3.1.1.05.b64.txt",
-        "releases/v3.1.1.06.b64.txt",
-        "releases/v3.1.1.07.b64.txt",
-        "releases/v3.1.1.08.b64.txt",
-        "releases/v3.1.1.09.b64.txt",
-        "releases/v3.1.1.10.b64.txt",
-        "releases/v3.1.1.11.b64.txt",
-        "releases/v3.1.1.12.b64.txt",
-        "releases/v3.1.1.13.b64.txt",
-        "releases/v3.1.1.14.b64.txt",
-        "releases/v3.1.1.15.b64.txt",
-        "releases/v3.1.1.16.b64.txt",
-        "releases/v3.1.1.17.b64.txt",
-        "releases/v3.1.1.18.b64.txt",
-        "releases/v3.1.1.19.b64.txt",
-        "releases/v3.1.1.20.b64.txt",
-        "releases/v3.1.1.21.b64.txt",
-        "releases/v3.1.1.22.b64.txt",
-        "releases/v3.1.1.23.b64.txt"
+        "releases/v3.1.3.01.b64.txt",
+        "releases/v3.1.3.02.b64.txt",
+        "releases/v3.1.3.03.b64.txt",
+        "releases/v3.1.3.04.b64.txt",
+        "releases/v3.1.3.05.b64.txt",
+        "releases/v3.1.3.06.b64.txt",
+        "releases/v3.1.3.07.b64.txt",
+        "releases/v3.1.3.08.b64.txt",
+        "releases/v3.1.3.09.b64.txt",
+        "releases/v3.1.3.10.b64.txt",
+        "releases/v3.1.3.11.b64.txt",
+        "releases/v3.1.3.12.b64.txt",
+        "releases/v3.1.3.13.b64.txt",
+        "releases/v3.1.3.14.b64.txt",
+        "releases/v3.1.3.15.b64.txt",
+        "releases/v3.1.3.16.b64.txt",
+        "releases/v3.1.3.17.b64.txt",
+        "releases/v3.1.3.18.b64.txt",
+        "releases/v3.1.3.19.b64.txt",
+        "releases/v3.1.3.20.b64.txt",
+        "releases/v3.1.3.21.b64.txt",
+        "releases/v3.1.3.22.b64.txt",
+        "releases/v3.1.3.23.b64.txt"
     ],
-    "sha256": "e8918b7e6c94181bdc4b09e25ebe6f15703d690993e2f19e5607a02b04cdf7bc",
+    "sha256": "2ec50ca248d14a110927d6b87c9e13b97de980124f395a4a386db3e03cca3665",
     "files": [
         {
             "path": ".htaccess",
@@ -35,7 +35,7 @@
         },
         {
             "path": "VERSION",
-            "sha256": "6dc3b2dc3139b7d421b6fc26a7f853389a9b035ea4f2e9047b9516050dd6ac73"
+            "sha256": "2aaac27dade3045a30c64834f4c1ce9f5a5a4864c43e547bec804bc6e0186f43"
         },
         {
             "path": "index.php",
@@ -63,7 +63,7 @@
         },
         {
             "path": "public/VERSION",
-            "sha256": "6dc3b2dc3139b7d421b6fc26a7f853389a9b035ea4f2e9047b9516050dd6ac73"
+            "sha256": "2aaac27dade3045a30c64834f4c1ce9f5a5a4864c43e547bec804bc6e0186f43"
         },
         {
             "path": "public/api/generate-event-poster.php",
@@ -211,7 +211,7 @@
         },
         {
             "path": "public/groups.php",
-            "sha256": "8c19c98a3874073c6ae775f5c2ff053abc73d57a311805198b8c3be44d5fb01d"
+            "sha256": "783c486beb6878a53556713251f7a2dfa7ffa26fa7eb480ee0d1212b1894fa75"
         },
         {
             "path": "public/index.php",
@@ -255,7 +255,7 @@
         },
         {
             "path": "public/lib/BotWebhookHandler.php",
-            "sha256": "02823c947f5e69a12038d4d3946c7eb784ab7a03b479c693123a836a799857a3"
+            "sha256": "ff8b85d219df917e9b4f431ef937f41c94ca2bab52d489b44ef10a1477c1a3bb"
         },
         {
             "path": "public/lib/CronTasks.php",
@@ -275,11 +275,11 @@
         },
         {
             "path": "public/lib/GroupBroadcastService.php",
-            "sha256": "95577c02d9bc509ccc573196d1f6f6c3acb8aa055726f047693d8a6615e220d8"
+            "sha256": "23df1a9d05b531f6056a68bdaeeeec335352aa091f7b4dac6e611085bc1163a9"
         },
         {
             "path": "public/lib/GroupMessageHandler.php",
-            "sha256": "f09ab193c095f71888feda0a7295d634068dd3c24dffd3def69c3d4390cfd6e5"
+            "sha256": "2c7a2a7d3178f22bbe05dec78cefc95772f6140383ac19a26fe914b1a06c3054"
         },
         {
             "path": "public/lib/LegacyDataMigrator.php",
@@ -367,7 +367,7 @@
         },
         {
             "path": "public/prayer-clock.php",
-            "sha256": "501dc8fef09c99678e1242349a5da4e112a3a30fc1cc2b5de74c7f1e03c62067"
+            "sha256": "d73195fb8ff6b627fad4071bf568278a0c38722f5a6491a4531a817dc9cf269d"
         },
         {
             "path": "public/prayers.php",
@@ -427,7 +427,7 @@
         },
         {
             "path": "public/updates/manifest.json",
-            "sha256": "09c8dd60923d1dcfed7e909046eaecda0c878a49c71dd1dfc51b5005495cd860"
+            "sha256": "cb64c5d3d63cba7a7c66513190ecb8a678259ab3452641d06d8d688837edfd31"
         },
         {
             "path": "public/updates/migrations/0.2.0.sql",
