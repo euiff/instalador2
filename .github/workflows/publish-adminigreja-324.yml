@@ -1,0 +1,126 @@
+name: Publish AdminIgreja 3.2.4 congregation card update
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-324.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout update channel
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - name: Checkout 3.2.4 work source
+        uses: actions/checkout@v4
+        with:
+          ref: work-3.2.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate changed PHP and expected fields
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.2.3-source/public/congregations.php
+          php -l source/work-3.2.3-source/public/members.php
+          php -l source/work-3.2.3-source/public/member-document.php
+          php -l source/work-3.2.3-source/public/lib/UploadService.php
+          grep -q 'name="naturalness"' source/work-3.2.3-source/public/members.php
+          grep -q 'Logo da congregação' source/work-3.2.3-source/public/congregations.php
+          grep -q 'congregation_logo' source/work-3.2.3-source/public/member-document.php
+          ! grep -q '<b>Nacionalidade</b>' source/work-3.2.3-source/public/member-document.php
+          grep -q 'ADD COLUMN logo_url' source/work-3.2.3-source/public/database/021_congregation_logo.sql
+
+      - name: Build delta package and manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.2.3-source
+          tar -czf /tmp/adminigreja-3.2.4.tar.gz \
+            public/congregations.php \
+            public/members.php \
+            public/member-document.php \
+            public/lib/UploadService.php \
+            public/database/001_core.sql \
+            public/database/021_congregation_logo.sql \
+            public/VERSION \
+            public/CHANGELOG.md
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.2.4.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.2.4.tar.gz > /tmp/adminigreja-3.2.4.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.2.4.b64 /tmp/v3.2.4.
+          i=1
+          for f in /tmp/v3.2.4.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.2.4.$n.b64.txt"
+            i=$((i+1))
+          done
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.2.3-source")
+          release=channel/"releases"
+          parts=sorted(release.glob("v3.2.4.*.b64.txt"))
+          package=Path("/tmp/adminigreja-3.2.4.tar.gz")
+          file_paths=[
+              "public/congregations.php",
+              "public/members.php",
+              "public/member-document.php",
+              "public/lib/UploadService.php",
+              "public/database/001_core.sql",
+              "public/database/021_congregation_logo.sql",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+          manifest={
+              "version":"3.2.4",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "files":files,
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=4)+"\n",encoding="utf-8")
+          print(json.dumps(manifest,ensure_ascii=False,indent=2))
+          PY
+
+      - name: Verify package rebuild and extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.2.4.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.2.4.tar.gz
+          test "$(sha256sum /tmp/rebuilt-3.2.4.tar.gz | awk '{print $1}')" = "$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          rm -rf /tmp/test324 && mkdir -p /tmp/test324
+          tar -xzf /tmp/rebuilt-3.2.4.tar.gz -C /tmp/test324
+          php -l /tmp/test324/public/congregations.php
+          php -l /tmp/test324/public/members.php
+          php -l /tmp/test324/public/member-document.php
+          php -l /tmp/test324/public/lib/UploadService.php
+
+      - name: Publish 3.2.4
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.4.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.2.4 congregation logo and naturalness update"
+          git push origin main
