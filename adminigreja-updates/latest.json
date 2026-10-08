@@ -1,44 +1,27 @@
 {
-    "version": "3.2.4",
+    "version": "3.2.5",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.2.4.01.b64.txt",
-        "releases/v3.2.4.02.b64.txt"
+        "releases/v3.2.5.01.b64.txt"
     ],
-    "sha256": "f14b1af58b00ed69ecfa77c447c12a8874691fb809ca67f0b6df7292829fa9e5",
+    "sha256": "fd3b10894fce5dfa3224ee40bf9dfcecda06f71619de7da1e2c2a4e4c7168b63",
     "files": [
         {
             "path": "public/congregations.php",
-            "sha256": "7b943d87be5082dcea22428cdede567322e7029c449256a25edbd468ab5d3ca4"
-        },
-        {
-            "path": "public/members.php",
-            "sha256": "2e2d837c5abac5d36483e984c0a64c5e654352f37e3fe7364ebae09f4513cbac"
-        },
-        {
-            "path": "public/member-document.php",
-            "sha256": "a528c9a8f8f846191c433cf7a4468c2ce5769ab505836fbb9420e33d6427505d"
+            "sha256": "811f5054b056b4d44470afff051876be823a9e510f0c6380f37c0fa93c0ca926"
         },
         {
             "path": "public/lib/UploadService.php",
-            "sha256": "f9f06d69ddc4b0fa0c8f94ab1bb120970856f6f127c47c9700fe7698bef4bf54"
-        },
-        {
-            "path": "public/database/001_core.sql",
-            "sha256": "5dae41ad3e6a0623193abd0748f27894ebc2f49e063ba06cf28090d9cc6d3d4b"
-        },
-        {
-            "path": "public/database/021_congregation_logo.sql",
-            "sha256": "f37a06c3c8783e5ff02794e18c633d2fcd12c7eb59e179947391345b0804423e"
+            "sha256": "c97fcff0f085e0b795a1b36b9afaab56b3e5850b7b169acf13df30475167b1c8"
         },
         {
             "path": "public/VERSION",
-            "sha256": "da37b62b234fc08c3abe13174a58e80da0d1c4cfc5dcf4378e9317e81d4f5c3d"
+            "sha256": "a37fa49d02e50f3371b05c5046958650772ecbedb21882a542229792b81578b2"
         },
         {
             "path": "public/CHANGELOG.md",
-            "sha256": "ab09b06dc1f7a222a6b2e28654a54f0bcdfd8e0d13f4201eebf3908b7d621dfe"
+            "sha256": "6516755a15c63a5d44d284ae0411968123ad4de3fba448c5b102c6c03a97e045"
         }
     ]
 }
