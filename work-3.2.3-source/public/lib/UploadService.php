@@ -68,6 +68,28 @@ final class UploadService
         return rtrim($this->appRoot,'/\\').'/'.$relativePath;
     }
 
+    public function repairPublicImage(?string $url): void
+    {
+        $url=trim((string)$url);
+        if($url===''||preg_match('#^https?://#i',$url))return;
+        $relative=ltrim(parse_url($url,PHP_URL_PATH)?:$url,'/');
+        if(!str_starts_with($relative,'storage/uploads/'))return;
+        $file=$this->absolute($relative);
+        if(is_file($file)){
+            @chmod(dirname($file),0755);
+            @chmod($file,0644);
+        }
+        $dir=dirname($file);
+        while(str_starts_with($dir,$this->absolute('storage/uploads'))){
+            @chmod($dir,0755);
+            $parent=dirname($dir);
+            if($parent===$dir)break;
+            $dir=$parent;
+        }
+        @chmod($this->absolute('storage'),0755);
+        @chmod($this->absolute('storage/uploads'),0755);
+    }
+
     private function store(
         array $file,
         string $churchId,
@@ -91,8 +113,15 @@ final class UploadService
         $safeChurch=preg_replace('/[^A-Za-z0-9_-]/','',$churchId)?:'church';
         $relative=rtrim($base,'/').'/'.$safeChurch;
         $dir=$this->absolute($relative);
-        if(!is_dir($dir)&&!mkdir($dir,0750,true)&&!is_dir($dir)){
+        $dirMode=$protect?0750:0755;
+        if(!is_dir($dir)&&!mkdir($dir,$dirMode,true)&&!is_dir($dir)){
             throw new RuntimeException('Não foi possível criar a pasta de arquivos.');
+        }
+        if(!$protect){
+            @chmod($this->absolute('storage'),0755);
+            @chmod($this->absolute('storage/uploads'),0755);
+            @chmod($this->absolute(rtrim($base,'/')),0755);
+            @chmod($dir,0755);
         }
 
         if($protect)$this->protectDirectory(dirname($this->absolute(rtrim($base,'/').'/placeholder')));
@@ -104,7 +133,7 @@ final class UploadService
         if(!is_uploaded_file($tmp)||!move_uploaded_file($tmp,$target)){
             throw new RuntimeException('Não foi possível salvar o arquivo enviado.');
         }
-        @chmod($target,0640);
+        @chmod($target,$protect?0640:0644);
 
         return [
             'path'=>$relative.'/'.$name,
