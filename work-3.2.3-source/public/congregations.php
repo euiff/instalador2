@@ -1,10 +1,12 @@
 <?php
 require __DIR__.'/bootstrap.php';
+require_once __DIR__.'/lib/UploadService.php';
 
 $user=$auth->requireAbility('secretary');
 $church=$auth->currentChurch();
 if(!$church)redirect('/logout.php');
 $cid=(string)$church['id'];
+$uploads=new UploadService(__DIR__);
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
     try{
@@ -22,6 +24,18 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $name=trim((string)($_POST['name']??''));
         if($name==='')throw new RuntimeException('Informe o nome da congregação.');
 
+        $logoUrl=null;
+        if($id!==''){
+            $q=$pdo->prepare('SELECT logo_url FROM congregations WHERE id=? AND church_id=? LIMIT 1');
+            $q->execute([$id,$cid]);
+            $logoUrl=$q->fetchColumn()?:null;
+        }
+
+        $uploaded=$uploads->congregationLogo($_FILES['logo']??[],$cid);
+        if($uploaded){
+            $logoUrl='/'.ltrim((string)$uploaded['path'],'/');
+        }
+
         $vals=[
             trim((string)($_POST['address']??''))?:null,
             trim((string)($_POST['phone']??''))?:null,
@@ -30,15 +44,16 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             trim((string)($_POST['schedule_text']??''))?:null,
             trim((string)($_POST['daily_devotional_time']??''))?:null,
             (int)($_POST['sort_order']??0),
+            $logoUrl,
         ];
 
         if($id!==''){
-            $q=$pdo->prepare('UPDATE congregations SET name=?,address=?,phone=?,pastor_name=?,pix_key=?,schedule_text=?,daily_devotional_time=?,sort_order=? WHERE id=? AND church_id=?');
+            $q=$pdo->prepare('UPDATE congregations SET name=?,address=?,phone=?,pastor_name=?,pix_key=?,schedule_text=?,daily_devotional_time=?,sort_order=?,logo_url=? WHERE id=? AND church_id=?');
             $q->execute([$name,...$vals,$id,$cid]);
             flash('success','Congregação atualizada com sucesso.');
         }else{
             $id=app_uuid();
-            $q=$pdo->prepare('INSERT INTO congregations(id,church_id,name,address,phone,pastor_name,pix_key,schedule_text,daily_devotional_time,sort_order,active) VALUES(?,?,?,?,?,?,?,?,?,?,1)');
+            $q=$pdo->prepare('INSERT INTO congregations(id,church_id,name,address,phone,pastor_name,pix_key,schedule_text,daily_devotional_time,sort_order,logo_url,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,1)');
             $q->execute([$id,$cid,$name,...$vals]);
             flash('success','Congregação cadastrada com sucesso.');
         }
@@ -150,7 +165,7 @@ View::header('Congregações','congregations',$auth,$church);
   </div>
 
   <div class="editor-grid">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
       <?=csrf_field()?>
       <input type="hidden" name="action" value="save">
       <input type="hidden" name="id" value="<?=e($edit['id']??'')?>">
@@ -159,6 +174,12 @@ View::header('Congregações','congregations',$auth,$church);
         <div class="field full"><label>Endereço</label><input class="input" name="address" value="<?=e($edit['address']??'')?>" placeholder="Rua, número, bairro e cidade"></div>
         <div class="field"><label>Telefone</label><input class="input" name="phone" value="<?=e($edit['phone']??'')?>" placeholder="64 99999-9999"></div>
         <div class="field"><label>Pastor responsável</label><input class="input" name="pastor_name" value="<?=e($edit['pastor_name']??'')?>"></div>
+        <div class="field full">
+          <label>Logo da congregação</label>
+          <input class="input" type="file" name="logo" accept="image/jpeg,image/png,image/webp">
+          <small class="help-text">JPG, PNG ou WebP. Esta logo será usada na carteirinha dos membros desta congregação. Se não houver logo aqui, será usada a logo geral da igreja.</small>
+          <?php if(!empty($edit['logo_url'])):?><div style="margin-top:10px"><img src="<?=e($edit['logo_url'])?>" alt="Logo atual" style="max-width:110px;max-height:110px;border-radius:14px;border:1px solid var(--line)"></div><?php endif?>
+        </div>
         <div class="field"><label>Chave PIX</label><input class="input" name="pix_key" value="<?=e($edit['pix_key']??'')?>" placeholder="Opcional"></div>
         <div class="field"><label>Horário do devocional</label><input class="input" type="time" name="daily_devotional_time" value="<?=e(!empty($edit['daily_devotional_time'])?substr((string)$edit['daily_devotional_time'],0,5):'')?>"></div>
         <div class="field full"><label>Horários / cultos</label><textarea class="textarea" name="schedule_text" placeholder="Ex.: Domingo 19h&#10;Quarta 19h30&#10;Sexta 19h30"><?=e($edit['schedule_text']??'')?></textarea></div>
