@@ -10,11 +10,98 @@ final class GroupMessageHandler
     {
         $churchId=$church['id'];$text=trim($text);
         $registeredGroupId=$this->registeredGroupId((string)$churchId,$groupId);
+        $result=$this->pollVote((string)$churchId,$groupId,$registeredGroupId,$senderPhone,$senderName,$text);
+        if($result) return $result;
         $result=$this->raffle($churchId,$groupId,$registeredGroupId,$senderPhone,$senderName,$text);
         if($result) return $result;
         $result=$this->prayerClock($churchId,$groupId,$registeredGroupId,$senderPhone,$senderName,$text);
         if($result) return $result;
         return $this->moderate($church,$groupId,$senderPhone,$senderName,$text,$messageKey);
+    }
+
+
+    private function pollVote(string $churchId,string $groupJid,?string $registeredGroupId,string $phone,string $name,string $text): ?array
+    {
+        if(!preg_match('/^(?:voto\s*)?([1-8])$/ui',trim($text),$m))return null;
+        $choice=(int)$m[1];
+
+        $q=$this->pdo->prepare('SELECT * FROM polls WHERE church_id=? AND status="sent" AND (expires_at IS NULL OR expires_at>NOW()) ORDER BY sent_at DESC,created_at DESC');
+        $q->execute([$churchId]);
+
+        $poll=null;
+        foreach($q->fetchAll() as $candidate){
+            $targets=json_decode((string)($candidate['target_groups']??'[]'),true);
+            if(!is_array($targets))$targets=[];
+
+            if($targets){
+                if(!$registeredGroupId||!in_array($registeredGroupId,$targets,true))continue;
+            }else{
+                if(!$registeredGroupId)continue;
+                $g=$this->pdo->prepare('SELECT purposes FROM church_groups WHERE id=? AND church_id=? AND active=1 LIMIT 1');
+                $g->execute([$registeredGroupId,$churchId]);
+                $purposes=json_decode((string)($g->fetchColumn()?:'[]'),true);
+                if(!is_array($purposes)||!in_array('polls',$purposes,true))continue;
+            }
+
+            $poll=$candidate;
+            break;
+        }
+
+        if(!$poll)return null;
+
+        $options=json_decode((string)($poll['options']??'[]'),true);
+        if(!is_array($options)||$choice<1||$choice>count($options)){
+            return ['handled'=>true,'reply'=>'❌ Opção inválida. Responda *VOTO 1* até *VOTO '.count($options).'* conforme as opções da enquete.'];
+        }
+
+        $optionText=trim((string)$options[$choice-1]);
+        if($optionText==='')return ['handled'=>true,'reply'=>'❌ Essa opção não está disponível.'];
+
+        $normalizedPhone=preg_replace('/\D+/','',$phone)?:trim($phone);
+        if($normalizedPhone==='')$normalizedPhone=trim($phone);
+        if($normalizedPhone==='')return ['handled'=>true,'reply'=>'❌ Não consegui identificar seu número para registrar o voto.'];
+
+        $existing=$this->pdo->prepare('SELECT id,option_index FROM poll_votes WHERE poll_id=? AND voter_phone=? LIMIT 1');
+        $existing->execute([$poll['id'],$normalizedPhone]);
+        $vote=$existing->fetch();
+
+        if($vote){
+            $this->pdo->prepare('UPDATE poll_votes SET group_id=?,voter_name=?,option_index=?,option_text=?,updated_at=NOW() WHERE id=?')
+                ->execute([$registeredGroupId,$name?:null,$choice,$optionText,$vote['id']]);
+            $changed=(int)$vote['option_index']!==$choice;
+        }else{
+            $this->pdo->prepare('INSERT INTO poll_votes(id,poll_id,church_id,group_id,voter_phone,voter_name,option_index,option_text) VALUES(?,?,?,?,?,?,?,?)')
+                ->execute([app_uuid(),$poll['id'],$churchId,$registeredGroupId,$normalizedPhone,$name?:null,$choice,$optionText]);
+            $changed=true;
+        }
+
+        $counts=array_fill(1,count($options),0);
+        $s=$this->pdo->prepare('SELECT option_index,COUNT(*) qty FROM poll_votes WHERE poll_id=? GROUP BY option_index');
+        $s->execute([$poll['id']]);
+        foreach($s->fetchAll() as $row){
+            $idx=(int)$row['option_index'];
+            if(isset($counts[$idx]))$counts[$idx]=(int)$row['qty'];
+        }
+
+        $results=[];
+        foreach($counts as $idx=>$qty)$results[(string)$idx]=$qty;
+        $this->pdo->prepare('UPDATE polls SET results=? WHERE id=?')
+            ->execute([json_encode($results,JSON_UNESCAPED_UNICODE),$poll['id']]);
+
+        $total=array_sum($counts);
+        $lines=[];
+        foreach($options as $i=>$opt){
+            $idx=$i+1;
+            $qty=$counts[$idx]??0;
+            $pct=$total>0?round(($qty/$total)*100):0;
+            $lines[]='*'.$idx.'.* '.$opt.' — *'.$qty.'* voto'.($qty===1?'':'s').' ('.$pct.'%)';
+        }
+
+        $prefix=$changed?'✅ *Voto registrado!*':'✅ *Seu voto já estava nessa opção.*';
+        return [
+            'handled'=>true,
+            'reply'=>$prefix."\n".'👤 '.($name?:'Participante')."\n".'🗳️ *'.$choice.'. '.$optionText.'*'."\n\n".'📊 *Resultado parcial*'."\n".implode("\n",$lines)."\n\n".'Total: *'.$total.'* voto'.($total===1?'':'s').'. Você pode alterar seu voto respondendo *VOTO* + o novo número.'
+        ];
     }
 
     private function raffle(string $churchId,string $groupJid,?string $registeredGroupId,string $phone,string $name,string $text):?array
