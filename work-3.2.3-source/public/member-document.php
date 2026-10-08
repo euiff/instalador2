@@ -16,7 +16,7 @@ if(!in_array($type,$allowed,true)){
     exit('Documento inválido.');
 }
 
-$q=$pdo->prepare('SELECT m.*,c.name congregation_name,c.address congregation_address,c.pastor_name congregation_pastor,c.pastor_signature_url congregation_signature FROM members m LEFT JOIN congregations c ON c.id=m.congregation_id WHERE m.id=? AND m.church_id=? LIMIT 1');
+$q=$pdo->prepare('SELECT m.*,c.name congregation_name,c.address congregation_address,c.pastor_name congregation_pastor,c.pastor_signature_url congregation_signature,c.logo_url congregation_logo FROM members m LEFT JOIN congregations c ON c.id=m.congregation_id WHERE m.id=? AND m.church_id=? LIMIT 1');
 $q->execute([$id,$cid]);
 $m=$q->fetch();
 if(!$m){
@@ -67,7 +67,8 @@ if($type==='membership_card'){
     if($parents==='')$parents='Não informado';
 
     $photo=trim((string)($m['photo_url']??''));
-    $logo=trim((string)($church['logo_url']??''));
+    $logo=trim((string)($m['congregation_logo']??''));
+    if($logo==='')$logo=trim((string)($church['logo_url']??''));
 
     $scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
     $host=(string)($_SERVER['HTTP_HOST']??'');
@@ -183,7 +184,6 @@ linear-gradient(135deg,var(--blue1) 0%,var(--blue2) 48%,#032a68 100%)}
         <div class="back-fields">
           <div class="back-field"><b>Filiação — Mãe / Pai</b><span><?=e($parents)?></span></div>
           <div class="back-field"><b>Data de Batismo</b><span><?=e($fmt($m['baptism_date']??null))?></span></div>
-          <div class="back-field"><b>Nacionalidade</b><span><?=e($m['nationality']?:'—')?></span></div>
           <div class="back-field"><b>Naturalidade</b><span><?=e($m['naturalness']?:'—')?></span></div>
           <div class="back-field"><b>Departamento</b><span><?=e($m['department']?:'—')?></span></div>
           <div class="back-field"><b>Pastor / Responsável</b><span><?=e($pastor?:'—')?></span></div>
