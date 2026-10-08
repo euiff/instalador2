@@ -64,3 +64,5 @@ jobs:
           git push --force origin work-3.2.3
 
 # trigger extraction
+
+# trigger format detection 2
