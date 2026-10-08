@@ -1,0 +1,107 @@
+name: Publish validated PHP 3.2.2 bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-validated-php-322.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download validated bridge artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-1b20-820e-90b9-31e868446db6/raw?se=2026-10-08T13%3A12%3A35Z&sp=r&sv=2026-02-06&sr=b&scid=b1d82027-23bc-5f7c-9a46-95bd191ffcd6&skoid=db6dad9e-03ee-465b-aef6-ce0f63a161dc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-08T12%3A22%3A17Z&ske=2026-10-09T12%3A22%3A17Z&sks=b&skv=2026-02-06&sig=V7n51%2BqQzOPYrsTGfDJDbXDZtMejWDWiJgQWZtuDwII%3D' -o /tmp/bridge322.zip
+          echo 'a4f5cc1dd344b7f257eef19b721e517dfe103fb1d20d331b8d03e28add1c431b  /tmp/bridge322.zip' | sha256sum -c -
+          rm -rf /tmp/bridge322
+          mkdir -p /tmp/bridge322
+          unzip -q /tmp/bridge322.zip -d /tmp/bridge322
+
+      - name: Validate bridge content
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import base64, hashlib, json, pathlib, gzip, tarfile, io
+          root=pathlib.Path('/tmp/bridge322')
+          latest=list(root.rglob('latest.json'))
+          if len(latest)!=1:
+              raise SystemExit(f'expected one latest.json, found {len(latest)}')
+          src=latest[0].parent
+          m=json.loads((src/'latest.json').read_text(encoding='utf-8'))
+
+          if m.get('version')!='3.2.2':
+              raise SystemExit(f"unexpected version: {m.get('version')}")
+          if len(m.get('parts',[]))!=29:
+              raise SystemExit('unexpected part count')
+          if len(m.get('files',[]))!=121:
+              raise SystemExit('unexpected file count')
+
+          encoded=''.join((src/p).read_text(encoding='utf-8').strip() for p in m['parts'])
+          gz=base64.b64decode(encoded,validate=True)
+          got=hashlib.sha256(gz).hexdigest()
+          if got!='360f414e8aebc82370207ce0eb2f8385dbee244c2da55ea1fe36baac9e82558a':
+              raise SystemExit(f'package sha mismatch: {got}')
+          if got.lower()!=str(m['sha256']).lower():
+              raise SystemExit('manifest package sha mismatch')
+
+          tar=gzip.decompress(gz)
+          with tarfile.open(fileobj=io.BytesIO(tar),mode='r:') as tf:
+              names=set(tf.getnames())
+          required=[
+              'public/VERSION',
+              'public/database/020_finance_reversals.sql',
+              'public/finance.php',
+              'public/event-registrations.php',
+              'public/lib/EngagementNotificationService.php',
+              'public/database/019_finance_closings.sql'
+          ]
+          for path in required:
+              if path not in names:
+                  raise SystemExit(f'missing required file {path}')
+          if 'public/config/database.php' in names:
+              raise SystemExit('local database config must not be published')
+          print('bridge 3.2.2 validated')
+          PY
+
+      - name: Stage public update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=$(dirname "$(find /tmp/bridge322 -name latest.json -print -quit)")
+          mkdir -p adminigreja-updates/releases
+          rm -f adminigreja-updates/releases/v3.2.2.*.b64.txt
+          cp "$src"/releases/v3.2.2.*.b64.txt adminigreja-updates/releases/
+          cp "$src/latest.json" adminigreja-updates/latest.json
+
+          python3 <<'PY'
+          import base64, hashlib, json, pathlib
+          root=pathlib.Path('adminigreja-updates')
+          m=json.loads((root/'latest.json').read_text(encoding='utf-8'))
+          encoded=''.join((root/p).read_text(encoding='utf-8').strip() for p in m['parts'])
+          gz=base64.b64decode(encoded,validate=True)
+          got=hashlib.sha256(gz).hexdigest()
+          assert m['version']=='3.2.2'
+          assert len(m['parts'])==29
+          assert len(m['files'])==121
+          assert got==m['sha256'].lower()
+          print('staged public channel ok',got)
+          PY
+
+      - name: Commit public channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.2.*.b64.txt
+          git commit -m "Publish Igreja Master 3.2.2 update channel"
+          git push
