@@ -124,3 +124,5 @@ jobs:
           git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.4.*.b64.txt
           git commit -m "Publish AdminIgreja 3.2.4 congregation logo and naturalness update"
           git push origin main
+
+# trigger publish 3.2.4
