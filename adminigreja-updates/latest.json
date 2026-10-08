@@ -1,32 +1,33 @@
 {
-    "version": "3.1.0",
+    "version": "3.1.1",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.1.0.01.b64.txt",
-        "releases/v3.1.0.02.b64.txt",
-        "releases/v3.1.0.03.b64.txt",
-        "releases/v3.1.0.04.b64.txt",
-        "releases/v3.1.0.05.b64.txt",
-        "releases/v3.1.0.06.b64.txt",
-        "releases/v3.1.0.07.b64.txt",
-        "releases/v3.1.0.08.b64.txt",
-        "releases/v3.1.0.09.b64.txt",
-        "releases/v3.1.0.10.b64.txt",
-        "releases/v3.1.0.11.b64.txt",
-        "releases/v3.1.0.12.b64.txt",
-        "releases/v3.1.0.13.b64.txt",
-        "releases/v3.1.0.14.b64.txt",
-        "releases/v3.1.0.15.b64.txt",
-        "releases/v3.1.0.16.b64.txt",
-        "releases/v3.1.0.17.b64.txt",
-        "releases/v3.1.0.18.b64.txt",
-        "releases/v3.1.0.19.b64.txt",
-        "releases/v3.1.0.20.b64.txt",
-        "releases/v3.1.0.21.b64.txt",
-        "releases/v3.1.0.22.b64.txt"
+        "releases/v3.1.1.01.b64.txt",
+        "releases/v3.1.1.02.b64.txt",
+        "releases/v3.1.1.03.b64.txt",
+        "releases/v3.1.1.04.b64.txt",
+        "releases/v3.1.1.05.b64.txt",
+        "releases/v3.1.1.06.b64.txt",
+        "releases/v3.1.1.07.b64.txt",
+        "releases/v3.1.1.08.b64.txt",
+        "releases/v3.1.1.09.b64.txt",
+        "releases/v3.1.1.10.b64.txt",
+        "releases/v3.1.1.11.b64.txt",
+        "releases/v3.1.1.12.b64.txt",
+        "releases/v3.1.1.13.b64.txt",
+        "releases/v3.1.1.14.b64.txt",
+        "releases/v3.1.1.15.b64.txt",
+        "releases/v3.1.1.16.b64.txt",
+        "releases/v3.1.1.17.b64.txt",
+        "releases/v3.1.1.18.b64.txt",
+        "releases/v3.1.1.19.b64.txt",
+        "releases/v3.1.1.20.b64.txt",
+        "releases/v3.1.1.21.b64.txt",
+        "releases/v3.1.1.22.b64.txt",
+        "releases/v3.1.1.23.b64.txt"
     ],
-    "sha256": "e6c6adc5fcf7b1a7c0f729bdbe44501a0d76b0cb62636bb019fb3dfd7ff86969",
+    "sha256": "e8918b7e6c94181bdc4b09e25ebe6f15703d690993e2f19e5607a02b04cdf7bc",
     "files": [
         {
             "path": ".htaccess",
@@ -34,7 +35,7 @@
         },
         {
             "path": "VERSION",
-            "sha256": "b2f44d3b6e29f8b1b73ea4735f006affc4d198e1fd9c7d50e736159b1ef636c6"
+            "sha256": "6dc3b2dc3139b7d421b6fc26a7f853389a9b035ea4f2e9047b9516050dd6ac73"
         },
         {
             "path": "index.php",
@@ -57,8 +58,12 @@
             "sha256": "969ceb02b101d5b2de08e31e7de42d59ea59ecc15580ea659cbcac0a68e8cd2d"
         },
         {
+            "path": "public/RELEASE-3.1.1.md",
+            "sha256": "001e490c0bb6faa5d8754b917f2dac39b771c2edbde68b46f1b537d8e7a929a9"
+        },
+        {
             "path": "public/VERSION",
-            "sha256": "b2f44d3b6e29f8b1b73ea4735f006affc4d198e1fd9c7d50e736159b1ef636c6"
+            "sha256": "6dc3b2dc3139b7d421b6fc26a7f853389a9b035ea4f2e9047b9516050dd6ac73"
         },
         {
             "path": "public/api/generate-event-poster.php",
@@ -74,11 +79,15 @@
         },
         {
             "path": "public/assets/app.css",
-            "sha256": "e16954c521de46e49fb56e21fcd190a2c951083bb346002174224465ee7e579d"
+            "sha256": "2afa7b6100df8871251ab5d072ade9ed63d7a819017a8080db00448aeec412f4"
         },
         {
             "path": "public/assets/public.css",
             "sha256": "9f67560de26d6d157957ffa97a20885b6770da90698cbac1faae2691ebb48c35"
+        },
+        {
+            "path": "public/automations.php",
+            "sha256": "97b486c65cfc838d925bf6997eaaac2b4f1fadf6dd97c8695e38a91e75aea178"
         },
         {
             "path": "public/bootstrap.php",
@@ -110,7 +119,7 @@
         },
         {
             "path": "public/cron.php",
-            "sha256": "bff4baed515fe48fb295b60440dfcae59a89d1b756577f556bddbde078e5b33e"
+            "sha256": "80f1e28ee0e7c72c2b2902b3359835ca5c89b88dca847330fe6da523b9b603f9"
         },
         {
             "path": "public/dashboard.php",
@@ -181,6 +190,10 @@
             "sha256": "bf152ed28bab6ae3dc5a87f105d02b0dcd8c123d2fa23e88565b84be01e5b02c"
         },
         {
+            "path": "public/database/017_automation_runtime.sql",
+            "sha256": "8330d9919257c826ec84e7e6916143de6250e4781bbbafd2e904878678d42a36"
+        },
+        {
             "path": "public/event-registrations.php",
             "sha256": "3887e1af1adce7d4f075cdb628ca677ee8c734d7cb63cddbe800d759dfbd9966"
         },
@@ -214,7 +227,7 @@
         },
         {
             "path": "public/lib/AdvancedCronTasks.php",
-            "sha256": "a8a304612653334283775282f65afe6051180a7502320e25c4ba3b42248e6bee"
+            "sha256": "ce4550fac17f4cfcf05b0fc3c97e8f320ae630e372f11951309a70b360c75e3c"
         },
         {
             "path": "public/lib/AiClient.php",
@@ -223,6 +236,10 @@
         {
             "path": "public/lib/Auth.php",
             "sha256": "188fc2f56f2ca7fb311340aa4cae52a713c9e07c36cc28e6ac13d92f2095ae01"
+        },
+        {
+            "path": "public/lib/AutomationRunner.php",
+            "sha256": "c22a7d35ae7b5d9631725ef1e815fbdd2ae3be3a291fce666d8e38cb33344505"
         },
         {
             "path": "public/lib/BibleReadingService.php",
@@ -242,7 +259,7 @@
         },
         {
             "path": "public/lib/CronTasks.php",
-            "sha256": "6a036407de7eb2ff682200738fe819ba39287fe67ca7697606c6611af7b4d1e3"
+            "sha256": "a86349970edc3298da3c07d00f76d551fb8dbcd6715c26d06a9974ee9e79f987"
         },
         {
             "path": "public/lib/DashboardService.php",
@@ -294,7 +311,7 @@
         },
         {
             "path": "public/lib/View.php",
-            "sha256": "07e866795ad7a3974d441bccedbc26a0e588060d3ec57df8c90a7a4db92bf71e"
+            "sha256": "fbb445ecd3f2cf7272ba5ade5053b67f174dc4b6dd835e29713a9ebc1a7af80d"
         },
         {
             "path": "public/lib/helpers.php",
@@ -410,7 +427,7 @@
         },
         {
             "path": "public/updates/manifest.json",
-            "sha256": "38357d8e7cfd0e6a04e0d8a1630bee7b5e935ffc25fdc834db707de1225e2e62"
+            "sha256": "09c8dd60923d1dcfed7e909046eaecda0c878a49c71dd1dfc51b5005495cd860"
         },
         {
             "path": "public/updates/migrations/0.2.0.sql",
