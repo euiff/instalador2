@@ -28,9 +28,11 @@
         "releases/v3.2.0.23.b64.txt",
         "releases/v3.2.0.24.b64.txt",
         "releases/v3.2.0.25.b64.txt",
-        "releases/v3.2.0.26.b64.txt"
+        "releases/v3.2.0.26.b64.txt",
+        "releases/v3.2.0.27.b64.txt",
+        "releases/v3.2.0.28.b64.txt"
     ],
-    "sha256": "41519cd979cc1e56a74a85628178f09f2be55f067fa5c5a21e35219e7e2085fd",
+    "sha256": "3ef389b7822e4962c9d7d1674aa4853825899f6125d6e826be97a4b7db0a40ba",
     "files": [
         {
             "path": ".htaccess",
@@ -51,6 +53,10 @@
         {
             "path": "public/404.php",
             "sha256": "abbd94068ae464bcef8ec4003358229cdc33735646d6917c272ca011e29504b6"
+        },
+        {
+            "path": "public/CHANGELOG.md",
+            "sha256": "12d8376c6783366dd7e4418764660ab3eb98142f41315063baeedae279495859"
         },
         {
             "path": "public/RELEASE-3.0.0.md",
@@ -78,11 +84,11 @@
         },
         {
             "path": "public/api/whatsapp-webhook.php",
-            "sha256": "3c09eb0e84218b6a704b820df487d0ac8764cebaca93a314e8487418b769b62f"
+            "sha256": "d4d24e2d7db351150cfcfb265d5727c0148361acd92ff5c42351e3274ef975d1"
         },
         {
             "path": "public/assets/app.css",
-            "sha256": "a30a5838514552437cb7199ec09798ad01d37b6466ec9a064b0f4abaabbc355e"
+            "sha256": "def3c39954734bd2a29612a60dffbe873285122bac81fba270afb4802054350b"
         },
         {
             "path": "public/assets/public.css",
@@ -93,12 +99,16 @@
             "sha256": "2e61dd5dd6c94fc7b61daacd9d28066a8a6b3ecc268d0c1d9108350c22dec7a5"
         },
         {
+            "path": "public/bible.php",
+            "sha256": "20f62ce2f2cd6a3b4ca6ea4bf91ab98505981c625e76d785ce4523a8e4d21ca2"
+        },
+        {
             "path": "public/bootstrap.php",
             "sha256": "7ad5011ce292eec5e6a1925d3923032c918d2a015ae63e5559780bff5341e458"
         },
         {
             "path": "public/bot-settings.php",
-            "sha256": "00663a1be1285ab829eee2493c895040d52bc3277e2a7f4a7d17483537663ad9"
+            "sha256": "c87481e9f1b8c8c9c9c9c03ec4356c7fb9fd976b8b0fed3c57c8fa98a2995c58"
         },
         {
             "path": "public/cadastro.php",
@@ -126,7 +136,7 @@
         },
         {
             "path": "public/dashboard.php",
-            "sha256": "d28667c59298b7cb3542d7375b5ebe8afa890f2960e5c22d63757efc24824450"
+            "sha256": "95fad7f20b0e4426dc07835157e55aa85174f390ce8eb9f1c631a77fb1a22271"
         },
         {
             "path": "public/database/001_core.sql",
@@ -201,12 +211,16 @@
             "sha256": "339165228a82048d44548e417b6f7716f54283ce84c7c37e7abace9a719463a1"
         },
         {
+            "path": "public/documents.php",
+            "sha256": "9b2d4d3a50c25e98f0c8826cec078dcaa48ba56253686427abcf49bd1c7e2dc2"
+        },
+        {
             "path": "public/event-registrations.php",
             "sha256": "3887e1af1adce7d4f075cdb628ca677ee8c734d7cb63cddbe800d759dfbd9966"
         },
         {
             "path": "public/events.php",
-            "sha256": "e2ed8be90130c66febf4cce1059367d3fd3898afbff7754ce34b5d8154fdbde5"
+            "sha256": "2d5e9cd66d52898896093fd65986efe93095053020c0d0eda1e477356ee89827"
         },
         {
             "path": "public/finance-document.php",
@@ -214,7 +228,7 @@
         },
         {
             "path": "public/finance.php",
-            "sha256": "5d8dc1fd8ffcc93f22af7dae34b5977dd668f79799af01eec402de2d31651353"
+            "sha256": "5fb59202b551984a1e359be8d40fda5ed9c4b0e38968e75c32e9fa2683f9dfc6"
         },
         {
             "path": "public/group-moderation.php",
@@ -254,11 +268,23 @@
         },
         {
             "path": "public/lib/BibleReadingService.php",
-            "sha256": "ca6f96f5365fbde7381d077fae1993b63835ecf4dee62ca333e49046b21035c2"
+            "sha256": "252ebf4d4b8d59f04a482dfc2bd3893be0b67536b5e63b447eff47146e826904"
+        },
+        {
+            "path": "public/lib/BotBibleFlow.php",
+            "sha256": "0c001e1dafccf3863cbaf691d0a9396617cd84168b677d763f8d996d4559f38a"
+        },
+        {
+            "path": "public/lib/BotDocumentFlow.php",
+            "sha256": "d306a7542d0aa53d1a88119cc7045f74eab9ea7a7064518883f22d1fd79bde09"
         },
         {
             "path": "public/lib/BotEditFlow.php",
             "sha256": "575cc218e159f13429c5dc2ccecd22ebfd196dcc85f2160c08c5c643852b4bf1"
+        },
+        {
+            "path": "public/lib/BotEventFlow.php",
+            "sha256": "e508856b271df9f6e23aebdc9442334640afbc0a9c0823c0e319956128b47723"
         },
         {
             "path": "public/lib/BotRegistrationFlow.php",
@@ -266,7 +292,7 @@
         },
         {
             "path": "public/lib/BotWebhookHandler.php",
-            "sha256": "45a78b88a03640780e3a42f7697b498bf57e6603c3668e5730a3dcb8cbdb3fbf"
+            "sha256": "dcb9afdc13724cb1ddaa5b6ed31bde7c0d6ba000d418c0a65879e98d49930b23"
         },
         {
             "path": "public/lib/CronTasks.php",
@@ -286,7 +312,7 @@
         },
         {
             "path": "public/lib/EvolutionClient.php",
-            "sha256": "d8c98ccb01c50a3e60cbe4bc81b97f09484bd10b3604e649050bce027e6be19b"
+            "sha256": "5171d5664bedc214be39c37d7ae200168f4e2af2eed30c1dd98680c2ed8e6343"
         },
         {
             "path": "public/lib/GroupBroadcastService.php",
@@ -299,6 +325,10 @@
         {
             "path": "public/lib/LegacyDataMigrator.php",
             "sha256": "02622b15242f2b299c8bd11c82a23782f385fc6a1452ff659bf59a6fe76fe439"
+        },
+        {
+            "path": "public/lib/MemberDocumentService.php",
+            "sha256": "3f2000aeedb27196b5a6abf8e3c1c7f7f22d72b15a1537a0b2bc84404dda36dd"
         },
         {
             "path": "public/lib/NotificationService.php",
@@ -322,7 +352,7 @@
         },
         {
             "path": "public/lib/SpiritualFlow.php",
-            "sha256": "fd7275ad069e71ba8501379ba1c96af3b72087255ec16429b8cd10d1e5490f53"
+            "sha256": "adfb449c4123aa2a92bb55606b52b2db70f28909fcb12675378090f31dcc470f"
         },
         {
             "path": "public/lib/TtsClient.php",
@@ -338,7 +368,7 @@
         },
         {
             "path": "public/lib/View.php",
-            "sha256": "96eaff19f43e93392bac01b98510279d59048b749896813930dbc339647b9518"
+            "sha256": "99533120c154cbc080c3a3a4e619cb76e4aa965f5f9f78ad9c6eb26a0458513f"
         },
         {
             "path": "public/lib/helpers.php",
@@ -359,6 +389,10 @@
         {
             "path": "public/master.php",
             "sha256": "c75f7d91988fdf07e6c0b462bc6501fff660bda50cf495c9d500e7407901fa8b"
+        },
+        {
+            "path": "public/member-document-pdf.php",
+            "sha256": "e168d6707ee5ab1c8b4289f978888c47a62dc4732506bacfff794daa03d05a72"
         },
         {
             "path": "public/member-document.php",
@@ -394,7 +428,7 @@
         },
         {
             "path": "public/prayer-clock.php",
-            "sha256": "07bbdb86d63d826a83e636e81ec43dc7f0af31165950ffcc974a181665d50370"
+            "sha256": "cea0b6be001555e68de1644c5cc429e2c8b5bab050aab24c1ffd120c6ffe318d"
         },
         {
             "path": "public/prayers.php",
@@ -406,7 +440,7 @@
         },
         {
             "path": "public/raffles.php",
-            "sha256": "abee1dc7ddc238188356c666b5298059380950f4aa39e6573d94e9ab887a6250"
+            "sha256": "06b3d3c858807379ba38ef23cef2317578870a037f627dee5158b52f556be38d"
         },
         {
             "path": "public/register.php",
@@ -422,7 +456,7 @@
         },
         {
             "path": "public/service-types.php",
-            "sha256": "ae32ca0ee8e833465f26965cd2599a7e3334edbd32ced7b3c71ac363f28f4705"
+            "sha256": "b713a28efd0e375a514a411826f30f562e7ef78d39aed33508a2347e59fd6b60"
         },
         {
             "path": "public/settings.php",
@@ -458,7 +492,7 @@
         },
         {
             "path": "public/updates/manifest.json",
-            "sha256": "b96cd93b784bd4c9aac1c01c86038caaffcb84ccb87c66d85bb6d1d1ca8d5b14"
+            "sha256": "0e3fdbb55146f7e66b9a6d7c84df7035061e911b841f54ecfcfe6da866ced1d6"
         },
         {
             "path": "public/updates/migrations/0.2.0.sql",
