@@ -1,0 +1,20 @@
+<?php
+require __DIR__.'/bootstrap.php';
+$user=$auth->requireAbility('communications'); $church=$auth->currentChurch(); if(!$church) exit('Igreja não selecionada.'); $churchId=$church['id'];
+if($_SERVER['REQUEST_METHOD']==='POST'){
+  verify_csrf();
+  $blocked=array_values(array_filter(array_map('trim',preg_split('/\r?\n/',$_POST['blocked_words']??''))));
+  $q=$pdo->prepare('INSERT INTO group_moderation_settings(id,church_id,enabled,ai_moderation_enabled,blocked_words,moderate_adult_content,moderate_politics,moderate_profanity,moderate_spam,mention_user_in_warning,warning_message) VALUES(?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE enabled=VALUES(enabled),ai_moderation_enabled=VALUES(ai_moderation_enabled),blocked_words=VALUES(blocked_words),moderate_adult_content=VALUES(moderate_adult_content),moderate_politics=VALUES(moderate_politics),moderate_profanity=VALUES(moderate_profanity),moderate_spam=VALUES(moderate_spam),mention_user_in_warning=VALUES(mention_user_in_warning),warning_message=VALUES(warning_message)');
+  $q->execute([app_uuid(),$churchId,isset($_POST['enabled'])?1:0,isset($_POST['ai_moderation_enabled'])?1:0,json_encode($blocked,JSON_UNESCAPED_UNICODE),isset($_POST['moderate_adult_content'])?1:0,isset($_POST['moderate_politics'])?1:0,isset($_POST['moderate_profanity'])?1:0,isset($_POST['moderate_spam'])?1:0,isset($_POST['mention_user_in_warning'])?1:0,trim($_POST['warning_message']??'')?:null]);
+  flash('success','Configurações de moderação salvas.'); redirect('/group-moderation.php');
+}
+$q=$pdo->prepare('SELECT * FROM group_moderation_settings WHERE church_id=? LIMIT 1'); $q->execute([$churchId]); $s=$q->fetch() ?: ['enabled'=>0,'ai_moderation_enabled'=>0,'blocked_words'=>'[]','moderate_adult_content'=>1,'moderate_politics'=>0,'moderate_profanity'=>1,'moderate_spam'=>1,'mention_user_in_warning'=>1,'warning_message'=>''];
+$blocked=json_decode($s['blocked_words']??'[]',true)?:[];
+$l=$pdo->prepare('SELECT * FROM moderation_logs WHERE church_id=? ORDER BY created_at DESC LIMIT 100'); $l->execute([$churchId]); $logs=$l->fetchAll();
+View::header('Moderação de Grupos','group-moderation',$auth,$church);
+?>
+<div class="page-head"><div><h1>Moderação de Grupos</h1><p>Defina regras para proteger os grupos de WhatsApp da igreja.</p></div></div><?php View::flash(); ?>
+<div class="grid-2"><section class="card"><h2>Regras</h2><form method="post" class="form-grid"><?=csrf_field()?>
+<label><input type="checkbox" name="enabled" <?=$s['enabled']?'checked':''?>> Ativar moderação</label><label><input type="checkbox" name="ai_moderation_enabled" <?=$s['ai_moderation_enabled']?'checked':''?>> Usar IA</label><label><input type="checkbox" name="moderate_adult_content" <?=$s['moderate_adult_content']?'checked':''?>> Conteúdo adulto</label><label><input type="checkbox" name="moderate_profanity" <?=$s['moderate_profanity']?'checked':''?>> Palavrões</label><label><input type="checkbox" name="moderate_spam" <?=$s['moderate_spam']?'checked':''?>> Spam</label><label><input type="checkbox" name="moderate_politics" <?=$s['moderate_politics']?'checked':''?>> Política</label><label><input type="checkbox" name="mention_user_in_warning" <?=$s['mention_user_in_warning']?'checked':''?>> Mencionar usuário no aviso</label><label class="full">Palavras bloqueadas (uma por linha)<textarea name="blocked_words"><?=e(implode("\n",$blocked))?></textarea></label><label class="full">Mensagem de aviso<textarea name="warning_message"><?=e($s['warning_message']??'')?></textarea></label><div class="full"><button class="btn primary">Salvar</button></div></form></section>
+<section class="card"><h2>Últimas ocorrências</h2><div class="table-wrap"><table><thead><tr><th>Data</th><th>Usuário</th><th>Motivo</th><th>Ação</th></tr></thead><tbody><?php foreach($logs as $r):?><tr><td><?=e(date('d/m/Y H:i',strtotime($r['created_at'])))?></td><td><?=e($r['sender_name']?:$r['sender_phone'])?></td><td><?=e($r['reason'])?></td><td><?=e($r['action_taken']?:'—')?></td></tr><?php endforeach?></tbody></table></div></section></div>
+<?php View::footer(); ?>

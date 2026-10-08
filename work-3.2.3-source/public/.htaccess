@@ -1,0 +1,28 @@
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Nunca exponha código interno, migrations, configuração ou backups.
+RewriteRule ^(?:config|database|lib|tools|updates)(?:/|$) - [F,L,NC]
+RewriteRule ^storage/(?:backups|update-staging|logs)(?:/|$) - [F,L,NC]
+
+RewriteRule ^pricing/?$ pricing.php [L,QSA]
+RewriteRule ^login/?$ login.php [L,QSA]
+RewriteRule ^register/?$ register.php [L,QSA]
+RewriteRule ^onboarding/?$ onboarding.php [L,QSA]
+RewriteRule ^dashboard/?$ dashboard.php [L,QSA]
+RewriteRule ^verify/([^/]+)/?$ verify.php?code=$1 [L,QSA]
+RewriteRule ^verify/?$ verify.php [L,QSA]
+RewriteRule ^cadastro/([A-Za-z0-9-]+)/?$ cadastro.php?slug=$1 [L,QSA]
+RewriteRule ^transparencia/([A-Za-z0-9-]+)/?$ transparency.php?slug=$1 [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . 404.php [L]
+</IfModule>
+
+<FilesMatch "^(database\.php|update\.php)$">
+  Require all denied
+</FilesMatch>
