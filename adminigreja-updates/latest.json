@@ -6,7 +6,7 @@
     "releases/v3.2.9.01.b64.txt",
     "releases/v3.2.9.02.b64.txt"
   ],
-  "sha256": "6fda307cf96f4ed325b0969613adf80b8967089630868b6d77c11a989b732281",
+  "sha256": "fdea113184896fb6de043f62d12ecdca1174dd8626e8a20c1324dfc1a18588ff",
   "files": [
     {
       "path": "public/polls.php",
