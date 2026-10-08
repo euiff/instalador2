@@ -1,0 +1,98 @@
+name: Publish validated PHP 3.1.1 bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-validated-php-311.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download validated bridge artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-406c-820e-bc1e-aaddc5185cd2/raw?se=2026-10-08T00%3A05%3A20Z&sp=r&sv=2026-02-06&sr=b&scid=2e9b20ec-2111-5d44-9576-731eea07c10b&skoid=db6dad9e-03ee-465b-aef6-ce0f63a161dc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-07T05%3A49%3A13Z&ske=2026-10-08T05%3A49%3A13Z&sks=b&skv=2026-02-06&sig=jgmQqEMCf1pn6S230eMYitr4pnW2pj9W5T4A3uXMiN0%3D' -o /tmp/bridge311.zip
+          echo 'e7708534e47018b7aebe16b44b3cbec0d048a32c7f6145c5d3283472dac4c370  /tmp/bridge311.zip' | sha256sum -c -
+          rm -rf /tmp/bridge311
+          mkdir -p /tmp/bridge311
+          unzip -q /tmp/bridge311.zip -d /tmp/bridge311
+
+      - name: Validate bridge content
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import base64, hashlib, json, pathlib
+          root=pathlib.Path('/tmp/bridge311')
+          latest=list(root.rglob('latest.json'))
+          if len(latest)!=1:
+              raise SystemExit(f'expected one latest.json, found {len(latest)}')
+          src=latest[0].parent
+          m=json.loads((src/'latest.json').read_text(encoding='utf-8'))
+          if m.get('version')!='3.1.1':
+              raise SystemExit(f"unexpected version: {m.get('version')}")
+          if len(m.get('parts',[]))!=23:
+              raise SystemExit('unexpected part count')
+          if len(m.get('files',[]))!=104:
+              raise SystemExit('unexpected file count')
+          encoded=''.join((src/p).read_text(encoding='utf-8').strip() for p in m['parts'])
+          gz=base64.b64decode(encoded,validate=True)
+          got=hashlib.sha256(gz).hexdigest()
+          if got!='e8918b7e6c94181bdc4b09e25ebe6f15703d690993e2f19e5607a02b04cdf7bc':
+              raise SystemExit(f'package sha mismatch: {got}')
+          if got.lower()!=str(m['sha256']).lower():
+              raise SystemExit('manifest package sha mismatch')
+          paths={f.get('path'):f.get('sha256') for f in m['files'] if isinstance(f,dict)}
+          required=[
+              'public/VERSION',
+              'public/automations.php',
+              'public/cron.php',
+              'public/lib/AutomationRunner.php',
+              'public/database/017_automation_runtime.sql'
+          ]
+          for path in required:
+              if path not in paths:
+                  raise SystemExit(f'missing required file {path}')
+          print('bridge 3.1.1 validated')
+          PY
+
+      - name: Stage public update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=$(dirname "$(find /tmp/bridge311 -name latest.json -print -quit)")
+          mkdir -p adminigreja-updates/releases
+          rm -f adminigreja-updates/releases/v3.1.1.*.b64.txt
+          cp "$src"/releases/v3.1.1.*.b64.txt adminigreja-updates/releases/
+          cp "$src/latest.json" adminigreja-updates/latest.json
+          python3 <<'PY'
+          import base64, hashlib, json, pathlib
+          root=pathlib.Path('adminigreja-updates')
+          m=json.loads((root/'latest.json').read_text(encoding='utf-8'))
+          encoded=''.join((root/p).read_text(encoding='utf-8').strip() for p in m['parts'])
+          gz=base64.b64decode(encoded,validate=True)
+          got=hashlib.sha256(gz).hexdigest()
+          assert m['version']=='3.1.1'
+          assert len(m['parts'])==23
+          assert len(m['files'])==104
+          assert got==m['sha256'].lower()
+          print('staged channel ok',got)
+          PY
+
+      - name: Commit public channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.1.1.*.b64.txt
+          git commit -m "Publish Igreja Master 3.1.1 update channel"
+          git push
