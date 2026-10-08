@@ -48,16 +48,8 @@ jobs:
           git config user.email "actions@github.com"
           git checkout -B work-3.2.3
           rm -rf work-3.2.3-source
-          mkdir -p work-3.2.3-source/public/lib work-3.2.3-source/public/assets
-          cp /tmp/adminigreja-322/public/member-document-pdf.php work-3.2.3-source/public/
-          cp /tmp/adminigreja-322/public/member-document.php work-3.2.3-source/public/
-          cp /tmp/adminigreja-322/public/member-profile.php work-3.2.3-source/public/
-          cp /tmp/adminigreja-322/public/members.php work-3.2.3-source/public/
-          cp /tmp/adminigreja-322/public/verify.php work-3.2.3-source/public/
-          cp /tmp/adminigreja-322/public/lib/MemberDocumentService.php work-3.2.3-source/public/lib/
-          cp /tmp/adminigreja-322/public/lib/SimplePdf.php work-3.2.3-source/public/lib/
-          cp /tmp/adminigreja-322/public/assets/app.css work-3.2.3-source/public/assets/
-          cp /tmp/adminigreja-322/public/database/005_documents.sql work-3.2.3-source/public/ 2>/dev/null || true
+          mkdir -p work-3.2.3-source
+          cp -a /tmp/adminigreja-322/. work-3.2.3-source/
           printf '3.2.2\n' > work-3.2.3-source/BASE_VERSION
           git add work-3.2.3-source
           git commit -m "Extract 3.2.2 card source for 3.2.3 work" || true
@@ -66,3 +58,5 @@ jobs:
 # trigger extraction
 
 # trigger format detection 2
+
+# extract full source for 3.2.3
