@@ -1,5 +1,12 @@
 # Changelog · Igreja Master
 
+## 3.2.5
+
+- Corrigidas as permissões dos arquivos públicos enviados para logo de congregação.
+- Novos uploads de logo ficam acessíveis corretamente pelo navegador.
+- Ao abrir a edição da congregação, o sistema tenta reparar automaticamente a permissão da logo já enviada.
+- Mantidos os ajustes da 3.2.4 para Naturalidade e uso da logo da congregação na carteirinha.
+
 ## 3.2.4
 
 - Congregações agora possuem upload de logo própria em JPG, PNG ou WebP.
