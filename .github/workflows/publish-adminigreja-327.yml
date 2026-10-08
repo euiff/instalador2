@@ -104,3 +104,5 @@ jobs:
           git commit -m "Publish AdminIgreja 3.2.7 poll fix and redesign"
           git pull --rebase origin main
           git push origin main
+
+# trigger publish 3.2.7
