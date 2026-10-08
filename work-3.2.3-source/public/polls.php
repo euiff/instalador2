@@ -32,7 +32,8 @@ function poll_message(array $poll): string
     }
 
     $lines[]='';
-    $lines[]='Participe escolhendo uma das opções acima.';
+    $lines[]='🗳️ *COMO VOTAR:* responda neste grupo com *VOTO 1*, *VOTO 2* e assim por diante.';
+    $lines[]='Seu voto será salvo pelo sistema. Se votar novamente, o voto anterior será substituído.';
 
     return implode("\n",$lines);
 }
@@ -173,7 +174,7 @@ View::header('Enquetes','polls',$auth,$church);
 .poll-groups{display:grid;gap:8px;max-height:240px;overflow:auto}.poll-group{display:flex;gap:10px;align-items:flex-start;padding:11px;border:1px solid #e1e7ee;border-radius:11px;background:#fff}.poll-group input{margin-top:3px}.poll-group strong{display:block;font-size:13px}.poll-group small{display:block;color:#718096;margin-top:2px;font-size:10px}
 .poll-summary{background:#f8fafc;border:1px solid #e1e7ee;border-radius:12px;padding:15px;margin-bottom:18px}.poll-summary strong{display:block;color:#173f70;margin-bottom:5px}.poll-summary p{margin:0;color:#64748b;font-size:12px;line-height:1.5}
 .poll-actions{display:flex;gap:10px}.poll-actions .btn-primary{flex:1}
-.poll-list{display:grid;gap:12px}.poll-card{border:1px solid #e1e7ee;border-radius:14px;padding:16px;background:#fff}.poll-card-top{display:flex;justify-content:space-between;gap:12px}.poll-card h3{font-size:14px;margin:0;line-height:1.4}.poll-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.poll-meta span{font-size:10px;padding:5px 8px;border-radius:999px;background:#f1f5f9;color:#536274}.poll-status-sent{background:#e8f7ee!important;color:#247a46!important}.poll-status-error{background:#fff0f0!important;color:#b42318!important}.poll-status-scheduled{background:#fff6df!important;color:#946200!important}.poll-card-actions{display:flex;gap:7px;margin-top:12px}
+.poll-list{display:grid;gap:12px}.poll-card{border:1px solid #e1e7ee;border-radius:14px;padding:16px;background:#fff}.poll-card-top{display:flex;justify-content:space-between;gap:12px}.poll-card h3{font-size:14px;margin:0;line-height:1.4}.poll-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.poll-meta span{font-size:10px;padding:5px 8px;border-radius:999px;background:#f1f5f9;color:#536274}.poll-status-sent{background:#e8f7ee!important;color:#247a46!important}.poll-status-error{background:#fff0f0!important;color:#b42318!important}.poll-status-scheduled{background:#fff6df!important;color:#946200!important}.poll-card-actions{display:flex;gap:7px;margin-top:12px}.poll-results{margin-top:14px;padding-top:12px;border-top:1px solid #edf1f5}.poll-result-row{margin:8px 0}.poll-result-head{display:flex;justify-content:space-between;gap:10px;font-size:11px}.poll-bar{height:8px;background:#edf2f7;border-radius:999px;overflow:hidden;margin-top:5px}.poll-bar span{display:block;height:100%;background:#1768ad;border-radius:999px}.poll-voters{margin-top:12px}.poll-voters summary{cursor:pointer;font-size:11px;font-weight:800;color:#14548f}.poll-voter-list{margin-top:8px;display:grid;gap:5px;max-height:170px;overflow:auto}.poll-voter{display:flex;justify-content:space-between;gap:8px;font-size:10px;padding:7px 8px;background:#f8fafc;border-radius:8px;color:#526277}
 .poll-empty{padding:40px 20px;text-align:center;color:#718096}
 .poll-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:1000px){.poll-page{grid-template-columns:1fr}.poll-send-cards{grid-template-columns:1fr}.poll-two{grid-template-columns:1fr}}
@@ -264,7 +265,7 @@ View::header('Enquetes','polls',$auth,$church);
 
     <div class="poll-summary">
       <strong>Como funciona o envio</strong>
-      <p>Ao escolher “Enviar agora”, o sistema só marcará a enquete como enviada depois que o WhatsApp confirmar pelo menos um grupo. Se houver erro, ele aparecerá nesta página.</p>
+      <p>Ao escolher “Enviar agora”, o grupo receberá as opções e a instrução para responder <strong>VOTO 1</strong>, <strong>VOTO 2</strong> etc. O sistema identifica cada participante, salva um voto por pessoa e atualiza a apuração no painel.</p>
     </div>
 
     <div class="poll-actions">
@@ -285,6 +286,19 @@ View::header('Enquetes','polls',$auth,$church);
       if(!is_array($targetIds))$targetIds=[];
       $status=(string)$row['status'];
       $statusLabel=match($status){'sent'=>'Enviada','scheduled'=>'Agendada','error'=>'Erro de envio','draft'=>'Rascunho',default=>$status};
+
+      $pollOptions=json_decode((string)($row['options']??'[]'),true);
+      if(!is_array($pollOptions))$pollOptions=[];
+
+      $voteQ=$pdo->prepare('SELECT option_index,COUNT(*) qty FROM poll_votes WHERE poll_id=? GROUP BY option_index');
+      $voteQ->execute([$row['id']]);
+      $voteCounts=[];
+      foreach($voteQ->fetchAll() as $voteRow)$voteCounts[(int)$voteRow['option_index']]=(int)$voteRow['qty'];
+      $voteTotal=array_sum($voteCounts);
+
+      $votersQ=$pdo->prepare('SELECT voter_name,voter_phone,option_index,option_text,updated_at FROM poll_votes WHERE poll_id=? ORDER BY updated_at DESC LIMIT 100');
+      $votersQ->execute([$row['id']]);
+      $voters=$votersQ->fetchAll();
     ?>
       <article class="poll-card">
         <div class="poll-card-top">
@@ -296,6 +310,34 @@ View::header('Enquetes','polls',$auth,$church);
           <span><?=$targetIds?count($targetIds).' grupo(s) escolhido(s)':'Grupos de finalidade Enquetes'?></span>
           <?php if(!empty($row['sent_at'])):?><span>Enviada <?=e(date('d/m H:i',strtotime($row['sent_at'])))?></span><?php endif?>
           <?php if(!empty($row['scheduled_at'])&&$status==='scheduled'):?><span>Para <?=e(date('d/m H:i',strtotime($row['scheduled_at'])))?></span><?php endif?>
+          <span>🗳️ <?=$voteTotal?> voto<?=$voteTotal===1?'':'s'?></span>
+        </div>
+
+        <div class="poll-results">
+          <?php foreach($pollOptions as $i=>$opt):
+            $idx=$i+1;
+            $qty=$voteCounts[$idx]??0;
+            $pct=$voteTotal>0?round(($qty/$voteTotal)*100):0;
+          ?>
+            <div class="poll-result-row">
+              <div class="poll-result-head"><span><strong><?=$idx?>.</strong> <?=e($opt)?></span><span><?=$qty?> · <?=$pct?>%</span></div>
+              <div class="poll-bar"><span style="width:<?=$pct?>%"></span></div>
+            </div>
+          <?php endforeach?>
+
+          <?php if($voters):?>
+            <details class="poll-voters">
+              <summary>Ver quem votou (<?=count($voters)?>)</summary>
+              <div class="poll-voter-list">
+                <?php foreach($voters as $voter):?>
+                  <div class="poll-voter">
+                    <span><?=e($voter['voter_name']?:$voter['voter_phone'])?></span>
+                    <span>VOTO <?=e($voter['option_index'])?> · <?=e($voter['option_text'])?></span>
+                  </div>
+                <?php endforeach?>
+              </div>
+            </details>
+          <?php endif?>
         </div>
         <div class="poll-card-actions">
           <form method="post"><?=csrf_field()?><input type="hidden" name="action" value="resend"><input type="hidden" name="id" value="<?=e($row['id'])?>"><button class="btn btn-light small">↻ Reenviar</button></form>
