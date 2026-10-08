@@ -1,5 +1,13 @@
 # Changelog · Igreja Master
 
+## 3.2.8
+
+- Unificado o gerador de documentos do painel e do WhatsApp.
+- Certificados, cartas, declarações e carteirinha passam a usar o mesmo template central.
+- PDFs enviados pelo WhatsApp passam a usar o visual moderno do painel, com logo da congregação, assinatura, QR e autenticação.
+- Download PDF do painel também passa pelo mesmo renderizador usado no WhatsApp.
+- Adicionado motor HTML→PDF e QR local ao pacote para evitar diferenças entre navegador e bot.
+
 ## 3.2.7
 
 - Corrigido o envio de enquetes para grupos do WhatsApp: “Enviar agora” passa a executar o envio de verdade.
