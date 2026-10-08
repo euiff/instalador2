@@ -49,3 +49,5 @@ jobs:
           git add work-3.2.3-source
           git commit -m "Extract 3.2.2 card source for 3.2.3 work" || true
           git push --force origin work-3.2.3
+
+# trigger extraction
