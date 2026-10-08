@@ -1,23 +1,44 @@
 {
-    "version": "3.2.3",
+    "version": "3.2.4",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.2.3.01.b64.txt"
+        "releases/v3.2.4.01.b64.txt",
+        "releases/v3.2.4.02.b64.txt"
     ],
-    "sha256": "7b7ebe79cc3a987ab2324c9613f480c050a5d0d1d83e9c9d59ef9bf67ea91dec",
+    "sha256": "f14b1af58b00ed69ecfa77c447c12a8874691fb809ca67f0b6df7292829fa9e5",
     "files": [
         {
+            "path": "public/congregations.php",
+            "sha256": "7b943d87be5082dcea22428cdede567322e7029c449256a25edbd468ab5d3ca4"
+        },
+        {
+            "path": "public/members.php",
+            "sha256": "2e2d837c5abac5d36483e984c0a64c5e654352f37e3fe7364ebae09f4513cbac"
+        },
+        {
             "path": "public/member-document.php",
-            "sha256": "329faef9f27166e362e2396d2268b0c5f10e2bdd2d0a49403410deadbc5595e5"
+            "sha256": "a528c9a8f8f846191c433cf7a4468c2ce5769ab505836fbb9420e33d6427505d"
+        },
+        {
+            "path": "public/lib/UploadService.php",
+            "sha256": "f9f06d69ddc4b0fa0c8f94ab1bb120970856f6f127c47c9700fe7698bef4bf54"
+        },
+        {
+            "path": "public/database/001_core.sql",
+            "sha256": "5dae41ad3e6a0623193abd0748f27894ebc2f49e063ba06cf28090d9cc6d3d4b"
+        },
+        {
+            "path": "public/database/021_congregation_logo.sql",
+            "sha256": "f37a06c3c8783e5ff02794e18c633d2fcd12c7eb59e179947391345b0804423e"
         },
         {
             "path": "public/VERSION",
-            "sha256": "8bac95a38f37afadb73bad656f4abdeaea9a73b43bc160a8ba2282b5d61018cf"
+            "sha256": "da37b62b234fc08c3abe13174a58e80da0d1c4cfc5dcf4378e9317e81d4f5c3d"
         },
         {
             "path": "public/CHANGELOG.md",
-            "sha256": "7dbbca2aafe2a42106a9067bbac0cc4b0e39a625c94716d8d214cf5f6ec98bf8"
+            "sha256": "ab09b06dc1f7a222a6b2e28654a54f0bcdfd8e0d13f4201eebf3908b7d621dfe"
         }
     ]
 }
