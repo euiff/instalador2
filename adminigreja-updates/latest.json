@@ -1,33 +1,33 @@
 {
-    "version": "3.1.4",
+    "version": "3.1.5",
     "min_php": "8.1",
     "encoding": "base64",
     "parts": [
-        "releases/v3.1.4.01.b64.txt",
-        "releases/v3.1.4.02.b64.txt",
-        "releases/v3.1.4.03.b64.txt",
-        "releases/v3.1.4.04.b64.txt",
-        "releases/v3.1.4.05.b64.txt",
-        "releases/v3.1.4.06.b64.txt",
-        "releases/v3.1.4.07.b64.txt",
-        "releases/v3.1.4.08.b64.txt",
-        "releases/v3.1.4.09.b64.txt",
-        "releases/v3.1.4.10.b64.txt",
-        "releases/v3.1.4.11.b64.txt",
-        "releases/v3.1.4.12.b64.txt",
-        "releases/v3.1.4.13.b64.txt",
-        "releases/v3.1.4.14.b64.txt",
-        "releases/v3.1.4.15.b64.txt",
-        "releases/v3.1.4.16.b64.txt",
-        "releases/v3.1.4.17.b64.txt",
-        "releases/v3.1.4.18.b64.txt",
-        "releases/v3.1.4.19.b64.txt",
-        "releases/v3.1.4.20.b64.txt",
-        "releases/v3.1.4.21.b64.txt",
-        "releases/v3.1.4.22.b64.txt",
-        "releases/v3.1.4.23.b64.txt"
+        "releases/v3.1.5.01.b64.txt",
+        "releases/v3.1.5.02.b64.txt",
+        "releases/v3.1.5.03.b64.txt",
+        "releases/v3.1.5.04.b64.txt",
+        "releases/v3.1.5.05.b64.txt",
+        "releases/v3.1.5.06.b64.txt",
+        "releases/v3.1.5.07.b64.txt",
+        "releases/v3.1.5.08.b64.txt",
+        "releases/v3.1.5.09.b64.txt",
+        "releases/v3.1.5.10.b64.txt",
+        "releases/v3.1.5.11.b64.txt",
+        "releases/v3.1.5.12.b64.txt",
+        "releases/v3.1.5.13.b64.txt",
+        "releases/v3.1.5.14.b64.txt",
+        "releases/v3.1.5.15.b64.txt",
+        "releases/v3.1.5.16.b64.txt",
+        "releases/v3.1.5.17.b64.txt",
+        "releases/v3.1.5.18.b64.txt",
+        "releases/v3.1.5.19.b64.txt",
+        "releases/v3.1.5.20.b64.txt",
+        "releases/v3.1.5.21.b64.txt",
+        "releases/v3.1.5.22.b64.txt",
+        "releases/v3.1.5.23.b64.txt"
     ],
-    "sha256": "cf6461fa6585cd3cfaad8a11d0d597cad3c0094464156469c817875c60f675e2",
+    "sha256": "d47b202690484059a679126f1c862975fe32308a5752a030b2c4463f2efd4f44",
     "files": [
         {
             "path": ".htaccess",
@@ -35,7 +35,7 @@
         },
         {
             "path": "VERSION",
-            "sha256": "f1bfdc843a55919fe9d0e7947b2cabac73702800b2a18c846643452c05df15f7"
+            "sha256": "ac537ba2b68591e53b50c3dbb5c3aef860a9bf4764ac18a612d47f8011fbd7c4"
         },
         {
             "path": "index.php",
@@ -63,7 +63,7 @@
         },
         {
             "path": "public/VERSION",
-            "sha256": "f1bfdc843a55919fe9d0e7947b2cabac73702800b2a18c846643452c05df15f7"
+            "sha256": "ac537ba2b68591e53b50c3dbb5c3aef860a9bf4764ac18a612d47f8011fbd7c4"
         },
         {
             "path": "public/api/generate-event-poster.php",
@@ -75,7 +75,7 @@
         },
         {
             "path": "public/api/whatsapp-webhook.php",
-            "sha256": "4e19a2bd58f957650314e3b83f2b82ed59a166887b837ce6f0299643036f4fef"
+            "sha256": "3c09eb0e84218b6a704b820df487d0ac8764cebaca93a314e8487418b769b62f"
         },
         {
             "path": "public/assets/app.css",
@@ -255,7 +255,7 @@
         },
         {
             "path": "public/lib/BotWebhookHandler.php",
-            "sha256": "578c24e0857abc30a6221077ffbaa0b0eeb67a3cf884427e9b5ca5b4f8d3edda"
+            "sha256": "45a78b88a03640780e3a42f7697b498bf57e6603c3668e5730a3dcb8cbdb3fbf"
         },
         {
             "path": "public/lib/CronTasks.php",
@@ -279,7 +279,7 @@
         },
         {
             "path": "public/lib/GroupMessageHandler.php",
-            "sha256": "2c7a2a7d3178f22bbe05dec78cefc95772f6140383ac19a26fe914b1a06c3054"
+            "sha256": "b96d39342faac74ea203ec258cff4c8463a308727d160dd4e8d86274105eb206"
         },
         {
             "path": "public/lib/LegacyDataMigrator.php",
@@ -427,7 +427,7 @@
         },
         {
             "path": "public/updates/manifest.json",
-            "sha256": "b320aced963a1b07d3672469e9a1d80f9de616ba3b32a722880ee420d0d4c8dc"
+            "sha256": "6dc9b1c50090336054f7b89d523b1822e5d01ffc06d7e37dec2d82b2d93d350f"
         },
         {
             "path": "public/updates/migrations/0.2.0.sql",
