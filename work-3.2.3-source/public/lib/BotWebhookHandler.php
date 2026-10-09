@@ -193,15 +193,6 @@ final class BotWebhookHandler
             return (new BotEventFlow($this->pdo))->start($cid,$phone,$settings);
         }
 
-        if(in_array($normalized,['contato','falar com igreja','falar com a igreja','5'],true)){
-            $parts=['📞 *FALE COM A IGREJA*'];
-            if(!empty($church['phone']))$parts[]='Telefone/WhatsApp: '.$church['phone'];
-            if(!empty($church['email']))$parts[]='E-mail: '.$church['email'];
-            if(!empty($church['address']))$parts[]='Endereço: '.$church['address'];
-            if(count($parts)===1)$parts[]='Os dados de contato ainda não foram cadastrados.';
-            return implode("\n",$parts);
-        }
-
         if(in_array($normalized,['documentos','documento','declaração','declaracao','6'],true)){
             return (new BotDocumentFlow($this->pdo,dirname(__DIR__)))->start($cid,$phone);
         }
@@ -214,16 +205,12 @@ final class BotWebhookHandler
             return (new BotEditFlow($this->pdo))->start($cid,$phone);
         }
 
-        if(in_array($normalized,['aconselhamento','aconselhamento pastoral','apoio','9'],true)){
-            return (new SpiritualFlow($this->pdo,$ai))->startCounseling($cid,$phone,$name);
-        }
-
         return "Não entendi essa opção. Digite *menu* para ver as opções disponíveis.";
     }
 
     private function menuText(array $settings): string
     {
-        $default="1️⃣ Horários dos Cultos\n2️⃣ Pedido de Oração\n3️⃣ Bíblia e Plano de Leitura\n4️⃣ Eventos e Inscrições\n5️⃣ Falar com a Igreja\n6️⃣ Documentos\n7️⃣ Cadastro de Membro\n8️⃣ Meus Dados\n9️⃣ Aconselhamento Pastoral";
+        $default="1️⃣ Horários dos Cultos\n2️⃣ Pedido de Oração\n3️⃣ Bíblia e Plano de Leitura\n4️⃣ Eventos e Inscrições\n6️⃣ Documentos\n7️⃣ Cadastro de Membro\n8️⃣ Meus Dados";
         $custom=trim((string)($settings['menu_text']??''));
         if($custom==='')return $default;
 
@@ -234,6 +221,15 @@ final class BotWebhookHandler
             str_contains($custom,'Palavra Bíblica')||
             str_contains($custom,'Apoio espiritual')
         );
-        return $legacy?$default:$custom;
+        if($legacy)return $default;
+
+        $lines=preg_split('/\\R/u',$custom)?:[];
+        $lines=array_values(array_filter($lines,function(string $line): bool{
+            $plain=trim(preg_replace('/^[^0-9]*([0-9]).*$/u','$1',$line)??'');
+            if($plain==='5'||$plain==='9')return false;
+            return !preg_match('/(?:^|\\s)(?:5|9)(?:️⃣|[.)-])?\\s/u',$line);
+        }));
+        $custom=trim(implode("\n",$lines));
+        return $custom!==''?$custom:$default;
     }
 }
