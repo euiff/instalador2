@@ -8,7 +8,7 @@
     "releases/v3.2.10.03.b64.txt",
     "releases/v3.2.10.04.b64.txt"
   ],
-  "sha256": "4bffaaf65cc17837cead2b8ab46286a990c9854f4791d8753c1ac1460c6152c7",
+  "sha256": "df6f367962ce8b8854ab20920e341c3b69d2c0bd5bc03d3ae6522818ec083b67",
   "files": [
     {
       "path": "public/lib/BotWebhookHandler.php",
