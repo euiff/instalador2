@@ -115,3 +115,5 @@ jobs:
           git commit -m "Publish AdminIgreja 3.2.11 native poll payload fix"
           git pull --rebase origin main
           git push origin main
+
+# trigger publish 3.2.11
