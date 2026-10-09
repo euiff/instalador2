@@ -5,7 +5,7 @@
   "parts": [
     "releases/v3.2.11.01.b64.txt"
   ],
-  "sha256": "1cd55cc05a2ef2b663cb1b4c13b7f736ccdb4916306ab0701398b04f3010f042",
+  "sha256": "5d1d99f4e9c8a878a75902971fa11d924c0b7bcce7761ba41bb1266ccb9c3f4f",
   "files": [
     {
       "path": "public/lib/EvolutionClient.php",
