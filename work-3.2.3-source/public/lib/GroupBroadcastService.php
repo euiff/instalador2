@@ -80,6 +80,22 @@ final class GroupBroadcastService
         return $this->sendRows($church,$rows,$message,$campaignId,$imagePath);
     }
 
+    public function sendPollIds(array $church,array $groupIds,array $poll): array
+    {
+        return $this->sendPollRows(
+            $church,
+            $this->selected((string)$church['id'],$groupIds),
+            $poll
+        );
+    }
+
+    public function sendPollPurpose(array $church,string $purpose,array $poll,?string $congregationId=null): array
+    {
+        $rows=$this->list((string)$church['id'],$purpose,$congregationId,true);
+        if(!$rows)$rows=$this->legacyRows($church,$purpose,$congregationId);
+        return $this->sendPollRows($church,$rows,$poll);
+    }
+
     public function syncEvolution(array $church): array
     {
         $client=$this->client($church);
@@ -141,6 +157,60 @@ final class GroupBroadcastService
         if($jid==='')return '';
         if(!str_contains($jid,'@'))$jid.='@g.us';
         return $jid;
+    }
+
+    private function sendPollRows(array $church,array $rows,array $poll): array
+    {
+        $question=trim((string)($poll['question']??''));
+        $values=json_decode((string)($poll['options']??'[]'),true);
+        if(!is_array($values))$values=[];
+        $values=array_values(array_filter(array_map(fn($v)=>is_array($v)?trim((string)($v['text']??'')):trim((string)$v),$values),fn($v)=>$v!==''));
+
+        if($question==='')throw new RuntimeException('A pergunta da enquete está vazia.');
+        if(count($values)<2)throw new RuntimeException('A enquete precisa de pelo menos duas opções.');
+
+        $client=$this->client($church);
+        if(!$client->configured())throw new RuntimeException('Configure a Evolution API antes de enviar a enquete.');
+
+        $sent=0;$failed=0;$errors=[];$messageIds=[];
+        foreach($rows as $row){
+            $jid=trim((string)($row['evolution_group_jid']??$row['jid']??''));
+            if($jid==='')continue;
+
+            try{
+                $response=$client->sendGroupPoll($jid,$question,$values,1);
+                $messageId=$client->responseMessageId($response);
+
+                $this->pdo->prepare(
+                    'INSERT INTO poll_group_messages(id,poll_id,church_id,group_id,target_jid,whatsapp_message_id,sent_at)
+                     VALUES(?,?,?,?,?,?,NOW())
+                     ON DUPLICATE KEY UPDATE
+                       group_id=VALUES(group_id),
+                       whatsapp_message_id=VALUES(whatsapp_message_id),
+                       sent_at=NOW()'
+                )->execute([
+                    app_uuid(),
+                    $poll['id'],
+                    $church['id'],
+                    $row['id']??null,
+                    $jid,
+                    $messageId,
+                ]);
+
+                try{
+                    $this->pdo->prepare('INSERT INTO bot_messages(id,church_id,phone,direction,message,message_type,status) VALUES(?,?,?,"outbound",?,"poll","sent")')
+                        ->execute([app_uuid(),$church['id'],$jid,'Enquete: '.$question]);
+                }catch(Throwable){}
+
+                $messageIds[]=['group_id'=>$row['id']??null,'jid'=>$jid,'message_id'=>$messageId];
+                $sent++;
+            }catch(Throwable $e){
+                $failed++;
+                $errors[]=['group'=>$row['name']??$jid,'error'=>$e->getMessage()];
+            }
+        }
+
+        return ['sent'=>$sent,'failed'=>$failed,'errors'=>$errors,'message_ids'=>$messageIds];
     }
 
     private function sendRows(array $church,array $rows,string $message,?string $campaignId,?string $imagePath): array
