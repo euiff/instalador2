@@ -43,10 +43,9 @@ function poll_send(PDO $pdo,GroupBroadcastService $broadcast,array $church,array
     $groupIds=json_decode((string)($poll['target_groups']??'[]'),true);
     if(!is_array($groupIds))$groupIds=[];
 
-    $message=poll_message($poll);
     return $groupIds
-        ?$broadcast->sendIds($church,$groupIds,$message)
-        :$broadcast->sendPurpose($church,'polls',$message);
+        ?$broadcast->sendPollIds($church,$groupIds,$poll)
+        :$broadcast->sendPollPurpose($church,'polls',$poll);
 }
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
@@ -265,7 +264,7 @@ View::header('Enquetes','polls',$auth,$church);
 
     <div class="poll-summary">
       <strong>Como funciona o envio</strong>
-      <p>Ao escolher “Enviar agora”, o grupo receberá as opções e a instrução para responder <strong>VOTO 1</strong>, <strong>VOTO 2</strong> etc. O sistema identifica cada participante, salva um voto por pessoa e atualiza a apuração no painel.</p>
+      <p>Ao escolher “Enviar agora”, o sistema envia uma <strong>enquete nativa do WhatsApp</strong>. A pessoa toca diretamente na opção, acompanha as barras de resultado e pode abrir “Ver votos” no próprio WhatsApp.</p>
     </div>
 
     <div class="poll-actions">
@@ -310,10 +309,13 @@ View::header('Enquetes','polls',$auth,$church);
           <span><?=$targetIds?count($targetIds).' grupo(s) escolhido(s)':'Grupos de finalidade Enquetes'?></span>
           <?php if(!empty($row['sent_at'])):?><span>Enviada <?=e(date('d/m H:i',strtotime($row['sent_at'])))?></span><?php endif?>
           <?php if(!empty($row['scheduled_at'])&&$status==='scheduled'):?><span>Para <?=e(date('d/m H:i',strtotime($row['scheduled_at'])))?></span><?php endif?>
-          <span>🗳️ <?=$voteTotal?> voto<?=$voteTotal===1?'':'s'?></span>
+          <?php if($voteTotal>0):?><span>🗳️ <?=$voteTotal?> voto<?=$voteTotal===1?'':'s'?></span><?php else:?><span>🗳️ Votação nativa no WhatsApp</span><?php endif?>
         </div>
 
         <div class="poll-results">
+          <?php if($voteTotal===0):?>
+            <div style="font-size:11px;color:#64748b;padding:6px 0">Os votos desta enquete são exibidos no próprio WhatsApp. Toque em <strong>Ver votos</strong> na enquete para consultar os participantes e resultados.</div>
+          <?php endif?>
           <?php foreach($pollOptions as $i=>$opt):
             $idx=$i+1;
             $qty=$voteCounts[$idx]??0;
