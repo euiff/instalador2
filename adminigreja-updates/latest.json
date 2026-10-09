@@ -1,36 +1,58 @@
 {
-  "version": "3.2.9",
+  "version": "3.2.10",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.2.9.01.b64.txt",
-    "releases/v3.2.9.02.b64.txt"
+    "releases/v3.2.10.01.b64.txt",
+    "releases/v3.2.10.02.b64.txt",
+    "releases/v3.2.10.03.b64.txt",
+    "releases/v3.2.10.04.b64.txt"
   ],
-  "sha256": "fdea113184896fb6de043f62d12ecdca1174dd8626e8a20c1324dfc1a18588ff",
+  "sha256": "4bffaaf65cc17837cead2b8ab46286a990c9854f4791d8753c1ac1460c6152c7",
   "files": [
     {
-      "path": "public/polls.php",
-      "sha256": "1951fbf7a225749583a0072f3f89a2bf0740cd29e5d7323a1fac8c128cb63791"
+      "path": "public/lib/BotWebhookHandler.php",
+      "sha256": "591c51c6b7942c5a61c50452071c8c9a65d9b55ef47d445dddfadd5e1c456764"
+    },
+    {
+      "path": "public/lib/MemberDocumentTemplate.php",
+      "sha256": "89b224790659a856e4007df0fa8c049e38f77673d3440fd75b934a1aa591dbb2"
+    },
+    {
+      "path": "public/lib/UnifiedMemberDocumentService.php",
+      "sha256": "932a9ef99674a5d495e45acbdb84d5f93ddfea38855d0d24006468e1cbfdc6ec"
+    },
+    {
+      "path": "public/lib/EvolutionClient.php",
+      "sha256": "41af365a699401fa51abd2e828eafb10d05870ef786972ec939fafa654635c26"
+    },
+    {
+      "path": "public/lib/GroupBroadcastService.php",
+      "sha256": "b9456a347728edfce8d87c0b32603b5712975f812d8b8145b764e98ec059ace7"
     },
     {
       "path": "public/lib/GroupMessageHandler.php",
-      "sha256": "589930354813fe3578eb8da70c803ce99d502f46e23be5e5edef282d0efab6f1"
+      "sha256": "90f9ff81a43bdde437f2e57d6be8c15402267edd031fae3e7fd7ea66e5d94cb3"
     },
     {
       "path": "public/lib/CronTasks.php",
-      "sha256": "10168a4561d756f29797aeb5243ef74095a7e68fedb2c476301d54a24bbbd449"
+      "sha256": "751ab6e90a792424a7a92c12d9bd9f43f41ca2428d59168565cfa2c01ddfe2ad"
     },
     {
-      "path": "public/database/022_poll_votes.sql",
-      "sha256": "dd3bc9e6d8e22d76d3422081e05241f642df1cd8ec4eefe7898fbd61480291a6"
+      "path": "public/polls.php",
+      "sha256": "10b365b3928ac08d23bef95f187deecbbbbedf00c040e3f7ddada7246efe48cd"
+    },
+    {
+      "path": "public/database/023_native_poll_messages.sql",
+      "sha256": "ab70d770cd03631de7e22f17a8ebe4a8e6c24972450aee99f039e3cc747a02a8"
     },
     {
       "path": "public/VERSION",
-      "sha256": "184a22021ef4187c4c70cf5288f97713892e23039a84a381697fb8fcd359ba3a"
+      "sha256": "1378b42344106d43c55154323b2d12df12d524c29fb9f49a2f6b066ef700617b"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "9179d160fba79883097c7bdc4455aed647a8ae31b50fd00449d4b1caaf297982"
+      "sha256": "2881f822e65cfd351180be277891826080ab5ee5b20cdf79b106e4b5629bb249"
     }
   ]
 }
