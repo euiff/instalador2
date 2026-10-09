@@ -1,5 +1,15 @@
 # Changelog · Igreja Master
 
+## 3.2.10
+
+- Removidas do menu do WhatsApp as opções 5 (Falar com a Igreja) e 9 (Aconselhamento Pastoral).
+- Certificados passam a ser gerados em A4 paisagem, inclusive quando enviados pelo WhatsApp.
+- Cartas e declarações permanecem em A4 retrato.
+- Enquetes passam a usar o componente nativo de enquete do WhatsApp via Evolution API sendPoll.
+- Participantes votam tocando diretamente nas opções e consultam barras e “Ver votos” no próprio WhatsApp.
+- Envio imediato e agendado usam o mesmo formato nativo.
+- IDs das mensagens de enquete são registrados por grupo para rastrear a enquete original.
+
 ## 3.2.9
 
 - Enquetes passam a ser votações reais no WhatsApp.
