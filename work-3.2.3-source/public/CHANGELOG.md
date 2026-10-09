@@ -1,5 +1,12 @@
 # Changelog · Igreja Master
 
+## 3.2.11
+
+- Corrigido o payload da enquete nativa enviado à Evolution API.
+- Removido o fallback incompatível que gerava erro HTTP 400 informando ausência de name/selectableCount/values.
+- Mantido somente o formato oficial number + name + selectableCount + values.
+- Adicionada tentativa alternativa de destino do grupo sem alterar o formato oficial da enquete.
+
 ## 3.2.10
 
 - Removidas do menu do WhatsApp as opções 5 (Falar com a Igreja) e 9 (Aconselhamento Pastoral).
