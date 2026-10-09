@@ -95,7 +95,8 @@ final class UnifiedMemberDocumentService
 
         $dompdf=new Dompdf\Dompdf($optionsPdf);
         $dompdf->loadHtml((string)$doc['html'],'UTF-8');
-        $dompdf->setPaper('A4','portrait');
+        $certificate=in_array($type,['baptism_certificate','membership_certificate'],true);
+        $dompdf->setPaper('A4',$certificate?'landscape':'portrait');
         $dompdf->render();
 
         $bytes=$dompdf->output();
