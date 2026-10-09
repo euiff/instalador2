@@ -1,58 +1,23 @@
 {
-  "version": "3.2.10",
+  "version": "3.2.11",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.2.10.01.b64.txt",
-    "releases/v3.2.10.02.b64.txt",
-    "releases/v3.2.10.03.b64.txt",
-    "releases/v3.2.10.04.b64.txt"
+    "releases/v3.2.11.01.b64.txt"
   ],
-  "sha256": "df6f367962ce8b8854ab20920e341c3b69d2c0bd5bc03d3ae6522818ec083b67",
+  "sha256": "1cd55cc05a2ef2b663cb1b4c13b7f736ccdb4916306ab0701398b04f3010f042",
   "files": [
     {
-      "path": "public/lib/BotWebhookHandler.php",
-      "sha256": "591c51c6b7942c5a61c50452071c8c9a65d9b55ef47d445dddfadd5e1c456764"
-    },
-    {
-      "path": "public/lib/MemberDocumentTemplate.php",
-      "sha256": "89b224790659a856e4007df0fa8c049e38f77673d3440fd75b934a1aa591dbb2"
-    },
-    {
-      "path": "public/lib/UnifiedMemberDocumentService.php",
-      "sha256": "932a9ef99674a5d495e45acbdb84d5f93ddfea38855d0d24006468e1cbfdc6ec"
-    },
-    {
       "path": "public/lib/EvolutionClient.php",
-      "sha256": "41af365a699401fa51abd2e828eafb10d05870ef786972ec939fafa654635c26"
-    },
-    {
-      "path": "public/lib/GroupBroadcastService.php",
-      "sha256": "b9456a347728edfce8d87c0b32603b5712975f812d8b8145b764e98ec059ace7"
-    },
-    {
-      "path": "public/lib/GroupMessageHandler.php",
-      "sha256": "90f9ff81a43bdde437f2e57d6be8c15402267edd031fae3e7fd7ea66e5d94cb3"
-    },
-    {
-      "path": "public/lib/CronTasks.php",
-      "sha256": "751ab6e90a792424a7a92c12d9bd9f43f41ca2428d59168565cfa2c01ddfe2ad"
-    },
-    {
-      "path": "public/polls.php",
-      "sha256": "10b365b3928ac08d23bef95f187deecbbbbedf00c040e3f7ddada7246efe48cd"
-    },
-    {
-      "path": "public/database/023_native_poll_messages.sql",
-      "sha256": "ab70d770cd03631de7e22f17a8ebe4a8e6c24972450aee99f039e3cc747a02a8"
+      "sha256": "79d5cb68a0228146f33644a9bd12699e8a5e987eaf8413fc71bb2c27eea028d6"
     },
     {
       "path": "public/VERSION",
-      "sha256": "1378b42344106d43c55154323b2d12df12d524c29fb9f49a2f6b066ef700617b"
+      "sha256": "16ba71ea0a4eb2dcdb4674c82499ad04c1ba99de671dc875a6d89eb06271ae37"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "2881f822e65cfd351180be277891826080ab5ee5b20cdf79b106e4b5629bb249"
+      "sha256": "6b8f2ad0c0c3a499781b4236a58436444f0f75de099cccba1aad7a92917cbf1e"
     }
   ]
 }
