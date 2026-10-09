@@ -170,19 +170,6 @@ final class CronTasks
             $q->execute([$church['id']]);
 
             foreach($q->fetchAll() as $poll){
-                $opts=json_decode((string)$poll['options'],true)?:[];
-                $lines=['📊 *ENQUETE*','', '❓ *'.trim((string)$poll['question']).'*',''];
-                foreach($opts as $i=>$opt){
-                    $lines[]='*'.($i+1).'.* '.(is_array($opt)?($opt['text']??json_encode($opt)):$opt);
-                }
-                if(!empty($poll['validity'])){
-                    $lines[]='';
-                    $lines[]='⏳ Validade: *'.trim((string)$poll['validity']).'*';
-                }
-                $lines[]='';
-                $lines[]='🗳️ *COMO VOTAR:* responda neste grupo com *VOTO 1*, *VOTO 2* e assim por diante.';
-                $lines[]='Seu voto será salvo. Se votar novamente, o voto anterior será substituído.';
-                $msg=implode("\n",$lines);
                 $ok=0;
                 $errorMessage=null;
 
@@ -191,8 +178,8 @@ final class CronTasks
                 try{
                     $service=new GroupBroadcastService($this->pdo);
                     $result=$groupIds
-                        ?$service->sendIds($church,$groupIds,$msg)
-                        :$service->sendPurpose($church,'polls',$msg);
+                        ?$service->sendPollIds($church,$groupIds,$poll)
+                        :$service->sendPollPurpose($church,'polls',$poll);
                     $ok+=(int)($result['sent']??0);
                     if($ok===0)$errorMessage=$result['errors'][0]['error']??'Nenhum grupo recebeu a enquete.';
                 }catch(Throwable $e){
