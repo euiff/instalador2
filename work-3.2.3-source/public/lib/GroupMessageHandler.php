@@ -10,8 +10,6 @@ final class GroupMessageHandler
     {
         $churchId=$church['id'];$text=trim($text);
         $registeredGroupId=$this->registeredGroupId((string)$churchId,$groupId);
-        $result=$this->pollVote((string)$churchId,$groupId,$registeredGroupId,$senderPhone,$senderName,$text);
-        if($result) return $result;
         $result=$this->raffle($churchId,$groupId,$registeredGroupId,$senderPhone,$senderName,$text);
         if($result) return $result;
         $result=$this->prayerClock($churchId,$groupId,$registeredGroupId,$senderPhone,$senderName,$text);
