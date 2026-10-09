@@ -147,39 +147,52 @@ final class EvolutionClient
     public function sendGroupPoll(string $groupJid,string $question,array $values,int $selectableCount=1): array
     {
         if(!$this->configured())throw new RuntimeException('Evolution API não configurada.');
+
         $groupJid=trim($groupJid);
         if($groupJid==='')throw new RuntimeException('JID do grupo não informado.');
         if(!str_contains($groupJid,'@'))$groupJid.='@g.us';
 
         $question=trim($question);
-        $values=array_values(array_filter(array_map(fn($v)=>trim((string)$v),$values),fn($v)=>$v!==''));
+        $values=array_values(array_unique(array_filter(
+            array_map(fn($v)=>trim((string)$v),$values),
+            fn($v)=>$v!==''
+        )));
+
         if($question==='')throw new RuntimeException('Pergunta da enquete vazia.');
         if(count($values)<2)throw new RuntimeException('A enquete precisa de pelo menos duas opções.');
+        if(count($values)>10)throw new RuntimeException('A Evolution aceita no máximo dez opções na enquete.');
+        $selectableCount=max(1,min($selectableCount,count($values),10));
 
         $path='/message/sendPoll/'.rawurlencode($this->instance);
-        $attempts=[
-            [
-                'number'=>$groupJid,
+
+        // Formato oficial da Evolution API:
+        // number, name, selectableCount e values no nível principal.
+        // Algumas versões aceitam o JID completo do grupo e outras resolvem
+        // melhor usando apenas a parte numérica. Mantemos o MESMO payload
+        // oficial e variamos somente o destino.
+        $targets=[$groupJid];
+        $numeric=preg_replace('/@g\\.us$/i','',$groupJid);
+        if(is_string($numeric)&&$numeric!==''&&$numeric!==$groupJid)$targets[]=$numeric;
+        $targets=array_values(array_unique($targets));
+
+        $errors=[];
+        foreach($targets as $target){
+            $payload=[
+                'number'=>$target,
                 'name'=>$question,
                 'selectableCount'=>$selectableCount,
                 'values'=>$values,
-            ],
-            [
-                'number'=>$groupJid,
-                'pollMessage'=>[
-                    'name'=>$question,
-                    'selectableCount'=>$selectableCount,
-                    'values'=>$values,
-                ],
-            ],
-        ];
+            ];
 
-        $last=null;
-        foreach($attempts as $payload){
-            try{return $this->request('POST',$path,$payload);}
-            catch(Throwable $e){$last=$e;}
+            try{
+                return $this->request('POST',$path,$payload);
+            }catch(Throwable $e){
+                $errors[]=$e->getMessage();
+            }
         }
-        throw new RuntimeException('Não foi possível enviar a enquete nativa pelo WhatsApp. '.($last?->getMessage()??''));
+
+        $detail=$errors?implode(' | ',array_unique($errors)):'sem detalhe retornado';
+        throw new RuntimeException('Não foi possível enviar a enquete nativa pelo WhatsApp. '.$detail);
     }
 
     public function responseMessageId(array $data): ?string
