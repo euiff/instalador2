@@ -1,0 +1,157 @@
+name: Publish AdminIgreja 3.2.10 native polls and orientations
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-3210.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.2.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate PHP and required changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.2.3-source/public/lib/BotWebhookHandler.php
+          php -l source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          php -l source/work-3.2.3-source/public/lib/UnifiedMemberDocumentService.php
+          php -l source/work-3.2.3-source/public/lib/EvolutionClient.php
+          php -l source/work-3.2.3-source/public/lib/GroupBroadcastService.php
+          php -l source/work-3.2.3-source/public/lib/GroupMessageHandler.php
+          php -l source/work-3.2.3-source/public/lib/CronTasks.php
+          php -l source/work-3.2.3-source/public/polls.php
+
+          grep -q 'sendGroupPoll' source/work-3.2.3-source/public/lib/EvolutionClient.php
+          grep -q 'sendPollIds' source/work-3.2.3-source/public/lib/GroupBroadcastService.php
+          grep -q 'sendPollPurpose' source/work-3.2.3-source/public/lib/GroupBroadcastService.php
+          grep -q 'A4 landscape' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q "certificate?'landscape':'portrait'" source/work-3.2.3-source/public/lib/UnifiedMemberDocumentService.php
+          grep -q 'CREATE TABLE IF NOT EXISTS poll_group_messages' source/work-3.2.3-source/public/database/023_native_poll_messages.sql
+
+          ! grep -q '5️⃣ Falar com a Igreja' source/work-3.2.3-source/public/lib/BotWebhookHandler.php
+          ! grep -q '9️⃣ Aconselhamento Pastoral' source/work-3.2.3-source/public/lib/BotWebhookHandler.php
+
+      - name: Build package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.2.3-source
+          tar -czf /tmp/adminigreja-3.2.10.tar.gz \
+            public/lib/BotWebhookHandler.php \
+            public/lib/MemberDocumentTemplate.php \
+            public/lib/UnifiedMemberDocumentService.php \
+            public/lib/EvolutionClient.php \
+            public/lib/GroupBroadcastService.php \
+            public/lib/GroupMessageHandler.php \
+            public/lib/CronTasks.php \
+            public/polls.php \
+            public/database/023_native_poll_messages.sql \
+            public/VERSION \
+            public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.2.10.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.2.10.tar.gz > /tmp/adminigreja-3.2.10.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.2.10.b64 /tmp/v3.2.10.
+
+          i=1
+          for f in /tmp/v3.2.10.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.2.10.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.2.3-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.2.10.tar.gz")
+          parts=sorted(release.glob("v3.2.10.*.b64.txt"))
+
+          file_paths=[
+              "public/lib/BotWebhookHandler.php",
+              "public/lib/MemberDocumentTemplate.php",
+              "public/lib/UnifiedMemberDocumentService.php",
+              "public/lib/EvolutionClient.php",
+              "public/lib/GroupBroadcastService.php",
+              "public/lib/GroupMessageHandler.php",
+              "public/lib/CronTasks.php",
+              "public/polls.php",
+              "public/database/023_native_poll_messages.sql",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.2.10",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.2.10.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.2.10.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.2.10.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test3210
+          mkdir -p /tmp/test3210
+          tar -xzf /tmp/rebuilt-3.2.10.tar.gz -C /tmp/test3210
+
+          php -l /tmp/test3210/public/lib/BotWebhookHandler.php
+          php -l /tmp/test3210/public/lib/UnifiedMemberDocumentService.php
+          php -l /tmp/test3210/public/lib/EvolutionClient.php
+          php -l /tmp/test3210/public/lib/GroupBroadcastService.php
+          php -l /tmp/test3210/public/lib/CronTasks.php
+          php -l /tmp/test3210/public/polls.php
+          test -f /tmp/test3210/public/database/023_native_poll_messages.sql
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.10.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.2.10 native polls and orientations"
+          git pull --rebase origin main
+          git push origin main
