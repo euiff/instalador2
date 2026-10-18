@@ -1,17 +1,13 @@
 {
-  "version": "2.0.29",
-  "notes": "Melhora a cobrança PIX com nome do cliente, situação exata do vencimento, plano e valor. O cartão PIX mostra vencimento e identifica automaticamente o tipo da chave (telefone, e-mail, CPF, CNPJ ou aleatória), sem repetir o nome da empresa. Mantém o botão Copiar chave Pix, fallback em texto e todas as correções anteriores.",
-  "sha256": "d14399e2f54f5fa2ed8e3841f9d42cfde2596b89e130893e952a42f0e6a9f938",
+  "version": "2.0.30",
+  "notes": "Refina a mensagem de cobrança mantendo o estilo anterior: começa pelo nome do cliente, informa se vence em breve, em X dias, amanhã, hoje, ontem ou se venceu há X dias, mostra plano e valor e avisa que o PIX foi enviado logo abaixo. O cartão PIX permanece com plano, valor, vencimento, tipo da chave e botão Copiar chave Pix.",
+  "sha256": "3eed2f7c2abebae1ac5bd7bdafd9012ee3760eb9fb68c60645304f7b3446cc66",
   "package_parts": [
-    "garra-vip/2.0.29/part-000a.b64",
-    "garra-vip/2.0.29/part-000b.b64",
-    "garra-vip/2.0.29/part-001.b64",
-    "garra-vip/2.0.29/part-002a0.b64",
-    "garra-vip/2.0.29/part-002a1.b64",
-    "garra-vip/2.0.29/part-002b.b64",
-    "garra-vip/2.0.29/part-003.b64",
-    "garra-vip/2.0.29/part-004.b64",
-    "garra-vip/2.0.29/part-005.b64"
+    "garra-vip/2.0.30/part-000.b64",
+    "garra-vip/2.0.30/part-001.b64",
+    "garra-vip/2.0.30/part-002.b64",
+    "garra-vip/2.0.30/part-003.b64",
+    "garra-vip/2.0.30/part-004.b64"
   ],
-  "released_at": "2026-10-18T18:55:00-03:00"
+  "released_at": "2026-10-18T19:10:00-03:00"
 }
