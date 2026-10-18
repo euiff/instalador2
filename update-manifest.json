@@ -1,16 +1,13 @@
 {
-  "version": "2.0.25",
-  "notes": "Mantém exatamente o texto atual da mensagem de cobrança e altera somente a parte do PIX manual: no Evolution API v2, a chave deixa de ser enviada como texto e passa a ser enviada em seguida como cartão PIX nativo do WhatsApp com a ação Copiar chave Pix. Aplica à cobrança manual e às notificações automáticas. Mantém o hotfix do atualizador da 2.0.24.",
-  "sha256": "a3ae669b549836c1b68483a6d0d8a888079a435f67a586ff3a121e5219f20468",
+  "version": "2.0.26",
+  "notes": "Corrige o PIX que aparecia como mensagem incompatível no WhatsApp. Mantém o texto da cobrança igual e envia a chave em um cartão interativo com botão Copiar chave Pix (CTA_COPY), compatível com WhatsApp Web e celular. Se o botão for recusado pela Evolution API, envia automaticamente a chave PIX em texto separado como fallback.",
+  "sha256": "af31557787c7fbc7d7d2ecf4c9e78fcded5d88f3ba3f3767e3a2edbbd8ab8e49",
   "package_parts": [
-    "garra-vip/2.0.25/part-000a.b64",
-    "garra-vip/2.0.25/part-000b.b64",
-    "garra-vip/2.0.25/part-000c.b64",
-    "garra-vip/2.0.25/part-001.b64",
-    "garra-vip/2.0.25/part-002.b64",
-    "garra-vip/2.0.25/part-003a.b64",
-    "garra-vip/2.0.25/part-003b.b64",
-    "garra-vip/2.0.25/part-003c.b64"
+    "garra-vip/2.0.26/part-000a0.b64",
+    "garra-vip/2.0.26/part-000a1.b64",
+    "garra-vip/2.0.26/part-000a2.b64",
+    "garra-vip/2.0.26/part-000b.b64",
+    "garra-vip/2.0.26/part-000c.b64"
   ],
-  "released_at": "2026-10-18T16:55:00-03:00"
+  "released_at": "2026-10-18T17:15:00-03:00"
 }
