@@ -1,24 +1,9 @@
 {
-  "version": "2.0.21",
-  "notes": "Corrige a cobrança por quantidade de telas: valor final = valor do plano x número de telas, sem alterar a duração do plano. A regra passa a valer na lista de clientes, cobranças manuais, Mercado Pago e cobrança automática. Também melhora fortemente o uso no celular com fontes, campos e botões maiores, cards de clientes, modais adaptados ao toque e layout mais responsivo. Mantém as correções anteriores de Sigma, kOfficePanel e menu de ações.",
-  "sha256": "d63ba8c8e73887be3988acfbb915ddef4b68bb103ff26a01de31888f62bd73b0",
+  "version": "2.0.24",
+  "notes": "Hotfix cumulativo do atualizador: corrige o loop em que a instalação concluía mas o Garra Vip voltava a mostrar Versão 2.0.8 e oferecia a mesma atualização novamente. O arquivo VERSION passa a ser a fonte canônica e a rotina confirma a gravação/limpa o cache após atualizar.",
+  "sha256": "0b0ca867458cfb9694387670b3516e5d9a27636f416d71ade5da9eba02137295",
   "package_parts": [
-    "garra-vip/2.0.21/part-000.b64",
-    "garra-vip/2.0.21/part-001.b64",
-    "garra-vip/2.0.21/part-002.b64",
-    "garra-vip/2.0.21/part-003.b64",
-    "garra-vip/2.0.21/part-004.b64",
-    "garra-vip/2.0.21/part-005.b64",
-    "garra-vip/2.0.21/part-006.b64",
-    "garra-vip/2.0.21/part-007.b64",
-    "garra-vip/2.0.21/part-008.b64",
-    "garra-vip/2.0.21/part-009.b64",
-    "garra-vip/2.0.21/part-010a.b64",
-    "garra-vip/2.0.21/part-010b.b64",
-    "garra-vip/2.0.21/part-010c.b64",
-    "garra-vip/2.0.21/part-011.b64",
-    "garra-vip/2.0.21/part-012.b64",
-    "garra-vip/2.0.21/part-013.b64"
+    "garra-vip/2.0.24/hotfix.b64"
   ],
-  "released_at": "2026-08-31T10:14:00-03:00"
+  "released_at": "2026-10-18T16:30:00-03:00"
 }
