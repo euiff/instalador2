@@ -1,15 +1,14 @@
 {
-  "version": "2.0.27",
-  "notes": "Melhora a cobrança via PIX: a mensagem avisa que o PIX está logo abaixo e orienta o cliente a copiar e pagar; o cartão passa a mostrar Pagamento via PIX, empresa, plano, valor e botão Copiar chave Pix. Mantém fallback em texto e todas as correções anteriores.",
-  "sha256": "049ebb51121603b00d5b938424df4ac759344723de983b812ff1f88170e3b90c",
+  "version": "2.0.28",
+  "notes": "Mantém as mensagens principais de cobrança no formato anterior e reformula somente o cartão PIX: nome da empresa, plano, valor e instruções curtas para copiar a chave, abrir o PIX no banco, conferir os dados e concluir o pagamento. Mantém o botão Copiar chave Pix, fallback em texto e todas as correções anteriores.",
+  "sha256": "ccad6f0d60169b684b583c45977858bfaf2002dce59672246eaf04ac1b948123",
   "package_parts": [
-    "garra-vip/2.0.27/part-000a.b64",
-    "garra-vip/2.0.27/part-000b.b64",
-    "garra-vip/2.0.27/part-000c.b64",
-    "garra-vip/2.0.27/part-001.b64",
-    "garra-vip/2.0.27/part-002.b64",
-    "garra-vip/2.0.27/part-003.b64",
-    "garra-vip/2.0.27/part-004.b64"
+    "garra-vip/2.0.28/part-000.b64",
+    "garra-vip/2.0.28/part-001.b64",
+    "garra-vip/2.0.28/part-002.b64",
+    "garra-vip/2.0.28/part-003.b64",
+    "garra-vip/2.0.28/part-004.b64",
+    "garra-vip/2.0.28/part-005.b64"
   ],
-  "released_at": "2026-10-18T18:20:00-03:00"
+  "released_at": "2026-10-18T18:35:00-03:00"
 }
