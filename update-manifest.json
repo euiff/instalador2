@@ -1,13 +1,15 @@
 {
-  "version": "2.0.26",
-  "notes": "Corrige o PIX que aparecia como mensagem incompatível no WhatsApp. Mantém o texto da cobrança igual e envia a chave em um cartão interativo com botão Copiar chave Pix (CTA_COPY), compatível com WhatsApp Web e celular. Se o botão for recusado pela Evolution API, envia automaticamente a chave PIX em texto separado como fallback.",
-  "sha256": "af31557787c7fbc7d7d2ecf4c9e78fcded5d88f3ba3f3767e3a2edbbd8ab8e49",
+  "version": "2.0.27",
+  "notes": "Melhora a cobrança via PIX: a mensagem avisa que o PIX está logo abaixo e orienta o cliente a copiar e pagar; o cartão passa a mostrar Pagamento via PIX, empresa, plano, valor e botão Copiar chave Pix. Mantém fallback em texto e todas as correções anteriores.",
+  "sha256": "049ebb51121603b00d5b938424df4ac759344723de983b812ff1f88170e3b90c",
   "package_parts": [
-    "garra-vip/2.0.26/part-000a0.b64",
-    "garra-vip/2.0.26/part-000a1.b64",
-    "garra-vip/2.0.26/part-000a2.b64",
-    "garra-vip/2.0.26/part-000b.b64",
-    "garra-vip/2.0.26/part-000c.b64"
+    "garra-vip/2.0.27/part-000a.b64",
+    "garra-vip/2.0.27/part-000b.b64",
+    "garra-vip/2.0.27/part-000c.b64",
+    "garra-vip/2.0.27/part-001.b64",
+    "garra-vip/2.0.27/part-002.b64",
+    "garra-vip/2.0.27/part-003.b64",
+    "garra-vip/2.0.27/part-004.b64"
   ],
-  "released_at": "2026-10-18T17:15:00-03:00"
+  "released_at": "2026-10-18T18:20:00-03:00"
 }
