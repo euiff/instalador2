@@ -1,9 +1,16 @@
 {
-  "version": "2.0.24",
-  "notes": "Hotfix cumulativo do atualizador: corrige o loop em que a instalação concluía mas o Garra Vip voltava a mostrar Versão 2.0.8 e oferecia a mesma atualização novamente. O arquivo VERSION passa a ser a fonte canônica e a rotina confirma a gravação/limpa o cache após atualizar.",
-  "sha256": "0b0ca867458cfb9694387670b3516e5d9a27636f416d71ade5da9eba02137295",
+  "version": "2.0.25",
+  "notes": "Mantém exatamente o texto atual da mensagem de cobrança e altera somente a parte do PIX manual: no Evolution API v2, a chave deixa de ser enviada como texto e passa a ser enviada em seguida como cartão PIX nativo do WhatsApp com a ação Copiar chave Pix. Aplica à cobrança manual e às notificações automáticas. Mantém o hotfix do atualizador da 2.0.24.",
+  "sha256": "a3ae669b549836c1b68483a6d0d8a888079a435f67a586ff3a121e5219f20468",
   "package_parts": [
-    "garra-vip/2.0.24/hotfix.b64"
+    "garra-vip/2.0.25/part-000a.b64",
+    "garra-vip/2.0.25/part-000b.b64",
+    "garra-vip/2.0.25/part-000c.b64",
+    "garra-vip/2.0.25/part-001.b64",
+    "garra-vip/2.0.25/part-002.b64",
+    "garra-vip/2.0.25/part-003a.b64",
+    "garra-vip/2.0.25/part-003b.b64",
+    "garra-vip/2.0.25/part-003c.b64"
   ],
-  "released_at": "2026-10-18T16:30:00-03:00"
+  "released_at": "2026-10-18T16:55:00-03:00"
 }
