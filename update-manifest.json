@@ -1,13 +1,18 @@
 {
-  "version": "2.0.30",
-  "notes": "Refina a mensagem de cobrança mantendo o estilo anterior: começa pelo nome do cliente, informa se vence em breve, em X dias, amanhã, hoje, ontem ou se venceu há X dias, mostra plano e valor e avisa que o PIX foi enviado logo abaixo. O cartão PIX permanece com plano, valor, vencimento, tipo da chave e botão Copiar chave Pix.",
-  "sha256": "3eed2f7c2abebae1ac5bd7bdafd9012ee3760eb9fb68c60645304f7b3446cc66",
+  "version": "2.0.31",
+  "notes": "Simplifica o segundo cartão PIX para não repetir plano, valor e vencimento que já aparecem na primeira mensagem. O cartão mostra apenas o tipo da chave PIX, uma orientação curta e o botão Copiar chave Pix. Mantém todas as correções anteriores.",
+  "sha256": "1c226fd26aa8addce6a4fd7b8f7a787c030b08b60b4aa4c0647a0f88ce9e3ef0",
   "package_parts": [
-    "garra-vip/2.0.30/part-000.b64",
-    "garra-vip/2.0.30/part-001.b64",
-    "garra-vip/2.0.30/part-002.b64",
-    "garra-vip/2.0.30/part-003.b64",
-    "garra-vip/2.0.30/part-004.b64"
+    "garra-vip/2.0.31/chunk-00.b64",
+    "garra-vip/2.0.31/chunk-01.b64",
+    "garra-vip/2.0.31/chunk-02.b64",
+    "garra-vip/2.0.31/chunk-03.b64",
+    "garra-vip/2.0.31/chunk-04.b64",
+    "garra-vip/2.0.31/chunk-05.b64",
+    "garra-vip/2.0.31/chunk-06.b64",
+    "garra-vip/2.0.31/chunk-07.b64",
+    "garra-vip/2.0.31/chunk-08.b64",
+    "garra-vip/2.0.31/chunk-09.b64"
   ],
-  "released_at": "2026-10-18T19:10:00-03:00"
+  "released_at": "2026-10-18T19:28:00-03:00"
 }
