@@ -9,8 +9,8 @@
     "releases/v3.4.6.04.b64.txt"
   ],
   "sha256": "32ecc13827633511e93e69434b587893245e23787f1d89d58c90ec1637a18d5b",
-  "published_at": "2026-10-24T22:08:00-03:00",
-  "cache_buster": "3.4.6-20261024-2208",
+  "published_at": "2026-10-24T22:04:00-03:00",
+  "cache_buster": "3.4.6-20261024-2204-final",
   "notes": [
     "Separação SaaS corrigida entre Master e igrejas-clientes.",
     "Atualizações funciona sem igreja selecionada.",
