@@ -1,0 +1,205 @@
+name: Publish AdminIgreja 3.2.12 document rendering fixes
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-3212.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.2.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate template syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q "data:'.\$mime.';base64" source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'width:85.6mm;height:54mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'card-main-table' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'body{width:210mm;height:297mm;overflow:hidden}' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'body{width:297mm;height:210mm;overflow:hidden}' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+
+      - name: Install PDF dependencies for smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          composer install             --working-dir=source/work-3.2.3-source/public             --no-dev             --prefer-dist             --optimize-autoloader             --no-interaction
+
+      - name: Smoke test images and one-page PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, pathlib
+          png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=')
+          root=pathlib.Path('source/work-3.2.3-source/public')
+          (root/'test-logo.png').write_bytes(png)
+          (root/'test-photo.png').write_bytes(png)
+          PY
+
+          cat > /tmp/test-docs-3212.php <<'PHP'
+          <?php
+          require 'source/work-3.2.3-source/public/vendor/autoload.php';
+          require 'source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php';
+
+          $root='source/work-3.2.3-source/public';
+          $t=new MemberDocumentTemplate($root);
+          $church=[
+            'name'=>'Casa da Bênção',
+            'logo_url'=>'/test-logo.png',
+            'pastor_name'=>'Pastor Responsável',
+            'address'=>'Rua Exemplo, 123 - Centro',
+            'public_url'=>'https://example.org',
+          ];
+          $member=[
+            'name'=>'João da Silva',
+            'role'=>'Pastor',
+            'department'=>'Louvor',
+            'marital_status'=>'Casado',
+            'rg'=>'12.345.678 SSP-GO',
+            'cpf'=>'123.456.789-00',
+            'membership_date'=>'2015-05-10',
+            'birth_date'=>'1990-01-01',
+            'baptism_date'=>'2010-12-15',
+            'baptism_church'=>'Casa da Bênção',
+            'baptism_pastor'=>'Pastor Responsável',
+            'naturalness'=>'Catalão - GO',
+            'mother_name'=>'Maria',
+            'father_name'=>'José',
+            'photo_url'=>'/test-photo.png',
+            'congregation_name'=>'ICB Catalão Sede',
+            'congregation_address'=>'Rua Exemplo, 123 - Centro',
+            'congregation_pastor'=>'Pastor Responsável',
+            'congregation_signature'=>'',
+            'congregation_logo'=>'/test-logo.png',
+          ];
+
+          function renderPdf(MemberDocumentTemplate $t,array $church,array $member,string $type,string $title,string $orientation,string $out): void {
+              $html=$t->render($church,$member,$type,$title,'TESTE-123456');
+              if(!str_contains($html,'data:image/png;base64,'))throw new RuntimeException($type.' sem imagem incorporada');
+
+              $opts=new Dompdf\Options();
+              $opts->set('isRemoteEnabled',true);
+              $opts->set('isHtml5ParserEnabled',true);
+              $opts->set('defaultFont','DejaVu Sans');
+              $opts->setChroot('source/work-3.2.3-source/public');
+
+              $pdf=new Dompdf\Dompdf($opts);
+              $pdf->loadHtml($html,'UTF-8');
+              $pdf->setPaper('A4',$orientation);
+              $pdf->render();
+
+              $pages=$pdf->getCanvas()->get_page_count();
+              if($pages!==1)throw new RuntimeException($type.' gerou '.$pages.' páginas');
+
+              $bytes=$pdf->output();
+              if(!str_starts_with($bytes,'%PDF-'))throw new RuntimeException($type.' PDF inválido');
+              file_put_contents($out,$bytes);
+              echo $type." OK pages=".$pages." bytes=".strlen($bytes)."\n";
+          }
+
+          renderPdf($t,$church,$member,'baptism_certificate','Certificado de Batismo','landscape','/tmp/cert.pdf');
+          renderPdf($t,$church,$member,'recommendation_letter','Carta de Recomendação','portrait','/tmp/letter.pdf');
+          renderPdf($t,$church,$member,'membership_card','Carteira de Membro','portrait','/tmp/card.pdf');
+          PHP
+
+          php /tmp/test-docs-3212.php
+          rm -f source/work-3.2.3-source/public/test-logo.png source/work-3.2.3-source/public/test-photo.png
+
+      - name: Build package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.2.3-source
+          tar -czf /tmp/adminigreja-3.2.12.tar.gz             public/lib/MemberDocumentTemplate.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.2.12.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.2.12.tar.gz > /tmp/adminigreja-3.2.12.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.2.12.b64 /tmp/v3.2.12.
+
+          i=1
+          for f in /tmp/v3.2.12.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.2.12.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.2.3-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.2.12.tar.gz")
+          parts=sorted(release.glob("v3.2.12.*.b64.txt"))
+
+          file_paths=[
+              "public/lib/MemberDocumentTemplate.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.2.12",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.2.12.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.2.12.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.2.12.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test3212
+          mkdir -p /tmp/test3212
+          tar -xzf /tmp/rebuilt-3.2.12.tar.gz -C /tmp/test3212
+          php -l /tmp/test3212/public/lib/MemberDocumentTemplate.php
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.2.12.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.2.12 document rendering fixes"
+          git pull --rebase origin main
+          git push origin main
