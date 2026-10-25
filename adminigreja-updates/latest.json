@@ -1,24 +1,68 @@
 {
-  "version": "3.4.2",
+  "version": "3.4.3",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.4.2.01.b64.txt"
+    "releases/v3.4.3.01.b64.txt",
+    "releases/v3.4.3.02.b64.txt",
+    "releases/v3.4.3.03.b64.txt"
   ],
-  "sha256": "554e47cb076a767376c3d9549af9b5c9cd2a64f229cb3269d0c97ae5771e909b",
+  "sha256": "1ba9df584d05f80f58476be5f45b552ebd3a4b41b41e1bbbfbf3911aef21dfc6",
   "notes": [
-    "Corrige QR Code e rodapé saindo da moldura do certificado.",
-    "Reduz e limita nome e texto para permanecerem dentro da área segura.",
-    "Mantém certificado em A4 paisagem e uma única página."
+    "Master separado das igrejas-clientes.",
+    "Cada igreja mantém usuários, membros, WhatsApp e dados próprios.",
+    "Modo suporte explícito para o Master.",
+    "Transferência de propriedade para pastor/responsável.",
+    "Proteção contra instância Evolution duplicada entre igrejas."
   ],
   "files": [
     {
-      "path": "public/lib/MemberDocumentTemplate.php",
-      "sha256": "5271b1b57311330aa078a48fb1ed81fcea2d947892ae7abc3ebfef76e79bf41b"
+      "path": "public/lib/Auth.php",
+      "sha256": "639181ca656ac7f75e84f4f8de2da3f203f806d7dd3182d24104f360214af59d"
+    },
+    {
+      "path": "public/login.php",
+      "sha256": "1a65fa2c0145c1dea34ae83e2a0fe79dad29cc4c1f070b3da748e48541a6c16d"
+    },
+    {
+      "path": "public/switch-church.php",
+      "sha256": "6ea044dea4823cad4b118cee5e9e886098c945b93d0c4ced8c901b5b25745b98"
+    },
+    {
+      "path": "public/master.php",
+      "sha256": "42f6e2bc3b39db879ad701366f64b70e0d5936a3f642b4a660518a8ba9bdba8a"
+    },
+    {
+      "path": "public/users.php",
+      "sha256": "e214e1391704821f4eb694a8a6c8da6362cec723c8c674ce3df4674d57d83492"
+    },
+    {
+      "path": "public/lib/View.php",
+      "sha256": "c86fe0f6913d085b6e5e12c200d4a0cee96f7fd17beb2888cdb1758379cca8ac"
+    },
+    {
+      "path": "public/settings.php",
+      "sha256": "0c7330a96973fbc7572faa87825b99163cc355a705167abcdd13d15ef14e20e6"
+    },
+    {
+      "path": "public/api/whatsapp-webhook.php",
+      "sha256": "608bcffc8011b5295c54fad5f47625d6929c72cfd6bf3b0053d4b79f7d6b3bed"
+    },
+    {
+      "path": "public/lib/BotWebhookHandler.php",
+      "sha256": "15e5655f03d3052baf3734d42e4a0b02d62a0e96de1ba668bde1c3ffe5258cd7"
+    },
+    {
+      "path": "public/database/025_tenant_role_cleanup.sql",
+      "sha256": "6cc554490c529b19a4bd1ceb225da1d7aecf6d84fa694d55ea8a1c2db923a510"
     },
     {
       "path": "public/VERSION",
-      "sha256": "68ec10d7aa58f8cc2cc4636c9ea52e6fc13299fc121387bc5ce30665c576b3e6"
+      "sha256": "0ca6c7591d8ed155ad3e925e2279149da5c782c0b57266a016fdd862dcc647da"
+    },
+    {
+      "path": "public/CHANGELOG.md",
+      "sha256": "2f44c6a213e2fa8577f2629b4a601d80f65afe9b59b5b02faf1bffa4f29946c2"
     }
   ]
 }
