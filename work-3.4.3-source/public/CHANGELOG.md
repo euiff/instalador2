@@ -1,5 +1,18 @@
 # Changelog · Igreja Master
 
+## 3.4.7
+
+- Painel Master ampliado para gestão profissional de igrejas-clientes.
+- Nova igreja passa a ser criada em janela flutuante, com dados da igreja e acesso do proprietário separados.
+- Adicionados indicadores de total de igrejas, igrejas ativas, usuários e membros.
+- Adicionada busca por igreja, pastor ou e-mail.
+- Master pode editar nome, pastor, telefone, e-mail, endereço, plano, status, datas, limite de usuários, mensalidade e observações da igreja.
+- Adicionada gestão completa do proprietário: escolher usuário existente ou criar/vincular novo pastor/administrador.
+- Ao definir proprietário, qualquer vínculo interno do Master é removido da igreja automaticamente.
+- Adicionado botão explícito para desvincular o Master de uma igreja existente sem apagar dados.
+- O Master continua podendo abrir qualquer igreja apenas em modo suporte, sem precisar ser membro dela.
+- Igrejas criadas pelo Master não herdam dados da conta Master; cada cliente nasce com dados próprios.
+
 ## 3.4.6
 
 - Mantém a separação SaaS corrigida da 3.4.5 entre Master e igrejas-clientes.
