@@ -1,0 +1,145 @@
+name: Publish AdminIgreja 3.4.7 Master panel upgrade
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-347.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.4.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate Master panel
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.4.3-source/public/master.php
+          php -l source/work-3.4.3-source/public/lib/Auth.php
+          php -l source/work-3.4.3-source/public/lib/View.php
+          php -l source/work-3.4.3-source/public/updates.php
+
+          grep -q 'master-new-church' source/work-3.4.3-source/public/master.php
+          grep -q 'fab-new-church' source/work-3.4.3-source/public/master.php
+          grep -q "action' value="detach_master"" source/work-3.4.3-source/public/master.php || grep -q 'name="action" value="detach_master"' source/work-3.4.3-source/public/master.php
+          grep -q "action' value="create_owner"" source/work-3.4.3-source/public/master.php || grep -q 'name="action" value="create_owner"' source/work-3.4.3-source/public/master.php
+          grep -q 'master_detach_from_church' source/work-3.4.3-source/public/master.php
+          grep -q 'Abrir painel desta igreja em modo suporte' source/work-3.4.3-source/public/master.php
+          grep -q 'Igrejas-clientes' source/work-3.4.3-source/public/master.php
+          grep -q 'Mensalidade' source/work-3.4.3-source/public/master.php
+
+          # Preserve corrected SaaS behavior.
+          ! grep -q 'Igreja não selecionada' source/work-3.4.3-source/public/updates.php
+          grep -q 'platform_master_mode' source/work-3.4.3-source/public/lib/Auth.php
+
+          # No destructive database migration included.
+          test ! -f source/work-3.4.3-source/public/database/027_master_detach.sql
+
+      - name: Build 3.4.7 delta package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.4.3-source
+          tar -czf /tmp/adminigreja-3.4.7.tar.gz             public/master.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.4.7.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.4.7.tar.gz > /tmp/adminigreja-3.4.7.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.4.7.b64 /tmp/v3.4.7.
+
+          i=1
+          for f in /tmp/v3.4.7.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.4.7.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.4.3-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.4.7.tar.gz")
+          parts=sorted(release.glob("v3.4.7.*.b64.txt"))
+
+          file_paths=[
+              "public/master.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.4.7",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "published_at":"2026-10-24T22:22:00-03:00",
+              "cache_buster":"3.4.7-20261024-2222",
+              "notes":[
+                  "Painel Master completo para gestão de igrejas-clientes.",
+                  "Nova igreja em janela flutuante.",
+                  "Edição de dados, plano, mensalidade e status da igreja.",
+                  "Gestão e criação do proprietário da igreja.",
+                  "Desvinculação segura do Master sem apagar dados.",
+                  "Acesso do Master às igrejas somente em modo suporte."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.4.7.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.4.7.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.4.7.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test347
+          mkdir -p /tmp/test347
+          tar -xzf /tmp/rebuilt-3.4.7.tar.gz -C /tmp/test347
+
+          php -l /tmp/test347/public/master.php
+          test "$(cat /tmp/test347/public/VERSION)" = "3.4.7"
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.4.7.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.4.7 Master panel upgrade"
+          git pull --rebase origin main
+          git push origin main
