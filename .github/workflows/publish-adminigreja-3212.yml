@@ -33,8 +33,8 @@ jobs:
           grep -q "data:'.\$mime.';base64" source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
           grep -q 'width:85.6mm;height:54mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
           grep -q 'card-main-table' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
-          grep -q 'body{width:209mm;height:296mm;overflow:hidden}' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
-          grep -q 'body{width:296mm;height:209mm;overflow:hidden}' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'certificate{width:250mm;height:175mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'letter{width:172mm;height:280mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
 
       - name: Install PDF dependencies for smoke test
         shell: bash
