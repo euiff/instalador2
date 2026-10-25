@@ -1,5 +1,31 @@
 # Changelog · Igreja Master
 
+## 3.4.3
+
+- Separação SaaS reforçada entre Plataforma Master e igrejas-clientes.
+- O usuário Master entra no Painel Master sem assumir automaticamente nenhuma igreja.
+- Acesso aos módulos de uma igreja pelo Master exige entrada explícita em modo suporte.
+- Adicionado botão para sair do modo suporte e voltar à Plataforma Master.
+- Nova igreja / cliente cria um tenant próprio com pastor/responsável como proprietário.
+- O e-mail do Master não pode ser usado como proprietário de uma igreja-cliente.
+- Novo acesso dentro de uma igreja passa a ser claramente um usuário interno daquela igreja.
+- Adicionada transferência de propriedade de igreja para pastor/responsável, removendo o Master da equipe interna do tenant.
+- Papéis globais `admin` antigos são removidos; perfis de igreja ficam exclusivamente em `church_members.church_role`.
+- Configuração do WhatsApp impede reutilizar a mesma instância Evolution em duas igrejas ativas.
+- Webhook recusa instâncias ambíguas para impedir mistura de mensagens entre clientes.
+- Mantida a separação de membros, grupos, financeiro, documentos, eventos e configurações por `church_id`.
+
+## 3.4.2
+
+- Corrigido QR Code e rodapé do certificado para permanecerem dentro da área segura de impressão.
+- Certificado mantido em A4 paisagem e uma única página.
+
+## 3.4.1
+
+- Corrigido carregamento de logo e foto nos documentos do painel.
+- Corrigida folha em branco extra nos PDFs.
+- Carteirinha PVC azul/dourada refinada conforme referência visual.
+
 ## 3.4.0
 
 - Corrigido o cadastro de novos membros com naturalidade, evitando erro na quantidade de parâmetros SQL.
