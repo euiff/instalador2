@@ -103,7 +103,10 @@ final class Auth
         if(!$churchId||!$userId)return null;
 
         if($this->hasRole('super_admin',(string)$userId)){
-            $q=$this->pdo->prepare('SELECT c.*,1 AS is_owner FROM churches c WHERE c.id=? AND c.active=1 LIMIT 1');
+            $supportId=(string)($_SESSION['master_support_church_id']??'');
+            if($supportId===''||$supportId!==(string)$churchId)return null;
+
+            $q=$this->pdo->prepare('SELECT c.*,0 AS is_owner FROM churches c WHERE c.id=? AND c.active=1 LIMIT 1');
             $q->execute([$churchId]);
             return $q->fetch()?:null;
         }
@@ -160,10 +163,11 @@ final class Auth
         if($userId===''||$churchId==='')return null;
 
         if($this->hasRole('super_admin',$userId)){
+            if(!$this->isMasterSupportMode())return null;
             return [
                 'user_id'=>$userId,
                 'church_id'=>$churchId,
-                'is_owner'=>1,
+                'is_owner'=>0,
                 'church_role'=>'super_admin',
                 'permissions'=>null,
             ];
