@@ -1,0 +1,63 @@
+name: Prepare AdminIgreja 3.4.3 source
+
+on:
+  push:
+    paths:
+      - '.github/workflows/prepare-adminigreja-343.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - name: Checkout hotfix source
+        uses: actions/checkout@v4
+        with:
+          ref: work-3.2.3
+          path: hotfix
+          fetch-depth: 1
+
+      - name: Rebuild and extract 3.4.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/adminigreja-340 /tmp/adminigreja-340.tar.gz /tmp/adminigreja-340.b64
+          mkdir -p /tmp/adminigreja-340
+          cat channel/adminigreja-updates/releases/v3.4.0.*.b64.txt | tr -d '\r\n' > /tmp/adminigreja-340.b64
+          base64 -d /tmp/adminigreja-340.b64 > /tmp/adminigreja-340.tar.gz
+          tar -xzf /tmp/adminigreja-340.tar.gz -C /tmp/adminigreja-340
+          test -f /tmp/adminigreja-340/public/lib/Auth.php
+          test -f /tmp/adminigreja-340/public/master.php
+          test -f /tmp/adminigreja-340/public/users.php
+
+      - name: Overlay 3.4.1 and 3.4.2 document hotfix
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp hotfix/work-3.2.3-source/public/lib/MemberDocumentTemplate.php /tmp/adminigreja-340/public/lib/MemberDocumentTemplate.php
+          printf '3.4.2\n' > /tmp/adminigreja-340/public/VERSION
+
+      - name: Publish working branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git checkout -B work-3.4.3
+          rm -rf work-3.4.3-source
+          mkdir -p work-3.4.3-source
+          cp -a /tmp/adminigreja-340/. work-3.4.3-source/
+          git add work-3.4.3-source
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git commit -m "Prepare AdminIgreja 3.4.3 source from 3.4.0 plus document hotfixes"
+          git push -f origin work-3.4.3
