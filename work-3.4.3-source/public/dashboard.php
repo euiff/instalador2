@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/bootstrap.php';
+if($auth->isSuperAdmin()&&!$auth->isMasterSupportMode())redirect('/master.php');
 $user=$auth->requireAbility('dashboard');
 $church=$auth->currentChurch();
 if(!$church)redirect('/logout.php');
