@@ -1,21 +1,23 @@
 {
-  "version": "3.4.5",
+  "version": "3.4.6",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.4.5.01.b64.txt",
-    "releases/v3.4.5.02.b64.txt",
-    "releases/v3.4.5.03.b64.txt",
-    "releases/v3.4.5.04.b64.txt"
+    "releases/v3.4.6.01.b64.txt",
+    "releases/v3.4.6.02.b64.txt",
+    "releases/v3.4.6.03.b64.txt",
+    "releases/v3.4.6.04.b64.txt"
   ],
-  "sha256": "9e1800b346225cdb912f93cdd930b0218417f6c7e805ce55891ae9f1199200d9",
+  "sha256": "32ecc13827633511e93e69434b587893245e23787f1d89d58c90ec1637a18d5b",
+  "published_at": "2026-10-24T22:08:00-03:00",
+  "cache_buster": "3.4.6-20261024-2208",
   "notes": [
     "Separação SaaS corrigida entre Master e igrejas-clientes.",
     "Atualizações funciona sem igreja selecionada.",
-    "Master sem contexto de igreja volta ao Painel Master em vez de tela vazia.",
-    "Modo suporte explícito por igreja-cliente.",
-    "Nenhuma migration destrutiva de papéis/permissões nesta versão.",
-    "WhatsApp isolado por instância Evolution de cada igreja."
+    "Master fora de contexto volta ao Painel Master, sem tela vazia.",
+    "Atualizador consulta raw.githubusercontent.com e API oficial do GitHub.",
+    "A versão válida mais nova entre as rotas é usada automaticamente.",
+    "Nenhuma migration destrutiva de papéis/permissões nesta versão."
   ],
   "files": [
     {
@@ -63,14 +65,16 @@
       "sha256": "987c61369dcf8f10bbc4ce778bfe92e0c41768cd25ce953649f7d19fd0db181f"
     },
     {
+      "path": "public/lib/Updater.php",
+      "sha256": "de9c9bdd3750b3b7f3583ebabacc06adc86e863afdff4e96b235865e5e9ffafa"
+    },
+    {
       "path": "public/VERSION",
-      "sha256": "282f6fe03df9856294bc0a0db74e65b15906eb6ae7fef56fadebb09751fef301"
+      "sha256": "47079b3096eb33e5b9f085d86e52250b7a876f134be3fae5d2328584f67af6b1"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "c51a107029b4f31bcdecea3dd9ea44022116979af7c432f24ec7ce32cbaed42c"
+      "sha256": "36d856b06366fd494e93255a32c119d5f1ada9f259aca3b4a23c9550ebac072c"
     }
-  ],
-  "published_at": "2026-10-24T22:00:00-03:00",
-  "cache_buster": "3.4.5-20261024-2200"
+  ]
 }
