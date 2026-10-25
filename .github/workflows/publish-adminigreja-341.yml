@@ -1,0 +1,196 @@
+name: Publish AdminIgreja 3.4.1 document hotfix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-341.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.2.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate document template
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q "data:'.\$mime.';base64" source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'width:85.6mm;height:54mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'card-main-table' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+
+      - name: Install renderer for smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          composer install             --working-dir=source/work-3.2.3-source/public             --no-dev             --prefer-dist             --optimize-autoloader             --no-interaction
+
+      - name: Verify one-page rendering
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, pathlib
+          png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=')
+          root=pathlib.Path('source/work-3.2.3-source/public')
+          (root/'test-logo.png').write_bytes(png)
+          (root/'test-photo.png').write_bytes(png)
+          PY
+
+          cat > /tmp/test-docs-341.php <<'PHP'
+          <?php
+          require 'source/work-3.2.3-source/public/vendor/autoload.php';
+          require 'source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php';
+
+          $root='source/work-3.2.3-source/public';
+          $t=new MemberDocumentTemplate($root);
+          $church=[
+            'name'=>'Casa da Bênção',
+            'logo_url'=>'/test-logo.png',
+            'pastor_name'=>'Pastor Responsável',
+            'address'=>'Rua Exemplo, 123',
+            'public_url'=>'https://example.org',
+          ];
+          $member=[
+            'name'=>'João da Silva',
+            'role'=>'Pastor',
+            'department'=>'Louvor',
+            'marital_status'=>'Casado',
+            'rg'=>'12.345.678 SSP-GO',
+            'cpf'=>'123.456.789-00',
+            'membership_date'=>'2015-05-10',
+            'birth_date'=>'1990-01-01',
+            'baptism_date'=>'2010-12-15',
+            'baptism_church'=>'Casa da Bênção',
+            'baptism_pastor'=>'Pastor Responsável',
+            'naturalness'=>'Catalão - GO',
+            'mother_name'=>'Maria',
+            'father_name'=>'José',
+            'photo_url'=>'/test-photo.png',
+            'congregation_name'=>'ICB Catalão Sede',
+            'congregation_address'=>'Rua Exemplo, 123',
+            'congregation_pastor'=>'Pastor Responsável',
+            'congregation_signature'=>'',
+            'congregation_logo'=>'/test-logo.png',
+          ];
+
+          function check(MemberDocumentTemplate $t,array $church,array $member,string $type,string $title,string $orientation): void {
+              $html=$t->render($church,$member,$type,$title,'TESTE-341');
+              if(!str_contains($html,'data:image/png;base64,'))throw new RuntimeException($type.' sem imagem incorporada');
+
+              $o=new Dompdf\Options();
+              $o->set('isRemoteEnabled',true);
+              $o->set('isHtml5ParserEnabled',true);
+              $o->set('defaultFont','DejaVu Sans');
+              $o->setChroot('source/work-3.2.3-source/public');
+
+              $pdf=new Dompdf\Dompdf($o);
+              $pdf->loadHtml($html,'UTF-8');
+              $pdf->setPaper('A4',$orientation);
+              $pdf->render();
+
+              $pages=$pdf->getCanvas()->get_page_count();
+              if($pages!==1)throw new RuntimeException($type.' gerou '.$pages.' páginas');
+              echo $type." OK pages=".$pages."\n";
+          }
+
+          check($t,$church,$member,'baptism_certificate','Certificado de Batismo','landscape');
+          check($t,$church,$member,'recommendation_letter','Carta de Recomendação','portrait');
+          check($t,$church,$member,'membership_card','Carteira de Membro','portrait');
+          PHP
+
+          php /tmp/test-docs-341.php
+
+      - name: Build 3.4.1 delta package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pkg341
+          mkdir -p /tmp/pkg341/public/lib
+          cp source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php /tmp/pkg341/public/lib/
+          printf '3.4.1\n' > /tmp/pkg341/public/VERSION
+
+          tar -czf /tmp/adminigreja-3.4.1.tar.gz -C /tmp/pkg341 public
+
+          cd channel
+          rm -f adminigreja-updates/releases/v3.4.1.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.4.1.tar.gz > /tmp/adminigreja-3.4.1.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.4.1.b64 /tmp/v3.4.1.
+
+          i=1
+          for f in /tmp/v3.4.1.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.4.1.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          pkg=Path("/tmp/pkg341")
+          package=Path("/tmp/adminigreja-3.4.1.tar.gz")
+          parts=sorted((channel/"releases").glob("v3.4.1.*.b64.txt"))
+          files=[]
+          for rel in ["public/lib/MemberDocumentTemplate.php","public/VERSION"]:
+              p=pkg/rel
+              files.append({"path":rel,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()})
+
+          manifest={
+              "version":"3.4.1",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "notes":[
+                  "Correção de logo e foto nos documentos do painel.",
+                  "Correção da folha em branco extra nos PDFs enviados pelo WhatsApp.",
+                  "Carteirinha redesenhada conforme o modelo PVC azul/dourado de referência."
+              ],
+              "files":files,
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.4.1.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.4.1.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.4.1.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+          rm -rf /tmp/test341
+          mkdir -p /tmp/test341
+          tar -xzf /tmp/rebuilt-3.4.1.tar.gz -C /tmp/test341
+          php -l /tmp/test341/public/lib/MemberDocumentTemplate.php
+          test "$(cat /tmp/test341/public/VERSION)" = "3.4.1"
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.4.1.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.4.1 document rendering hotfix"
+          git pull --rebase origin main
+          git push origin main
