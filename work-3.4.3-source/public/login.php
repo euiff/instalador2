@@ -1,11 +1,11 @@
 <?php
 require __DIR__ . '/bootstrap.php';
-if ($auth->user()) redirect('/dashboard.php');
+if ($auth->user()) redirect($auth->isSuperAdmin()?'/master.php':'/dashboard.php');
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = (string)($_POST['password'] ?? '');
-    if ($auth->login($email, $password)) redirect('/dashboard.php');
+    if ($auth->login($email, $password)) redirect($auth->isSuperAdmin()?'/master.php':'/dashboard.php');
     $error = 'E-mail ou senha inválidos.';
 }
 ?><!doctype html>
