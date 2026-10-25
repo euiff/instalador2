@@ -2,8 +2,8 @@
 require __DIR__.'/bootstrap.php';
 
 $user=$auth->requireRole('super_admin');
-$church=$auth->currentChurch();
-if(!$church) exit('Igreja não selecionada.');
+// Atualizações pertencem à plataforma, não a uma igreja-cliente.
+// O Master deve poder atualizar mesmo sem estar em modo suporte.
 
 require_once __DIR__.'/lib/Updater.php';
 $cfg=require __DIR__.'/config/update.php';
