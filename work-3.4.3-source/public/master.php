@@ -50,6 +50,46 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             redirect('/master.php?church='.urlencode($id));
         }
 
+        if($action==='set_owner'){
+            $churchId=(string)($_POST['church_id']??'');
+            $membershipId=(string)($_POST['membership_id']??'');
+            if($churchId===''||$membershipId==='')throw new RuntimeException('Selecione o novo proprietário.');
+
+            $q=$pdo->prepare('SELECT cm.*,u.email,u.full_name FROM church_members cm INNER JOIN users u ON u.id=cm.user_id WHERE cm.id=? AND cm.church_id=? LIMIT 1');
+            $q->execute([$membershipId,$churchId]);
+            $target=$q->fetch();
+            if(!$target)throw new RuntimeException('Usuário não pertence a esta igreja.');
+
+            $super=$pdo->prepare("SELECT 1 FROM user_roles WHERE user_id=? AND role='super_admin' LIMIT 1");
+            $super->execute([$target['user_id']]);
+            if($super->fetchColumn())throw new RuntimeException('O Master da plataforma não pode ser proprietário de uma igreja-cliente.');
+
+            $pdo->beginTransaction();
+            try{
+                $pdo->prepare("UPDATE church_members SET is_owner=0,church_role=CASE WHEN church_role='owner' THEN 'admin' ELSE church_role END WHERE church_id=?")
+                    ->execute([$churchId]);
+                $pdo->prepare("UPDATE church_members SET is_owner=1,church_role='owner',permissions=NULL WHERE id=? AND church_id=?")
+                    ->execute([$membershipId,$churchId]);
+
+                // O Master administra a plataforma e não deve permanecer como
+                // usuário interno da igreja-cliente.
+                $pdo->prepare("DELETE cm FROM church_members cm INNER JOIN user_roles ur ON ur.user_id=cm.user_id AND ur.role='super_admin' WHERE cm.church_id=?")
+                    ->execute([$churchId]);
+
+                master_audit($pdo,(string)$user['id'],$churchId,'church_owner_transferred',[
+                    'new_owner_user_id'=>$target['user_id'],
+                    'new_owner_email'=>$target['email'],
+                ]);
+                $pdo->commit();
+            }catch(Throwable $e){
+                if($pdo->inTransaction())$pdo->rollBack();
+                throw $e;
+            }
+
+            flash('success','Propriedade transferida. O pastor agora é o responsável da igreja e o Master ficou somente na plataforma.');
+            redirect('/master.php?church='.urlencode($churchId).'#owner');
+        }
+
         if($action==='create_church'){
             $name=trim((string)($_POST['church_name']??''));
             $ownerName=trim((string)($_POST['owner_name']??''));
@@ -99,6 +139,17 @@ $selected=null;
 if(!empty($_GET['church'])){
     $q=$pdo->prepare('SELECT c.*,(SELECT COUNT(*) FROM church_members cm WHERE cm.church_id=c.id) user_count,(SELECT COUNT(*) FROM members m WHERE m.church_id=c.id AND m.active=1) member_count FROM churches c WHERE c.id=? LIMIT 1');
     $q->execute([(string)$_GET['church']]);$selected=$q->fetch()?:null;
+}
+$churchUsers=[];
+if($selected){
+    $uq=$pdo->prepare("SELECT cm.id membership_id,cm.user_id,cm.is_owner,cm.church_role,u.full_name,u.email,
+      EXISTS(SELECT 1 FROM user_roles ur WHERE ur.user_id=u.id AND ur.role='super_admin') is_master
+      FROM church_members cm
+      INNER JOIN users u ON u.id=cm.user_id
+      WHERE cm.church_id=?
+      ORDER BY cm.is_owner DESC,u.full_name,u.email");
+    $uq->execute([$selected['id']]);
+    $churchUsers=$uq->fetchAll();
 }
 
 $rows=$pdo->query("SELECT c.*,
@@ -160,11 +211,31 @@ View::header('Painel Master',$auth,'master.php');
     </div>
     <button class="btn btn-primary" style="margin-top:14px">Salvar acesso</button>
   </form>
-  <form method="post" action="/switch-church.php" style="margin-top:10px">
+  <div id="owner" style="margin-top:22px;padding-top:18px;border-top:1px solid var(--line)">
+    <h3 style="margin:0 0 5px;font-size:15px">Proprietário da igreja</h3>
+    <p class="muted" style="margin:0 0 12px">O proprietário é o pastor/administrador cliente. O Master administra a plataforma e não deve ser proprietário da igreja.</p>
+    <form method="post" style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">
+      <?=csrf_field()?>
+      <input type="hidden" name="action" value="set_owner">
+      <input type="hidden" name="church_id" value="<?=e($selected['id'])?>">
+      <div class="field" style="flex:1;min-width:240px">
+        <label>Pastor / responsável proprietário</label>
+        <select class="select" name="membership_id" required>
+          <option value="">Selecione...</option>
+          <?php foreach($churchUsers as $cu): if(!empty($cu['is_master']))continue;?>
+            <option value="<?=e($cu['membership_id'])?>" <?=!empty($cu['is_owner'])?'selected':''?>><?=e($cu['full_name']?:$cu['email'])?> · <?=e($cu['email'])?><?=!empty($cu['is_owner'])?' · atual':''?></option>
+          <?php endforeach?>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit" onclick="return confirm('Transferir a propriedade desta igreja para o usuário selecionado?')">Definir proprietário</button>
+    </form>
+  </div>
+
+  <form method="post" action="/switch-church.php" style="margin-top:14px">
     <?=csrf_field()?>
     <input type="hidden" name="church_id" value="<?=e($selected['id'])?>">
     <input type="hidden" name="back" value="/dashboard.php">
-    <button class="btn btn-light" style="width:100%">Abrir painel desta igreja</button>
+    <button class="btn btn-light" style="width:100%">Abrir painel desta igreja em modo suporte</button>
   </form>
 </section>
 <?php endif?>
