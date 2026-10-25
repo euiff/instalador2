@@ -1,26 +1,24 @@
 {
-  "version": "3.4.1",
+  "version": "3.4.2",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.4.1.01.b64.txt"
+    "releases/v3.4.2.01.b64.txt"
   ],
-  "sha256": "5674625e1ed4d11abb55791e40574b613316e54f84a997034af7c4acb7912bfd",
+  "sha256": "554e47cb076a767376c3d9549af9b5c9cd2a64f229cb3269d0c97ae5771e909b",
   "notes": [
-    "Correção de logo e foto nos documentos do painel.",
-    "Correção da folha em branco extra nos PDFs enviados pelo WhatsApp.",
-    "Carteirinha redesenhada conforme o modelo PVC azul/dourado de referência."
+    "Corrige QR Code e rodapé saindo da moldura do certificado.",
+    "Reduz e limita nome e texto para permanecerem dentro da área segura.",
+    "Mantém certificado em A4 paisagem e uma única página."
   ],
   "files": [
     {
       "path": "public/lib/MemberDocumentTemplate.php",
-      "sha256": "ff6becae5bdbcf24355b2f9d2f4e44408ddede29f626176b2a0bb83ac5afbdf9"
+      "sha256": "5271b1b57311330aa078a48fb1ed81fcea2d947892ae7abc3ebfef76e79bf41b"
     },
     {
       "path": "public/VERSION",
-      "sha256": "cc714f5e0224a78311f4835e9fbb88e69ba35f65e7dd5cb7d86cabb4a84bbd72"
+      "sha256": "68ec10d7aa58f8cc2cc4636c9ea52e6fc13299fc121387bc5ce30665c576b3e6"
     }
-  ],
-  "published_at": "2026-10-24T21:29:00-03:00",
-  "cache_buster": "3.4.1-20261024-2129"
+  ]
 }
