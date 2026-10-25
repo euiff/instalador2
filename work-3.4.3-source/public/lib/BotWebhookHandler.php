@@ -19,9 +19,13 @@ final class BotWebhookHandler
         $jid=(string)($key['remoteJid']??'');
         if(!empty($key['fromMe'])) return ['ok'=>true,'ignored'=>'from_me'];
 
-        $q=$this->pdo->prepare('SELECT * FROM churches WHERE evolution_instance_name=? AND active=1 LIMIT 1');
-        $q->execute([$instance]);$church=$q->fetch();
-        if(!$church) return ['ok'=>true,'ignored'=>'church_not_found'];
+        $q=$this->pdo->prepare('SELECT * FROM churches WHERE evolution_instance_name=? AND active=1 ORDER BY id');
+        $q->execute([$instance]);
+        $matches=$q->fetchAll();
+        if(count($matches)!==1){
+            return ['ok'=>true,'ignored'=>count($matches)>1?'ambiguous_instance':'church_not_found'];
+        }
+        $church=$matches[0];
 
         $client=new EvolutionClient((string)($church['evolution_api_url']??''),(string)($church['evolution_api_key']??''),(string)($church['evolution_instance_name']??''));
         $ai=new AiClient((string)($church['gemini_api_key']??''));
