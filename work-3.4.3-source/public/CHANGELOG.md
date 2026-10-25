@@ -1,5 +1,18 @@
 # Changelog · Igreja Master
 
+## 3.4.5
+
+- Reintroduz a separação SaaS entre Plataforma Master e igrejas-clientes, corrigindo o problema da 3.4.3.
+- Master entra no Painel Master sem precisar selecionar uma igreja.
+- Página de Atualizações funciona normalmente fora de qualquer igreja-cliente.
+- Se o Master abrir um módulo de igreja sem contexto, o sistema redireciona ao Painel Master em vez de exibir erro ou tela vazia.
+- Modo suporte permite abrir explicitamente uma igreja-cliente e sair com “Voltar ao Master”.
+- Cada pastor/proprietário continua limitado aos dados da própria igreja.
+- Nova igreja/cliente cria conta independente com responsável próprio.
+- Transferência de propriedade não apaga vínculos históricos do Master; apenas remove sua condição de proprietário da igreja.
+- Nenhuma migration destrutiva de papéis/permissões é executada nesta versão.
+- Instâncias Evolution continuam isoladas por igreja para evitar mistura de mensagens.
+
 ## 3.4.3
 
 - Separação SaaS reforçada entre Plataforma Master e igrejas-clientes.
