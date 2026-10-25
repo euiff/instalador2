@@ -1,0 +1,172 @@
+name: Publish AdminIgreja 3.4.5 corrected tenant isolation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-345.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.4.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate corrected tenant flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.4.3-source/public/lib/Auth.php
+          php -l source/work-3.4.3-source/public/login.php
+          php -l source/work-3.4.3-source/public/switch-church.php
+          php -l source/work-3.4.3-source/public/master.php
+          php -l source/work-3.4.3-source/public/users.php
+          php -l source/work-3.4.3-source/public/lib/View.php
+          php -l source/work-3.4.3-source/public/settings.php
+          php -l source/work-3.4.3-source/public/api/whatsapp-webhook.php
+          php -l source/work-3.4.3-source/public/lib/BotWebhookHandler.php
+          php -l source/work-3.4.3-source/public/updates.php
+          php -l source/work-3.4.3-source/public/dashboard.php
+
+          # Master platform mode exists.
+          grep -q "platform_master_mode" source/work-3.4.3-source/public/lib/Auth.php
+          grep -q "master_support_church_id" source/work-3.4.3-source/public/lib/Auth.php
+          grep -q "leave_master_support" source/work-3.4.3-source/public/switch-church.php
+
+          # Updates MUST NOT require a selected church.
+          ! grep -q "Igreja não selecionada" source/work-3.4.3-source/public/updates.php
+          ! grep -q "\$auth->currentChurch()" source/work-3.4.3-source/public/updates.php
+
+          # Direct tenant module access by Master redirects safely.
+          grep -q "Escolha uma igreja-cliente" source/work-3.4.3-source/public/lib/Auth.php
+          grep -q "redirect('/master.php')" source/work-3.4.3-source/public/lib/Auth.php
+          grep -q "redirect('/master.php')" source/work-3.4.3-source/public/dashboard.php
+
+          # Owner transfer is non-destructive.
+          ! grep -q "DELETE cm FROM church_members" source/work-3.4.3-source/public/master.php
+          grep -q "UPDATE church_members cm INNER JOIN user_roles" source/work-3.4.3-source/public/master.php
+
+          # No destructive tenant role cleanup is part of this release.
+          test ! -f source/work-3.4.3-source/public/database/027_tenant_role_cleanup.sql
+
+          # WhatsApp tenant safeguards remain.
+          grep -q "Cada igreja-cliente deve usar uma instância diferente" source/work-3.4.3-source/public/settings.php
+          grep -q "ambiguous_instance" source/work-3.4.3-source/public/api/whatsapp-webhook.php
+
+      - name: Build 3.4.5 delta package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.4.3-source
+          tar -czf /tmp/adminigreja-3.4.5.tar.gz             public/lib/Auth.php             public/login.php             public/switch-church.php             public/master.php             public/users.php             public/lib/View.php             public/settings.php             public/api/whatsapp-webhook.php             public/lib/BotWebhookHandler.php             public/updates.php             public/dashboard.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.4.5.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.4.5.tar.gz > /tmp/adminigreja-3.4.5.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.4.5.b64 /tmp/v3.4.5.
+
+          i=1
+          for f in /tmp/v3.4.5.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.4.5.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.4.3-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.4.5.tar.gz")
+          parts=sorted(release.glob("v3.4.5.*.b64.txt"))
+
+          file_paths=[
+              "public/lib/Auth.php",
+              "public/login.php",
+              "public/switch-church.php",
+              "public/master.php",
+              "public/users.php",
+              "public/lib/View.php",
+              "public/settings.php",
+              "public/api/whatsapp-webhook.php",
+              "public/lib/BotWebhookHandler.php",
+              "public/updates.php",
+              "public/dashboard.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.4.5",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "notes":[
+                  "Separação SaaS corrigida entre Master e igrejas-clientes.",
+                  "Atualizações funciona sem igreja selecionada.",
+                  "Master sem contexto de igreja volta ao Painel Master em vez de tela vazia.",
+                  "Modo suporte explícito por igreja-cliente.",
+                  "Nenhuma migration destrutiva de papéis/permissões nesta versão.",
+                  "WhatsApp isolado por instância Evolution de cada igreja."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.4.5.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.4.5.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.4.5.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test345
+          mkdir -p /tmp/test345
+          tar -xzf /tmp/rebuilt-3.4.5.tar.gz -C /tmp/test345
+
+          php -l /tmp/test345/public/lib/Auth.php
+          php -l /tmp/test345/public/master.php
+          php -l /tmp/test345/public/lib/View.php
+          php -l /tmp/test345/public/updates.php
+          test "$(cat /tmp/test345/public/VERSION)" = "3.4.5"
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.4.5.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.4.5 corrected tenant isolation"
+          git pull --rebase origin main
+          git push origin main
