@@ -1,0 +1,166 @@
+name: Publish AdminIgreja 3.4.6 corrected SaaS and updater cache fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-346.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.4.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate corrected SaaS and updater
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.4.3-source/public/lib/Auth.php
+          php -l source/work-3.4.3-source/public/login.php
+          php -l source/work-3.4.3-source/public/switch-church.php
+          php -l source/work-3.4.3-source/public/master.php
+          php -l source/work-3.4.3-source/public/users.php
+          php -l source/work-3.4.3-source/public/lib/View.php
+          php -l source/work-3.4.3-source/public/settings.php
+          php -l source/work-3.4.3-source/public/api/whatsapp-webhook.php
+          php -l source/work-3.4.3-source/public/lib/BotWebhookHandler.php
+          php -l source/work-3.4.3-source/public/updates.php
+          php -l source/work-3.4.3-source/public/dashboard.php
+          php -l source/work-3.4.3-source/public/lib/Updater.php
+
+          # Master separation remains corrected.
+          grep -q "platform_master_mode" source/work-3.4.3-source/public/lib/Auth.php
+          grep -q "master_support_church_id" source/work-3.4.3-source/public/lib/Auth.php
+          grep -q "Escolha uma igreja-cliente" source/work-3.4.3-source/public/lib/Auth.php
+          ! grep -q "Igreja não selecionada" source/work-3.4.3-source/public/updates.php
+          ! grep -q "\$auth->currentChurch()" source/work-3.4.3-source/public/updates.php
+
+          # Updater anti-cache: raw + GitHub API and newest valid version wins.
+          grep -q "api.github.com/repos" source/work-3.4.3-source/public/lib/Updater.php
+          grep -q "application/vnd.github.raw+json" source/work-3.4.3-source/public/lib/Updater.php
+          grep -q "no-cache, no-store, must-revalidate" source/work-3.4.3-source/public/lib/Updater.php
+          grep -q "version_compare" source/work-3.4.3-source/public/lib/Updater.php
+
+          # No destructive role migration in this release.
+          ! grep -q "DELETE FROM user_roles WHERE role='admin'" source/work-3.4.3-source/public/CHANGELOG.md
+
+      - name: Build 3.4.6 delta package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.4.3-source
+          tar -czf /tmp/adminigreja-3.4.6.tar.gz             public/lib/Auth.php             public/login.php             public/switch-church.php             public/master.php             public/users.php             public/lib/View.php             public/settings.php             public/api/whatsapp-webhook.php             public/lib/BotWebhookHandler.php             public/updates.php             public/dashboard.php             public/lib/Updater.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.4.6.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.4.6.tar.gz > /tmp/adminigreja-3.4.6.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.4.6.b64 /tmp/v3.4.6.
+
+          i=1
+          for f in /tmp/v3.4.6.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.4.6.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.4.3-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.4.6.tar.gz")
+          parts=sorted(release.glob("v3.4.6.*.b64.txt"))
+
+          file_paths=[
+              "public/lib/Auth.php",
+              "public/login.php",
+              "public/switch-church.php",
+              "public/master.php",
+              "public/users.php",
+              "public/lib/View.php",
+              "public/settings.php",
+              "public/api/whatsapp-webhook.php",
+              "public/lib/BotWebhookHandler.php",
+              "public/updates.php",
+              "public/dashboard.php",
+              "public/lib/Updater.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.4.6",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "published_at":"2026-10-24T22:08:00-03:00",
+              "cache_buster":"3.4.6-20261024-2208",
+              "notes":[
+                  "Separação SaaS corrigida entre Master e igrejas-clientes.",
+                  "Atualizações funciona sem igreja selecionada.",
+                  "Master fora de contexto volta ao Painel Master, sem tela vazia.",
+                  "Atualizador consulta raw.githubusercontent.com e API oficial do GitHub.",
+                  "A versão válida mais nova entre as rotas é usada automaticamente.",
+                  "Nenhuma migration destrutiva de papéis/permissões nesta versão."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.4.6.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.4.6.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.4.6.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test346
+          mkdir -p /tmp/test346
+          tar -xzf /tmp/rebuilt-3.4.6.tar.gz -C /tmp/test346
+
+          php -l /tmp/test346/public/lib/Auth.php
+          php -l /tmp/test346/public/lib/Updater.php
+          php -l /tmp/test346/public/updates.php
+          test "$(cat /tmp/test346/public/VERSION)" = "3.4.6"
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.4.6.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.4.6 corrected SaaS and updater cache fix"
+          git pull --rebase origin main
+          git push origin main
