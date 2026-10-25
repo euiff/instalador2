@@ -1,0 +1,154 @@
+{
+  "version": "3.4.0",
+  "ref": "igreja-master-3.4.0-interface",
+  "min_php": "8.1",
+  "generated_at": "2026-10-24T23:14:02.303957+00:00",
+  "notes": [
+    "Navegação por áreas, busca de funções, cadastros em janelas e tesouraria em abas.",
+    "Inclui os recursos e as correções das versões anteriores."
+  ],
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "201c79ddf6896c86045c9e3cd7c350933beb268337538056b2f9300dc7e07589"
+    },
+    {
+      "path": "RELEASE-3.3.0.md",
+      "sha256": "a70de3c49fce73bd89bb3fc9e689cbcb38a5e510c4cad8e327e0fcf0a4d7eac1"
+    },
+    {
+      "path": "RELEASE-3.4.0.md",
+      "sha256": "d976846642848966831a58d995dcaa2ce51636ca3220c3b73a4399e1bc9c9eff"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "f5e3e93e58ffc2a20a3ca53e8025bc50d7c1dccbef4b34e2388aa9bbf8678466"
+    },
+    {
+      "path": "assets.php",
+      "sha256": "cfe1c46b86e33cdbb59cd9b1c0aa0536514b38a41df515513c80848b33f1b728"
+    },
+    {
+      "path": "assets/admin-ui.css",
+      "sha256": "9bb1ecf3980c5f1c465bf4629c9e8372ec7335bfb501c1c1db28816a0ab7d911"
+    },
+    {
+      "path": "assets/admin-ui.js",
+      "sha256": "d029c0b97943905465a06ec963bc7c7dffcda2908287a6df04974cf73319c4a9"
+    },
+    {
+      "path": "assets/app.css",
+      "sha256": "b00c77cf18b29382138ceb796d0ece5b6c62733a62d07761a33b3525902c568b"
+    },
+    {
+      "path": "campaigns.php",
+      "sha256": "2bd704422925a9c60361a60353ab04ee2cb1202a3a4dc68855ed2adaa1bf3339"
+    },
+    {
+      "path": "church-insights.php",
+      "sha256": "8055b4535ab51a6c4a76383e8080bca1ebee3404954653e5d357633475344f9d"
+    },
+    {
+      "path": "congregations.php",
+      "sha256": "514537e1863d3d2bdd24fd2eea8b4e92d51ec01c968a6d802eb7848ea09a86fa"
+    },
+    {
+      "path": "dashboard.php",
+      "sha256": "9b25b62e8de5501e2e73b73fbc5c4a7d194a0a6a56d4c8e4726a898f8adf566e"
+    },
+    {
+      "path": "database/024_people_and_assets.sql",
+      "sha256": "2be77c0bb5abb4f8d85c6684be598c2cacb8b09be6b9cf1d837c596fa2c4fc4e"
+    },
+    {
+      "path": "departments.php",
+      "sha256": "c175de9fec8529f1bdc0c5708161d8148da088b9600cc012982b1bd3a24fd240"
+    },
+    {
+      "path": "event-registrations.php",
+      "sha256": "581ee9cb96ad788c6a35e2577d62f1448ea748e1987ba9993d834165bb36c11a"
+    },
+    {
+      "path": "finance.php",
+      "sha256": "1f8ba6a6068eb7aca3438486943de6a73b4802d8d32863400cb443162eb92080"
+    },
+    {
+      "path": "groups.php",
+      "sha256": "a8600936d04f446ba42878ade8fc0f7161252c62f21ab7a35672f12e4289bbce"
+    },
+    {
+      "path": "lib/CareView.php",
+      "sha256": "cfc09e3f77f8e7096fee44d02cd646659e44262b47646b1780a5a131976b037b"
+    },
+    {
+      "path": "lib/ChurchCare.php",
+      "sha256": "263bc6315fada6f9d337f932066419af13e3a0dd9064c32f8f1438e03da34d8c"
+    },
+    {
+      "path": "lib/Ui.php",
+      "sha256": "46e86efa32af2ab0d454627249728127d25f81f97259d9f8356e8258427625aa"
+    },
+    {
+      "path": "lib/View.php",
+      "sha256": "7bdfa8d3b7fbbb5c60ee4156a0653bdadc31a7ab3876dac9f1f0a6bccab0dfa7"
+    },
+    {
+      "path": "lib/dashboard-care.php",
+      "sha256": "191347cc21d7008ec1c0168df761cc654cacc867a4c77d11383df8635aee4f69"
+    },
+    {
+      "path": "lib/member-care-summary.php",
+      "sha256": "0e68695a12831d6d9fd3ce537ea806994a0ee965f4f46936bc29d8abc0a418c7"
+    },
+    {
+      "path": "login.php",
+      "sha256": "880e3c4a169acd19081a0ed6b7010d53c715eb23effcbc9a7c4ffc12a149c97e"
+    },
+    {
+      "path": "member-profile.php",
+      "sha256": "b7b76d8cec6e2f22a160c6f5572c3d0df925909daeb829dd52d440b9b916cefd"
+    },
+    {
+      "path": "members.php",
+      "sha256": "ece78025f41aebb5d5bad87709bb34fb96078f7212ac575845be677cf519d7da"
+    },
+    {
+      "path": "needs.php",
+      "sha256": "aec338a3950037945b7bc9b9e86f7b6a77d5605591e46c290f705114d7226234"
+    },
+    {
+      "path": "pastoral-care.php",
+      "sha256": "63f320603d9b34fe4dd48aa397c01c849b9e0716c597c534acabebb3642e6815"
+    },
+    {
+      "path": "polls.php",
+      "sha256": "f5a47e9ee21766872e950af39b64d253f0b5b679b79f39414ef6469b0a4852f9"
+    },
+    {
+      "path": "prayer-clock.php",
+      "sha256": "876f93e55c8ab88d36ac992482af335d07f410647741ad8f185779c03f9be1ff"
+    },
+    {
+      "path": "prayers.php",
+      "sha256": "64e52ecb56384709f5238ea7a9fcec7355ccb44d8ec33332a1719edfe3a7fda5"
+    },
+    {
+      "path": "raffles.php",
+      "sha256": "985a2a967f507fbcbb7c39e8dd4df1bd213d751740264c0318f6fa339bffc4c5"
+    },
+    {
+      "path": "service-types.php",
+      "sha256": "3a67a111c08a9c21c9686d56f525d4215ef3b2a1209bfb4497d86c5cd1503dbb"
+    },
+    {
+      "path": "users.php",
+      "sha256": "387930f0248d06b493fa9fbc5cc0603a1a15178463f07f76fecb2cd5c25355ff"
+    },
+    {
+      "path": "visitors.php",
+      "sha256": "45b76b3033158bb90fdeb62775fbaac8437061bc96de66b894b2aa3afad750b7"
+    }
+  ],
+  "delete": [],
+  "migrations": []
+}
