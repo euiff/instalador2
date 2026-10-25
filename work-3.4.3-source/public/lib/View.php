@@ -26,7 +26,8 @@ final class View
         $user = $auth->requireLogin();
         $church = is_array($arg4) ? $arg4 : $auth->currentChurch();
         $churches = $auth->churches();
-        $isSuperAdmin = $auth->hasRole('super_admin', (string)$user['id']);
+        $isSuperAdmin = $auth->isSuperAdmin((string)$user['id']);
+        $isMasterSupport = $auth->isMasterSupportMode();
         $items = [
             'dashboard.php' => ['dashboard','Início','⌂','dashboard'],
             'finance.php' => ['finance','Tesouraria','◈','finance'],
@@ -65,6 +66,12 @@ final class View
         if ($isSuperAdmin) {
             $nav['master.php'] = ['master','Painel Master','★'];
             $nav['updates.php'] = ['updates','Atualizações','↻'];
+            if(!$isMasterSupport){
+                $nav=[
+                    'master.php'=>['master','Painel Master','★'],
+                    'updates.php'=>['updates','Atualizações','↻'],
+                ];
+            }
         }
         $groups = [
             'Visão geral'=>['home',['dashboard.php','church-insights.php','reports.php']],
@@ -105,9 +112,14 @@ final class View
 <a class="skip-link" href="#main-content">Ir para o conteúdo</a>
 <div class="app-shell">
     <aside class="sidebar" id="sidebar" aria-label="Menu principal">
-        <a class="brand" href="/dashboard.php"><div class="brand-logo"><?php if(!empty($church['logo_url'])):?><img src="<?=e($church['logo_url'])?>" alt=""><?php else:?>✦<?php endif?></div><div><strong>Igreja Master</strong><small>Gestão da sua igreja</small></div></a>
+        <a class="brand" href="<?=$isSuperAdmin&&!$isMasterSupport?'/master.php':'/dashboard.php'?>"><div class="brand-logo"><?php if(!$isSuperAdmin&& !empty($church['logo_url'])):?><img src="<?=e($church['logo_url'])?>" alt=""><?php elseif($isMasterSupport&& !empty($church['logo_url'])):?><img src="<?=e($church['logo_url'])?>" alt=""><?php else:?>✦<?php endif?></div><div><strong>Igreja Master</strong><small><?=$isSuperAdmin?($isMasterSupport?'Suporte à igreja-cliente':'Plataforma SaaS'):'Gestão da sua igreja'?></small></div></a>
         <button class="sidebar-close icon-button" type="button" data-sidebar-close aria-label="Fechar menu"><?=Ui::icon('close')?></button>
-        <?php if(count($churches)>1):?>
+        <?php if($isSuperAdmin&&!$isMasterSupport):?>
+        <div class="current-church"><?=Ui::icon('building')?><span>Plataforma Master</span></div>
+        <?php elseif($isSuperAdmin&&$isMasterSupport):?>
+        <div class="current-church" style="display:block"><div style="font-size:10px;text-transform:uppercase;opacity:.7;margin-bottom:3px">Modo suporte</div><span><?=e($church['name']??'Igreja selecionada')?></span></div>
+        <form method="post" action="/switch-church.php" style="margin:8px 12px 12px"><?=csrf_field()?><input type="hidden" name="action" value="leave_master_support"><button class="btn btn-light" type="submit" style="width:100%">Voltar ao Master</button></form>
+        <?php elseif(count($churches)>1):?>
         <form class="church-switch" method="post" action="/switch-church.php"><?=csrf_field()?><label for="church_id">Igreja em uso</label><select id="church_id" name="church_id" onchange="this.form.submit()"><?php foreach($churches as $c):?><option value="<?=e($c['id'])?>" <?=$church&&$church['id']===$c['id']?'selected':''?>><?=e($c['name'])?></option><?php endforeach?></select></form>
         <?php else:?><div class="current-church"><?=Ui::icon('building')?><span><?=e($church['name']??'Sua igreja')?></span></div><?php endif?>
         <button class="nav-search" type="button" data-open-dialog="menu-search"><?=Ui::icon('search')?><span>Encontrar uma função</span><kbd>/</kbd></button>
@@ -126,12 +138,12 @@ final class View
         <div class="sidebar-user"><div class="avatar"><?=e(mb_strtoupper(mb_substr($user['full_name']?:$user['email'],0,1)))?></div><div class="sidebar-user-text"><strong><?=e($user['full_name']?:'Minha conta')?></strong><small><?=e($user['email'])?></small></div><a class="logout icon-button" href="/logout.php" aria-label="Sair da conta">↪</a></div>
     </aside>
     <div class="page-wrap">
-        <header class="app-topbar"><button type="button" class="menu-button icon-button" data-sidebar-open aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false"><?=Ui::icon('menu')?></button><div class="breadcrumb"><span><?=e($groupTitle)?></span><strong><?=e($title==='Dashboard'?'Início':$title)?></strong></div><div class="topbar-actions"><button class="topbar-search icon-button" type="button" data-open-dialog="menu-search" aria-label="Buscar no menu"><?=Ui::icon('search')?></button><?=Ui::newButton('quick-create','Novo cadastro')?></div></header>
+        <header class="app-topbar"><button type="button" class="menu-button icon-button" data-sidebar-open aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false"><?=Ui::icon('menu')?></button><div class="breadcrumb"><span><?=e($groupTitle)?></span><strong><?=e($title==='Dashboard'?'Início':$title)?></strong></div><div class="topbar-actions"><button class="topbar-search icon-button" type="button" data-open-dialog="menu-search" aria-label="Buscar no menu"><?=Ui::icon('search')?></button><?php if(!($isSuperAdmin&&!$isMasterSupport)):?><?=Ui::newButton('quick-create','Novo cadastro')?><?php endif?></div></header>
         <div class="sidebar-overlay" data-sidebar-close></div>
         <main class="content" id="main-content" tabindex="-1">
 <?php
         self::$menu=$nav;
-        self::$quickCreates=array_values(array_filter($quickCreates,fn($c)=>$auth->can($c[4])));
+        self::$quickCreates=$isSuperAdmin&&!$isMasterSupport?[]:array_values(array_filter($quickCreates,fn($c)=>$auth->can($c[4])));
     }
 
     private static array $menu=[];
