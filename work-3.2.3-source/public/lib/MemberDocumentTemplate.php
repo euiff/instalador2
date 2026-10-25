@@ -147,27 +147,29 @@ final class MemberDocumentTemplate
         return '<div class="cards">
           <section class="card-id card-front">
             <div class="card-swoosh one"></div><div class="card-swoosh two"></div>
-            <div class="card-top">
-              <div class="card-brand-logo">'.($logo!==''?'<img src="'.$this->e($logo).'" alt="Logo">':'<span>✦</span>').'</div>
-              <div class="card-brand">
-                <div class="card-church">'.$this->e($church).'</div>
-                <div class="card-subtitle">'.$this->e($credentialTitle).'</div>
-              </div>
-            </div>
 
-            <div class="card-main">
-              <div class="card-photo">'.($photo!==''?'<img src="'.$this->e($photo).'" alt="Foto de '.$this->e($m['name']).'">':'<span>FOTO</span>').'</div>
-              <div class="card-info">
+            <table class="card-top-table" cellspacing="0" cellpadding="0"><tr>
+              <td class="logo-cell"><div class="card-brand-logo">'.($logo!==''?'<img src="'.$this->e($logo).'" alt="Logo">':'<span>✦</span>').'</div></td>
+              <td class="brand-cell"><div class="card-church">'.$this->e($church).'</div><div class="card-subtitle">'.$this->e($credentialTitle).'</div></td>
+            </tr></table>
+
+            <table class="card-main-table" cellspacing="0" cellpadding="0"><tr>
+              <td class="photo-cell"><div class="card-photo">'.($photo!==''?'<img src="'.$this->e($photo).'" alt="Foto de '.$this->e($m['name']).'">':'<span>FOTO</span>').'</div></td>
+              <td class="info-cell">
                 <div class="card-name-line"><span>'.$this->e($role).':</span> <strong>'.$this->e($m['name']).'</strong></div>
-                <div class="card-data">
-                  <div class="card-data-item"><b>Estado Civil</b><span>'.$this->e($marital).'</span></div>
-                  <div class="card-data-item"><b>RG</b><span>'.$this->e($rg).'</span></div>
-                  <div class="card-data-item"><b>CPF</b><span>'.$this->e($cpf).'</span></div>
-                  <div class="card-data-item"><b>Membro desde</b><span>'.$this->e($memberSince).'</span></div>
-                </div>
-                <div class="card-congregation"><b>Congregação</b><span>'.$this->e($congregation).'</span></div>
-              </div>
-            </div>
+                <table class="card-data-table" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>'.$this->miniField('Estado Civil',$marital).'</td>
+                    <td>'.$this->miniField('RG',$rg).'</td>
+                  </tr>
+                  <tr>
+                    <td>'.$this->miniField('CPF',$cpf).'</td>
+                    <td>'.$this->miniField('Membro desde',$memberSince).'</td>
+                  </tr>
+                </table>
+                <div class="card-congregation">'.$this->miniField('Congregação',$congregation).'</div>
+              </td>
+            </tr></table>
 
             <div class="card-bottom-band"><strong>'.$this->e($role).': '.$this->e($m['name']).'</strong></div>
           </section>
@@ -176,30 +178,40 @@ final class MemberDocumentTemplate
             <div class="card-swoosh one"></div><div class="card-swoosh two"></div>
             <div class="card-back-title">DADOS DA CREDENCIAL</div>
 
-            <div class="back-layout">
-              <div class="back-left">
-                <div class="back-pill"><b>Filiação</b><span>'.$this->e($parents).'</span></div>
-                <div class="back-row">
-                  <div class="back-small"><b>Data de Batismo</b><span>'.$this->e($baptismDate).'</span></div>
-                  <div class="back-small"><b>Naturalidade</b><span>'.$this->e($naturalness).'</span></div>
-                </div>
-                <div class="back-row">
-                  <div class="back-small"><b>Departamento</b><span>'.$this->e($department).'</span></div>
-                  <div class="back-small"><b>Emissão</b><span>'.$this->e($today).'</span></div>
-                </div>
-                <div class="back-pastor"><b>Pastor / Responsável</b><span>'.$this->e($pastor?:'—').'</span></div>
-              </div>
-
-              <div class="back-qr">
-                '.($qr!==''?'<img src="'.$this->e($qr).'" alt="QR Code">':'<div class="qr-placeholder">QR</div>').'
-                <small>'.$this->e($verification).'</small>
-              </div>
-            </div>
+            <table class="back-layout-table" cellspacing="0" cellpadding="0"><tr>
+              <td class="back-left-cell">
+                <div class="back-field-wide"><b>Filiação</b><span>'.$this->e($parents).'</span></div>
+                <table class="back-pair-table" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>'.$this->miniBackField('Data de Batismo',$baptismDate).'</td>
+                    <td>'.$this->miniBackField('Naturalidade',$naturalness).'</td>
+                  </tr>
+                  <tr>
+                    <td>'.$this->miniBackField('Departamento',$department).'</td>
+                    <td>'.$this->miniBackField('Emissão',$today).'</td>
+                  </tr>
+                </table>
+                <div class="back-field-wide"><b>Pastor / Responsável</b><span>'.$this->e($pastor?:'—').'</span></div>
+              </td>
+              <td class="back-qr-cell">
+                <div class="back-qr">'.($qr!==''?'<img src="'.$this->e($qr).'" alt="QR Code">':'<div class="qr-placeholder">QR</div>').'<small>'.$this->e($verification).'</small></div>
+              </td>
+            </tr></table>
 
             <div class="back-address"><b>Endereço da igreja:</b> '.$this->e($address?:'Não informado').'</div>
             <div class="back-footer">'.$this->e($churchLine).'</div>
           </section>
         </div>';
+    }
+
+    private function miniField(string $label,string $value): string
+    {
+        return '<div class="mini-field"><b>'.$this->e($label).'</b><span>'.$this->e($value).'</span></div>';
+    }
+
+    private function miniBackField(string $label,string $value): string
+    {
+        return '<div class="mini-back-field"><b>'.$this->e($label).'</b><span>'.$this->e($value).'</span></div>';
     }
 
     private function field(string $label,string $value): string
@@ -305,22 +317,24 @@ final class MemberDocumentTemplate
         if($kind==='card'){
             return '@page{size:A4 portrait;margin:0}'.$common.'
             body{width:210mm;min-height:297mm;padding:14mm;background:#eef2f6}
-            .cards{width:100%;display:block}
-            .card-id{position:relative;width:85.6mm;height:54mm;margin:0 auto 12mm;overflow:hidden;border-radius:3mm;color:#fff;background:linear-gradient(135deg,#061b55 0%,#063f93 48%,#087bc0 100%);box-shadow:0 2mm 5mm rgba(4,22,61,.2)}
-            .card-id:before{content:"";position:absolute;right:-12mm;top:-16mm;width:40mm;height:75mm;background:linear-gradient(155deg,rgba(63,214,226,.35),rgba(255,255,255,.05));transform:rotate(10deg)}
-            .card-swoosh{position:absolute;left:-12mm;right:-12mm;height:1.2mm;background:#e3bc3f;transform:rotate(-8deg);opacity:.95}.card-swoosh.one{top:14mm}.card-swoosh.two{bottom:8mm;height:.7mm;opacity:.75}
-            .card-top{position:relative;z-index:2;height:14mm;padding:2.5mm 4mm 1.5mm;display:flex;align-items:center;border-bottom:.45mm solid rgba(245,207,78,.85)}
-            .card-brand-logo{width:10mm;height:10mm;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 10mm;box-shadow:0 0 0 .45mm rgba(244,202,63,.8)}.card-brand-logo img{width:100%;height:100%;object-fit:contain}.card-brand-logo span{color:#0b4a8f;font-size:7mm}
-            .card-brand{padding-left:3mm;line-height:1.05}.card-church{font-size:7.8pt;font-weight:900;text-transform:uppercase;letter-spacing:.15mm;text-shadow:0 .2mm .4mm rgba(0,0,0,.35)}.card-subtitle{margin-top:1mm;font-size:4.6pt;font-style:italic;color:#dcecff}
-            .card-main{position:relative;z-index:2;display:flex;gap:3mm;padding:3mm 4mm 0}
-            .card-photo{width:23mm;height:28mm;flex:0 0 23mm;border-radius:2mm;overflow:hidden;background:#fff;border:.55mm solid #f2d16a;display:flex;align-items:center;justify-content:center;color:#375679;font-size:6pt;font-weight:700}.card-photo img{width:100%;height:100%;object-fit:cover}
-            .card-info{flex:1;min-width:0}.card-name-line{font-size:6.8pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2.5mm}.card-name-line span{font-size:6pt}.card-name-line strong{font-size:7.5pt;text-transform:uppercase}
-            .card-data{display:grid;grid-template-columns:1fr 1fr;gap:1.4mm 2mm}.card-data-item b,.card-congregation b{display:block;font-size:4.2pt;color:#d7e7ff;margin-bottom:.4mm}.card-data-item span,.card-congregation span{display:block;background:#edf4fb;color:#16365f;border-radius:2mm;padding:.7mm 1.5mm;font-size:5.1pt;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-            .card-congregation{margin-top:1.4mm}.card-bottom-band{position:absolute;z-index:3;left:0;right:0;bottom:0;height:7mm;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,rgba(4,31,92,.94),rgba(5,68,145,.94));border-top:.4mm solid #dfb93f;text-transform:uppercase;font-size:6.4pt;letter-spacing:.25mm}
-            .card-back{padding:0}.card-back-title{position:relative;z-index:2;margin:3mm 4mm 1.7mm;font-size:6.8pt;font-weight:900;letter-spacing:.3mm;border-bottom:.45mm solid #d9b33a;padding-bottom:1.3mm}
-            .back-layout{position:relative;z-index:2;display:flex;gap:3mm;padding:0 4mm}.back-left{flex:1;min-width:0}.back-pill b,.back-small b,.back-pastor b{display:block;color:#d8e8ff;font-size:4.1pt;margin-bottom:.5mm}.back-pill span,.back-small span,.back-pastor span{display:block;background:#edf4fb;color:#17375f;border-radius:2mm;padding:.75mm 1.5mm;font-size:5pt;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-            .back-row{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-top:1.5mm}.back-pastor{margin-top:1.5mm}.back-qr{width:23mm;flex:0 0 23mm;text-align:center;background:#fff;border-radius:2mm;padding:1.5mm;color:#193b65;box-shadow:0 0 0 .45mm #d9b33a}.back-qr img{width:18mm;height:18mm;object-fit:contain}.back-qr small{display:block;font-size:3.6pt;line-height:1.1;word-break:break-all}.qr-placeholder{height:18mm;display:flex;align-items:center;justify-content:center;font-weight:900}
-            .back-address{position:absolute;z-index:2;left:4mm;right:4mm;bottom:6.3mm;font-size:4.5pt;color:#eff7ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.back-footer{position:absolute;z-index:2;left:0;right:0;bottom:0;height:5mm;background:rgba(4,31,92,.92);border-top:.4mm solid #d9b33a;display:flex;align-items:center;justify-content:center;font-size:4.3pt;font-weight:800;text-transform:uppercase;letter-spacing:.2mm}';
+            .cards{width:100%}
+            .card-id{position:relative;width:85.6mm;height:54mm;margin:0 auto 12mm;overflow:hidden;border-radius:3mm;color:#fff;background-color:#064f98;background-image:linear-gradient(135deg,#061b55 0%,#063f93 48%,#087bc0 100%);box-shadow:0 2mm 5mm rgba(4,22,61,.2);page-break-inside:avoid}
+            .card-id:before{content:"";position:absolute;right:-12mm;top:-16mm;width:40mm;height:75mm;background:rgba(63,214,226,.16);transform:rotate(10deg)}
+            .card-swoosh{position:absolute;z-index:1;left:-12mm;right:-12mm;height:1mm;background:#e3bc3f;transform:rotate(-8deg)}.card-swoosh.one{top:14mm}.card-swoosh.two{bottom:7mm;height:.55mm}
+            .card-top-table{position:relative;z-index:2;width:77.6mm;height:14mm;margin:0 4mm;border-bottom:.45mm solid #e3bc3f}.logo-cell{width:12mm;vertical-align:middle}.brand-cell{vertical-align:middle;padding-left:2mm}
+            .card-brand-logo{width:10mm;height:10mm;border-radius:50%;background:#fff;text-align:center;overflow:hidden;border:.45mm solid #e3bc3f}.card-brand-logo img{width:9mm;height:9mm;margin:.3mm;object-fit:contain}.card-brand-logo span{color:#0b4a8f;font-size:7mm}
+            .card-church{font-size:7.6pt;font-weight:900;text-transform:uppercase;letter-spacing:.12mm}.card-subtitle{margin-top:.8mm;font-size:4.5pt;font-style:italic;color:#dcecff}
+            .card-main-table{position:relative;z-index:2;width:77.6mm;margin:2.3mm 4mm 0}.photo-cell{width:26mm;vertical-align:top}.info-cell{vertical-align:top;padding-left:1mm}
+            .card-photo{width:23mm;height:28mm;border-radius:2mm;overflow:hidden;background:#fff;border:.55mm solid #f2d16a;text-align:center;color:#375679;font-size:6pt;font-weight:700}.card-photo img{width:23mm;height:28mm;object-fit:cover}.card-photo span{display:block;padding-top:12mm}
+            .card-name-line{font-size:6.5pt;white-space:nowrap;overflow:hidden;margin-bottom:1.8mm}.card-name-line span{font-size:5.8pt}.card-name-line strong{font-size:7pt;text-transform:uppercase}
+            .card-data-table{width:100%;table-layout:fixed}.card-data-table td{width:50%;vertical-align:top;padding:0 .8mm 1.2mm 0}.mini-field b,.card-congregation b{display:block;font-size:4pt;color:#d7e7ff;margin-bottom:.35mm}.mini-field span,.card-congregation span{display:block;background:#edf4fb;color:#16365f;border-radius:2mm;padding:.65mm 1.3mm;font-size:4.8pt;font-weight:800;white-space:nowrap;overflow:hidden}.card-congregation{margin-top:.2mm}
+            .card-bottom-band{position:absolute;z-index:3;left:0;right:0;bottom:0;height:6.4mm;background:#052f72;border-top:.4mm solid #dfb93f;text-align:center;padding-top:2mm;text-transform:uppercase;font-size:6pt;letter-spacing:.2mm}
+            .card-back-title{position:relative;z-index:2;margin:3mm 4mm 1.7mm;font-size:6.6pt;font-weight:900;letter-spacing:.3mm;border-bottom:.45mm solid #d9b33a;padding-bottom:1.2mm}
+            .back-layout-table{position:relative;z-index:2;width:77.6mm;margin:0 4mm;table-layout:fixed}.back-left-cell{width:54mm;vertical-align:top;padding-right:2mm}.back-qr-cell{width:23mm;vertical-align:top}
+            .back-field-wide b,.mini-back-field b{display:block;color:#d8e8ff;font-size:4pt;margin-bottom:.4mm}.back-field-wide span,.mini-back-field span{display:block;background:#edf4fb;color:#17375f;border-radius:2mm;padding:.65mm 1.3mm;font-size:4.8pt;font-weight:800;white-space:nowrap;overflow:hidden}
+            .back-pair-table{width:100%;table-layout:fixed;margin-top:1.2mm}.back-pair-table td{width:50%;vertical-align:top;padding:0 1mm 1.1mm 0}.back-field-wide{margin-top:1.1mm}
+            .back-qr{width:21.5mm;text-align:center;background:#fff;border-radius:2mm;padding:1.3mm;color:#193b65;border:.45mm solid #d9b33a}.back-qr img{width:17.5mm;height:17.5mm;object-fit:contain}.back-qr small{display:block;font-size:3.4pt;line-height:1.05;word-break:break-all}.qr-placeholder{height:17.5mm;padding-top:6mm;font-weight:900}
+            .back-address{position:absolute;z-index:2;left:4mm;right:4mm;bottom:5.9mm;font-size:4.3pt;color:#eff7ff;white-space:nowrap;overflow:hidden}.back-footer{position:absolute;z-index:2;left:0;right:0;bottom:0;height:4.8mm;background:#052f72;border-top:.4mm solid #d9b33a;text-align:center;padding-top:1.45mm;font-size:4.1pt;font-weight:800;text-transform:uppercase;letter-spacing:.18mm}';
         }
 
         return '@page{size:A4 portrait;margin:0}'.$common.'
