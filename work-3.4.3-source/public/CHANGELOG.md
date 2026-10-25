@@ -1,5 +1,14 @@
 # Changelog · Igreja Master
 
+## 3.4.6
+
+- Mantém a separação SaaS corrigida da 3.4.5 entre Master e igrejas-clientes.
+- Atualizador passa a consultar o manifesto por duas rotas independentes: raw.githubusercontent.com e API oficial do GitHub.
+- O sistema escolhe automaticamente a versão válida mais nova, evitando ficar preso em cache antigo.
+- Adicionados cabeçalhos no-cache/no-store/Pragma/Expires nas consultas do canal.
+- Atualizações continuam funcionando sem igreja selecionada.
+- Nenhuma migration destrutiva de papéis/permissões é executada.
+
 ## 3.4.5
 
 - Reintroduz a separação SaaS entre Plataforma Master e igrejas-clientes, corrigindo o problema da 3.4.3.
