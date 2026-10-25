@@ -1,80 +1,34 @@
 {
-  "version": "3.4.6",
+  "version": "3.4.7",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.4.6.01.b64.txt",
-    "releases/v3.4.6.02.b64.txt",
-    "releases/v3.4.6.03.b64.txt",
-    "releases/v3.4.6.04.b64.txt"
+    "releases/v3.4.7.01.b64.txt",
+    "releases/v3.4.7.02.b64.txt"
   ],
-  "sha256": "32ecc13827633511e93e69434b587893245e23787f1d89d58c90ec1637a18d5b",
-  "published_at": "2026-10-24T22:04:00-03:00",
-  "cache_buster": "3.4.6-20261024-2204-final",
+  "sha256": "b78b35af9a0cd5a8b1a13203ea1ce9dbfa8a66515cbc3d629d052cae019cd443",
+  "published_at": "2026-10-24T22:22:00-03:00",
+  "cache_buster": "3.4.7-20261024-2222",
   "notes": [
-    "Separação SaaS corrigida entre Master e igrejas-clientes.",
-    "Atualizações funciona sem igreja selecionada.",
-    "Master fora de contexto volta ao Painel Master, sem tela vazia.",
-    "Atualizador consulta raw.githubusercontent.com e API oficial do GitHub.",
-    "A versão válida mais nova entre as rotas é usada automaticamente.",
-    "Nenhuma migration destrutiva de papéis/permissões nesta versão."
+    "Painel Master completo para gestão de igrejas-clientes.",
+    "Nova igreja em janela flutuante.",
+    "Edição de dados, plano, mensalidade e status da igreja.",
+    "Gestão e criação do proprietário da igreja.",
+    "Desvinculação segura do Master sem apagar dados.",
+    "Acesso do Master às igrejas somente em modo suporte."
   ],
   "files": [
     {
-      "path": "public/lib/Auth.php",
-      "sha256": "2360480639760801880721e105b88c83d0755c5d4debbb730f72d02f8972ddcb"
-    },
-    {
-      "path": "public/login.php",
-      "sha256": "1a65fa2c0145c1dea34ae83e2a0fe79dad29cc4c1f070b3da748e48541a6c16d"
-    },
-    {
-      "path": "public/switch-church.php",
-      "sha256": "6ea044dea4823cad4b118cee5e9e886098c945b93d0c4ced8c901b5b25745b98"
-    },
-    {
       "path": "public/master.php",
-      "sha256": "4e64ac0634b6357753d552011e77d8701da1b43a6155791feff7e890bb7478fb"
-    },
-    {
-      "path": "public/users.php",
-      "sha256": "e214e1391704821f4eb694a8a6c8da6362cec723c8c674ce3df4674d57d83492"
-    },
-    {
-      "path": "public/lib/View.php",
-      "sha256": "c86fe0f6913d085b6e5e12c200d4a0cee96f7fd17beb2888cdb1758379cca8ac"
-    },
-    {
-      "path": "public/settings.php",
-      "sha256": "0c7330a96973fbc7572faa87825b99163cc355a705167abcdd13d15ef14e20e6"
-    },
-    {
-      "path": "public/api/whatsapp-webhook.php",
-      "sha256": "608bcffc8011b5295c54fad5f47625d6929c72cfd6bf3b0053d4b79f7d6b3bed"
-    },
-    {
-      "path": "public/lib/BotWebhookHandler.php",
-      "sha256": "15e5655f03d3052baf3734d42e4a0b02d62a0e96de1ba668bde1c3ffe5258cd7"
-    },
-    {
-      "path": "public/updates.php",
-      "sha256": "22e95578e33dad6730e4712785e5b3232b9f770906966196e4486c0808cb5dc7"
-    },
-    {
-      "path": "public/dashboard.php",
-      "sha256": "987c61369dcf8f10bbc4ce778bfe92e0c41768cd25ce953649f7d19fd0db181f"
-    },
-    {
-      "path": "public/lib/Updater.php",
-      "sha256": "de9c9bdd3750b3b7f3583ebabacc06adc86e863afdff4e96b235865e5e9ffafa"
+      "sha256": "283570fd490cfe2c89352cceb3a63afa7b319ebab337ccb3d2f2c1afe9cc0771"
     },
     {
       "path": "public/VERSION",
-      "sha256": "47079b3096eb33e5b9f085d86e52250b7a876f134be3fae5d2328584f67af6b1"
+      "sha256": "60e26eb948f555e6dc3f7429e0c138143aa2317591b298e85a7dc1721485d4f2"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "36d856b06366fd494e93255a32c119d5f1ada9f259aca3b4a23c9550ebac072c"
+      "sha256": "3a20c5d0766ec06b4545f695429bbe4c55df6e2394e709a42f7620e4cc03fa74"
     }
   ]
 }
