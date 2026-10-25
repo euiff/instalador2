@@ -1,72 +1,74 @@
 {
-  "version": "3.4.4",
+  "version": "3.4.5",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.4.4.01.b64.txt",
-    "releases/v3.4.4.02.b64.txt",
-    "releases/v3.4.4.03.b64.txt"
+    "releases/v3.4.5.01.b64.txt",
+    "releases/v3.4.5.02.b64.txt",
+    "releases/v3.4.5.03.b64.txt",
+    "releases/v3.4.5.04.b64.txt"
   ],
-  "sha256": "f83ea529dd5e3840af661730b3c2ad197f089859c1d2faf3864d6138e019420a",
+  "sha256": "9e1800b346225cdb912f93cdd930b0218417f6c7e805ce55891ae9f1199200d9",
   "notes": [
-    "Rollback funcional da 3.4.3 para o comportamento da 3.4.2.",
-    "Restaura seleção automática de igreja para o Master.",
-    "Restaura menus, login, permissões e fluxo anteriores.",
-    "Restaura papéis admin removidos pela migration da 3.4.3.",
-    "Mantém as correções de documentos/carteirinha já aplicadas antes da 3.4.3."
+    "Separação SaaS corrigida entre Master e igrejas-clientes.",
+    "Atualizações funciona sem igreja selecionada.",
+    "Master sem contexto de igreja volta ao Painel Master em vez de tela vazia.",
+    "Modo suporte explícito por igreja-cliente.",
+    "Nenhuma migration destrutiva de papéis/permissões nesta versão.",
+    "WhatsApp isolado por instância Evolution de cada igreja."
   ],
   "files": [
     {
-      "path": "public/VERSION",
-      "sha256": "a19f5cb2aecb9af1c0ed78cca3bfc0f8a954f1e680cc51bde6d3d7f7b965a79f"
-    },
-    {
-      "path": "public/api/whatsapp-webhook.php",
-      "sha256": "d4d24e2d7db351150cfcfb265d5727c0148361acd92ff5c42351e3274ef975d1"
-    },
-    {
-      "path": "public/dashboard.php",
-      "sha256": "9b25b62e8de5501e2e73b73fbc5c4a7d194a0a6a56d4c8e4726a898f8adf566e"
-    },
-    {
-      "path": "public/database/026_restore_pre343_roles.sql",
-      "sha256": "e261227d974726007f2592a429a1543300e6ebed74a603e80d583e00b0921232"
-    },
-    {
       "path": "public/lib/Auth.php",
-      "sha256": "188fc2f56f2ca7fb311340aa4cae52a713c9e07c36cc28e6ac13d92f2095ae01"
-    },
-    {
-      "path": "public/lib/BotWebhookHandler.php",
-      "sha256": "591c51c6b7942c5a61c50452071c8c9a65d9b55ef47d445dddfadd5e1c456764"
-    },
-    {
-      "path": "public/lib/View.php",
-      "sha256": "7bdfa8d3b7fbbb5c60ee4156a0653bdadc31a7ab3876dac9f1f0a6bccab0dfa7"
+      "sha256": "2360480639760801880721e105b88c83d0755c5d4debbb730f72d02f8972ddcb"
     },
     {
       "path": "public/login.php",
-      "sha256": "880e3c4a169acd19081a0ed6b7010d53c715eb23effcbc9a7c4ffc12a149c97e"
-    },
-    {
-      "path": "public/master.php",
-      "sha256": "c75f7d91988fdf07e6c0b462bc6501fff660bda50cf495c9d500e7407901fa8b"
-    },
-    {
-      "path": "public/settings.php",
-      "sha256": "7447accf142c3cb344bfcea394d41a0e4a07ed4b66ecd7ba0ef62d7ee7dbddd8"
+      "sha256": "1a65fa2c0145c1dea34ae83e2a0fe79dad29cc4c1f070b3da748e48541a6c16d"
     },
     {
       "path": "public/switch-church.php",
-      "sha256": "62c8f7b9e0e5afe2e84a9e45de4bce83d33d714562cd8f614ba0083171796720"
+      "sha256": "6ea044dea4823cad4b118cee5e9e886098c945b93d0c4ced8c901b5b25745b98"
     },
     {
-      "path": "public/updates.php",
-      "sha256": "2eb45bcc7781ca5165ed2f771d32e40867cdadfb1b91aceeea71144ae2c29dfa"
+      "path": "public/master.php",
+      "sha256": "4e64ac0634b6357753d552011e77d8701da1b43a6155791feff7e890bb7478fb"
     },
     {
       "path": "public/users.php",
-      "sha256": "387930f0248d06b493fa9fbc5cc0603a1a15178463f07f76fecb2cd5c25355ff"
+      "sha256": "e214e1391704821f4eb694a8a6c8da6362cec723c8c674ce3df4674d57d83492"
+    },
+    {
+      "path": "public/lib/View.php",
+      "sha256": "c86fe0f6913d085b6e5e12c200d4a0cee96f7fd17beb2888cdb1758379cca8ac"
+    },
+    {
+      "path": "public/settings.php",
+      "sha256": "0c7330a96973fbc7572faa87825b99163cc355a705167abcdd13d15ef14e20e6"
+    },
+    {
+      "path": "public/api/whatsapp-webhook.php",
+      "sha256": "608bcffc8011b5295c54fad5f47625d6929c72cfd6bf3b0053d4b79f7d6b3bed"
+    },
+    {
+      "path": "public/lib/BotWebhookHandler.php",
+      "sha256": "15e5655f03d3052baf3734d42e4a0b02d62a0e96de1ba668bde1c3ffe5258cd7"
+    },
+    {
+      "path": "public/updates.php",
+      "sha256": "22e95578e33dad6730e4712785e5b3232b9f770906966196e4486c0808cb5dc7"
+    },
+    {
+      "path": "public/dashboard.php",
+      "sha256": "987c61369dcf8f10bbc4ce778bfe92e0c41768cd25ce953649f7d19fd0db181f"
+    },
+    {
+      "path": "public/VERSION",
+      "sha256": "282f6fe03df9856294bc0a0db74e65b15906eb6ae7fef56fadebb09751fef301"
+    },
+    {
+      "path": "public/CHANGELOG.md",
+      "sha256": "c51a107029b4f31bcdecea3dd9ea44022116979af7c432f24ec7ce32cbaed42c"
     }
   ]
 }
