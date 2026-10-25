@@ -27,9 +27,15 @@ try{
     $event=(string)($payload['event']??'');
     $instanceRaw=$payload['instance']??'';
     $instance=is_string($instanceRaw)?$instanceRaw:(is_array($instanceRaw)?(string)($instanceRaw['instanceName']??$instanceRaw['name']??''):'');
-    $q=$pdo->prepare('SELECT id,evolution_webhook_token FROM churches WHERE evolution_instance_name=? AND active=1 LIMIT 1');
+    $q=$pdo->prepare('SELECT id,evolution_webhook_token FROM churches WHERE evolution_instance_name=? AND active=1 ORDER BY id');
     $q->execute([$instance]);
-    $church=$q->fetch();
+    $matches=$q->fetchAll();
+    if(count($matches)>1){
+        http_response_code(409);
+        echo json_encode(['ok'=>false,'error'=>'ambiguous_instance']);
+        exit;
+    }
+    $church=$matches[0]??null;
     $churchId=$church['id']??null;
 
     if($churchId){
