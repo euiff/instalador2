@@ -1,33 +1,33 @@
 {
-  "version": "3.3.0",
+  "version": "3.4.0",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.3.0.01.b64.txt",
-    "releases/v3.3.0.02.b64.txt",
-    "releases/v3.3.0.03.b64.txt",
-    "releases/v3.3.0.04.b64.txt",
-    "releases/v3.3.0.05.b64.txt",
-    "releases/v3.3.0.06.b64.txt",
-    "releases/v3.3.0.07.b64.txt",
-    "releases/v3.3.0.08.b64.txt",
-    "releases/v3.3.0.09.b64.txt",
-    "releases/v3.3.0.10.b64.txt",
-    "releases/v3.3.0.11.b64.txt",
-    "releases/v3.3.0.12.b64.txt",
-    "releases/v3.3.0.13.b64.txt",
-    "releases/v3.3.0.14.b64.txt",
-    "releases/v3.3.0.15.b64.txt",
-    "releases/v3.3.0.16.b64.txt",
-    "releases/v3.3.0.17.b64.txt",
-    "releases/v3.3.0.18.b64.txt",
-    "releases/v3.3.0.19.b64.txt",
-    "releases/v3.3.0.20.b64.txt"
+    "releases/v3.4.0.01.b64.txt",
+    "releases/v3.4.0.02.b64.txt",
+    "releases/v3.4.0.03.b64.txt",
+    "releases/v3.4.0.04.b64.txt",
+    "releases/v3.4.0.05.b64.txt",
+    "releases/v3.4.0.06.b64.txt",
+    "releases/v3.4.0.07.b64.txt",
+    "releases/v3.4.0.08.b64.txt",
+    "releases/v3.4.0.09.b64.txt",
+    "releases/v3.4.0.10.b64.txt",
+    "releases/v3.4.0.11.b64.txt",
+    "releases/v3.4.0.12.b64.txt",
+    "releases/v3.4.0.13.b64.txt",
+    "releases/v3.4.0.14.b64.txt",
+    "releases/v3.4.0.15.b64.txt",
+    "releases/v3.4.0.16.b64.txt",
+    "releases/v3.4.0.17.b64.txt",
+    "releases/v3.4.0.18.b64.txt",
+    "releases/v3.4.0.19.b64.txt",
+    "releases/v3.4.0.20.b64.txt"
   ],
-  "sha256": "320be2ebcde479ec845940027c0457136bb6d129513e506f0876879a29f0fd68",
+  "sha256": "c45b8b9975cacc37ca3afe64e8990444377735b758fdc3d9f47954cb1fe41612",
   "notes": [
-    "Visitantes, cuidado pastoral, departamentos, patrimônio e indicadores de pessoas.",
-    "Inclui as correções publicadas até 3.2.11."
+    "Novo visual, navegação por áreas, busca de funções e cadastros em janelas.",
+    "Tesouraria em abas; preserva os módulos e as correções das versões anteriores."
   ],
   "files": [
     {
@@ -40,7 +40,7 @@
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "c1e3ca36a6d5903d87a8801356ab766b5089d5560552c989b3697fe0f43c6607"
+      "sha256": "201c79ddf6896c86045c9e3cd7c350933beb268337538056b2f9300dc7e07589"
     },
     {
       "path": "public/LEIA-ME-ATUALIZACAO.txt",
@@ -59,8 +59,12 @@
       "sha256": "a70de3c49fce73bd89bb3fc9e689cbcb38a5e510c4cad8e327e0fcf0a4d7eac1"
     },
     {
+      "path": "public/RELEASE-3.4.0.md",
+      "sha256": "d976846642848966831a58d995dcaa2ce51636ca3220c3b73a4399e1bc9c9eff"
+    },
+    {
       "path": "public/VERSION",
-      "sha256": "5eee6c0c5c6901f5e523f0a434bca4106e1ff7136deb451f982b0bb1a7b13716"
+      "sha256": "f5e3e93e58ffc2a20a3ca53e8025bc50d7c1dccbef4b34e2388aa9bbf8678466"
     },
     {
       "path": "public/api/generate-event-poster.php",
@@ -75,6 +79,14 @@
       "sha256": "d4d24e2d7db351150cfcfb265d5727c0148361acd92ff5c42351e3274ef975d1"
     },
     {
+      "path": "public/assets/admin-ui.css",
+      "sha256": "9bb1ecf3980c5f1c465bf4629c9e8372ec7335bfb501c1c1db28816a0ab7d911"
+    },
+    {
+      "path": "public/assets/admin-ui.js",
+      "sha256": "d029c0b97943905465a06ec963bc7c7dffcda2908287a6df04974cf73319c4a9"
+    },
+    {
       "path": "public/assets/app.css",
       "sha256": "b00c77cf18b29382138ceb796d0ece5b6c62733a62d07761a33b3525902c568b"
     },
@@ -84,7 +96,7 @@
     },
     {
       "path": "public/assets.php",
-      "sha256": "9a9acead35da4d4cba7ce763a6802782bc1a254264c5fe978a057d83f59354c1"
+      "sha256": "cfe1c46b86e33cdbb59cd9b1c0aa0536514b38a41df515513c80848b33f1b728"
     },
     {
       "path": "public/automations.php",
@@ -108,7 +120,7 @@
     },
     {
       "path": "public/campaigns.php",
-      "sha256": "562b1362c00289a9c847af32fcc0ca5ad2a3bab371f300c78b370cb9f85a249a"
+      "sha256": "2bd704422925a9c60361a60353ab04ee2cb1202a3a4dc68855ed2adaa1bf3339"
     },
     {
       "path": "public/church-insights.php",
@@ -132,7 +144,7 @@
     },
     {
       "path": "public/congregations.php",
-      "sha256": "811f5054b056b4d44470afff051876be823a9e510f0c6380f37c0fa93c0ca926"
+      "sha256": "514537e1863d3d2bdd24fd2eea8b4e92d51ec01c968a6d802eb7848ea09a86fa"
     },
     {
       "path": "public/cron.php",
@@ -140,7 +152,7 @@
     },
     {
       "path": "public/dashboard.php",
-      "sha256": "8a4911ea8573cfdbd3751a17f54798b2e4cfd5d3eefabaf719a210cc823d38fd"
+      "sha256": "9b25b62e8de5501e2e73b73fbc5c4a7d194a0a6a56d4c8e4726a898f8adf566e"
     },
     {
       "path": "public/database/001_core.sql",
@@ -240,7 +252,7 @@
     },
     {
       "path": "public/departments.php",
-      "sha256": "0c9ddc86e31bef36332b33ac1bd8b3b08d6866a10e0849e313772b3e2f96e34e"
+      "sha256": "c175de9fec8529f1bdc0c5708161d8148da088b9600cc012982b1bd3a24fd240"
     },
     {
       "path": "public/documents.php",
@@ -248,7 +260,7 @@
     },
     {
       "path": "public/event-registrations.php",
-      "sha256": "cd8df768bbd00f4b035f3a6b9417fac41ff818073bd9b4049c9ded01ceb9647c"
+      "sha256": "581ee9cb96ad788c6a35e2577d62f1448ea748e1987ba9993d834165bb36c11a"
     },
     {
       "path": "public/events.php",
@@ -260,7 +272,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "60942be4227f420264f0b0908b271891464869f574764855e8930e67598a4a8c"
+      "sha256": "1f8ba6a6068eb7aca3438486943de6a73b4802d8d32863400cb443162eb92080"
     },
     {
       "path": "public/group-moderation.php",
@@ -268,7 +280,7 @@
     },
     {
       "path": "public/groups.php",
-      "sha256": "783c486beb6878a53556713251f7a2dfa7ffa26fa7eb480ee0d1212b1894fa75"
+      "sha256": "a8600936d04f446ba42878ade8fc0f7161252c62f21ab7a35672f12e4289bbce"
     },
     {
       "path": "public/index.php",
@@ -399,6 +411,10 @@
       "sha256": "717ae57a32cbdebf3e612d0046f8a4b66845315265886ee8c65a59e91e7e78a5"
     },
     {
+      "path": "public/lib/Ui.php",
+      "sha256": "46e86efa32af2ab0d454627249728127d25f81f97259d9f8356e8258427625aa"
+    },
+    {
       "path": "public/lib/UnifiedMemberDocumentService.php",
       "sha256": "932a9ef99674a5d495e45acbdb84d5f93ddfea38855d0d24006468e1cbfdc6ec"
     },
@@ -412,11 +428,11 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "3de294f446b110e3f2c203146e55b926b8f2c943b19da9ff0e5057d3333a2e78"
+      "sha256": "7bdfa8d3b7fbbb5c60ee4156a0653bdadc31a7ab3876dac9f1f0a6bccab0dfa7"
     },
     {
       "path": "public/lib/dashboard-care.php",
-      "sha256": "7c4a9cda11c30ebd15e8d4f5014ede7cf5cfd7e5de7740739faecf7664531a14"
+      "sha256": "191347cc21d7008ec1c0168df761cc654cacc867a4c77d11383df8635aee4f69"
     },
     {
       "path": "public/lib/helpers.php",
@@ -428,7 +444,7 @@
     },
     {
       "path": "public/login.php",
-      "sha256": "715fd9ee8f64dca30a1ea2fb5bf4faf9f0d41e2cd81ecf927bc836bc8e9afb3a"
+      "sha256": "880e3c4a169acd19081a0ed6b7010d53c715eb23effcbc9a7c4ffc12a149c97e"
     },
     {
       "path": "public/logout.php",
@@ -456,7 +472,7 @@
     },
     {
       "path": "public/members.php",
-      "sha256": "2e2d837c5abac5d36483e984c0a64c5e654352f37e3fe7364ebae09f4513cbac"
+      "sha256": "ece78025f41aebb5d5bad87709bb34fb96078f7212ac575845be677cf519d7da"
     },
     {
       "path": "public/messages.php",
@@ -464,7 +480,7 @@
     },
     {
       "path": "public/needs.php",
-      "sha256": "d2c1a9284e3c96c7c7e4a62c4b88292b629143f23d640cb4f64bebdd68f84781"
+      "sha256": "aec338a3950037945b7bc9b9e86f7b6a77d5605591e46c290f705114d7226234"
     },
     {
       "path": "public/onboarding.php",
@@ -472,7 +488,7 @@
     },
     {
       "path": "public/pastoral-care.php",
-      "sha256": "f4ea38183bb15179c4050699ff7a7c0c39e163e5b6b49eb9b02bcdade5c5a3a8"
+      "sha256": "63f320603d9b34fe4dd48aa397c01c849b9e0716c597c534acabebb3642e6815"
     },
     {
       "path": "public/payments.php",
@@ -480,15 +496,15 @@
     },
     {
       "path": "public/polls.php",
-      "sha256": "10b365b3928ac08d23bef95f187deecbbbbedf00c040e3f7ddada7246efe48cd"
+      "sha256": "f5a47e9ee21766872e950af39b64d253f0b5b679b79f39414ef6469b0a4852f9"
     },
     {
       "path": "public/prayer-clock.php",
-      "sha256": "cea0b6be001555e68de1644c5cc429e2c8b5bab050aab24c1ffd120c6ffe318d"
+      "sha256": "876f93e55c8ab88d36ac992482af335d07f410647741ad8f185779c03f9be1ff"
     },
     {
       "path": "public/prayers.php",
-      "sha256": "c2d9d7c625a1cce335242d87e35655a63111b26ea2faa690c7bd37e4719c28ed"
+      "sha256": "64e52ecb56384709f5238ea7a9fcec7355ccb44d8ec33332a1719edfe3a7fda5"
     },
     {
       "path": "public/pricing.php",
@@ -496,7 +512,7 @@
     },
     {
       "path": "public/raffles.php",
-      "sha256": "06b3d3c858807379ba38ef23cef2317578870a037f627dee5158b52f556be38d"
+      "sha256": "985a2a967f507fbcbb7c39e8dd4df1bd213d751740264c0318f6fa339bffc4c5"
     },
     {
       "path": "public/register.php",
@@ -512,7 +528,7 @@
     },
     {
       "path": "public/service-types.php",
-      "sha256": "b713a28efd0e375a514a411826f30f562e7ef78d39aed33508a2347e59fd6b60"
+      "sha256": "3a67a111c08a9c21c9686d56f525d4215ef3b2a1209bfb4497d86c5cd1503dbb"
     },
     {
       "path": "public/settings.php",
@@ -536,7 +552,7 @@
     },
     {
       "path": "public/updates/manifest.json",
-      "sha256": "3201c40780e814d13e9a1270663f525556803933d226db15cb2b86c50e475061"
+      "sha256": "9cdcd9b8a1b4ed56cf250b2d2550afa273d06901d070a9d3481ed9ae979267b2"
     },
     {
       "path": "public/updates/migrations/0.2.0.sql",
@@ -552,7 +568,7 @@
     },
     {
       "path": "public/users.php",
-      "sha256": "1ded8d1aa02c8d6dca52b0be94a9e4f3bfee5925a9b14147475d6a2a631a0d19"
+      "sha256": "387930f0248d06b493fa9fbc5cc0603a1a15178463f07f76fecb2cd5c25355ff"
     },
     {
       "path": "public/vendor/autoload.php",
