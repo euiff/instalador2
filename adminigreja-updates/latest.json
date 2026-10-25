@@ -1,68 +1,72 @@
 {
-  "version": "3.4.3",
+  "version": "3.4.4",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.4.3.01.b64.txt",
-    "releases/v3.4.3.02.b64.txt",
-    "releases/v3.4.3.03.b64.txt"
+    "releases/v3.4.4.01.b64.txt",
+    "releases/v3.4.4.02.b64.txt",
+    "releases/v3.4.4.03.b64.txt"
   ],
-  "sha256": "1ba9df584d05f80f58476be5f45b552ebd3a4b41b41e1bbbfbf3911aef21dfc6",
+  "sha256": "f83ea529dd5e3840af661730b3c2ad197f089859c1d2faf3864d6138e019420a",
   "notes": [
-    "Master separado das igrejas-clientes.",
-    "Cada igreja mantém usuários, membros, WhatsApp e dados próprios.",
-    "Modo suporte explícito para o Master.",
-    "Transferência de propriedade para pastor/responsável.",
-    "Proteção contra instância Evolution duplicada entre igrejas."
+    "Rollback funcional da 3.4.3 para o comportamento da 3.4.2.",
+    "Restaura seleção automática de igreja para o Master.",
+    "Restaura menus, login, permissões e fluxo anteriores.",
+    "Restaura papéis admin removidos pela migration da 3.4.3.",
+    "Mantém as correções de documentos/carteirinha já aplicadas antes da 3.4.3."
   ],
   "files": [
     {
-      "path": "public/lib/Auth.php",
-      "sha256": "639181ca656ac7f75e84f4f8de2da3f203f806d7dd3182d24104f360214af59d"
-    },
-    {
-      "path": "public/login.php",
-      "sha256": "1a65fa2c0145c1dea34ae83e2a0fe79dad29cc4c1f070b3da748e48541a6c16d"
-    },
-    {
-      "path": "public/switch-church.php",
-      "sha256": "6ea044dea4823cad4b118cee5e9e886098c945b93d0c4ced8c901b5b25745b98"
-    },
-    {
-      "path": "public/master.php",
-      "sha256": "42f6e2bc3b39db879ad701366f64b70e0d5936a3f642b4a660518a8ba9bdba8a"
-    },
-    {
-      "path": "public/users.php",
-      "sha256": "e214e1391704821f4eb694a8a6c8da6362cec723c8c674ce3df4674d57d83492"
-    },
-    {
-      "path": "public/lib/View.php",
-      "sha256": "c86fe0f6913d085b6e5e12c200d4a0cee96f7fd17beb2888cdb1758379cca8ac"
-    },
-    {
-      "path": "public/settings.php",
-      "sha256": "0c7330a96973fbc7572faa87825b99163cc355a705167abcdd13d15ef14e20e6"
+      "path": "public/VERSION",
+      "sha256": "a19f5cb2aecb9af1c0ed78cca3bfc0f8a954f1e680cc51bde6d3d7f7b965a79f"
     },
     {
       "path": "public/api/whatsapp-webhook.php",
-      "sha256": "608bcffc8011b5295c54fad5f47625d6929c72cfd6bf3b0053d4b79f7d6b3bed"
+      "sha256": "d4d24e2d7db351150cfcfb265d5727c0148361acd92ff5c42351e3274ef975d1"
+    },
+    {
+      "path": "public/dashboard.php",
+      "sha256": "9b25b62e8de5501e2e73b73fbc5c4a7d194a0a6a56d4c8e4726a898f8adf566e"
+    },
+    {
+      "path": "public/database/026_restore_pre343_roles.sql",
+      "sha256": "e261227d974726007f2592a429a1543300e6ebed74a603e80d583e00b0921232"
+    },
+    {
+      "path": "public/lib/Auth.php",
+      "sha256": "188fc2f56f2ca7fb311340aa4cae52a713c9e07c36cc28e6ac13d92f2095ae01"
     },
     {
       "path": "public/lib/BotWebhookHandler.php",
-      "sha256": "15e5655f03d3052baf3734d42e4a0b02d62a0e96de1ba668bde1c3ffe5258cd7"
+      "sha256": "591c51c6b7942c5a61c50452071c8c9a65d9b55ef47d445dddfadd5e1c456764"
     },
     {
-      "path": "public/database/025_tenant_role_cleanup.sql",
-      "sha256": "6cc554490c529b19a4bd1ceb225da1d7aecf6d84fa694d55ea8a1c2db923a510"
+      "path": "public/lib/View.php",
+      "sha256": "7bdfa8d3b7fbbb5c60ee4156a0653bdadc31a7ab3876dac9f1f0a6bccab0dfa7"
     },
     {
-      "path": "public/VERSION",
-      "sha256": "0ca6c7591d8ed155ad3e925e2279149da5c782c0b57266a016fdd862dcc647da"
+      "path": "public/login.php",
+      "sha256": "880e3c4a169acd19081a0ed6b7010d53c715eb23effcbc9a7c4ffc12a149c97e"
     },
     {
-      "path": "public/CHANGELOG.md",
-      "sha256": "2f44c6a213e2fa8577f2629b4a601d80f65afe9b59b5b02faf1bffa4f29946c2"
+      "path": "public/master.php",
+      "sha256": "c75f7d91988fdf07e6c0b462bc6501fff660bda50cf495c9d500e7407901fa8b"
+    },
+    {
+      "path": "public/settings.php",
+      "sha256": "7447accf142c3cb344bfcea394d41a0e4a07ed4b66ecd7ba0ef62d7ee7dbddd8"
+    },
+    {
+      "path": "public/switch-church.php",
+      "sha256": "62c8f7b9e0e5afe2e84a9e45de4bce83d33d714562cd8f614ba0083171796720"
+    },
+    {
+      "path": "public/updates.php",
+      "sha256": "2eb45bcc7781ca5165ed2f771d32e40867cdadfb1b91aceeea71144ae2c29dfa"
+    },
+    {
+      "path": "public/users.php",
+      "sha256": "387930f0248d06b493fa9fbc5cc0603a1a15178463f07f76fecb2cd5c25355ff"
     }
   ]
 }
