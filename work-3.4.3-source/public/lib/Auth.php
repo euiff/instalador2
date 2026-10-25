@@ -188,7 +188,11 @@ final class Auth
     {
         $userId=(string)($_SESSION['user_id']??'');
         if($userId===''||!$this->user())return false;
-        if($this->hasRole('super_admin',$userId))return true;
+        if($this->hasRole('super_admin',$userId)){
+            // O Master só recebe permissões de uma igreja quando entrou
+            // explicitamente nela em modo de suporte.
+            return $this->isMasterSupportMode();
+        }
 
         $membership=$this->currentMembership();
         if(!$membership)return false;
