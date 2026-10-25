@@ -85,11 +85,69 @@ final class Updater
     public function manifest(): array
     {
         if(!empty($this->cfg['channel_url'])){
-            $url=(string)$this->cfg['channel_url'];
-            $url.=(str_contains($url,'?')?'&':'?').'t='.time();
-            $data=json_decode($this->httpGet($url),true);
-            if(!is_array($data)||empty($data['version'])||!is_array($data['files']??null)||!is_array($data['parts']??null)||empty($data['sha256'])){
-                throw new RuntimeException('Manifesto público de atualização inválido.');
+            $baseUrl=(string)$this->cfg['channel_url'];
+            $url=$baseUrl.(str_contains($baseUrl,'?')?'&':'?').'t='.time().'-'.bin2hex(random_bytes(3));
+
+            $candidates=[];
+            $errors=[];
+
+            try{
+                $raw=json_decode($this->httpGet($url,[
+                    'Cache-Control: no-cache, no-store, must-revalidate',
+                    'Pragma: no-cache',
+                    'Expires: 0',
+                ]),true);
+                if(is_array($raw))$candidates[]=$raw;
+            }catch(Throwable $e){
+                $errors[]='raw: '.$e->getMessage();
+            }
+
+            // Fallback independente do CDN raw.githubusercontent.com:
+            // consulta o mesmo arquivo pela API oficial do GitHub e compara
+            // versões. Se uma rota estiver em cache, usamos a outra.
+            if(preg_match('#^https://raw\\.githubusercontent\\.com/([^/]+)/([^/]+)/([^/]+)/(.+)$#i',$baseUrl,$m)){
+                $owner=rawurlencode($m[1]);
+                $repo=rawurlencode($m[2]);
+                $branch=rawurlencode($m[3]);
+                $path=implode('/',array_map('rawurlencode',explode('/',$m[4])));
+                $apiUrl="https://api.github.com/repos/{$owner}/{$repo}/contents/{$path}?ref={$branch}&t=".time();
+
+                try{
+                    $apiRaw=json_decode($this->httpGet($apiUrl,[
+                        'Accept: application/vnd.github.raw+json',
+                        'Cache-Control: no-cache, no-store, must-revalidate',
+                        'Pragma: no-cache',
+                        'Expires: 0',
+                    ]),true);
+                    if(is_array($apiRaw))$candidates[]=$apiRaw;
+                }catch(Throwable $e){
+                    $errors[]='api: '.$e->getMessage();
+                }
+            }
+
+            $data=null;
+            foreach($candidates as $candidate){
+                if(
+                    !is_array($candidate)||
+                    empty($candidate['version'])||
+                    !is_array($candidate['files']??null)||
+                    !is_array($candidate['parts']??null)||
+                    empty($candidate['sha256'])
+                )continue;
+
+                if(
+                    $data===null||
+                    version_compare((string)$candidate['version'],(string)$data['version'],'>')
+                ){
+                    $data=$candidate;
+                }
+            }
+
+            if(!is_array($data)){
+                throw new RuntimeException(
+                    'Manifesto público de atualização inválido.'.
+                    ($errors?' '.implode(' | ',array_unique($errors)):'')
+                );
             }
             if(!preg_match('/^\\d+\\.\\d+\\.\\d+(?:[-+][A-Za-z0-9.-]+)?$/',(string)$data['version'])){
                 throw new RuntimeException('Versão inválida no manifesto público.');
