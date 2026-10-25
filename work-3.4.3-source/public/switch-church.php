@@ -8,6 +8,16 @@ if($_SERVER['REQUEST_METHOD']!=='POST'){
 }
 
 verify_csrf();
+$action=(string)($_POST['action']??'select');
+if($action==='leave_master_support'){
+    if(!$auth->isSuperAdmin()){
+        http_response_code(403);
+        exit('Acesso restrito ao Master.');
+    }
+    $auth->leaveChurchContext();
+    redirect('/master.php');
+}
+
 $id=(string)($_POST['church_id']??'');
 if($id===''||!$auth->selectChurch($id)){
     flash('error','Você não possui acesso a esta igreja.');
