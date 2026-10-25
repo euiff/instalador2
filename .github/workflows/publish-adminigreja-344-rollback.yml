@@ -1,0 +1,169 @@
+name: Publish AdminIgreja 3.4.4 rollback to 3.4.2 behavior
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-344-rollback.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - name: Checkout pre-3.4.3 source
+        uses: actions/checkout@v4
+        with:
+          ref: 2a2b506719ae410a3c8ced28a36ae0fc5a4eb5b7
+          path: rollback
+          fetch-depth: 1
+
+      - name: Prepare exact rollback files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pkg344
+          mkdir -p /tmp/pkg344/public/lib /tmp/pkg344/public/api /tmp/pkg344/public/database
+
+          cp rollback/work-3.4.3-source/public/lib/Auth.php /tmp/pkg344/public/lib/
+          cp rollback/work-3.4.3-source/public/login.php /tmp/pkg344/public/
+          cp rollback/work-3.4.3-source/public/switch-church.php /tmp/pkg344/public/
+          cp rollback/work-3.4.3-source/public/master.php /tmp/pkg344/public/
+          cp rollback/work-3.4.3-source/public/users.php /tmp/pkg344/public/
+          cp rollback/work-3.4.3-source/public/lib/View.php /tmp/pkg344/public/lib/
+          cp rollback/work-3.4.3-source/public/settings.php /tmp/pkg344/public/
+          cp rollback/work-3.4.3-source/public/api/whatsapp-webhook.php /tmp/pkg344/public/api/
+          cp rollback/work-3.4.3-source/public/lib/BotWebhookHandler.php /tmp/pkg344/public/lib/
+          cp rollback/work-3.4.3-source/public/updates.php /tmp/pkg344/public/
+          cp rollback/work-3.4.3-source/public/dashboard.php /tmp/pkg344/public/
+
+          cat > /tmp/pkg344/public/database/026_restore_pre343_roles.sql <<'SQL'
+          SET NAMES utf8mb4;
+
+          INSERT INTO user_roles(id,user_id,role)
+          SELECT UUID(),cm.user_id,'admin'
+          FROM church_members cm
+          WHERE (cm.is_owner=1 OR cm.church_role='admin')
+            AND NOT EXISTS (
+              SELECT 1 FROM user_roles ur
+              WHERE ur.user_id=cm.user_id AND ur.role='admin'
+            );
+          SQL
+
+          printf '3.4.4\n' > /tmp/pkg344/public/VERSION
+
+      - name: Validate rollback PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l /tmp/pkg344/public/lib/Auth.php
+          php -l /tmp/pkg344/public/login.php
+          php -l /tmp/pkg344/public/switch-church.php
+          php -l /tmp/pkg344/public/master.php
+          php -l /tmp/pkg344/public/users.php
+          php -l /tmp/pkg344/public/lib/View.php
+          php -l /tmp/pkg344/public/settings.php
+          php -l /tmp/pkg344/public/api/whatsapp-webhook.php
+          php -l /tmp/pkg344/public/lib/BotWebhookHandler.php
+          php -l /tmp/pkg344/public/updates.php
+          php -l /tmp/pkg344/public/dashboard.php
+
+          grep -q "if(!\$church) exit('Igreja não selecionada.');" /tmp/pkg344/public/updates.php
+          grep -q "if(\$this->hasRole('super_admin',\$userId))return true;" /tmp/pkg344/public/lib/Auth.php
+          grep -q "INSERT IGNORE INTO user_roles.*'admin'" /tmp/pkg344/public/master.php
+          ! grep -q "platform_master_mode" /tmp/pkg344/public/lib/Auth.php
+          ! grep -q "master_support_church_id" /tmp/pkg344/public/lib/Auth.php
+
+      - name: Build rollback package
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -czf /tmp/adminigreja-3.4.4.tar.gz -C /tmp/pkg344 public
+
+          cd channel
+          rm -f adminigreja-updates/releases/v3.4.4.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.4.4.tar.gz > /tmp/adminigreja-3.4.4.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.4.4.b64 /tmp/v3.4.4.
+
+          i=1
+          for f in /tmp/v3.4.4.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.4.4.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          pkg=Path("/tmp/pkg344")
+          package=Path("/tmp/adminigreja-3.4.4.tar.gz")
+          parts=sorted((channel/"releases").glob("v3.4.4.*.b64.txt"))
+
+          files=[]
+          for p in sorted((pkg/"public").rglob("*")):
+              if not p.is_file():
+                  continue
+              rel=p.relative_to(pkg).as_posix()
+              files.append({"path":rel,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()})
+
+          manifest={
+              "version":"3.4.4",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "notes":[
+                  "Rollback funcional da 3.4.3 para o comportamento da 3.4.2.",
+                  "Restaura seleção automática de igreja para o Master.",
+                  "Restaura menus, login, permissões e fluxo anteriores.",
+                  "Restaura papéis admin removidos pela migration da 3.4.3.",
+                  "Mantém as correções de documentos/carteirinha já aplicadas antes da 3.4.3."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify rollback package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.4.4.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.4.4.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.4.4.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test344
+          mkdir -p /tmp/test344
+          tar -xzf /tmp/rebuilt-3.4.4.tar.gz -C /tmp/test344
+          php -l /tmp/test344/public/lib/Auth.php
+          php -l /tmp/test344/public/updates.php
+          test "$(cat /tmp/test344/public/VERSION)" = "3.4.4"
+          test -f /tmp/test344/public/database/026_restore_pre343_roles.sql
+
+      - name: Publish rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.4.4.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.4.4 rollback to 3.4.2 behavior"
+          git pull --rebase origin main
+          git push origin main
