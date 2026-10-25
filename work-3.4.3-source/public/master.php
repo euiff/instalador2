@@ -456,7 +456,6 @@ View::header('Painel Master',$auth,'master.php');
 
     <div class="actions" style="margin-top:14px">
       <button class="btn btn-primary" type="submit">Salvar alterações</button>
-      <form></form>
     </div>
   </form>
 
