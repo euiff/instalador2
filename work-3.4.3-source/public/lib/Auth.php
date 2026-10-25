@@ -222,6 +222,15 @@ final class Auth
     public function requireAbility(string $ability): array
     {
         $user=$this->requireLogin();
+
+        // Se o Master tentar abrir diretamente um módulo de igreja sem ter
+        // escolhido um cliente, nunca mostramos tela vazia/403. Ele volta ao
+        // Painel Master e escolhe explicitamente a igreja que deseja suportar.
+        if($this->isSuperAdmin((string)$user['id'])&&!$this->isMasterSupportMode()){
+            flash('error','Escolha uma igreja-cliente para abrir os módulos dela.');
+            redirect('/master.php');
+        }
+
         if(!$this->can($ability)){
             http_response_code(403);
             exit('Você não possui permissão para acessar este módulo.');
