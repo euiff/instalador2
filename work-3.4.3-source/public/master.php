@@ -71,9 +71,11 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 $pdo->prepare("UPDATE church_members SET is_owner=1,church_role='owner',permissions=NULL WHERE id=? AND church_id=?")
                     ->execute([$membershipId,$churchId]);
 
-                // O Master administra a plataforma e não deve permanecer como
-                // usuário interno da igreja-cliente.
-                $pdo->prepare("DELETE cm FROM church_members cm INNER JOIN user_roles ur ON ur.user_id=cm.user_id AND ur.role='super_admin' WHERE cm.church_id=?")
+                // Mantemos qualquer vínculo legado do Master apenas para
+                // compatibilidade histórica, mas ele nunca é proprietário da
+                // igreja-cliente e o código ignora esse vínculo fora do modo
+                // suporte. Isso evita apagar dados/vínculos existentes.
+                $pdo->prepare("UPDATE church_members cm INNER JOIN user_roles ur ON ur.user_id=cm.user_id AND ur.role='super_admin' SET cm.is_owner=0,cm.church_role='admin' WHERE cm.church_id=?")
                     ->execute([$churchId]);
 
                 master_audit($pdo,(string)$user['id'],$churchId,'church_owner_transferred',[
@@ -86,7 +88,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 throw $e;
             }
 
-            flash('success','Propriedade transferida. O pastor agora é o responsável da igreja e o Master ficou somente na plataforma.');
+            flash('success','Propriedade transferida. O pastor agora é o responsável da igreja-cliente. O Master continua somente como administrador da plataforma.');
             redirect('/master.php?church='.urlencode($churchId).'#owner');
         }
 
