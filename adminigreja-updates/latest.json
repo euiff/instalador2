@@ -20,5 +20,7 @@
       "path": "public/VERSION",
       "sha256": "cc714f5e0224a78311f4835e9fbb88e69ba35f65e7dd5cb7d86cabb4a84bbd72"
     }
-  ]
+  ],
+  "published_at": "2026-10-24T21:29:00-03:00",
+  "cache_buster": "3.4.1-20261024-2129"
 }
