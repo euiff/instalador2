@@ -133,7 +133,7 @@ View::header('Usuários e permissões',$auth,'users.php');
 
 <div class="grid two-col">
 <section class="card card-pad">
-  <div class="page-head"><div><h1 style="font-size:17px">Usuários da igreja</h1><p><?=count($rows)?> acesso(s)<?= $maxUsers!==null?' de '.$maxUsers.' permitidos':''?></p></div></div>
+  <div class="page-head"><div><h1 style="font-size:17px">Usuários internos de <?=e($church['name'])?></h1><p><?=count($rows)?> acesso(s)<?= $maxUsers!==null?' de '.$maxUsers.' permitidos':''?> · todos vinculados somente a esta igreja</p></div></div>
   <div class="table-wrap"><table class="table"><thead><tr><th>Usuário</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead><tbody>
   <?php foreach($rows as $r):
       $role=!empty($r['is_owner'])?'owner':(string)($r['church_role']??'admin');
@@ -158,8 +158,9 @@ View::header('Usuários e permissões',$auth,'users.php');
 </section>
 
 <section data-registry-form="users" class="card card-pad">
-  <h2 style="font-size:17px">Novo acesso</h2>
-  <p class="muted">Secretaria e Tesouraria recebem apenas os módulos da própria função.</p>
+  <h2 style="font-size:17px">Novo usuário desta igreja</h2>
+  <p class="muted">Cria um acesso interno somente para <strong><?=e($church['name'])?></strong>. Pastor, administrador, secretaria e tesouraria não criam uma nova igreja aqui.</p>
+  <?php if($isMaster):?><div class="alert alert-info">Você está em modo suporte. Para cadastrar outra igreja como novo cliente, use o <a href="/master.php">Painel Master → Nova igreja / cliente</a>.</div><?php endif?>
   <form method="post"><?=csrf_field()?><input type="hidden" name="action" value="create">
     <div class="form-grid">
       <div class="field full"><label>Nome *</label><input class="input" name="full_name" required></div>
@@ -167,7 +168,7 @@ View::header('Usuários e permissões',$auth,'users.php');
       <div class="field full"><label>Perfil *</label><select class="select" name="church_role"><?php foreach($allowed as $v):?><option value="<?=e($v)?>"><?=e($roleLabels[$v])?></option><?php endforeach?></select></div>
       <div class="field full"><label>Senha inicial</label><input class="input" type="password" name="password" minlength="8"><small class="muted">Obrigatória somente quando o e-mail ainda não existe na plataforma.</small></div>
     </div>
-    <button class="btn btn-primary" style="width:100%;margin-top:14px">Criar / vincular acesso</button>
+    <button class="btn btn-primary" style="width:100%;margin-top:14px">Criar usuário em <?=e($church['name'])?></button>
   </form>
 </section>
 </div>
