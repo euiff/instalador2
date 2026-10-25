@@ -1,5 +1,14 @@
 # Changelog · Igreja Master
 
+## 3.2.12
+
+- Corrigido carregamento de logo e foto nos documentos exibidos pelo painel.
+- Imagens locais passam a ser incorporadas no HTML/PDF, eliminando diferenças entre navegador e WhatsApp.
+- Corrigida geração de segunda página em branco nos PDFs de cartas e declarações.
+- Certificados continuam em A4 paisagem e cartas/declarações em A4 retrato, agora com página física travada no tamanho correto.
+- Carteirinha redesenhada conforme o modelo PVC azul/dourado enviado como referência: logo no topo, foto integrada, dados em faixas claras, cargo/nome em destaque e verso com filiação, batismo, naturalidade, QR, pastor e endereço.
+- Mantida a regra de usar a logo da congregação e, na falta dela, a logo geral da igreja.
+
 ## 3.2.11
 
 - Corrigido o payload da enquete nativa enviado à Evolution API.
