@@ -24,6 +24,16 @@ final class Auth
         session_regenerate_id(true);
         $_SESSION['user_id']=$user['id'];
 
+        if($this->hasRole('super_admin',(string)$user['id'])){
+            // O Master pertence à plataforma, não a uma igreja-cliente.
+            // Ao entrar, começa fora de qualquer tenant. Ele só acessa uma
+            // igreja quando escolhe explicitamente "Abrir painel desta igreja".
+            unset($_SESSION['church_id'],$_SESSION['master_support_church_id']);
+            $_SESSION['platform_master_mode']=1;
+            return true;
+        }
+
+        unset($_SESSION['platform_master_mode'],$_SESSION['master_support_church_id']);
         $churches=$this->churches((string)$user['id']);
         if($churches){
             $current=(string)($_SESSION['church_id']??'');
@@ -62,7 +72,6 @@ final class Auth
             $this->pdo->prepare('INSERT INTO profiles(id,user_id,full_name) VALUES(?,?,?)')->execute([app_uuid(),$userId,trim($fullName)]);
             $this->pdo->prepare("INSERT INTO churches(id,name,slug,plan,active,ai_enabled) VALUES(?,?,?,'free',1,1)")->execute([$churchId,trim($churchName),$slug]);
             $this->pdo->prepare('INSERT INTO church_members(id,church_id,user_id,is_owner,church_role) VALUES(?,?,?,?,?)')->execute([app_uuid(),$churchId,$userId,1,'owner']);
-            $this->pdo->prepare("INSERT INTO user_roles(id,user_id,role) VALUES(?,?,'admin')")->execute([app_uuid(),$userId]);
 
             $this->pdo->commit();
             return ['user_id'=>$userId,'church_id'=>$churchId,'slug'=>$slug];
@@ -119,7 +128,29 @@ final class Auth
 
         if(!$q->fetchColumn())return false;
         $_SESSION['church_id']=$churchId;
+        if($this->hasRole('super_admin',$userId)){
+            $_SESSION['master_support_church_id']=$churchId;
+            unset($_SESSION['platform_master_mode']);
+        }
         return true;
+    }
+
+    public function isSuperAdmin(?string $userId=null): bool
+    {
+        $userId??=(string)($_SESSION['user_id']??'');
+        return $userId!==''&&$this->hasRole('super_admin',$userId);
+    }
+
+    public function isMasterSupportMode(): bool
+    {
+        return $this->isSuperAdmin()&&!empty($_SESSION['church_id'])&&!empty($_SESSION['master_support_church_id']);
+    }
+
+    public function leaveChurchContext(): void
+    {
+        if(!$this->isSuperAdmin())return;
+        unset($_SESSION['church_id'],$_SESSION['master_support_church_id']);
+        $_SESSION['platform_master_mode']=1;
     }
 
     public function currentMembership(): ?array
