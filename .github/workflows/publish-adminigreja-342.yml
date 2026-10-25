@@ -1,0 +1,186 @@
+name: Publish AdminIgreja 3.4.2 certificate safe area fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-342.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.2.3
+          path: source
+          fetch-depth: 1
+
+      - name: Validate template
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'cert-seal img{display:block;width:15mm;height:15mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'auth-strip{position:absolute;z-index:3;left:12mm;right:12mm;bottom:4.8mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+          grep -q 'cert-name{display:inline-block;max-width:190mm' source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php
+
+      - name: Install renderer for smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          composer install             --working-dir=source/work-3.2.3-source/public             --no-dev             --prefer-dist             --optimize-autoloader             --no-interaction
+
+      - name: Render certificate and verify one page
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, pathlib
+          png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=')
+          root=pathlib.Path('source/work-3.2.3-source/public')
+          (root/'test-logo.png').write_bytes(png)
+          PY
+
+          cat > /tmp/test-cert-342.php <<'PHP'
+          <?php
+          require 'source/work-3.2.3-source/public/vendor/autoload.php';
+          require 'source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php';
+
+          $t=new MemberDocumentTemplate('source/work-3.2.3-source/public');
+          $church=[
+            'name'=>'Casa da Bênção',
+            'logo_url'=>'/test-logo.png',
+            'pastor_name'=>'Pastor Responsável',
+            'address'=>'Rua Exemplo, 123',
+            'public_url'=>'https://example.org',
+          ];
+          $member=[
+            'name'=>'Euripedes Inacio Ferreira Filho',
+            'role'=>'Membro',
+            'department'=>'',
+            'marital_status'=>'Casado',
+            'rg'=>'12.345.678 SSP-GO',
+            'cpf'=>'123.456.789-00',
+            'membership_date'=>'2015-05-10',
+            'birth_date'=>'1984-06-12',
+            'baptism_date'=>'1996-03-08',
+            'baptism_church'=>'ICB Catalão',
+            'baptism_pastor'=>'Pastor Pedro',
+            'naturalness'=>'Catalão - GO',
+            'mother_name'=>'Maria',
+            'father_name'=>'José',
+            'photo_url'=>'',
+            'congregation_name'=>'ICB Catalão Sede',
+            'congregation_address'=>'Rua Exemplo, 123',
+            'congregation_pastor'=>'Pastor Responsável',
+            'congregation_signature'=>'',
+            'congregation_logo'=>'/test-logo.png',
+          ];
+
+          $html=$t->render($church,$member,'baptism_certificate','Certificado de Batismo','BAP-TESTE-342');
+          $o=new Dompdf\Options();
+          $o->set('isRemoteEnabled',true);
+          $o->set('isHtml5ParserEnabled',true);
+          $o->set('defaultFont','DejaVu Sans');
+          $o->setChroot('source/work-3.2.3-source/public');
+
+          $pdf=new Dompdf\Dompdf($o);
+          $pdf->loadHtml($html,'UTF-8');
+          $pdf->setPaper('A4','landscape');
+          $pdf->render();
+
+          $pages=$pdf->getCanvas()->get_page_count();
+          if($pages!==1)throw new RuntimeException('Certificado gerou '.$pages.' páginas');
+          $bytes=$pdf->output();
+          if(!str_starts_with($bytes,'%PDF-'))throw new RuntimeException('PDF inválido');
+          file_put_contents('/tmp/certificate-342.pdf',$bytes);
+          echo "CERTIFICATE_OK pages=".$pages." bytes=".strlen($bytes)."\n";
+          PHP
+          php /tmp/test-cert-342.php
+
+      - name: Build 3.4.2 delta package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pkg342
+          mkdir -p /tmp/pkg342/public/lib
+          cp source/work-3.2.3-source/public/lib/MemberDocumentTemplate.php /tmp/pkg342/public/lib/
+          printf '3.4.2\n' > /tmp/pkg342/public/VERSION
+
+          tar -czf /tmp/adminigreja-3.4.2.tar.gz -C /tmp/pkg342 public
+
+          cd channel
+          rm -f adminigreja-updates/releases/v3.4.2.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.4.2.tar.gz > /tmp/adminigreja-3.4.2.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.4.2.b64 /tmp/v3.4.2.
+
+          i=1
+          for f in /tmp/v3.4.2.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.4.2.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          channel=Path("adminigreja-updates")
+          pkg=Path("/tmp/pkg342")
+          package=Path("/tmp/adminigreja-3.4.2.tar.gz")
+          parts=sorted((channel/"releases").glob("v3.4.2.*.b64.txt"))
+          files=[]
+          for rel in ["public/lib/MemberDocumentTemplate.php","public/VERSION"]:
+              p=pkg/rel
+              files.append({"path":rel,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()})
+          manifest={
+              "version":"3.4.2",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "notes":[
+                  "Corrige QR Code e rodapé saindo da moldura do certificado.",
+                  "Reduz e limita nome e texto para permanecerem dentro da área segura.",
+                  "Mantém certificado em A4 paisagem e uma única página."
+              ],
+              "files":files,
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.4.2.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.4.2.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.4.2.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+          rm -rf /tmp/test342
+          mkdir -p /tmp/test342
+          tar -xzf /tmp/rebuilt-3.4.2.tar.gz -C /tmp/test342
+          php -l /tmp/test342/public/lib/MemberDocumentTemplate.php
+          test "$(cat /tmp/test342/public/VERSION)" = "3.4.2"
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.4.2.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.4.2 certificate safe area fix"
+          git pull --rebase origin main
+          git push origin main
