@@ -69,6 +69,14 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         ];
         if($values['name']==='')throw new RuntimeException('Informe o nome da igreja.');
 
+        if(!empty($values['evolution_instance_name'])){
+            $dup=$pdo->prepare('SELECT id,name FROM churches WHERE evolution_instance_name=? AND id<>? AND active=1 LIMIT 1');
+            $dup->execute([$values['evolution_instance_name'],$churchId]);
+            if($other=$dup->fetch()){
+                throw new RuntimeException('Esta instância da Evolution já está vinculada a outra igreja. Cada igreja-cliente precisa ter sua própria instância para manter o WhatsApp separado.');
+            }
+        }
+
         $sql='UPDATE churches SET name=?,phone=?,email=?,address=?,pastor_name=?,pix_key=?,welcome_message=?,evolution_api_url=?,evolution_api_key=?,evolution_instance_name=?,evolution_webhook_token=?,gemini_api_key=?,tts_enabled=?,tts_api_key=?,tts_voice_id=?,daily_devotional_time=?,ai_enabled=?,transparency_enabled=? WHERE id=?';
         $pdo->prepare($sql)->execute([
             $values['name'],$values['phone'],$values['email'],$values['address'],$values['pastor_name'],
@@ -191,7 +199,7 @@ View::header('Configurações','settings',$auth,$church);
     <div class="field">
       <label>Nome da instância</label>
       <input class="input" name="evolution_instance_name" value="<?=e($s['evolution_instance_name']??'')?>" placeholder="ex.: casa-da-bencao">
-      <small class="help-text">Tem que ser exatamente o mesmo nome cadastrado no painel da Evolution.</small>
+      <small class="help-text">Tem que ser exatamente o mesmo nome cadastrado no painel da Evolution. Cada igreja-cliente deve usar uma instância diferente.</small>
     </div>
     <div class="field">
       <label>API Key</label>
