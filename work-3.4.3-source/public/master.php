@@ -65,6 +65,13 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             try{
                 $q=$pdo->prepare('SELECT id FROM users WHERE email=? LIMIT 1');$q->execute([$email]);$ownerId=$q->fetchColumn();
                 $newUser=false;
+                if($ownerId){
+                    $super=$pdo->prepare("SELECT 1 FROM user_roles WHERE user_id=? AND role='super_admin' LIMIT 1");
+                    $super->execute([$ownerId]);
+                    if($super->fetchColumn()){
+                        throw new RuntimeException('O usuário Master da plataforma não pode ser responsável por uma igreja-cliente. Cadastre o e-mail do pastor/administrador da igreja.');
+                    }
+                }
                 if(!$ownerId){
                     if(strlen($password)<8) throw new RuntimeException('Para um novo usuário, informe senha inicial com pelo menos 8 caracteres.');
                     $ownerId=app_uuid();$newUser=true;
@@ -75,7 +82,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 $churchId=app_uuid();$slug=unique_church_slug($pdo,$name);
                 $pdo->prepare("INSERT INTO churches(id,name,slug,plan,subscription_status,active,ai_enabled) VALUES(?,?,?,?,'active',1,1)")->execute([$churchId,$name,$slug,$plan]);
                 $pdo->prepare('INSERT INTO church_members(id,church_id,user_id,is_owner,church_role) VALUES(?,?,?,?,?)')->execute([app_uuid(),$churchId,$ownerId,1,'owner']);
-                $pdo->prepare("INSERT IGNORE INTO user_roles(id,user_id,role) VALUES(?,?,'admin')")->execute([app_uuid(),$ownerId]);
 
                 master_audit($pdo,(string)$user['id'],$churchId,'church_created',['name'=>$name,'plan'=>$plan,'owner_email'=>$email,'new_user'=>$newUser]);
                 $pdo->commit();
@@ -110,7 +116,7 @@ View::header('Painel Master',$auth,'master.php');
 
 <div class="grid two-col">
 <section class="card card-pad">
-  <div class="page-head"><div><h1 style="font-size:18px">Plataforma Master</h1><p>Gerencie igrejas, planos e acessos.</p></div></div>
+  <div class="page-head"><div><h1 style="font-size:18px">Plataforma Master</h1><p>Você administra a plataforma. Cada igreja abaixo é um cliente isolado, com usuários, membros, WhatsApp, financeiro e configurações próprios.</p></div></div>
   <div class="table-wrap"><table class="table"><thead><tr><th>Igreja</th><th>Plano</th><th>Responsável</th><th>Usuários</th><th>Membros</th><th>Status</th><th></th></tr></thead><tbody>
   <?php foreach($rows as $r):?><tr>
     <td><strong><?=e($r['name'])?></strong><div class="muted" style="font-size:10px"><?=e($r['slug'])?></div></td>
@@ -125,16 +131,16 @@ View::header('Painel Master',$auth,'master.php');
 </section>
 
 <section class="card card-pad">
-  <div class="page-head"><div><h2 style="font-size:17px">Nova igreja / cliente</h2><p>Cria a igreja e vincula o responsável.</p></div></div>
+  <div class="page-head"><div><h2 style="font-size:17px">Nova igreja / cliente</h2><p>Crie uma conta totalmente separada. O responsável abaixo será o proprietário desta igreja e verá somente os dados dela.</p></div></div>
   <form method="post"><?=csrf_field()?><input type="hidden" name="action" value="create_church">
     <div class="form-grid">
       <div class="field full"><label>Nome da igreja *</label><input class="input" name="church_name" required></div>
-      <div class="field full"><label>Responsável *</label><input class="input" name="owner_name" required></div>
-      <div class="field full"><label>E-mail do responsável *</label><input class="input" type="email" name="owner_email" required></div>
+      <div class="field full"><label>Pastor / responsável da igreja *</label><input class="input" name="owner_name" required></div>
+      <div class="field full"><label>E-mail de acesso do pastor / responsável *</label><input class="input" type="email" name="owner_email" required><small class="muted">Este e-mail será o login da igreja-cliente. Não use o e-mail do Master.</small></div>
       <div class="field full"><label>Senha inicial</label><input class="input" type="password" name="owner_password" minlength="8"><small class="muted">Necessária somente se o e-mail ainda não existir no sistema.</small></div>
       <div class="field full"><label>Plano</label><select class="select" name="plan"><option value="basic">Básico</option><option value="pro">Pro</option><option value="enterprise">Enterprise</option><option value="free">Gratuito</option></select></div>
     </div>
-    <button class="btn btn-primary" style="width:100%;margin-top:14px">Criar igreja e acesso</button>
+    <button class="btn btn-primary" style="width:100%;margin-top:14px">Criar igreja-cliente separada</button>
   </form>
 </section>
 </div>
