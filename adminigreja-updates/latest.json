@@ -1,12 +1,16 @@
 {
-  "version": "3.2.12",
+  "version": "3.4.1",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.2.12.01.b64.txt",
-    "releases/v3.2.12.02.b64.txt"
+    "releases/v3.4.1.01.b64.txt"
   ],
-  "sha256": "1efd324268262e6b7124b04f79eed86c664717aac16bbbcdec30a8db3f5d3717",
+  "sha256": "5674625e1ed4d11abb55791e40574b613316e54f84a997034af7c4acb7912bfd",
+  "notes": [
+    "Correção de logo e foto nos documentos do painel.",
+    "Correção da folha em branco extra nos PDFs enviados pelo WhatsApp.",
+    "Carteirinha redesenhada conforme o modelo PVC azul/dourado de referência."
+  ],
   "files": [
     {
       "path": "public/lib/MemberDocumentTemplate.php",
@@ -14,11 +18,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "02e95d1d785e7c76ca211096b8531f4662c191748fc4a61cae1e9483fbeca117"
-    },
-    {
-      "path": "public/CHANGELOG.md",
-      "sha256": "746f14eda05b6805b5198eb31391a6d7c268533ce3f68c3b913df7c6018bda34"
+      "sha256": "cc714f5e0224a78311f4835e9fbb88e69ba35f65e7dd5cb7d86cabb4a84bbd72"
     }
   ]
 }
