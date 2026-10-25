@@ -303,8 +303,8 @@ final class MemberDocumentTemplate
 
         if($kind==='certificate'){
             return '@page{size:A4 landscape;margin:0}'.$common.'
-            body{width:297mm;height:210mm;overflow:hidden}
-            .certificate{width:297mm;height:210mm;padding:15mm 22mm 14mm;border:3px solid #092f63}
+            body{width:296mm;height:209mm;overflow:hidden}
+            .certificate{width:296mm;height:209mm;padding:15mm 22mm 14mm;border:3px solid #092f63}
             .certificate:before{content:"";position:absolute;inset:5mm;border:1px solid #d4aa37}.certificate:after{content:"";position:absolute;inset:8mm;border:1px solid #cad5e2}
             .corner{position:absolute;width:55mm;height:55mm}.corner.tl{left:-13mm;top:-18mm;background:#092f63}.corner.br{right:-13mm;bottom:-18mm;background:#d4aa37}
             .cert-content{position:relative;z-index:2;text-align:center;height:174mm}
@@ -316,7 +316,7 @@ final class MemberDocumentTemplate
 
         if($kind==='card'){
             return '@page{size:A4 portrait;margin:0}'.$common.'
-            body{width:210mm;min-height:297mm;padding:14mm;background:#eef2f6}
+            body{width:209mm;min-height:296mm;padding:14mm;background:#eef2f6}
             .cards{width:100%}
             .card-id{position:relative;width:85.6mm;height:54mm;margin:0 auto 12mm;overflow:hidden;border-radius:3mm;color:#fff;background-color:#064f98;background-image:linear-gradient(135deg,#061b55 0%,#063f93 48%,#087bc0 100%);box-shadow:0 2mm 5mm rgba(4,22,61,.2);page-break-inside:avoid}
             .card-id:before{content:"";position:absolute;right:-12mm;top:-16mm;width:40mm;height:75mm;background:rgba(63,214,226,.16);transform:rotate(10deg)}
@@ -338,8 +338,8 @@ final class MemberDocumentTemplate
         }
 
         return '@page{size:A4 portrait;margin:0}'.$common.'
-        body{width:210mm;height:297mm;overflow:hidden}
-        .letter{width:210mm;height:297mm;padding:0 18mm 14mm;page-break-after:avoid}
+        body{width:209mm;height:296mm;overflow:hidden}
+        .letter{width:209mm;height:296mm;padding:0 18mm 14mm;page-break-after:avoid}
         .letter-top{height:4mm;background:linear-gradient(90deg,#092f63,#0c4f91,#d4aa37)}
         .letter-head{padding:10mm 0 6mm;border-bottom:2px solid #092f63}.letter-logo{width:18mm;height:18mm;object-fit:contain;vertical-align:middle;margin-right:5mm}.letter-church{display:inline-block;font-size:15pt;font-weight:700;color:#092f63;text-transform:uppercase}.letter-cong{font-size:9pt;color:#526277;margin-left:23mm}.letter-address{font-size:7pt;color:#7a8798;margin-left:23mm}
         .letter-title{text-align:center;margin:14mm 0 1mm;color:#092f63;font-family:DejaVu Serif,serif;font-size:20pt;text-transform:uppercase}.letter-subtitle{text-align:center;color:#b48a16;font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:1px}.letter-recipient{margin-top:13mm;font-size:10pt}.letter-body{margin-top:8mm;font-family:DejaVu Serif,serif;font-size:11pt;line-height:1.72;text-align:justify}.letter-place{text-align:right;margin-top:12mm;font-size:9pt;color:#526277}
