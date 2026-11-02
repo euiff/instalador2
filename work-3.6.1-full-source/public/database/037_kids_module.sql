@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS kids_programs (
   start_time TIME NULL,
   end_time TIME NULL,
   status VARCHAR(30) NOT NULL DEFAULT 'draft',
+  public_token CHAR(32) NOT NULL,
   notes TEXT NULL,
   created_by_user_id CHAR(36) NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -102,6 +103,7 @@ CREATE TABLE IF NOT EXISTS kids_programs (
   PRIMARY KEY(id),
   KEY idx_kids_programs_date (church_id,program_date,status),
   KEY idx_kids_programs_room (church_id,room_id,program_date),
+  UNIQUE KEY uq_kids_program_token (church_id,public_token),
   CONSTRAINT fk_kids_programs_church FOREIGN KEY(church_id) REFERENCES churches(id) ON DELETE CASCADE,
   CONSTRAINT fk_kids_programs_class FOREIGN KEY(class_id) REFERENCES kids_classes(id) ON DELETE CASCADE,
   CONSTRAINT fk_kids_programs_room FOREIGN KEY(room_id) REFERENCES kids_rooms(id) ON DELETE CASCADE
@@ -151,4 +153,27 @@ CREATE TABLE IF NOT EXISTS kids_records (
   CONSTRAINT fk_kids_records_program FOREIGN KEY(program_id) REFERENCES kids_programs(id) ON DELETE CASCADE,
   CONSTRAINT fk_kids_records_child FOREIGN KEY(child_id) REFERENCES kids_children(id) ON DELETE CASCADE,
   CONSTRAINT fk_kids_records_media FOREIGN KEY(media_item_id) REFERENCES media_library_items(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS kids_checkin_requests (
+  id CHAR(36) NOT NULL,
+  church_id CHAR(36) NOT NULL,
+  program_id CHAR(36) NOT NULL,
+  child_id CHAR(36) NULL,
+  child_name VARCHAR(190) NOT NULL,
+  birth_date DATE NULL,
+  guardian_name VARCHAR(190) NOT NULL,
+  guardian_phone VARCHAR(60) NOT NULL,
+  request_type VARCHAR(30) NOT NULL DEFAULT 'existing',
+  status VARCHAR(30) NOT NULL DEFAULT 'pending',
+  notes VARCHAR(1000) NULL,
+  requested_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at DATETIME NULL,
+  reviewed_by_user_id CHAR(36) NULL,
+  PRIMARY KEY(id),
+  KEY idx_kids_checkin_requests (church_id,program_id,status,requested_at),
+  CONSTRAINT fk_kids_requests_church FOREIGN KEY(church_id) REFERENCES churches(id) ON DELETE CASCADE,
+  CONSTRAINT fk_kids_requests_program FOREIGN KEY(program_id) REFERENCES kids_programs(id) ON DELETE CASCADE,
+  CONSTRAINT fk_kids_requests_child FOREIGN KEY(child_id) REFERENCES kids_children(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
