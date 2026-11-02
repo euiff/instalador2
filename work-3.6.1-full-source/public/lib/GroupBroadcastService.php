@@ -57,9 +57,9 @@ final class GroupBroadcastService
         return $this->sendRows($church,$this->selected((string)$church['id'],$groupIds),$message,$campaignId,null);
     }
 
-    public function sendIdsRich(array $church,array $groupIds,string $message,?string $imagePath=null,?string $campaignId=null): array
+    public function sendIdsRich(array $church,array $groupIds,string $message,?string $mediaPath=null,?string $campaignId=null): array
     {
-        return $this->sendRows($church,$this->selected((string)$church['id'],$groupIds),$message,$campaignId,$imagePath);
+        return $this->sendRows($church,$this->selected((string)$church['id'],$groupIds),$message,$campaignId,$mediaPath);
     }
 
     public function sendPurpose(array $church,string $purpose,string $message,?string $congregationId=null,?string $campaignId=null): array
@@ -71,13 +71,13 @@ final class GroupBroadcastService
         return $this->sendRows($church,$rows,$message,$campaignId,null);
     }
 
-    public function sendPurposeRich(array $church,string $purpose,string $message,?string $congregationId=null,?string $imagePath=null,?string $campaignId=null): array
+    public function sendPurposeRich(array $church,string $purpose,string $message,?string $congregationId=null,?string $mediaPath=null,?string $campaignId=null): array
     {
         $rows=$this->list((string)$church['id'],$purpose,$congregationId,true);
         if(!$rows){
             $rows=$this->legacyRows($church,$purpose,$congregationId);
         }
-        return $this->sendRows($church,$rows,$message,$campaignId,$imagePath);
+        return $this->sendRows($church,$rows,$message,$campaignId,$mediaPath);
     }
 
     public function sendPollIds(array $church,array $groupIds,array $poll): array
@@ -213,7 +213,7 @@ final class GroupBroadcastService
         return ['sent'=>$sent,'failed'=>$failed,'errors'=>$errors,'message_ids'=>$messageIds];
     }
 
-    private function sendRows(array $church,array $rows,string $message,?string $campaignId,?string $imagePath): array
+    private function sendRows(array $church,array $rows,string $message,?string $campaignId,?string $mediaPath): array
     {
         $message=trim($message);
         if($message==='')throw new RuntimeException('A mensagem está vazia.');
@@ -229,8 +229,8 @@ final class GroupBroadcastService
             $deliveryId=app_uuid();
             try{
                 $mediaSent=false;
-                if($imagePath&&is_file($imagePath)){
-                    $mediaSent=$client->sendGroupImageFile($jid,$imagePath,$message);
+                if($mediaPath&&is_file($mediaPath)){
+                    $mediaSent=$client->sendGroupMediaFile($jid,$mediaPath,$message);
                 }
                 if(!$mediaSent)$client->sendGroupText($jid,$message);
 
