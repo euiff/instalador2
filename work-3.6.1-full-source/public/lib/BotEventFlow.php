@@ -12,7 +12,7 @@ final class BotEventFlow
     {
         $preferred=trim((string)($settings['event_registration_event_id']??''));
         if(!empty($settings['event_registration_enabled'])&&$preferred!==''){
-            $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity,registration_fee,registration_payment_methods,registration_public_token FROM events WHERE id=? AND church_id=? AND active=1 LIMIT 1');
+            $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity,registration_fee,registration_payment_methods,registration_public_token FROM events WHERE id=? AND church_id=? AND active=1 AND registration_enabled=1 LIMIT 1');
             $q->execute([$preferred,$churchId]);
             if($event=$q->fetch()){
                 $this->saveState($churchId,$phone,'event_name',['event_id'=>$event['id']]);
@@ -23,7 +23,7 @@ Digite seu *nome completo*:";
             }
         }
 
-        $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity,registration_fee,registration_payment_methods,registration_public_token FROM events WHERE church_id=? AND active=1 AND event_date>=NOW() ORDER BY event_date LIMIT 8');
+        $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity,registration_fee,registration_payment_methods,registration_public_token FROM events WHERE church_id=? AND active=1 AND registration_enabled=1 AND event_date>=NOW() ORDER BY event_date LIMIT 8');
         $q->execute([$churchId]);$rows=$q->fetchAll();
         if(!$rows)return '📅 Não há eventos futuros cadastrados no momento.';
 
@@ -79,7 +79,7 @@ Digite seu *nome completo*:";
             if(!preg_match('/^\d{1,2}$/',$value))return ['done'=>false,'reply'=>'Digite somente a quantidade de convidados. Ex.: *0*, *1* ou *2*.'];
             $data['guests_count']=(int)$value;
 
-            $q=$this->pdo->prepare('SELECT * FROM events WHERE id=? AND church_id=? AND active=1 LIMIT 1');
+            $q=$this->pdo->prepare('SELECT * FROM events WHERE id=? AND church_id=? AND active=1 AND registration_enabled=1 LIMIT 1');
             $q->execute([(string)($data['event_id']??''),$churchId]);$event=$q->fetch();
             if(!$event){$this->clear((string)$state['id']);return ['done'=>true,'reply'=>'Este evento não está mais disponível.'];}
 
