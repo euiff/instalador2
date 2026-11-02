@@ -80,8 +80,8 @@ final class KidsService
         if(!$this->isManager())throw new RuntimeException('Somente a administração pode criar ou editar turmas Kids.');
         $id=trim((string)($input['id']??''));
         $name=trim((string)($input['name']??''));
-        $min=$input['min_age_months']!==''&&isset($input['min_age_months'])?max(0,(int)$input['min_age_months']):null;
-        $max=$input['max_age_months']!==''&&isset($input['max_age_months'])?max(0,(int)$input['max_age_months']):null;
+        $min=isset($input['min_age_months'])&&trim((string)$input['min_age_months'])!==''?max(0,(int)$input['min_age_months']):null;
+        $max=isset($input['max_age_months'])&&trim((string)$input['max_age_months'])!==''?max(0,(int)$input['max_age_months']):null;
         $description=trim((string)($input['description']??''))?:null;
         $active=isset($input['active'])?1:0;
 
