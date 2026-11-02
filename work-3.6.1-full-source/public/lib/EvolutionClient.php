@@ -251,6 +251,57 @@ final class EvolutionClient
         return false;
     }
 
+    public function sendGroupMediaFile(string $groupJid,string $absolutePath,string $caption=''): bool
+    {
+        if(!$this->configured())throw new RuntimeException('Evolution API não configurada.');
+        $groupJid=trim($groupJid);
+        if($groupJid==='')throw new RuntimeException('JID do grupo não informado.');
+        if(!str_contains($groupJid,'@'))$groupJid.='@g.us';
+        if(!is_file($absolutePath)||!is_readable($absolutePath))return false;
+
+        $bytes=file_get_contents($absolutePath);
+        if($bytes===false||$bytes==='')return false;
+
+        $finfo=new finfo(FILEINFO_MIME_TYPE);
+        $mime=(string)$finfo->file($absolutePath);
+        $mediaType=match(true){
+            str_starts_with($mime,'image/')=>'image',
+            str_starts_with($mime,'video/')=>'video',
+            str_starts_with($mime,'audio/')=>'audio',
+            $mime==='application/pdf'=>'document',
+            default=>'document',
+        };
+
+        $base64=base64_encode($bytes);
+        $fileName=basename($absolutePath);
+        $attempts=[
+            [
+                'number'=>$groupJid,
+                'mediatype'=>$mediaType,
+                'mimetype'=>$mime,
+                'caption'=>$caption,
+                'media'=>$base64,
+                'fileName'=>$fileName,
+            ],
+            [
+                'number'=>$groupJid,
+                'mediatype'=>$mediaType,
+                'mimetype'=>$mime,
+                'caption'=>$caption,
+                'media'=>'data:'.$mime.';base64,'.$base64,
+                'fileName'=>$fileName,
+            ],
+        ];
+
+        foreach($attempts as $payload){
+            try{
+                $this->request('POST','/message/sendMedia/'.rawurlencode($this->instance),$payload);
+                return true;
+            }catch(Throwable){}
+        }
+        return false;
+    }
+
     public function sendGroupImageFile(string $groupJid,string $absolutePath,string $caption=''): bool
     {
         if(!$this->configured())throw new RuntimeException('Evolution API não configurada.');
