@@ -75,6 +75,7 @@ $q->execute([$cid]);$groups=$q->fetchAll();
 
 $typeLabels=['image'=>'Imagem','video'=>'Vídeo','audio'=>'Áudio','pdf'=>'PDF','document'=>'Documento','link'=>'Link'];
 $audienceLabels=['all'=>'Todos os usuários','members'=>'Membros','leaders'=>'Liderança','department'=>'Departamento','group'=>'Grupo/Célula'];
+$folderTypeLabels=['folder'=>'Pasta','photo_album'=>'Álbum de Fotos','video_album'=>'Álbum de Vídeos'];
 
 $total=count($items);
 $images=count(array_filter($items,fn($i)=>$i['media_type']==='image'));
@@ -119,7 +120,7 @@ View::flash();
       <a class="media-folder <?=$folderId===''?'active':''?>" href="/media-library.php"><span>Todos os arquivos</span></a>
       <?php foreach($folders as $folder):?>
         <a class="media-folder <?=$folderId===$folder['id']?'active':''?>" href="/media-library.php?folder=<?=e($folder['id'])?>">
-          <span><?=e($folder['name'])?></span><small><?=(int)$folder['item_count']?></small>
+          <span><?=e($folder['name'])?></span><small><?=e($folderTypeLabels[$folder['folder_type']??'folder']??'Pasta')?> · <?=(int)$folder['item_count']?></small>
         </a>
       <?php endforeach?>
     </div>
@@ -184,8 +185,9 @@ View::flash();
     <div class="dialog-body"><form method="post"><?=csrf_field()?><input type="hidden" name="action" value="save_folder"><input type="hidden" name="id" value="<?=e($folderEdit['id']??'')?>">
       <div class="form-grid">
         <label class="full">Nome *<input class="input" name="name" required maxlength="160" value="<?=e($folderEdit['name']??'')?>"></label>
-        <label class="full">Descrição<input class="input" name="description" maxlength="500" value="<?=e($folderEdit['description']??'')?>"></label>
+        <label>Tipo<select class="select" name="folder_type"><?php foreach($folderTypeLabels as $key=>$label):?><option value="<?=e($key)?>" <?=($folderEdit['folder_type']??'folder')===$key?'selected':''?>><?=e($label)?></option><?php endforeach?></select></label>
         <label>Ordem<input class="input" type="number" name="sort_order" value="<?=e((string)($folderEdit['sort_order']??0))?>"></label>
+        <label class="full">Descrição<input class="input" name="description" maxlength="500" value="<?=e($folderEdit['description']??'')?>"></label>
         <label><input type="checkbox" name="active" value="1" <?=!$folderEdit||!empty($folderEdit['active'])?'checked':''?>> Pasta ativa</label>
       </div>
       <button class="btn btn-primary">Salvar pasta</button>
