@@ -1,26 +1,44 @@
 {
-  "version": "3.6.2",
+  "version": "3.6.3",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.6.2.01.b64.txt",
-    "releases/v3.6.2.02.b64.txt",
-    "releases/v3.6.2.03.b64.txt"
+    "releases/v3.6.3.01.b64.txt",
+    "releases/v3.6.3.02.b64.txt",
+    "releases/v3.6.3.03.b64.txt",
+    "releases/v3.6.3.04.b64.txt",
+    "releases/v3.6.3.05.b64.txt"
   ],
-  "sha256": "65d2637048fdd316a35319749210aa238feb1088403559faf51dac46eab2ef51",
-  "published_at": "2026-11-02T19:48:00-03:00",
-  "cache_buster": "3.6.2-20261102-1948",
+  "sha256": "c416866c0d1d3a539cde3bc5e797c6a202cb3f93ef7f5d849a07cdb128d88fc3",
+  "published_at": "2026-11-02T19:58:00-03:00",
+  "cache_buster": "3.6.3-20261102-1958",
   "notes": [
-    "Novo Mural de Avisos para comunicação interna.",
-    "Segmentação por todos, membros, liderança, departamento ou grupo/célula.",
-    "Confirmação de leitura e contador de leituras.",
-    "Prioridade, fixação e período de exibição.",
-    "Links de ação e de arquivo/cartaz/vídeo por aviso."
+    "Novo módulo Ensino, Estudos e Turmas.",
+    "Perfil Professor/líder de turma com acesso somente às próprias turmas.",
+    "Matrículas, aulas, materiais, presença e acompanhamento de conclusão.",
+    "Aluno visualiza somente seus cursos e percentual de frequência.",
+    "Pacote cumulativo: inclui Grupos/Células 3.6.1 e Mural de Avisos 3.6.2."
   ],
   "files": [
     {
+      "path": "public/database/031_small_groups_attendance.sql",
+      "sha256": "685a4b86935f59762985fd61133081cd5bbcc58d73e103bcb1912234ad1a6d6b"
+    },
+    {
       "path": "public/database/032_announcements_board.sql",
       "sha256": "bbeda11b7aded00914a9a549ca00410d8e2b7381d7fcdef60740788888096bff"
+    },
+    {
+      "path": "public/database/033_learning_courses_classes.sql",
+      "sha256": "8761499ded1de5a46850545f633c39ee6b9fe95a9c4a171c17d5b45923fa80b8"
+    },
+    {
+      "path": "public/lib/SmallGroupService.php",
+      "sha256": "6dcf1ac15d27444fac3171d08f6ea9e1c15e3171f47ceeac0cb4a196cd903487"
+    },
+    {
+      "path": "public/small-groups.php",
+      "sha256": "a84fbe5fcd2143d8f15a45f1ded90aa352179fc9a114b247dda72fab1b019618"
     },
     {
       "path": "public/lib/AnnouncementService.php",
@@ -35,16 +53,32 @@
       "sha256": "246e598f29c38e1b53894c0a151bbd87092a983314b18324e886e326a3db07fb"
     },
     {
+      "path": "public/lib/LearningService.php",
+      "sha256": "040d1a0a54b880947704f4b6ad0da1a82ca36e748e869a1e3bd13dc0fde8b33d"
+    },
+    {
+      "path": "public/learning.php",
+      "sha256": "9166a2390079db076b099d1b19203ffcd0035c3281d753ce0bd4323854d3d6c5"
+    },
+    {
       "path": "public/lib/Auth.php",
-      "sha256": "e2a4957a8a388d0857a00788ec8e3912457b02c7371bd94e17f577d610747004"
+      "sha256": "9587953cee476a7aa21dfe8189cce1e4c1bb660ad727f83d4ebf8db1729e36a1"
+    },
+    {
+      "path": "public/users.php",
+      "sha256": "623031f081be0208201c289f0db7d50f79dd2140080b50230b6c4a855b6169ee"
+    },
+    {
+      "path": "public/dashboard.php",
+      "sha256": "854321a224bc348ac2a9c55fb810ffe0f6effe9dcb7f77831f37cf928ecc0206"
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "d9d8deeb2993881bd69365f3775399db85777dbb08de51a51199ea07d3a37f2b"
+      "sha256": "f8a652280a9a340c9f85461da54ee7109a604d172c1c9decc5a59ef4432d0c01"
     },
     {
       "path": "public/lib/Ui.php",
-      "sha256": "ff1d5c849a53445d288a8c656e544a02428a58b7f5087d4b585e905f52ef0c33"
+      "sha256": "c9c420c492f671cc768c1a44cfb7b9a687a77db16758fc47f8fb17ec1ef5d2c6"
     },
     {
       "path": "public/portal.php",
@@ -52,11 +86,11 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "bb8408e7188bc6e00f87159c1898e6bfee03926fb2c65b5af3f372a7abfbc7fb"
+      "sha256": "3ad143a7bbc464452fea79e6f5614ab6a2d63e32a990a6880710d4f8cadeeb2c"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "7ff3b3ecb7061bc8f8827e2adcd38d80aa59a339445f3fd8a1f07f4524878077"
+      "sha256": "2a3967b2988930c0bd164d8936a43771017321a3d2662e87929659b87634703a"
     }
   ]
 }
