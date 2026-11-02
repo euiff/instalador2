@@ -17,12 +17,13 @@ $roleLabels=[
     'department_leader'=>'Líder de departamento',
     'group_leader'=>'Líder de grupo/célula',
     'teacher'=>'Professor / líder de turma',
+    'kids_worker'=>'Equipe Kids',
     'member'=>'Membro (somente seus dados)',
 ];
 
 function allowed_church_roles(string $currentRole,bool $isMaster): array {
-    if($isMaster||$currentRole==='owner')return ['admin','pastor','secretary','treasurer','department_leader','group_leader','teacher','member'];
-    return ['secretary','treasurer','department_leader','group_leader','teacher','member'];
+    if($isMaster||$currentRole==='owner')return ['admin','pastor','secretary','treasurer','department_leader','group_leader','teacher','kids_worker','member'];
+    return ['secretary','treasurer','department_leader','group_leader','teacher','kids_worker','member'];
 }
 function church_user_audit(PDO $pdo,string $userId,string $churchId,string $action,array $details=[]): void {
     try{
@@ -35,7 +36,7 @@ $allowed=allowed_church_roles($currentRole,$isMaster);
 
 function save_portal_scope(PDO $pdo,string $cid,string $uid,string $role,array $input): void {
     $personId=trim((string)($input['person_id']??''))?:null;
-    if(in_array($role,['member','group_leader','teacher'],true)&&!$personId)throw new RuntimeException('Vincule este acesso a um cadastro de membro. Líderes de grupo e professores precisam desse vínculo para enxergar somente os grupos ou turmas em que foram definidos.');
+    if(in_array($role,['member','group_leader','teacher','kids_worker'],true)&&!$personId)throw new RuntimeException('Vincule este acesso a um cadastro de membro. Líderes de grupo, professores e equipe Kids precisam desse vínculo para enxergar somente os grupos, turmas ou equipes em que foram definidos.');
     if($personId){
         $q=$pdo->prepare('SELECT id FROM members WHERE church_id=? AND id=? AND active=1');$q->execute([$cid,$personId]);
         if(!$q->fetchColumn())throw new RuntimeException('Membro não encontrado nesta igreja.');
