@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/PixPayloadService.php';
+
 final class BotEventFlow
 {
     public function __construct(private PDO $pdo) {}
@@ -10,7 +12,7 @@ final class BotEventFlow
     {
         $preferred=trim((string)($settings['event_registration_event_id']??''));
         if(!empty($settings['event_registration_enabled'])&&$preferred!==''){
-            $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity FROM events WHERE id=? AND church_id=? AND active=1 LIMIT 1');
+            $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity,registration_fee,registration_payment_methods,registration_public_token FROM events WHERE id=? AND church_id=? AND active=1 LIMIT 1');
             $q->execute([$preferred,$churchId]);
             if($event=$q->fetch()){
                 $this->saveState($churchId,$phone,'event_name',['event_id'=>$event['id']]);
@@ -21,7 +23,7 @@ Digite seu *nome completo*:";
             }
         }
 
-        $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity FROM events WHERE church_id=? AND active=1 AND event_date>=NOW() ORDER BY event_date LIMIT 8');
+        $q=$this->pdo->prepare('SELECT id,title,event_date,location,capacity,registration_fee,registration_payment_methods,registration_public_token FROM events WHERE church_id=? AND active=1 AND event_date>=NOW() ORDER BY event_date LIMIT 8');
         $q->execute([$churchId]);$rows=$q->fetchAll();
         if(!$rows)return '📅 Não há eventos futuros cadastrados no momento.';
 
@@ -88,22 +90,67 @@ Digite seu *nome completo*:";
                 if($used+$wanted>(int)$event['capacity'])return ['done'=>false,'reply'=>'Não há vagas suficientes para essa quantidade de pessoas. Informe um número menor de convidados.'];
             }
 
-            $exists=$this->pdo->prepare('SELECT id FROM event_registrations WHERE event_id=? AND church_id=? AND phone=? LIMIT 1');
+            $exists=$this->pdo->prepare("SELECT id FROM event_registrations WHERE event_id=? AND church_id=? AND phone=? AND registration_status<>'cancelled' LIMIT 1");
             $exists->execute([$event['id'],$churchId,$phone]);
             if($exists->fetchColumn()){
                 $this->clear((string)$state['id']);
                 return ['done'=>true,'reply'=>'✅ Você já possui inscrição neste evento.'];
             }
 
-            $q=$this->pdo->prepare('INSERT INTO event_registrations(id,church_id,event_id,name,phone,email,guests_count) VALUES(?,?,?,?,?,?,?)');
-            $q->execute([app_uuid(),$churchId,$event['id'],$data['name'],$phone,$data['email']??null,(int)$data['guests_count']]);
+            $fee=(float)($event['registration_fee']??0);
+            $people=1+(int)$data['guests_count'];
+            $amount=$fee*$people;
+            $methods=json_decode((string)($event['registration_payment_methods']??'[]'),true);
+            if(!is_array($methods))$methods=[];
+            $paymentMethod=$fee<=0?'free':(in_array('pix',$methods,true)?'pix':(in_array('local',$methods,true)?'local':'local'));
+            $registrationStatus=$fee<=0?'confirmed':'pending';
+            $paymentStatus=$fee<=0?'waived':'pending';
+            $id=app_uuid();
+
+            $q=$this->pdo->prepare('INSERT INTO event_registrations(
+              id,church_id,event_id,name,phone,email,guests_count,
+              registration_status,payment_status,payment_method,amount_due,amount_paid,confirmed_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,0,?)');
+            $q->execute([
+                $id,$churchId,$event['id'],$data['name'],$phone,$data['email']??null,(int)$data['guests_count'],
+                $registrationStatus,$paymentStatus,$paymentMethod,$amount,
+                $registrationStatus==='confirmed'?date('Y-m-d H:i:s'):null
+            ]);
             $this->clear((string)$state['id']);
 
-            return ['done'=>true,'reply'=>"✅ *Inscrição confirmada!*
+            $reply=($registrationStatus==='confirmed'?'✅ *Inscrição confirmada!*':'🟡 *Inscrição recebida e aguardando pagamento/confirmação.*')."
 
 ".$this->eventSummary($event)."
 👤 ".$data['name']."
-👥 Convidados adicionais: ".(int)$data['guests_count']];
+👥 Pessoas: ".$people;
+            if($amount>0)$reply.="
+💰 Total: R$ ".number_format($amount,2,',','.');
+
+            if($paymentMethod==='pix'&&$amount>0){
+                $cq=$this->pdo->prepare('SELECT pix_key,donation_merchant_name,donation_merchant_city,name FROM churches WHERE id=? LIMIT 1');
+                $cq->execute([$churchId]);$church=$cq->fetch()?:[];
+                if(!empty($church['pix_key'])){
+                    try{
+                        $pix=PixPayloadService::payload(
+                            (string)$church['pix_key'],$amount,
+                            (string)($church['donation_merchant_name']??$church['name']??'IGREJA'),
+                            (string)($church['donation_merchant_city']??'BRASIL'),
+                            'Inscricao '.mb_substr((string)$event['title'],0,40)
+                        );
+                        $reply.="
+
+💠 *PIX copia e cola:*
+".$pix."
+📌 Após pagar, aguarde a confirmação da equipe.";
+                    }catch(Throwable){}
+                }
+            }elseif($paymentMethod==='local'&&$amount>0){
+                $reply.="
+
+💵 Pagamento no local / confirmação manual pela equipe.";
+            }
+
+            return ['done'=>true,'reply'=>$reply];
         }
 
         return ['done'=>false,'reply'=>'Digite *0* para voltar ao menu.'];
