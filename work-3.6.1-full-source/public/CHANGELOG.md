@@ -1,3 +1,16 @@
+# 3.7.2 — 02/11/2026
+
+- Portal do Membro 2.0 com nova tela inicial em formato de aplicativo.
+- Meu acesso passa a reunir avisos não lidos, estudos novos, turmas, próximos eventos, biblioteca, fotos/vídeos e contribuições.
+- Novo bloco de aniversariantes do mês atual e seguinte.
+- Indicador de preenchimento do cadastro pessoal.
+- Novo Meu Cadastro para o membro atualizar telefone, e-mail de contato, nascimento, naturalidade, estado civil e endereço.
+- Dados administrativos continuam protegidos: cargo, situação de membro, batismo, CPF/RG e membresia permanecem sob controle da secretaria.
+- Minhas contribuições e Caixa do Departamento continuam em tela própria, sem perder o fluxo financeiro existente.
+- Atalho Contribuir / PIX aparece no portal quando a igreja ativa Doações Online.
+- Acessos rápidos respeitam o perfil: Grupos/Células, Ensino, Kids e Caixa do Departamento aparecem somente quando autorizados.
+- Atualização cumulativa: mantém todos os módulos das versões 3.6.1 a 3.7.1.
+
 # 3.7.1 — 02/11/2026
 
 - Eventos 2.0 com link público de inscrição e QR Code.
