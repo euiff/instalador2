@@ -144,7 +144,7 @@ $readTotal=array_sum(array_map(fn($r)=>(int)$r['read_count'],$rows));
           <label class="full">Link de ação<input class="input" type="url" name="link_url" value="<?=e($edit['link_url']??'')?>" placeholder="https://..."><small class="muted">Ex.: inscrição, formulário, página do evento.</small></label>
           <label class="full">Link de arquivo/cartaz/vídeo<input class="input" type="url" name="attachment_url" value="<?=e($edit['attachment_url']??'')?>" placeholder="https://..."></label>
           <label><input type="checkbox" name="pinned" value="1" <?=!empty($edit['pinned'])?'checked':''?>> Fixar no topo</label>
-          <label><input type="checkbox" name="active" value="1" <?=$edit?(!empty($edit['active'])?'checked':''):'checked'?>> Aviso ativo</label>
+          <label><input type="checkbox" name="active" value="1" <?=($edit ? (!empty($edit['active'])?'checked':'') : 'checked')?>> Aviso ativo</label>
         </div>
         <button class="btn btn-primary">Salvar aviso</button>
       </form>
