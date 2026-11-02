@@ -60,7 +60,7 @@ final class SmallGroupService
 
     public function group(string $id): array
     {
-        foreach($this->groups(true) as $group){
+        foreach($this->groups($this->isManager()) as $group){
             if((string)$group['id']===$id){
                 if(!$this->isManager()&&!$group['active'])break;
                 return $group;
