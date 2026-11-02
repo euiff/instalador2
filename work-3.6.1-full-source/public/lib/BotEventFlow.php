@@ -96,6 +96,9 @@ Digite seu *nome completo*:";
         }
 
         if($step==='event_email'){
+            if($lower!=='pular'&&$value!==''&&!filter_var($value,FILTER_VALIDATE_EMAIL)){
+                return ['done'=>false,'reply'=>'Digite um *e-mail válido* (ex.: nome@dominio.com) ou *pular*:'];
+            }
             $data['email']=$lower==='pular'||$value===''?null:$value;
             $this->saveState($churchId,$phone,'event_guests',$data);
             return ['done'=>false,'reply'=>'Quantos *convidados adicionais* vão com você? Digite *0* se for sozinho(a).'];
