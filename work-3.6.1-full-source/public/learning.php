@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/bootstrap.php';
 require_once __DIR__.'/lib/LearningService.php';
+require_once __DIR__.'/lib/MediaLibraryService.php';
 
 $user=$auth->requireAbility('learning_portal');
 $church=$auth->currentChurch();
@@ -8,6 +9,7 @@ if(!$church)redirect($auth->isSuperAdmin()?'/master.php':'/logout.php');
 
 $cid=(string)$church['id'];
 $service=new LearningService($pdo,$auth,$cid);
+$mediaLibrary=new MediaLibraryService($pdo,$auth,$cid,__DIR__);
 $isManager=$service->isManager();
 $error=flash('error');
 $success=flash('success');
@@ -65,6 +67,13 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         }
         if($action==='lesson'){
             $classId=(string)($_POST['class_id']??'');
+            $mediaId=trim((string)($_POST['media_library_id']??''));
+            if($mediaId!==''){
+                $mediaItem=$mediaLibrary->item($mediaId);
+                $mediaUrl=$mediaLibrary->url($mediaItem);
+                if(!$mediaUrl)throw new RuntimeException('O material selecionado na Biblioteca não possui endereço disponível.');
+                $_POST['material_url']=$mediaUrl;
+            }
             $service->saveLesson($classId,$_POST);
             flash('success','Aula e frequência registradas.');
             redirect('/learning.php?class='.rawurlencode($classId).'#lessons');
@@ -84,6 +93,8 @@ $q->execute([$cid]);$memberOptions=$q->fetchAll();
 
 $q=$pdo->prepare('SELECT id,name FROM congregations WHERE church_id=? AND active=1 ORDER BY name');
 $q->execute([$cid]);$congregations=$q->fetchAll();
+
+$mediaItems=$isManager?$mediaLibrary->reusableItems():[];
 
 $teachers=[];$students=[];$lessons=[];$myProgress=null;$canManageSelected=false;
 if($selected){
@@ -301,6 +312,7 @@ View::flash();
       <label>Data *<input class="input" type="date" name="lesson_date" value="<?=date('Y-m-d')?>" required></label>
       <label>Título *<input class="input" name="title" required maxlength="190"></label>
       <label class="full">Descrição<textarea class="textarea" name="description" maxlength="10000"></textarea></label>
+      <label class="full">Material da Biblioteca<select class="select" name="media_library_id"><option value="">Nenhum / usar link abaixo</option><?php foreach($mediaItems as $media):?><option value="<?=e($media['id'])?>"><?=e($media['title'])?> · <?=e($media['media_type'])?></option><?php endforeach?></select></label>
       <label class="full">Link do material<input class="input" type="url" name="material_url" placeholder="https://..."></label>
     </div>
     <h3>Presença</h3>
