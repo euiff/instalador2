@@ -52,6 +52,7 @@ View::header($title,$auth,'portal.php');View::flash();
 <nav class="portal-tabs no-print" aria-label="Áreas do portal">
 <?php if($auth->can('member_portal')):?><a href="/portal.php?view=personal" <?=$view==='personal'?'aria-current="page"':''?>>Minhas contribuições</a><?php endif?>
 <?php if($auth->can('department_portal')):?><a href="/portal.php?view=department" <?=$view==='department'?'aria-current="page"':''?>>Caixa dos departamentos</a><?php endif?>
+<?php if($auth->can('member_board')):?><a href="/board.php">Mural</a><?php endif?>
 </nav>
 <?php if($error):?><div class="alert alert-error" role="alert"><?=e($error)?></div><?php endif?>
 <?php if($view==='personal'&&!$member):?><section class="card card-pad empty-state"><h2>Seu acesso está criado</h2><p>A secretaria precisa vincular seu login ao seu cadastro de membro. Assim você poderá consultar somente suas próprias contribuições.</p></section><?php endif?>
