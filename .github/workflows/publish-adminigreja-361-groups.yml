@@ -1,0 +1,156 @@
+name: Publish AdminIgreja 3.6.1 groups cells attendance
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-361-groups.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate PHP and module integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.6.1-full-source/public/lib/SmallGroupService.php
+          php -l source/work-3.6.1-full-source/public/small-groups.php
+          php -l source/work-3.6.1-full-source/public/lib/Auth.php
+          php -l source/work-3.6.1-full-source/public/users.php
+          php -l source/work-3.6.1-full-source/public/dashboard.php
+          php -l source/work-3.6.1-full-source/public/lib/View.php
+          php -l source/work-3.6.1-full-source/public/lib/Ui.php
+
+          grep -q "CREATE TABLE IF NOT EXISTS small_groups" source/work-3.6.1-full-source/public/database/031_small_groups_attendance.sql
+          grep -q "small_group_leaders" source/work-3.6.1-full-source/public/database/031_small_groups_attendance.sql
+          grep -q "small_group_attendance" source/work-3.6.1-full-source/public/database/031_small_groups_attendance.sql
+
+          grep -q "group_leader" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "group_portal" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "Líder de grupo/célula" source/work-3.6.1-full-source/public/users.php
+          grep -q "Grupos e Células" source/work-3.6.1-full-source/public/lib/View.php
+          grep -q "Grupos do WhatsApp" source/work-3.6.1-full-source/public/lib/View.php
+          grep -q "Registrar reunião" source/work-3.6.1-full-source/public/small-groups.php
+          grep -q "Relatórios de frequência" source/work-3.6.1-full-source/public/small-groups.php
+          grep -q "small-groups.php" source/work-3.6.1-full-source/public/lib/Ui.php
+
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.6.1"
+
+      - name: Build 3.6.1 delta package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+          tar -czf /tmp/adminigreja-3.6.1.tar.gz             public/database/031_small_groups_attendance.sql             public/lib/SmallGroupService.php             public/small-groups.php             public/lib/Auth.php             public/users.php             public/dashboard.php             public/lib/View.php             public/lib/Ui.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.6.1.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.6.1.tar.gz > /tmp/adminigreja-3.6.1.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.6.1.b64 /tmp/v3.6.1.
+
+          i=1
+          for f in /tmp/v3.6.1.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.6.1.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.6.1.tar.gz")
+          parts=sorted(release.glob("v3.6.1.*.b64.txt"))
+
+          file_paths=[
+              "public/database/031_small_groups_attendance.sql",
+              "public/lib/SmallGroupService.php",
+              "public/small-groups.php",
+              "public/lib/Auth.php",
+              "public/users.php",
+              "public/dashboard.php",
+              "public/lib/View.php",
+              "public/lib/Ui.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.6.1",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "published_at":"2026-11-02T19:35:00-03:00",
+              "cache_buster":"3.6.1-20261102-1935",
+              "notes":[
+                  "Novo módulo Grupos e Células separado dos grupos do WhatsApp.",
+                  "Até quatro líderes por grupo e participantes vinculados.",
+                  "Novo perfil Líder de grupo/célula com acesso somente aos próprios grupos.",
+                  "Registro de reunião com presença individual, visitantes, tema e observações.",
+                  "Relatório por período com reuniões, presenças, média e visitantes."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.6.1.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.6.1.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.6.1.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test361
+          mkdir -p /tmp/test361
+          tar -xzf /tmp/rebuilt-3.6.1.tar.gz -C /tmp/test361
+
+          php -l /tmp/test361/public/lib/SmallGroupService.php
+          php -l /tmp/test361/public/small-groups.php
+          php -l /tmp/test361/public/lib/Auth.php
+          test "$(cat /tmp/test361/public/VERSION)" = "3.6.1"
+          test -f /tmp/test361/public/database/031_small_groups_attendance.sql
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.6.1.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.6.1 groups cells attendance"
+          git pull --rebase origin main
+          git push origin main
