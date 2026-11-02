@@ -59,6 +59,7 @@ $donationUrl=(!empty($church['donation_enabled'])&&!empty($church['donation_publ
     ?$scheme.'://'.$host.'/donate.php?t='.rawurlencode((string)$church['donation_public_token'])
     :null;
 
+$months=[1=>'JAN',2=>'FEV',3=>'MAR',4=>'ABR',5=>'MAI',6=>'JUN',7=>'JUL',8=>'AGO',9=>'SET',10=>'OUT',11=>'NOV',12=>'DEZ'];
 $firstName=$member?trim(explode(' ',trim((string)$member['name']))[0]??''):'';
 if($firstName==='')$firstName=trim(explode(' ',trim((string)($user['full_name']??'')))[0]??'');
 if($firstName==='')$firstName='Olá';
@@ -97,11 +98,11 @@ View::flash();
 
   <div class="member-grid">
     <section class="card member-section">
-      <div class="member-section-head"><h2>Próximos eventos</h2><a class="muted" href="/events.php">Agenda</a></div>
+      <div class="member-section-head"><h2>Próximos eventos</h2><span class="muted">Agenda da igreja</span></div>
       <div class="member-events">
         <?php foreach($events as $event):?>
           <div class="member-event">
-            <div class="member-date"><strong><?=date('d',strtotime($event['event_date']))?></strong><small><?=mb_strtoupper(strftime('%b',strtotime($event['event_date'])))?></small></div>
+            <div class="member-date"><strong><?=date('d',strtotime($event['event_date']))?></strong><small><?=e($months[(int)date('n',strtotime($event['event_date']))]??'')?></small></div>
             <div><strong><?=e($event['title'])?></strong><small class="muted"><?=date('H:i',strtotime($event['event_date']))?><?=!empty($event['location'])?' · '.e($event['location']):''?></small></div>
             <?php if(!empty($event['registration_enabled'])&&!empty($event['registration_public_token'])):?><a class="btn btn-light" target="_blank" href="/event-register.php?t=<?=e($event['registration_public_token'])?>">Inscrever</a><?php endif?>
           </div>
