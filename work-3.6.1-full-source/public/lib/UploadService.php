@@ -42,6 +42,39 @@ final class UploadService
         );
     }
 
+    public function mediaLibraryFile(array $file,string $churchId): ?array
+    {
+        if(($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_NO_FILE)return null;
+
+        return $this->store(
+            $file,
+            $churchId,
+            'storage/uploads/library',
+            [
+                'image/jpeg'=>'jpg',
+                'image/png'=>'png',
+                'image/webp'=>'webp',
+                'image/gif'=>'gif',
+                'application/pdf'=>'pdf',
+                'audio/mpeg'=>'mp3',
+                'audio/ogg'=>'ogg',
+                'audio/wav'=>'wav',
+                'audio/x-wav'=>'wav',
+                'video/mp4'=>'mp4',
+                'video/webm'=>'webm',
+                'text/plain'=>'txt',
+                'application/msword'=>'doc',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'=>'docx',
+                'application/vnd.ms-excel'=>'xls',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'=>'xlsx',
+                'application/vnd.ms-powerpoint'=>'ppt',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation'=>'pptx',
+            ],
+            50*1024*1024,
+            false
+        );
+    }
+
     public function financeDocument(array $file,string $churchId): ?array
     {
         if(($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_NO_FILE)return null;
