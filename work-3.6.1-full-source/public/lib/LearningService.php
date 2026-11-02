@@ -259,7 +259,7 @@ final class LearningService
         if($title===''||!$date)throw new InvalidArgumentException('Informe título e data da aula.');
         if(mb_strlen($title)>190)throw new InvalidArgumentException('Título muito longo.');
         if($description!==null&&mb_strlen($description)>10000)throw new InvalidArgumentException('Descrição muito longa.');
-        if($material!==null&&!filter_var($material,FILTER_VALIDATE_URL))throw new InvalidArgumentException('Link do material inválido.');
+        if($material!==null&&!$this->validResourceUrl($material))throw new InvalidArgumentException('Material inválido. Use um link válido ou um arquivo da Biblioteca.');
         if(!is_array($present))throw new InvalidArgumentException('Lista de presença inválida.');
 
         $students=$this->students($classId);
@@ -339,6 +339,14 @@ final class LearningService
             $this->cid,$classId,$person
         ]);
         return (bool)$q->fetchColumn();
+    }
+
+    private function validResourceUrl(string $value): bool
+    {
+        $value=trim($value);
+        if($value==='')return false;
+        if(filter_var($value,FILTER_VALIDATE_URL))return true;
+        return str_starts_with($value,'/storage/uploads/library/');
     }
 
     private function dateOrNull(string $value): ?string
