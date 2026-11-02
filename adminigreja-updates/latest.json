@@ -1,63 +1,62 @@
 {
-  "version": "3.6.1",
+  "version": "3.6.2",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.6.1.01.b64.txt",
-    "releases/v3.6.1.02.b64.txt",
-    "releases/v3.6.1.03.b64.txt",
-    "releases/v3.6.1.04.b64.txt"
+    "releases/v3.6.2.01.b64.txt",
+    "releases/v3.6.2.02.b64.txt",
+    "releases/v3.6.2.03.b64.txt"
   ],
-  "sha256": "11ecca7f58d826941c3b56aafa282e1de01779bf3ece867d201a00ad64e63199",
-  "published_at": "2026-11-02T19:35:00-03:00",
-  "cache_buster": "3.6.1-20261102-1935",
+  "sha256": "65d2637048fdd316a35319749210aa238feb1088403559faf51dac46eab2ef51",
+  "published_at": "2026-11-02T19:48:00-03:00",
+  "cache_buster": "3.6.2-20261102-1948",
   "notes": [
-    "Novo módulo Grupos e Células separado dos grupos do WhatsApp.",
-    "Até quatro líderes por grupo e participantes vinculados.",
-    "Novo perfil Líder de grupo/célula com acesso somente aos próprios grupos.",
-    "Registro de reunião com presença individual, visitantes, tema e observações.",
-    "Relatório por período com reuniões, presenças, média e visitantes."
+    "Novo Mural de Avisos para comunicação interna.",
+    "Segmentação por todos, membros, liderança, departamento ou grupo/célula.",
+    "Confirmação de leitura e contador de leituras.",
+    "Prioridade, fixação e período de exibição.",
+    "Links de ação e de arquivo/cartaz/vídeo por aviso."
   ],
   "files": [
     {
-      "path": "public/database/031_small_groups_attendance.sql",
-      "sha256": "685a4b86935f59762985fd61133081cd5bbcc58d73e103bcb1912234ad1a6d6b"
+      "path": "public/database/032_announcements_board.sql",
+      "sha256": "bbeda11b7aded00914a9a549ca00410d8e2b7381d7fcdef60740788888096bff"
     },
     {
-      "path": "public/lib/SmallGroupService.php",
-      "sha256": "6dcf1ac15d27444fac3171d08f6ea9e1c15e3171f47ceeac0cb4a196cd903487"
+      "path": "public/lib/AnnouncementService.php",
+      "sha256": "5d9a7b1be825a4108e0d8d223ee9ebe07c51d9f2ac2b9953104fe172035193c6"
     },
     {
-      "path": "public/small-groups.php",
-      "sha256": "a84fbe5fcd2143d8f15a45f1ded90aa352179fc9a114b247dda72fab1b019618"
+      "path": "public/announcements.php",
+      "sha256": "aa0369ba25013e80fe57ae0d464036953f3a6e5605fca0eb5064ad167d3bc8d8"
+    },
+    {
+      "path": "public/board.php",
+      "sha256": "246e598f29c38e1b53894c0a151bbd87092a983314b18324e886e326a3db07fb"
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "432b8af19d077508a88b6020c68f0844ea45e6ae5049bd86dc77c39f24aaf137"
-    },
-    {
-      "path": "public/users.php",
-      "sha256": "9b18e3752066d6d4e7d6b31ac6dad7462d2cf0ec0e8763150ac744ce1c54b1e6"
-    },
-    {
-      "path": "public/dashboard.php",
-      "sha256": "acb37e1e680aef1a83c44626d20822daae34bb6e60d45eb5c8b42c84c70163da"
+      "sha256": "e2a4957a8a388d0857a00788ec8e3912457b02c7371bd94e17f577d610747004"
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "e9684ccf1de7e7fab345799b777ee4af8f688c237da8306d0bb468ff67a49b51"
+      "sha256": "d9d8deeb2993881bd69365f3775399db85777dbb08de51a51199ea07d3a37f2b"
     },
     {
       "path": "public/lib/Ui.php",
-      "sha256": "a98099a0f5551dffcea0310d59a4d5d2359848dc01e0b466e703b81e935ff235"
+      "sha256": "ff1d5c849a53445d288a8c656e544a02428a58b7f5087d4b585e905f52ef0c33"
+    },
+    {
+      "path": "public/portal.php",
+      "sha256": "0cc4b45c8e91e05936fda9a7b80c2ccae808ce6d7c462db5eac466b6d43e4e7c"
     },
     {
       "path": "public/VERSION",
-      "sha256": "de58d841bd709aa85a66ecc500dfbb48e7c207e84c399e30e751e8ccad6e8c9b"
+      "sha256": "bb8408e7188bc6e00f87159c1898e6bfee03926fb2c65b5af3f372a7abfbc7fb"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "349a8a3994130a75a953a7cdd0407ce7f47db65a0f194bec1cb366b814e29a20"
+      "sha256": "7ff3b3ecb7061bc8f8827e2adcd38d80aa59a339445f3fd8a1f07f4524878077"
     }
   ]
 }
