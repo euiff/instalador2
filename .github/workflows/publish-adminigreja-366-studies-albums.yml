@@ -1,0 +1,141 @@
+name: Publish AdminIgreja 3.6.6 cumulative studies albums
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-366-studies-albums.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate cumulative modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            public/lib/SmallGroupService.php public/small-groups.php
+            public/lib/AnnouncementService.php public/announcements.php public/board.php
+            public/lib/LearningService.php public/learning.php
+            public/lib/MediaLibraryService.php public/media-library.php public/albums.php
+            public/lib/StudyService.php public/studies.php
+            public/lib/UploadService.php public/events.php
+            public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php
+            public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php
+          )
+          for f in "${files[@]}"; do php -l "source/work-3.6.1-full-source/$f"; done
+
+          for m in 031_small_groups_attendance 032_announcements_board 033_learning_courses_classes 034_media_library 035_campaign_media 036_studies_albums; do
+            test -f "source/work-3.6.1-full-source/public/database/$m.sql"
+          done
+
+          grep -q "folder_type" source/work-3.6.1-full-source/public/database/036_studies_albums.sql
+          grep -q "CREATE TABLE IF NOT EXISTS church_studies" source/work-3.6.1-full-source/public/database/036_studies_albums.sql
+          grep -q "study_portal" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "Fotos e Vídeos" source/work-3.6.1-full-source/public/albums.php
+          grep -q "Marcar como lido" source/work-3.6.1-full-source/public/studies.php
+          grep -q "photo_album" source/work-3.6.1-full-source/public/media-library.php
+          grep -q "sendGroupMediaFile" source/work-3.6.1-full-source/public/lib/EvolutionClient.php
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.6.6"
+
+      - name: Build cumulative package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+          tar -czf /tmp/adminigreja-3.6.6.tar.gz             public/database/031_small_groups_attendance.sql             public/database/032_announcements_board.sql             public/database/033_learning_courses_classes.sql             public/database/034_media_library.sql             public/database/035_campaign_media.sql             public/database/036_studies_albums.sql             public/lib/SmallGroupService.php public/small-groups.php             public/lib/AnnouncementService.php public/announcements.php public/board.php             public/lib/LearningService.php public/learning.php             public/lib/MediaLibraryService.php public/media-library.php public/albums.php             public/lib/StudyService.php public/studies.php             public/lib/UploadService.php public/events.php             public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php             public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php             public/VERSION public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.6.6.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.6.6.tar.gz > /tmp/adminigreja-3.6.6.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.6.6.b64 /tmp/v3.6.6.
+
+          i=1
+          for f in /tmp/v3.6.6.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.6.6.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          package=Path("/tmp/adminigreja-3.6.6.tar.gz")
+          parts=sorted((channel/"releases").glob("v3.6.6.*.b64.txt"))
+          file_paths=[
+            "public/database/031_small_groups_attendance.sql","public/database/032_announcements_board.sql",
+            "public/database/033_learning_courses_classes.sql","public/database/034_media_library.sql",
+            "public/database/035_campaign_media.sql","public/database/036_studies_albums.sql",
+            "public/lib/SmallGroupService.php","public/small-groups.php",
+            "public/lib/AnnouncementService.php","public/announcements.php","public/board.php",
+            "public/lib/LearningService.php","public/learning.php",
+            "public/lib/MediaLibraryService.php","public/media-library.php","public/albums.php",
+            "public/lib/StudyService.php","public/studies.php",
+            "public/lib/UploadService.php","public/events.php",
+            "public/lib/EvolutionClient.php","public/lib/GroupBroadcastService.php","public/lib/CronTasks.php","public/campaigns.php",
+            "public/lib/Auth.php","public/users.php","public/dashboard.php","public/lib/View.php","public/lib/Ui.php","public/portal.php",
+            "public/VERSION","public/CHANGELOG.md"
+          ]
+          files=[{"path":rel,"sha256":hashlib.sha256((source/rel).read_bytes()).hexdigest()} for rel in file_paths]
+          manifest={
+            "version":"3.6.6","min_php":"8.1","encoding":"base64",
+            "parts":[f"releases/{p.name}" for p in parts],
+            "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+            "published_at":"2026-11-02T20:42:00-03:00",
+            "cache_buster":"3.6.6-20261102-2042",
+            "notes":[
+              "Novo módulo Estudos por categorias com capa, material e registro de leitura.",
+              "Biblioteca agora cria Álbuns de Fotos e Álbuns de Vídeos.",
+              "Novo acesso Fotos e Vídeos para membros e líderes.",
+              "Pacote cumulativo com Grupos/Células, Mural, Ensino, Biblioteca e WhatsApp com mídia."
+            ],
+            "files":files
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.6.6.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.6.6.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.6.6.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+          rm -rf /tmp/test366 && mkdir -p /tmp/test366
+          tar -xzf /tmp/rebuilt-3.6.6.tar.gz -C /tmp/test366
+          php -l /tmp/test366/public/studies.php
+          php -l /tmp/test366/public/albums.php
+          php -l /tmp/test366/public/lib/StudyService.php
+          test "$(cat /tmp/test366/public/VERSION)" = "3.6.6"
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.6.6.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.6.6 cumulative studies albums"
+          git pull --rebase origin main
+          git push origin main
