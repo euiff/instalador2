@@ -1,0 +1,45 @@
+name: Prepare AdminIgreja 3.6.1 source
+
+on:
+  push:
+    paths:
+      - '.github/workflows/prepare-adminigreja-361.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Rebuild 3.6.0 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/adminigreja-360 /tmp/adminigreja-360.tar.gz /tmp/adminigreja-360.b64
+          mkdir -p /tmp/adminigreja-360
+          cat adminigreja-updates/releases/v3.6.0.*.b64.txt | tr -d '\r\n' > /tmp/adminigreja-360.b64
+          base64 -d /tmp/adminigreja-360.b64 > /tmp/adminigreja-360.tar.gz
+          tar -xzf /tmp/adminigreja-360.tar.gz -C /tmp/adminigreja-360
+          test -f /tmp/adminigreja-360/public/VERSION
+          test -f /tmp/adminigreja-360/public/lib/View.php
+
+      - name: Publish work branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -B work-3.6.1
+          rm -rf work-3.6.1-source
+          mkdir -p work-3.6.1-source
+          cp -a /tmp/adminigreja-360/. work-3.6.1-source/
+          git add work-3.6.1-source
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git commit -m "Prepare AdminIgreja 3.6.1 source from 3.6.0"
+          git push -f origin work-3.6.1
