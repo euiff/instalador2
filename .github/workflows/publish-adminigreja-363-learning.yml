@@ -1,0 +1,178 @@
+name: Publish AdminIgreja 3.6.3 cumulative learning module
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-363-learning.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate cumulative modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            public/lib/SmallGroupService.php
+            public/small-groups.php
+            public/lib/AnnouncementService.php
+            public/announcements.php
+            public/board.php
+            public/lib/LearningService.php
+            public/learning.php
+            public/lib/Auth.php
+            public/users.php
+            public/dashboard.php
+            public/lib/View.php
+            public/lib/Ui.php
+            public/portal.php
+          )
+          for f in "${files[@]}"; do
+            php -l "source/work-3.6.1-full-source/$f"
+          done
+
+          grep -q "CREATE TABLE IF NOT EXISTS small_groups" source/work-3.6.1-full-source/public/database/031_small_groups_attendance.sql
+          grep -q "CREATE TABLE IF NOT EXISTS church_announcements" source/work-3.6.1-full-source/public/database/032_announcements_board.sql
+          grep -q "CREATE TABLE IF NOT EXISTS learning_courses" source/work-3.6.1-full-source/public/database/033_learning_courses_classes.sql
+
+          grep -q "group_leader" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "teacher" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "learning_portal" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "Professor / líder de turma" source/work-3.6.1-full-source/public/users.php
+          grep -q "Ensino e Turmas" source/work-3.6.1-full-source/public/lib/View.php
+          grep -q "Registrar aula" source/work-3.6.1-full-source/public/learning.php
+          grep -q "Meu progresso" source/work-3.6.1-full-source/public/learning.php
+          grep -q "Mural de Avisos" source/work-3.6.1-full-source/public/announcements.php
+          grep -q "Grupos e Células" source/work-3.6.1-full-source/public/small-groups.php
+
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.6.3"
+
+      - name: Build cumulative 3.6.3 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+          tar -czf /tmp/adminigreja-3.6.3.tar.gz             public/database/031_small_groups_attendance.sql             public/database/032_announcements_board.sql             public/database/033_learning_courses_classes.sql             public/lib/SmallGroupService.php             public/small-groups.php             public/lib/AnnouncementService.php             public/announcements.php             public/board.php             public/lib/LearningService.php             public/learning.php             public/lib/Auth.php             public/users.php             public/dashboard.php             public/lib/View.php             public/lib/Ui.php             public/portal.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.6.3.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.6.3.tar.gz > /tmp/adminigreja-3.6.3.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.6.3.b64 /tmp/v3.6.3.
+
+          i=1
+          for f in /tmp/v3.6.3.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.6.3.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.6.3.tar.gz")
+          parts=sorted(release.glob("v3.6.3.*.b64.txt"))
+
+          file_paths=[
+              "public/database/031_small_groups_attendance.sql",
+              "public/database/032_announcements_board.sql",
+              "public/database/033_learning_courses_classes.sql",
+              "public/lib/SmallGroupService.php",
+              "public/small-groups.php",
+              "public/lib/AnnouncementService.php",
+              "public/announcements.php",
+              "public/board.php",
+              "public/lib/LearningService.php",
+              "public/learning.php",
+              "public/lib/Auth.php",
+              "public/users.php",
+              "public/dashboard.php",
+              "public/lib/View.php",
+              "public/lib/Ui.php",
+              "public/portal.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.6.3",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "published_at":"2026-11-02T19:58:00-03:00",
+              "cache_buster":"3.6.3-20261102-1958",
+              "notes":[
+                  "Novo módulo Ensino, Estudos e Turmas.",
+                  "Perfil Professor/líder de turma com acesso somente às próprias turmas.",
+                  "Matrículas, aulas, materiais, presença e acompanhamento de conclusão.",
+                  "Aluno visualiza somente seus cursos e percentual de frequência.",
+                  "Pacote cumulativo: inclui Grupos/Células 3.6.1 e Mural de Avisos 3.6.2."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.6.3.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.6.3.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.6.3.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test363
+          mkdir -p /tmp/test363
+          tar -xzf /tmp/rebuilt-3.6.3.tar.gz -C /tmp/test363
+
+          php -l /tmp/test363/public/lib/LearningService.php
+          php -l /tmp/test363/public/learning.php
+          php -l /tmp/test363/public/lib/Auth.php
+          test "$(cat /tmp/test363/public/VERSION)" = "3.6.3"
+          test -f /tmp/test363/public/database/031_small_groups_attendance.sql
+          test -f /tmp/test363/public/database/032_announcements_board.sql
+          test -f /tmp/test363/public/database/033_learning_courses_classes.sql
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.6.3.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.6.3 cumulative learning module"
+          git pull --rebase origin main
+          git push origin main
