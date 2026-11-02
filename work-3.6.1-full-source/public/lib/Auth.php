@@ -204,11 +204,13 @@ final class Auth
         $role=$this->churchRole();
         // Restricted profiles cannot acquire general permissions through old JSON overrides.
         if(in_array($role,['member','department_leader','group_leader'],true)) {
-            return $ability==='member_portal'
+            return $ability==='member_board'
+                || $ability==='member_portal'
                 || ($role==='department_leader' && $ability==='department_portal')
                 || ($role==='group_leader' && $ability==='group_portal');
         }
         if($role==='')return false;
+        if($ability==='member_board')return true;
         if($ability==='member_portal')return !empty($membership['person_id']);
         if($ability==='department_portal')return $this->can('finance');
         if(in_array($role,['owner','admin','pastor'],true))return true;
