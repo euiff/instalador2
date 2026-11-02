@@ -1,3 +1,20 @@
+# 3.7.0 — 02/11/2026
+
+- Novo módulo Kids para gestão do ministério infantil.
+- Fluxo Turma → Sala → Programação, com faixa etária, local e capacidade.
+- Equipe por turma com níveis Gestor, Líder e Voluntário.
+- Novo perfil Equipe Kids, vinculado ao cadastro pessoal e limitado às turmas atribuídas.
+- Cadastro de crianças, responsáveis, autorização de retirada, autorização de imagem, alergias/restrições e necessidades especiais.
+- Programações com status Rascunho, Aberta e Encerrada.
+- Check-in assistido com controle de capacidade e código de segurança de retirada.
+- Checkout exige o código de segurança e um responsável autorizado.
+- Link público de check-in por programação, pronto para QR Code.
+- Solicitação pública não entra automaticamente: fica pendente para aprovação da equipe.
+- Cadastro rápido de visitante a partir de solicitação aprovada.
+- Registros gerais, pedagógicos, comportamentais ou de incidente, com mídia opcional da Biblioteca.
+- Relatório básico de programações, presença atual e solicitações pendentes.
+- Atualização cumulativa: mantém todos os módulos das versões 3.6.1 a 3.6.6.
+
 # 3.6.6 — 02/11/2026
 
 - Novo módulo Estudos com categorias, capa, conteúdo, material anexo e link complementar.
