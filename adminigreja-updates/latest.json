@@ -1,34 +1,78 @@
 {
-  "version": "3.4.7",
+  "version": "3.5.0",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.4.7.01.b64.txt",
-    "releases/v3.4.7.02.b64.txt"
+    "releases/v3.5.0.01.b64.txt",
+    "releases/v3.5.0.02.b64.txt",
+    "releases/v3.5.0.03.b64.txt",
+    "releases/v3.5.0.04.b64.txt"
   ],
-  "sha256": "b78b35af9a0cd5a8b1a13203ea1ce9dbfa8a66515cbc3d629d052cae019cd443",
-  "published_at": "2026-10-24T22:22:00-03:00",
-  "cache_buster": "3.4.7-20261024-2222",
+  "sha256": "39dc671156c85657f38179f73ba730f831dc56dcd610f0f89318fc00b03d8480",
+  "published_at": "2026-11-02T18:47:25-03:00",
+  "cache_buster": "3.5.0-20261102",
   "notes": [
-    "Painel Master completo para gestão de igrejas-clientes.",
-    "Nova igreja em janela flutuante.",
-    "Edição de dados, plano, mensalidade e status da igreja.",
-    "Gestão e criação do proprietário da igreja.",
-    "Desvinculação segura do Master sem apagar dados.",
-    "Acesso do Master às igrejas somente em modo suporte."
+    "Portal pessoal de contribuições e perfis de líder e membro.",
+    "Caixas por departamento integrados ao livro financeiro geral.",
+    "Permissões isoladas por igreja, pessoa e departamento.",
+    "Menu superior no computador e extrato imprimível."
   ],
   "files": [
     {
-      "path": "public/master.php",
-      "sha256": "283570fd490cfe2c89352cceb3a63afa7b319ebab337ccb3d2f2c1afe9cc0771"
-    },
-    {
       "path": "public/VERSION",
-      "sha256": "60e26eb948f555e6dc3f7429e0c138143aa2317591b298e85a7dc1721485d4f2"
+      "sha256": "76120c1f2c4311c2154c22a6b58e00e411e0ebe76afae0daf608d9196c61f114"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "3a20c5d0766ec06b4545f695429bbe4c55df6e2394e709a42f7620e4cc03fa74"
+      "sha256": "639f1c890818c9038de501affd403a8dd06a34045d552ab18dfaf77e84443482"
+    },
+    {
+      "path": "public/database/027_member_department_portals.sql",
+      "sha256": "2abede0868ff67fb9d85a1d5295bd766326c41ea33496bf9c6c70f0a45538565"
+    },
+    {
+      "path": "public/lib/Auth.php",
+      "sha256": "ff76e06d85ee0292cc2a815cf7a5a5b008575acf41b6b82a16a659f49ca5e723"
+    },
+    {
+      "path": "public/lib/View.php",
+      "sha256": "c5778f2f953a6557cc6ca3bd0d95b907f05b31a44d4baf948a7f9105682f59c8"
+    },
+    {
+      "path": "public/lib/PortalService.php",
+      "sha256": "778b00f804aacf487990ae2072f3032f82bdb973b626d4cbeacf0bbb4d8838c1"
+    },
+    {
+      "path": "public/login.php",
+      "sha256": "82e6ddceb30ba2213acf3369e0f8e43a017c61eefcedd397a38d1c0c4b26064b"
+    },
+    {
+      "path": "public/dashboard.php",
+      "sha256": "f1e2aaf179a5867b72b70d77855edfc4f5af6068ab143a7bbdbd4d0e6b795567"
+    },
+    {
+      "path": "public/finance.php",
+      "sha256": "85db849ff155eac2b62f2949a63f49c2b521b93236af098bbbe0e752134ee766"
+    },
+    {
+      "path": "public/users.php",
+      "sha256": "84fb1f86b077f7ba2d5b647d8a88834b285756d171d349bb19557e3349d9f5f3"
+    },
+    {
+      "path": "public/portal.php",
+      "sha256": "633fb875fa44d40b1123d282e418a16ebd2d6906f72c8334f3a0e699fdf19782"
+    },
+    {
+      "path": "public/department-cash.php",
+      "sha256": "9343216faee583e3391688b2852f8ab04b609f744012955f67f6db8c21dc48f0"
+    },
+    {
+      "path": "public/assets/management.css",
+      "sha256": "5e5dbeded0590ab5f81a723c78e73889733836edffb977a72ee99b69be92630e"
+    },
+    {
+      "path": "public/assets/management.js",
+      "sha256": "064f46877e2e9e3a2f916b449a5a1283555e560f760240ec312abb52ccbbf490"
     }
   ]
 }
