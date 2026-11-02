@@ -32,6 +32,12 @@ final class EventRegistrationService
         $email=trim((string)($input['email']??''))?:null;
         $birth=trim((string)($input['birth_date']??''))?:null;
         $cpf=trim((string)($input['cpf']??''))?:null;
+        $cep=trim((string)($input['cep']??''))?:null;
+        $street=trim((string)($input['address_street']??''))?:null;
+        $number=trim((string)($input['address_number']??''))?:null;
+        $neighborhood=trim((string)($input['address_neighborhood']??''))?:null;
+        $city=trim((string)($input['address_city']??''))?:null;
+        $state=trim((string)($input['address_state']??''))?:null;
         $guests=max(0,min(20,(int)($input['guests_count']??0)));
         $method=(string)($input['payment_method']??'');
         $notes=trim((string)($input['notes']??''))?:null;
@@ -42,6 +48,9 @@ final class EventRegistrationService
         }
         if(!empty($event['registration_require_document'])&&$cpf===null){
             throw new InvalidArgumentException('Informe o CPF/documento solicitado.');
+        }
+        if(!empty($event['registration_require_address'])&&(!$street||!$city||!$state)){
+            throw new InvalidArgumentException('Informe o endereço solicitado pelo evento.');
         }
         if(!empty($event['registration_deadline'])&&strtotime((string)$event['registration_deadline'])<time()){
             throw new RuntimeException('O prazo de inscrições deste evento terminou.');
@@ -76,11 +85,11 @@ final class EventRegistrationService
         $paymentStatus=$fee<=0?'waived':'pending';
 
         $q=$pdo->prepare("INSERT INTO event_registrations(
-          id,church_id,event_id,name,phone,email,birth_date,cpf,guests_count,notes,
+          id,church_id,event_id,name,phone,email,birth_date,cpf,cep,address_street,address_number,address_neighborhood,address_city,address_state,guests_count,notes,
           registration_status,payment_status,payment_method,amount_due,amount_paid,confirmed_at
-        ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?)");
+        ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?)");
         $q->execute([
-            $id,$churchId,$eventId,$name,$phone,$email,$birth,$cpf,$guests,$notes,
+            $id,$churchId,$eventId,$name,$phone,$email,$birth,$cpf,$cep,$street,$number,$neighborhood,$city,$state,$guests,$notes,
             $registrationStatus,$paymentStatus,$method,$amount,
             $registrationStatus==='confirmed'?date('Y-m-d H:i:s'):null
         ]);
