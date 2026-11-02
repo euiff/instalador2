@@ -74,6 +74,17 @@ $available=!empty($event['capacity'])?max(0,(int)$event['capacity']-$registered)
       <div class="field"><label>CPF / documento <?=!empty($event['registration_require_document'])?'*':''?></label><input class="input" name="cpf" <?=!empty($event['registration_require_document'])?'required':''?>></div>
       <div class="field"><label>Convidados adicionais</label><input class="input" type="number" min="0" max="20" name="guests_count" value="0"></div>
     </div>
+    <?php if(!empty($event['registration_require_address'])):?>
+      <h2>Endereço</h2>
+      <div class="grid">
+        <div class="field"><label>CEP</label><input class="input" name="cep"></div>
+        <div class="field"><label>Rua *</label><input class="input" name="address_street" required></div>
+        <div class="field"><label>Número</label><input class="input" name="address_number"></div>
+        <div class="field"><label>Bairro</label><input class="input" name="address_neighborhood"></div>
+        <div class="field"><label>Cidade *</label><input class="input" name="address_city" required></div>
+        <div class="field"><label>UF *</label><input class="input" name="address_state" required maxlength="2"></div>
+      </div>
+    <?php endif?>
     <?php if($fee>0):?>
       <div class="field"><label>Forma de pagamento *</label><div class="pay-options">
         <?php if(in_array('pix',$methods,true)):?><label class="pay-option"><input type="radio" name="payment_method" value="pix" required> PIX</label><?php endif?>
