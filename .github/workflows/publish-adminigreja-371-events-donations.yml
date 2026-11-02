@@ -1,0 +1,240 @@
+name: Publish AdminIgreja 3.7.1 cumulative events donations
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-371-events-donations.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate PHP syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            public/lib/SmallGroupService.php public/small-groups.php
+            public/lib/AnnouncementService.php public/announcements.php public/board.php
+            public/lib/LearningService.php public/learning.php
+            public/lib/MediaLibraryService.php public/media-library.php public/albums.php
+            public/lib/StudyService.php public/studies.php
+            public/lib/KidsService.php public/kids.php public/kids-checkin.php
+            public/lib/PixPayloadService.php public/lib/EventRegistrationService.php
+            public/event-register.php public/event-registrations.php public/donate.php
+            public/lib/BotEventFlow.php public/settings.php
+            public/lib/UploadService.php public/events.php
+            public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php
+            public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php
+          )
+          for f in "${files[@]}"; do php -l "source/work-3.6.1-full-source/$f"; done
+
+          for m in             031_small_groups_attendance             032_announcements_board             033_learning_courses_classes             034_media_library             035_campaign_media             036_studies_albums             037_kids_module             038_events_donations_qr; do
+            test -f "source/work-3.6.1-full-source/public/database/$m.sql"
+          done
+
+          grep -q "registration_enabled" source/work-3.6.1-full-source/public/database/038_events_donations_qr.sql
+          grep -q "donation_public_token" source/work-3.6.1-full-source/public/database/038_events_donations_qr.sql
+          grep -q "Ativar link público de inscrição" source/work-3.6.1-full-source/public/events.php
+          grep -q "Contribuir / PIX" source/work-3.6.1-full-source/public/portal.php
+          grep -q "Doações Online" source/work-3.6.1-full-source/public/settings.php
+          grep -q "publicRegistrationUrl" source/work-3.6.1-full-source/public/lib/BotEventFlow.php
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.7.1"
+
+      - name: Test PIX payload generator
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -r '
+            require "source/work-3.6.1-full-source/public/lib/PixPayloadService.php";
+            $p=PixPayloadService::payload("teste@example.com",50.00,"Casa da Bencao","Catalao","Oferta");
+            if(!str_contains($p,"br.gov.bcb.pix")){fwrite(STDERR,"GUI PIX ausente\n");exit(1);}
+            if(!str_contains($p,"CASA DA BENCAO")){fwrite(STDERR,"Merchant inválido\n");exit(1);}
+            if(!preg_match("/6304[0-9A-F]{4}$/",$p)){fwrite(STDERR,"CRC PIX inválido\n");exit(1);}
+            echo "PIX payload OK\n";
+          '
+
+      - name: Test event registration service with temporary database
+        shell: bash
+        run: |
+          set -euo pipefail
+          if php -m | grep -qi pdo_sqlite; then
+            cat >/tmp/test-event-registration.php <<'PHP'
+          <?php
+          function app_uuid(): string {
+              static $n=0;$n++;
+              return sprintf("00000000-0000-4000-8000-%012d",$n);
+          }
+          require "source/work-3.6.1-full-source/public/lib/EventRegistrationService.php";
+          $pdo=new PDO("sqlite::memory:");
+          $pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+          $pdo->exec("CREATE TABLE event_registrations(
+            id TEXT PRIMARY KEY,church_id TEXT,event_id TEXT,name TEXT,phone TEXT,email TEXT,birth_date TEXT,cpf TEXT,
+            cep TEXT,address_street TEXT,address_number TEXT,address_neighborhood TEXT,address_city TEXT,address_state TEXT,
+            guests_count INTEGER DEFAULT 0,notes TEXT,registration_status TEXT,payment_status TEXT,payment_method TEXT,
+            amount_due REAL DEFAULT 0,amount_paid REAL DEFAULT 0,payment_reference TEXT,confirmed_at TEXT
+          )");
+          $base=[
+            "church_id"=>"c1","id"=>"e1","registration_fee"=>0,
+            "registration_payment_methods"=>"[]","capacity"=>10,
+            "registration_require_email"=>0,"registration_require_document"=>0,
+            "registration_require_address"=>0,"registration_deadline"=>null
+          ];
+          $a=EventRegistrationService::registerPublic($pdo,$base,[
+            "name"=>"Teste","phone"=>"5564999999999","guests_count"=>1
+          ]);
+          if($a["registration_status"]!=="confirmed"||$a["payment_status"]!=="waived"||$a["people"]!==2)exit(2);
+
+          $paid=$base;
+          $paid["id"]="e2";
+          $paid["registration_fee"]=25;
+          $paid["registration_payment_methods"]=json_encode(["pix"]);
+          $b=EventRegistrationService::registerPublic($pdo,$paid,[
+            "name"=>"Teste Pago","phone"=>"5564888888888","guests_count"=>1,"payment_method"=>"pix"
+          ]);
+          if($b["registration_status"]!=="pending"||$b["payment_status"]!=="pending"||abs($b["amount_due"]-50)>0.001)exit(3);
+          echo "Event registration service OK\n";
+          PHP
+            php /tmp/test-event-registration.php
+          else
+            echo "pdo_sqlite não disponível no runner; teste de integração SQL ignorado."
+          fi
+
+      - name: Build cumulative 3.7.1 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+
+          files=(
+            public/database/031_small_groups_attendance.sql
+            public/database/032_announcements_board.sql
+            public/database/033_learning_courses_classes.sql
+            public/database/034_media_library.sql
+            public/database/035_campaign_media.sql
+            public/database/036_studies_albums.sql
+            public/database/037_kids_module.sql
+            public/database/038_events_donations_qr.sql
+            public/lib/SmallGroupService.php public/small-groups.php
+            public/lib/AnnouncementService.php public/announcements.php public/board.php
+            public/lib/LearningService.php public/learning.php
+            public/lib/MediaLibraryService.php public/media-library.php public/albums.php
+            public/lib/StudyService.php public/studies.php
+            public/lib/KidsService.php public/kids.php public/kids-checkin.php
+            public/lib/PixPayloadService.php public/lib/EventRegistrationService.php
+            public/event-register.php public/event-registrations.php public/donate.php
+            public/lib/BotEventFlow.php public/settings.php
+            public/lib/UploadService.php public/events.php
+            public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php
+            public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php
+            public/VERSION public/CHANGELOG.md
+          )
+
+          tar -czf /tmp/adminigreja-3.7.1.tar.gz "${files[@]}"
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.7.1.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.7.1.tar.gz > /tmp/adminigreja-3.7.1.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.7.1.b64 /tmp/v3.7.1.
+
+          i=1
+          for f in /tmp/v3.7.1.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.7.1.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          package=Path("/tmp/adminigreja-3.7.1.tar.gz")
+          parts=sorted((channel/"releases").glob("v3.7.1.*.b64.txt"))
+          file_paths=[
+            "public/database/031_small_groups_attendance.sql","public/database/032_announcements_board.sql",
+            "public/database/033_learning_courses_classes.sql","public/database/034_media_library.sql",
+            "public/database/035_campaign_media.sql","public/database/036_studies_albums.sql",
+            "public/database/037_kids_module.sql","public/database/038_events_donations_qr.sql",
+            "public/lib/SmallGroupService.php","public/small-groups.php",
+            "public/lib/AnnouncementService.php","public/announcements.php","public/board.php",
+            "public/lib/LearningService.php","public/learning.php",
+            "public/lib/MediaLibraryService.php","public/media-library.php","public/albums.php",
+            "public/lib/StudyService.php","public/studies.php",
+            "public/lib/KidsService.php","public/kids.php","public/kids-checkin.php",
+            "public/lib/PixPayloadService.php","public/lib/EventRegistrationService.php",
+            "public/event-register.php","public/event-registrations.php","public/donate.php",
+            "public/lib/BotEventFlow.php","public/settings.php",
+            "public/lib/UploadService.php","public/events.php",
+            "public/lib/EvolutionClient.php","public/lib/GroupBroadcastService.php","public/lib/CronTasks.php","public/campaigns.php",
+            "public/lib/Auth.php","public/users.php","public/dashboard.php","public/lib/View.php","public/lib/Ui.php","public/portal.php",
+            "public/VERSION","public/CHANGELOG.md"
+          ]
+          files=[{"path":rel,"sha256":hashlib.sha256((source/rel).read_bytes()).hexdigest()} for rel in file_paths]
+          manifest={
+            "version":"3.7.1",
+            "min_php":"8.1",
+            "encoding":"base64",
+            "parts":[f"releases/{p.name}" for p in parts],
+            "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+            "published_at":"2026-11-02T21:28:00-03:00",
+            "cache_buster":"3.7.1-20261102-2128",
+            "notes":[
+              "Eventos 2.0 com inscrição pública, QR, vagas e pagamento manual/PIX.",
+              "Secretaria acompanha confirmação, pagamento, vagas e valores.",
+              "Bot do WhatsApp respeita regras do evento e gera PIX quando aplicável.",
+              "Nova página pública de Doações Online por PIX.",
+              "Pacote cumulativo com todos os módulos 3.6.1 a 3.7.0."
+            ],
+            "files":files
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.7.1.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.7.1.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.7.1.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+          rm -rf /tmp/test371 && mkdir -p /tmp/test371
+          tar -xzf /tmp/rebuilt-3.7.1.tar.gz -C /tmp/test371
+          php -l /tmp/test371/public/events.php
+          php -l /tmp/test371/public/event-register.php
+          php -l /tmp/test371/public/event-registrations.php
+          php -l /tmp/test371/public/donate.php
+          php -l /tmp/test371/public/lib/PixPayloadService.php
+          php -l /tmp/test371/public/lib/EventRegistrationService.php
+          test "$(cat /tmp/test371/public/VERSION)" = "3.7.1"
+          test -f /tmp/test371/public/database/038_events_donations_qr.sql
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.1.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.7.1 cumulative events donations"
+          git pull --rebase origin main
+          git push origin main
