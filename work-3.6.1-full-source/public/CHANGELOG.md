@@ -1,3 +1,14 @@
+# 3.6.6 — 02/11/2026
+
+- Novo módulo Estudos com categorias, capa, conteúdo, material anexo e link complementar.
+- Estudos podem ser destinados a todos, membros, liderança, departamento ou grupo/célula.
+- Registro de leitura por usuário e contador de leituras para a administração.
+- Biblioteca passa a distinguir pasta comum, Álbum de Fotos e Álbum de Vídeos.
+- Novo acesso Fotos e Vídeos para membros e líderes, usando os mesmos arquivos da Biblioteca.
+- Álbuns respeitam as permissões e o público definido em cada mídia.
+- Portal pessoal passa a exibir Estudos e Fotos/Vídeos.
+- Atualização cumulativa: mantém Grupos/Células, Mural, Ensino, Biblioteca e WhatsApp com mídia.
+
 # 3.6.5 — 02/11/2026
 
 - Biblioteca integrada aos Comunicados do WhatsApp.
