@@ -38,13 +38,27 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             $date=trim((string)($_POST['event_date']??''));
             if($title===''||$date==='')throw new InvalidArgumentException('Título e data são obrigatórios.');
             $eventDate=str_replace('T',' ',$date).(strlen($date)<=16?':00':'');
+            $registrationEnabled=isset($_POST['registration_enabled'])?1:0;
+            $registrationFee=max(0,(float)str_replace(',','.',(string)($_POST['registration_fee']??'0')));
+            $registrationMethods=array_values(array_intersect((array)($_POST['registration_payment_methods']??[]),['pix','local']));
+            if($registrationEnabled&&$registrationFee>0&&!$registrationMethods)$registrationMethods=['pix'];
+            $registrationDeadline=trim((string)($_POST['registration_deadline']??''));
+            $registrationDeadline=$registrationDeadline!==''?str_replace('T',' ',$registrationDeadline).(strlen($registrationDeadline)<=16?':00':''):null;
+            $registrationRequireEmail=isset($_POST['registration_require_email'])?1:0;
+            $registrationRequireDocument=isset($_POST['registration_require_document'])?1:0;
+            $registrationRequireAddress=isset($_POST['registration_require_address'])?1:0;
             $groupService=new GroupBroadcastService($pdo);
             $targetGroupIds=$groupService->idsFromPost($_POST['target_group_ids']??[]);
             $existingImage=null;
+            $registrationToken=null;
             if($id){
-                $x=$pdo->prepare('SELECT notification_image_path FROM events WHERE id=? AND church_id=?');
-                $x->execute([$id,$cid]);$existingImage=$x->fetchColumn()?:null;
+                $x=$pdo->prepare('SELECT notification_image_path,registration_public_token FROM events WHERE id=? AND church_id=?');
+                $x->execute([$id,$cid]);
+                $existing=$x->fetch()?:[];
+                $existingImage=$existing['notification_image_path']??null;
+                $registrationToken=$existing['registration_public_token']??null;
             }
+            if($registrationEnabled&&trim((string)$registrationToken)==='')$registrationToken=bin2hex(random_bytes(16));
             $uploaded=$uploader->notificationImage($_FILES['notification_image']??[],$cid);
             $notificationImage=$uploaded['path']??$existingImage;
             if(!$uploaded){
@@ -71,13 +85,26 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 ($_POST['capacity']??'')!==''?(int)$_POST['capacity']:null,
             ];
             if($id){
-                $q=$pdo->prepare('UPDATE events SET congregation_id=?,service_type_id=?,title=?,description=?,theme=?,event_type=?,event_date=?,location=?,speaker_name=?,capacity=?,target_group_ids=?,notification_image_path=? WHERE id=? AND church_id=?');
-                $q->execute([...$vals,json_encode($targetGroupIds,JSON_UNESCAPED_UNICODE),$notificationImage,$id,$cid]);
+                $q=$pdo->prepare('UPDATE events SET congregation_id=?,service_type_id=?,title=?,description=?,theme=?,event_type=?,event_date=?,location=?,speaker_name=?,capacity=?,target_group_ids=?,notification_image_path=?,registration_enabled=?,registration_fee=?,registration_payment_methods=?,registration_public_token=?,registration_deadline=?,registration_require_email=?,registration_require_document=?,registration_require_address=? WHERE id=? AND church_id=?');
+                $q->execute([
+                    ...$vals,
+                    json_encode($targetGroupIds,JSON_UNESCAPED_UNICODE),$notificationImage,
+                    $registrationEnabled,$registrationFee,json_encode($registrationMethods,JSON_UNESCAPED_UNICODE),
+                    $registrationEnabled?$registrationToken:null,$registrationDeadline,
+                    $registrationRequireEmail,$registrationRequireDocument,$registrationRequireAddress,
+                    $id,$cid
+                ]);
                 $success='Evento atualizado.';
             }else{
                 $id=app_uuid();
-                $q=$pdo->prepare('INSERT INTO events(id,church_id,congregation_id,service_type_id,title,description,theme,event_type,event_date,location,speaker_name,capacity,target_group_ids,notification_image_path,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,1)');
-                $q->execute([$id,$cid,...$vals,json_encode($targetGroupIds,JSON_UNESCAPED_UNICODE),$notificationImage]);
+                $q=$pdo->prepare('INSERT INTO events(id,church_id,congregation_id,service_type_id,title,description,theme,event_type,event_date,location,speaker_name,capacity,target_group_ids,notification_image_path,registration_enabled,registration_fee,registration_payment_methods,registration_public_token,registration_deadline,registration_require_email,registration_require_document,registration_require_address,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1)');
+                $q->execute([
+                    $id,$cid,...$vals,
+                    json_encode($targetGroupIds,JSON_UNESCAPED_UNICODE),$notificationImage,
+                    $registrationEnabled,$registrationFee,json_encode($registrationMethods,JSON_UNESCAPED_UNICODE),
+                    $registrationEnabled?$registrationToken:null,$registrationDeadline,
+                    $registrationRequireEmail,$registrationRequireDocument,$registrationRequireAddress
+                ]);
                 $x=$pdo->prepare('SELECT * FROM events WHERE id=? AND church_id=?');$x->execute([$id,$cid]);$event=$x->fetch();
                 $success='Evento criado com sucesso.';
                 try{
@@ -117,6 +144,9 @@ $selectedGroups=$edit?json_decode((string)($edit['target_group_ids']??'[]'),true
 if(!is_array($selectedGroups))$selectedGroups=[];
 $libraryImages=array_values(array_filter($mediaLibrary->reusableItems('image'),fn($m)=>!empty($m['storage_path'])));
 
+$scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
+$host=(string)($_SERVER['HTTP_HOST']??'');
+$basePublicUrl=$host!==''?$scheme.'://'.$host:'';
 View::header('Eventos',$auth,'events.php');
 ?>
 <div class="module-hero"><div><span class="eyebrow">Agenda e comunicação</span><h1>Eventos</h1><p>Cadastre programações, envie convites com cartaz, acompanhe inscrições, gere listas e reenvie lembretes aos grupos.</p></div><div class="hero-stat"><strong><?=count($rows)?></strong><span>eventos encontrados</span></div></div>
