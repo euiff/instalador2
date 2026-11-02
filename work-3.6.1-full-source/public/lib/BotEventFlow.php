@@ -58,6 +58,32 @@ Digite seu *nome completo*:";
         if($step==='event_choose'){
             $eventId=$data['events'][$value]??null;
             if(!$eventId)return ['done'=>false,'reply'=>'Escolha um dos números da lista ou digite *0* para voltar.'];
+
+            $q=$this->pdo->prepare('SELECT * FROM events WHERE id=? AND church_id=? AND active=1 AND registration_enabled=1 LIMIT 1');
+            $q->execute([$eventId,$churchId]);
+            $event=$q->fetch();
+            if(!$event){
+                $this->clear((string)$state['id']);
+                return ['done'=>true,'reply'=>'Este evento não está mais disponível para inscrição.'];
+            }
+
+            if(!empty($event['registration_deadline'])&&strtotime((string)$event['registration_deadline'])<time()){
+                $this->clear((string)$state['id']);
+                return ['done'=>true,'reply'=>'O prazo de inscrições deste evento terminou.'];
+            }
+
+            // Quando o evento exige dados que o fluxo enxuto do WhatsApp não
+            // coleta, encaminhamos para a página pública para não gravar uma
+            // inscrição incompleta.
+            if(!empty($event['registration_require_document'])||!empty($event['registration_require_address'])){
+                $this->clear((string)$state['id']);
+                $url=$this->publicRegistrationUrl((string)($event['registration_public_token']??''));
+                return [
+                    'done'=>true,
+                    'reply'=>"Para este evento é necessário preencher dados adicionais (documento/endereço).".($url!==''?"\n\n🌐 Faça a inscrição completa aqui:\n".$url:"\n\nSolicite o link público de inscrição à secretaria.")
+                ];
+            }
+
             $data=['event_id'=>$eventId];
             $this->saveState($churchId,$phone,'event_name',$data);
             return ['done'=>false,'reply'=>'Digite seu *nome completo*:'];
@@ -82,9 +108,17 @@ Digite seu *nome completo*:";
             $q=$this->pdo->prepare('SELECT * FROM events WHERE id=? AND church_id=? AND active=1 AND registration_enabled=1 LIMIT 1');
             $q->execute([(string)($data['event_id']??''),$churchId]);$event=$q->fetch();
             if(!$event){$this->clear((string)$state['id']);return ['done'=>true,'reply'=>'Este evento não está mais disponível.'];}
+            if(!empty($event['registration_deadline'])&&strtotime((string)$event['registration_deadline'])<time()){
+                $this->clear((string)$state['id']);
+                return ['done'=>true,'reply'=>'O prazo de inscrições deste evento terminou.'];
+            }
+            if(!empty($event['registration_require_email'])&&empty($data['email'])){
+                $this->saveState($churchId,$phone,'event_email',$data);
+                return ['done'=>false,'reply'=>'Este evento exige e-mail. Digite um *e-mail válido* para continuar:'];
+            }
 
             if(!empty($event['capacity'])){
-                $c=$this->pdo->prepare('SELECT COALESCE(SUM(1+guests_count),0) FROM event_registrations WHERE event_id=? AND church_id=?');
+                $c=$this->pdo->prepare('SELECT COALESCE(SUM(1+guests_count),0) FROM event_registrations WHERE event_id=? AND church_id=? AND registration_status<>'cancelled'');
                 $c->execute([$event['id'],$churchId]);
                 $used=(int)$c->fetchColumn();$wanted=1+(int)$data['guests_count'];
                 if($used+$wanted>(int)$event['capacity'])return ['done'=>false,'reply'=>'Não há vagas suficientes para essa quantidade de pessoas. Informe um número menor de convidados.'];
@@ -164,6 +198,16 @@ Digite seu *nome completo*:";
         if(!empty($event['location']))$msg.="
 📍 ".$event['location'];
         return $msg;
+    }
+
+    private function publicRegistrationUrl(string $token): string
+    {
+        $token=trim($token);
+        if($token==='')return '';
+        $host=trim((string)($_SERVER['HTTP_HOST']??''));
+        if($host==='')return '';
+        $scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
+        return $scheme.'://'.$host.'/event-register.php?t='.rawurlencode($token);
     }
 
     private function saveState(string $churchId,string $phone,string $state,array $data): void
