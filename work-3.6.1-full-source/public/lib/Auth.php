@@ -185,7 +185,7 @@ final class Auth
         if(($membership['church_role']??'')==='super_admin')return 'super_admin';
         if(!empty($membership['is_owner']))return 'owner';
         $role=strtolower(trim((string)($membership['church_role']??'admin')));
-        return in_array($role,['owner','admin','pastor','secretary','treasurer','department_leader','member'],true)?$role:'';
+        return in_array($role,['owner','admin','pastor','secretary','treasurer','department_leader','group_leader','member'],true)?$role:'';
     }
 
     public function can(string $ability): bool
@@ -203,8 +203,10 @@ final class Auth
 
         $role=$this->churchRole();
         // Restricted profiles cannot acquire general permissions through old JSON overrides.
-        if(in_array($role,['member','department_leader'],true)) {
-            return $ability==='member_portal' || ($role==='department_leader' && $ability==='department_portal');
+        if(in_array($role,['member','department_leader','group_leader'],true)) {
+            return $ability==='member_portal'
+                || ($role==='department_leader' && $ability==='department_portal')
+                || ($role==='group_leader' && $ability==='group_portal');
         }
         if($role==='')return false;
         if($ability==='member_portal')return !empty($membership['person_id']);
@@ -220,7 +222,7 @@ final class Auth
         }
 
         $matrix=[
-            'secretary'=>['dashboard','secretary','communications','needs'],
+            'secretary'=>['dashboard','secretary','communications','needs','group_portal'],
             'treasurer'=>['dashboard','finance','reports','needs'],
         ];
         return in_array($ability,$matrix[$role]??[],true);
