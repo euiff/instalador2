@@ -1,12 +1,16 @@
 <?php
 require __DIR__.'/bootstrap.php';
 require_once __DIR__.'/lib/GroupBroadcastService.php';
+require_once __DIR__.'/lib/MediaLibraryService.php';
+require_once __DIR__.'/lib/UploadService.php';
 
 $user=$auth->requireAbility('communications');
 $church=$auth->currentChurch();
 if(!$church)redirect('/logout.php');
 $cid=(string)$church['id'];
 $service=new GroupBroadcastService($pdo);
+$mediaLibrary=new MediaLibraryService($pdo,$auth,$cid,__DIR__);
+$uploader=new UploadService(__DIR__);
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
     try{
@@ -27,6 +31,15 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $groupIds=$service->idsFromPost($_POST['target_group_ids']??[]);
         if($title===''||$message==='')throw new RuntimeException('Informe título e mensagem.');
 
+        $mediaId=trim((string)($_POST['media_item_id']??''));
+        $mediaItem=null;$mediaPath=null;$mediaType=null;
+        if($mediaId!==''){
+            $mediaItem=$mediaLibrary->item($mediaId);
+            $mediaPath=$mediaLibrary->localPath($mediaItem);
+            if(!$mediaPath)throw new RuntimeException('Para enviar pelo WhatsApp, escolha um arquivo enviado à Biblioteca, não apenas um link externo.');
+            $mediaType=(string)($mediaItem['media_type']??'document');
+        }
+
         $id=app_uuid();
         if($action==='schedule'){
             $scheduled=trim((string)($_POST['scheduled_at']??''));
@@ -34,19 +47,35 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             $scheduled=str_replace('T',' ',$scheduled).(strlen($scheduled)<=16?':00':'');
             if(strtotime($scheduled)<=time())throw new RuntimeException('O agendamento precisa estar no futuro.');
 
-            $q=$pdo->prepare('INSERT INTO communication_campaigns(id,church_id,title,message,campaign_type,target_group_ids,scheduled_at,status,created_by) VALUES(?,?,?,?,?,?,?,"scheduled",?)');
-            $q->execute([$id,$cid,$title,$message,$type,json_encode($groupIds,JSON_UNESCAPED_UNICODE),$scheduled,$user['id']]);
+            $q=$pdo->prepare('INSERT INTO communication_campaigns(id,church_id,title,message,campaign_type,target_group_ids,media_item_id,media_path,media_type,scheduled_at,status,created_by) VALUES(?,?,?,?,?,?,?,?,?,?,"scheduled",?)');
+            $q->execute([
+                $id,$cid,$title,$message,$type,json_encode($groupIds,JSON_UNESCAPED_UNICODE),
+                $mediaId!==''?$mediaId:null,
+                $mediaItem?($mediaItem['storage_path']??null):null,
+                $mediaType,
+                $scheduled,$user['id']
+            ]);
             flash('success','Comunicado agendado para '.date('d/m/Y H:i',strtotime($scheduled)).'.');
             redirect('/campaigns.php');
         }
 
         if($action==='send'){
-            $q=$pdo->prepare('INSERT INTO communication_campaigns(id,church_id,title,message,campaign_type,target_group_ids,status,created_by) VALUES(?,?,?,?,?,?,"sending",?)');
-            $q->execute([$id,$cid,$title,$message,$type,json_encode($groupIds,JSON_UNESCAPED_UNICODE),$user['id']]);
+            $q=$pdo->prepare('INSERT INTO communication_campaigns(id,church_id,title,message,campaign_type,target_group_ids,media_item_id,media_path,media_type,status,created_by) VALUES(?,?,?,?,?,?,?,?,?,"sending",?)');
+            $q->execute([
+                $id,$cid,$title,$message,$type,json_encode($groupIds,JSON_UNESCAPED_UNICODE),
+                $mediaId!==''?$mediaId:null,
+                $mediaItem?($mediaItem['storage_path']??null):null,
+                $mediaType,
+                $user['id']
+            ]);
 
             $result=$groupIds
-                ?$service->sendIds($church,$groupIds,$message,$id)
-                :$service->sendPurpose($church,'announcements',$message,null,$id);
+                ?($mediaPath
+                    ?$service->sendIdsRich($church,$groupIds,$message,$mediaPath,$id)
+                    :$service->sendIds($church,$groupIds,$message,$id))
+                :($mediaPath
+                    ?$service->sendPurposeRich($church,'announcements',$message,null,$mediaPath,$id)
+                    :$service->sendPurpose($church,'announcements',$message,null,$id));
 
             $status=(int)$result['sent']>0?'sent':'error';
             $pdo->prepare('UPDATE communication_campaigns SET status=?,sent_at=IF(?="sent",NOW(),sent_at) WHERE id=?')->execute([$status,$status,$id]);
@@ -67,6 +96,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 }
 
 $groups=$service->list($cid,null,null,true);
+$mediaItems=array_values(array_filter(
+    $mediaLibrary->reusableItems(),
+    fn($item)=>!empty($item['storage_path'])
+));
 $q=$pdo->prepare('
     SELECT c.*,
       (SELECT COUNT(*) FROM communication_deliveries d WHERE d.campaign_id=c.id AND d.status="sent") sent_count,
@@ -110,6 +143,7 @@ View::header('Comunicados','campaigns',$auth,$church);
       <div class="field"><label>Título interno *</label><input class="input" name="title" required placeholder="Ex.: Convite culto de domingo"></div>
       <div class="field"><label>Tipo</label><select class="select" name="campaign_type"><option value="announcement">Comunicado</option><option value="event">Convite de evento</option><option value="reminder">Lembrete</option><option value="pastoral">Mensagem pastoral</option><option value="campaign">Campanha</option></select></div>
       <div class="field full"><label>Mensagem *</label><textarea class="textarea tall" name="message" required placeholder="Escreva exatamente como deseja que a mensagem apareça no WhatsApp."></textarea></div>
+      <div class="field full"><label>Mídia da Biblioteca</label><select class="select" name="media_item_id"><option value="">Somente texto</option><?php foreach($mediaItems as $media):?><option value="<?=e($media['id'])?>"><?=e($media['title'])?> · <?=e($media['media_type'])?></option><?php endforeach?></select><small class="help-text">Imagem, PDF, áudio, vídeo ou documento enviado à Biblioteca. O mesmo arquivo será guardado no agendamento.</small></div>
       <div class="field full">
         <label>Grupos destinatários</label>
         <div class="target-grid">
@@ -135,7 +169,8 @@ View::header('Comunicados','campaigns',$auth,$church);
   <div class="setup-steps" style="grid-template-columns:1fr">
     <div><strong>1</strong><span>Cadastre ou sincronize os grupos em “Grupos da Igreja”.</span></div>
     <div><strong>2</strong><span>Marque as finalidades de cada grupo: eventos, rifas, oração, comunicados etc.</span></div>
-    <div><strong>3</strong><span>Envie manualmente aqui ou deixe eventos/rifas/oração dispararem automaticamente.</span></div>
+    <div><strong>3</strong><span>Escolha uma mídia da Biblioteca se quiser enviar cartaz, PDF, áudio ou vídeo junto.</span></div>
+    <div><strong>4</strong><span>Envie manualmente aqui ou deixe o cron disparar no horário agendado com a mesma mídia.</span></div>
   </div>
   <a class="btn btn-light" style="width:100%" href="/settings.php">Revisar Evolution API</a>
 </aside>
