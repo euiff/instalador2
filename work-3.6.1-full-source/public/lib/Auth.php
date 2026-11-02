@@ -205,6 +205,7 @@ final class Auth
         // Restricted profiles cannot acquire general permissions through old JSON overrides.
         if(in_array($role,['member','department_leader','group_leader','teacher'],true)) {
             return $ability==='member_board'
+                || $ability==='media_portal'
                 || ($ability==='member_portal' && !empty($membership['person_id']))
                 || ($ability==='learning_portal' && !empty($membership['person_id']))
                 || ($role==='department_leader' && $ability==='department_portal')
@@ -213,6 +214,7 @@ final class Auth
         }
         if($role==='')return false;
         if($ability==='member_board')return true;
+        if($ability==='media_portal')return true;
         if($ability==='learning_portal')return !empty($membership['person_id'])||in_array($role,['owner','admin','pastor','secretary'],true);
         if($ability==='member_portal')return !empty($membership['person_id']);
         if($ability==='department_portal')return $this->can('finance');
