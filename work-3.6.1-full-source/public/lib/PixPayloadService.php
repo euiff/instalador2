@@ -46,7 +46,8 @@ final class PixPayloadService
         if($value==='')$value=$fallback;
         $ascii=@iconv('UTF-8','ASCII//TRANSLIT//IGNORE',$value);
         if(is_string($ascii)&&$ascii!=='')$value=$ascii;
-        $value=strtoupper(preg_replace('/[^A-Z0-9 .-]/','',$value)??$value);
+        $value=strtoupper($value);
+        $value=preg_replace('/[^A-Z0-9 .-]/','',$value)??$value;
         $value=trim(preg_replace('/\s+/',' ',$value)??$value);
         return substr($value,0,$max);
     }
