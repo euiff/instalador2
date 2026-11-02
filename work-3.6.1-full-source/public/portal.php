@@ -50,6 +50,8 @@ View::header($title,$auth,'portal.php');View::flash();
 ?>
 <section class="module-toolbar"><div class="module-title"><h1><?=e($title)?></h1><p><?=e($view==='department'?'Entradas, despesas e prestação de contas do seu ministério.':'Seu histórico de dízimos, ofertas e outras contribuições à igreja.')?></p></div><button type="button" class="btn btn-light no-print" onclick="window.print()">Imprimir / salvar PDF</button></section>
 <nav class="portal-tabs no-print" aria-label="Áreas do portal">
+<a href="/portal-home.php">Início</a>
+<?php if($auth->can('member_portal')):?><a href="/my-profile.php">Meu Cadastro</a><?php endif?>
 <?php if($auth->can('member_portal')):?><a href="/portal.php?view=personal" <?=$view==='personal'?'aria-current="page"':''?>>Minhas contribuições</a><?php endif?>
 <?php if($auth->can('department_portal')):?><a href="/portal.php?view=department" <?=$view==='department'?'aria-current="page"':''?>>Caixa dos departamentos</a><?php endif?>
 <?php if($auth->can('member_board')):?><a href="/board.php">Mural</a><?php endif?>
