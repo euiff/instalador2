@@ -34,7 +34,7 @@ final class Ui
     public static function state(): array
     {
         $page=basename((string)($_SERVER['SCRIPT_NAME']??''));
-        if(!in_array($page,['registers.php','finance-control.php','members.php','congregations.php','events.php','service-types.php','users.php','needs.php','announcements.php','visitors.php','pastoral-care.php','departments.php','small-groups.php','learning.php','assets.php','groups.php','campaigns.php','polls.php','raffles.php','prayer-clock.php','event-registrations.php','prayers.php','finance.php'],true)) return ['isPost'=>false,'post'=>[]];
+        if(!in_array($page,['registers.php','finance-control.php','members.php','congregations.php','events.php','service-types.php','users.php','needs.php','announcements.php','media-library.php','visitors.php','pastoral-care.php','departments.php','small-groups.php','learning.php','assets.php','groups.php','campaigns.php','polls.php','raffles.php','prayer-clock.php','event-registrations.php','prayers.php','finance.php'],true)) return ['isPost'=>false,'post'=>[]];
         $draft=$_SESSION['_ui_drafts'][$page]??null;
         unset($_SESSION['_ui_drafts'][$page]);
         if($_SERVER['REQUEST_METHOD']!=='POST' && is_array($draft) && ($draft['church']??null)===($_SESSION['church_id']??null) && time()-(int)($draft['time']??0)<300) return ['isPost'=>true,'post'=>$draft['post']];
