@@ -1,3 +1,12 @@
+# 3.6.5 — 02/11/2026
+
+- Biblioteca integrada aos Comunicados do WhatsApp.
+- Campanhas podem enviar imagem, PDF, áudio, vídeo ou documento salvo localmente na Biblioteca.
+- O arquivo escolhido fica gravado no agendamento e é reutilizado quando o cron executar.
+- EvolutionClient ganhou envio genérico de mídia para grupos, mantendo fallback para texto quando a mídia não puder ser enviada.
+- Histórico de campanhas registra a mídia vinculada sem depender de novo upload.
+- Atualização cumulativa: mantém Grupos/Células, Mural, Ensino e Biblioteca das versões 3.6.1 a 3.6.4.
+
 # 3.6.4 — 02/11/2026
 
 - Nova Biblioteca de Mídia e Arquivos por igreja.
