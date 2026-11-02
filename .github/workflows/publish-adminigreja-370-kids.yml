@@ -1,0 +1,174 @@
+name: Publish AdminIgreja 3.7.0 cumulative Kids
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-370-kids.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate PHP and Kids integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            public/lib/SmallGroupService.php public/small-groups.php
+            public/lib/AnnouncementService.php public/announcements.php public/board.php
+            public/lib/LearningService.php public/learning.php
+            public/lib/MediaLibraryService.php public/media-library.php public/albums.php
+            public/lib/StudyService.php public/studies.php
+            public/lib/KidsService.php public/kids.php public/kids-checkin.php
+            public/lib/UploadService.php public/events.php
+            public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php
+            public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php
+          )
+          for f in "${files[@]}"; do php -l "source/work-3.6.1-full-source/$f"; done
+
+          for m in 031_small_groups_attendance 032_announcements_board 033_learning_courses_classes 034_media_library 035_campaign_media 036_studies_albums 037_kids_module; do
+            test -f "source/work-3.6.1-full-source/public/database/$m.sql"
+          done
+
+          grep -q "CREATE TABLE IF NOT EXISTS kids_classes" source/work-3.6.1-full-source/public/database/037_kids_module.sql
+          grep -q "CREATE TABLE IF NOT EXISTS kids_checkin_requests" source/work-3.6.1-full-source/public/database/037_kids_module.sql
+          grep -q "public_token" source/work-3.6.1-full-source/public/database/037_kids_module.sql
+          grep -q "kids_worker" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "Equipe Kids" source/work-3.6.1-full-source/public/users.php
+          grep -q "Código de retirada" source/work-3.6.1-full-source/public/kids.php
+          grep -q "Solicitar check-in" source/work-3.6.1-full-source/public/kids-checkin.php
+          grep -q "approveRequest" source/work-3.6.1-full-source/public/lib/KidsService.php
+          grep -q "checkout" source/work-3.6.1-full-source/public/lib/KidsService.php
+          grep -q "Kids" source/work-3.6.1-full-source/public/lib/View.php
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.7.0"
+
+      - name: Build cumulative package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+
+          files=(
+            public/database/031_small_groups_attendance.sql
+            public/database/032_announcements_board.sql
+            public/database/033_learning_courses_classes.sql
+            public/database/034_media_library.sql
+            public/database/035_campaign_media.sql
+            public/database/036_studies_albums.sql
+            public/database/037_kids_module.sql
+            public/lib/SmallGroupService.php public/small-groups.php
+            public/lib/AnnouncementService.php public/announcements.php public/board.php
+            public/lib/LearningService.php public/learning.php
+            public/lib/MediaLibraryService.php public/media-library.php public/albums.php
+            public/lib/StudyService.php public/studies.php
+            public/lib/KidsService.php public/kids.php public/kids-checkin.php
+            public/lib/UploadService.php public/events.php
+            public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php
+            public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php
+            public/VERSION public/CHANGELOG.md
+          )
+
+          tar -czf /tmp/adminigreja-3.7.0.tar.gz "${files[@]}"
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.7.0.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.7.0.tar.gz > /tmp/adminigreja-3.7.0.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.7.0.b64 /tmp/v3.7.0.
+
+          i=1
+          for f in /tmp/v3.7.0.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.7.0.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          package=Path("/tmp/adminigreja-3.7.0.tar.gz")
+          parts=sorted((channel/"releases").glob("v3.7.0.*.b64.txt"))
+
+          file_paths=[
+            "public/database/031_small_groups_attendance.sql","public/database/032_announcements_board.sql",
+            "public/database/033_learning_courses_classes.sql","public/database/034_media_library.sql",
+            "public/database/035_campaign_media.sql","public/database/036_studies_albums.sql","public/database/037_kids_module.sql",
+            "public/lib/SmallGroupService.php","public/small-groups.php",
+            "public/lib/AnnouncementService.php","public/announcements.php","public/board.php",
+            "public/lib/LearningService.php","public/learning.php",
+            "public/lib/MediaLibraryService.php","public/media-library.php","public/albums.php",
+            "public/lib/StudyService.php","public/studies.php",
+            "public/lib/KidsService.php","public/kids.php","public/kids-checkin.php",
+            "public/lib/UploadService.php","public/events.php",
+            "public/lib/EvolutionClient.php","public/lib/GroupBroadcastService.php","public/lib/CronTasks.php","public/campaigns.php",
+            "public/lib/Auth.php","public/users.php","public/dashboard.php","public/lib/View.php","public/lib/Ui.php","public/portal.php",
+            "public/VERSION","public/CHANGELOG.md"
+          ]
+
+          files=[{"path":rel,"sha256":hashlib.sha256((source/rel).read_bytes()).hexdigest()} for rel in file_paths]
+          manifest={
+            "version":"3.7.0",
+            "min_php":"8.1",
+            "encoding":"base64",
+            "parts":[f"releases/{p.name}" for p in parts],
+            "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+            "published_at":"2026-11-02T21:05:00-03:00",
+            "cache_buster":"3.7.0-20261102-2105",
+            "notes":[
+              "Novo módulo Kids com turmas, salas, equipe, crianças e responsáveis.",
+              "Check-in assistido, checkout com código de segurança e controle de capacidade.",
+              "Link público por programação com solicitação e aprovação da equipe.",
+              "Registros da aula com mídia e relatórios básicos.",
+              "Pacote cumulativo com todos os módulos 3.6.1 a 3.6.6."
+            ],
+            "files":files
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.7.0.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.7.0.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.7.0.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+          rm -rf /tmp/test370 && mkdir -p /tmp/test370
+          tar -xzf /tmp/rebuilt-3.7.0.tar.gz -C /tmp/test370
+          php -l /tmp/test370/public/kids.php
+          php -l /tmp/test370/public/kids-checkin.php
+          php -l /tmp/test370/public/lib/KidsService.php
+          test "$(cat /tmp/test370/public/VERSION)" = "3.7.0"
+          test -f /tmp/test370/public/database/037_kids_module.sql
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.0.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.7.0 cumulative Kids"
+          git pull --rebase origin main
+          git push origin main
