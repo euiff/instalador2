@@ -1,26 +1,29 @@
 {
-  "version": "3.6.6",
+  "version": "3.7.0",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.6.6.01.b64.txt",
-    "releases/v3.6.6.02.b64.txt",
-    "releases/v3.6.6.03.b64.txt",
-    "releases/v3.6.6.04.b64.txt",
-    "releases/v3.6.6.05.b64.txt",
-    "releases/v3.6.6.06.b64.txt",
-    "releases/v3.6.6.07.b64.txt",
-    "releases/v3.6.6.08.b64.txt",
-    "releases/v3.6.6.09.b64.txt"
+    "releases/v3.7.0.01.b64.txt",
+    "releases/v3.7.0.02.b64.txt",
+    "releases/v3.7.0.03.b64.txt",
+    "releases/v3.7.0.04.b64.txt",
+    "releases/v3.7.0.05.b64.txt",
+    "releases/v3.7.0.06.b64.txt",
+    "releases/v3.7.0.07.b64.txt",
+    "releases/v3.7.0.08.b64.txt",
+    "releases/v3.7.0.09.b64.txt",
+    "releases/v3.7.0.10.b64.txt",
+    "releases/v3.7.0.11.b64.txt"
   ],
-  "sha256": "5f5b8fe525710237bf624cba37719fb550bcd09e4492aaf0b50d55ae1175ab65",
-  "published_at": "2026-11-02T20:42:00-03:00",
-  "cache_buster": "3.6.6-20261102-2042",
+  "sha256": "8ec296c5a87c5f7732796bdc303b19626f02edc9d071a87bc4e93295fed60f9b",
+  "published_at": "2026-11-02T21:05:00-03:00",
+  "cache_buster": "3.7.0-20261102-2105",
   "notes": [
-    "Novo módulo Estudos por categorias com capa, material e registro de leitura.",
-    "Biblioteca agora cria Álbuns de Fotos e Álbuns de Vídeos.",
-    "Novo acesso Fotos e Vídeos para membros e líderes.",
-    "Pacote cumulativo com Grupos/Células, Mural, Ensino, Biblioteca e WhatsApp com mídia."
+    "Novo módulo Kids com turmas, salas, equipe, crianças e responsáveis.",
+    "Check-in assistido, checkout com código de segurança e controle de capacidade.",
+    "Link público por programação com solicitação e aprovação da equipe.",
+    "Registros da aula com mídia e relatórios básicos.",
+    "Pacote cumulativo com todos os módulos 3.6.1 a 3.6.6."
   ],
   "files": [
     {
@@ -46,6 +49,10 @@
     {
       "path": "public/database/036_studies_albums.sql",
       "sha256": "74a1efa1211ff7b82dc2999c8493090e7eb9ac3291ffc5b9f1816523c1a6487d"
+    },
+    {
+      "path": "public/database/037_kids_module.sql",
+      "sha256": "9196396b77413c8ba593c23e6aa0418daca09dd7119e857a91360b504cdcd8d9"
     },
     {
       "path": "public/lib/SmallGroupService.php",
@@ -96,6 +103,18 @@
       "sha256": "54feb99a9002930405e29e8e7e8616fb39b604ba42b045704c87bd1add35ac8d"
     },
     {
+      "path": "public/lib/KidsService.php",
+      "sha256": "7c9954d48a9dd9ecec67c9dfd1f74f736ff35b83407fa4cf3cb9699e9f43b08c"
+    },
+    {
+      "path": "public/kids.php",
+      "sha256": "998907d55e629fc27a0aa7e6194ad760c4fdc2b7d301832f69b5a649a658573d"
+    },
+    {
+      "path": "public/kids-checkin.php",
+      "sha256": "50fffd7aa723bf99ca16bd8b4dab3080e3e14178079a086a628898a78e4e23b2"
+    },
+    {
       "path": "public/lib/UploadService.php",
       "sha256": "6919939938b61cdad9eb2620a50fd7bc083860490c9706423802ab7bf5443012"
     },
@@ -121,23 +140,23 @@
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "d55ac77517902cecc1f5741292c7b80959797fbb3a4f6f8d4e3a7274bd1d9c14"
+      "sha256": "acaf91bb5d6f14c14d3b43201d231778c3c967569f8c7bbd832b174cbf890753"
     },
     {
       "path": "public/users.php",
-      "sha256": "623031f081be0208201c289f0db7d50f79dd2140080b50230b6c4a855b6169ee"
+      "sha256": "4907b77a7121a34d15ae06fec39ab02995e6fb51d0a04f63a7f6541ae789722c"
     },
     {
       "path": "public/dashboard.php",
-      "sha256": "854321a224bc348ac2a9c55fb810ffe0f6effe9dcb7f77831f37cf928ecc0206"
+      "sha256": "cc0da37d0767542bbd2081d0a3d7865007a9813b4d109f52949ad0d8a81eb4f0"
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "f517d96365fd102edaa6a774bd457caacdef171d5d66ea013f96993466bee27f"
+      "sha256": "6fcd7b9f2d615aeec4181107bd6f63e000949bc576fcff86d40ad400132269df"
     },
     {
       "path": "public/lib/Ui.php",
-      "sha256": "866bd3099b03564032519e34a3872ff6f1b363e4c9f13186f58f8ba93ab89e55"
+      "sha256": "39cbac26e22107bc85489cbbfd76757df1058ab1e121d875603269f40ec76a0a"
     },
     {
       "path": "public/portal.php",
@@ -145,11 +164,11 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "14e0f057c25f7d383ad4f3b04ef946cca611c629e5c0366ad78a7eac8bbd794b"
+      "sha256": "84746b20a3a72f6ff85a629706e50507c1bd200907456b76dd808a2a5ca0efba"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "487682ecb37e14dd6e07a267bd49760935d2e44a6012ec4a1af6d7fd2a6d6ff2"
+      "sha256": "c226922a3c369c4b8f42b448b50410fcac997d757c5bc57159ef31e92766f9b4"
     }
   ]
 }
