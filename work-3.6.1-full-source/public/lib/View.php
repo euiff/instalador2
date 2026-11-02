@@ -31,7 +31,8 @@ final class View
         $items = [
             'dashboard.php' => ['dashboard','Início','⌂','dashboard'],
             'portal-home.php' => ['portal-home','Meu acesso','⌂','member_board'],
-            'portal.php' => ['portal','Contribuições / Caixa','R
+            'portal.php' => ['portal','Contribuições / Caixa','◈','member_portal'],
+            'my-profile.php' => ['my-profile','Meu Cadastro','♙','member_portal'],
             'board.php' => ['board','Mural','✉','member_board'],
             'media-library.php' => ['media-library','Biblioteca de Mídia','▣','media_portal'],
             'studies.php' => ['studies','Estudos','▤','study_portal'],
