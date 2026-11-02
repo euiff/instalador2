@@ -1,3 +1,17 @@
+# 3.6.4 — 02/11/2026
+
+- Nova Biblioteca de Mídia e Arquivos por igreja.
+- Upload seguro de imagens, PDFs, áudios, vídeos e documentos, além de links externos.
+- Pastas, categorias, busca, filtros, destaques e arquivamento.
+- Controle de público por todos, membros, liderança, departamento ou grupo/célula.
+- Usuários visualizam somente arquivos liberados para o próprio perfil.
+- Arquivos da Biblioteca podem ser reutilizados diretamente no Mural de Avisos.
+- Materiais da Biblioteca podem ser selecionados nas aulas do módulo Ensino/Turmas.
+- Imagens da Biblioteca podem ser reutilizadas como cartaz/folder de Eventos e enviadas pelo WhatsApp.
+- Professor/líder de turma só consegue reutilizar mídias que estejam visíveis para seu acesso.
+- Biblioteca aparece no portal do membro/líder.
+- Atualização cumulativa: mantém Grupos/Células, Mural e Ensino das versões 3.6.1 a 3.6.3.
+
 # 3.6.3 — 02/11/2026
 
 - Novo módulo Ensino, Estudos e Turmas.
