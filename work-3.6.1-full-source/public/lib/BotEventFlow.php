@@ -121,7 +121,7 @@ Digite seu *nome completo*:";
             }
 
             if(!empty($event['capacity'])){
-                $c=$this->pdo->prepare('SELECT COALESCE(SUM(1+guests_count),0) FROM event_registrations WHERE event_id=? AND church_id=? AND registration_status<>'cancelled'');
+                $c=$this->pdo->prepare("SELECT COALESCE(SUM(1+guests_count),0) FROM event_registrations WHERE event_id=? AND church_id=? AND registration_status<>'cancelled'");
                 $c->execute([$event['id'],$churchId]);
                 $used=(int)$c->fetchColumn();$wanted=1+(int)$data['guests_count'];
                 if($used+$wanted>(int)$event['capacity'])return ['done'=>false,'reply'=>'Não há vagas suficientes para essa quantidade de pessoas. Informe um número menor de convidados.'];
