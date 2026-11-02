@@ -4,6 +4,7 @@ require_once __DIR__.'/lib/NotificationService.php';
 require_once __DIR__.'/lib/GroupBroadcastService.php';
 require_once __DIR__.'/lib/UploadService.php';
 require_once __DIR__.'/lib/EngagementNotificationService.php';
+require_once __DIR__.'/lib/MediaLibraryService.php';
 $auth->requireAbility('secretary');
 $church=$auth->currentChurch();
 if(!$church)redirect('/logout.php');
@@ -13,6 +14,7 @@ $error=flash('error');
 $success=flash('success');
 $uploader=new UploadService(__DIR__);
 $engagementNotifier=new EngagementNotificationService($pdo,__DIR__);
+$mediaLibrary=new MediaLibraryService($pdo,$auth,(string)$cid,__DIR__);
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
     try{
@@ -45,6 +47,16 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             }
             $uploaded=$uploader->notificationImage($_FILES['notification_image']??[],$cid);
             $notificationImage=$uploaded['path']??$existingImage;
+            if(!$uploaded){
+                $mediaImageId=trim((string)($_POST['media_image_id']??''));
+                if($mediaImageId!==''){
+                    $mediaItem=$mediaLibrary->item($mediaImageId);
+                    if(($mediaItem['media_type']??'')!=='image'||empty($mediaItem['storage_path'])){
+                        throw new RuntimeException('Para eventos, escolha uma imagem enviada à Biblioteca. Links externos não podem ser anexados ao WhatsApp como folder.');
+                    }
+                    $notificationImage=(string)$mediaItem['storage_path'];
+                }
+            }
 
             $vals=[
                 trim((string)($_POST['congregation_id']??''))?:null,
@@ -103,6 +115,7 @@ $groupService=new GroupBroadcastService($pdo);
 $groups=$groupService->list((string)$cid,null,null,true);
 $selectedGroups=$edit?json_decode((string)($edit['target_group_ids']??'[]'),true):[];
 if(!is_array($selectedGroups))$selectedGroups=[];
+$libraryImages=array_values(array_filter($mediaLibrary->reusableItems('image'),fn($m)=>!empty($m['storage_path'])));
 
 View::header('Eventos',$auth,'events.php');
 ?>
@@ -146,6 +159,7 @@ View::header('Eventos',$auth,'events.php');
     <div class="field full"><label>Local</label><input class="input" name="location" value="<?=e($edit['location']??'')?>"></div>
     <div class="field full"><label>Preletor / convidado</label><input class="input" name="speaker_name" value="<?=e($edit['speaker_name']??'')?>"></div>
     <div class="field full"><label>Descrição</label><textarea class="textarea" name="description"><?=e($edit['description']??'')?></textarea></div>
+    <div class="field full"><label>Imagem da Biblioteca<select class="select" name="media_image_id"><option value="">Nenhuma / usar upload abaixo</option><?php foreach($libraryImages as $media):?><option value="<?=e($media['id'])?>"><?=e($media['title'])?></option><?php endforeach?></select><small class="help-text">Escolha um cartaz já salvo na Biblioteca. Se enviar um novo arquivo abaixo, o novo upload tem prioridade.</small></div>
     <div class="field full"><label>Cartaz / folder para enviar junto</label><input class="input" type="file" name="notification_image" accept="image/jpeg,image/png,image/webp"><small class="help-text">JPG, PNG ou WEBP até 8 MB. <?=!empty($edit['notification_image_path'])?'Já existe um folder salvo; envie outro somente se quiser substituir.':''?></small></div>
     <div class="field full">
       <label>Grupos que receberão convite e lembrete</label>
