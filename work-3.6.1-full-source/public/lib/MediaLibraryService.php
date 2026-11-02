@@ -249,7 +249,7 @@ final class MediaLibraryService
 
     public function item(string $id,bool $requireVisible=false): array
     {
-        $rows=$requireVisible?$this->visibleForCurrentUser():$this->all();
+        $rows=($requireVisible||!$this->isManager())?$this->visibleForCurrentUser():$this->all();
         foreach($rows as $row)if((string)$row['id']===$id)return $row;
         throw new RuntimeException('Arquivo não encontrado ou não disponível.');
     }
