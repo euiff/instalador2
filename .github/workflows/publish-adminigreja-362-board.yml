@@ -1,0 +1,151 @@
+name: Publish AdminIgreja 3.6.2 announcement board
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-362-board.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate PHP and board integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l source/work-3.6.1-full-source/public/lib/AnnouncementService.php
+          php -l source/work-3.6.1-full-source/public/announcements.php
+          php -l source/work-3.6.1-full-source/public/board.php
+          php -l source/work-3.6.1-full-source/public/lib/Auth.php
+          php -l source/work-3.6.1-full-source/public/lib/View.php
+          php -l source/work-3.6.1-full-source/public/lib/Ui.php
+          php -l source/work-3.6.1-full-source/public/portal.php
+
+          grep -q "CREATE TABLE IF NOT EXISTS church_announcements" source/work-3.6.1-full-source/public/database/032_announcements_board.sql
+          grep -q "church_announcement_reads" source/work-3.6.1-full-source/public/database/032_announcements_board.sql
+          grep -q "member_board" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "Mural de Avisos" source/work-3.6.1-full-source/public/announcements.php
+          grep -q "Marcar como lido" source/work-3.6.1-full-source/public/board.php
+          grep -q "announcements.php" source/work-3.6.1-full-source/public/lib/View.php
+          grep -q "board.php" source/work-3.6.1-full-source/public/lib/View.php
+          grep -q "Mural" source/work-3.6.1-full-source/public/portal.php
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.6.2"
+
+      - name: Build 3.6.2 delta package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+          tar -czf /tmp/adminigreja-3.6.2.tar.gz             public/database/032_announcements_board.sql             public/lib/AnnouncementService.php             public/announcements.php             public/board.php             public/lib/Auth.php             public/lib/View.php             public/lib/Ui.php             public/portal.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.6.2.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.6.2.tar.gz > /tmp/adminigreja-3.6.2.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.6.2.b64 /tmp/v3.6.2.
+
+          i=1
+          for f in /tmp/v3.6.2.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.6.2.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.6.2.tar.gz")
+          parts=sorted(release.glob("v3.6.2.*.b64.txt"))
+
+          file_paths=[
+              "public/database/032_announcements_board.sql",
+              "public/lib/AnnouncementService.php",
+              "public/announcements.php",
+              "public/board.php",
+              "public/lib/Auth.php",
+              "public/lib/View.php",
+              "public/lib/Ui.php",
+              "public/portal.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.6.2",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "published_at":"2026-11-02T19:48:00-03:00",
+              "cache_buster":"3.6.2-20261102-1948",
+              "notes":[
+                  "Novo Mural de Avisos para comunicação interna.",
+                  "Segmentação por todos, membros, liderança, departamento ou grupo/célula.",
+                  "Confirmação de leitura e contador de leituras.",
+                  "Prioridade, fixação e período de exibição.",
+                  "Links de ação e de arquivo/cartaz/vídeo por aviso."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.6.2.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.6.2.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.6.2.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test362
+          mkdir -p /tmp/test362
+          tar -xzf /tmp/rebuilt-3.6.2.tar.gz -C /tmp/test362
+
+          php -l /tmp/test362/public/lib/AnnouncementService.php
+          php -l /tmp/test362/public/announcements.php
+          php -l /tmp/test362/public/board.php
+          test "$(cat /tmp/test362/public/VERSION)" = "3.6.2"
+          test -f /tmp/test362/public/database/032_announcements_board.sql
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.6.2.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.6.2 announcement board"
+          git pull --rebase origin main
+          git push origin main
