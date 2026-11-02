@@ -1,79 +1,110 @@
 {
-  "version": "3.5.1",
+  "version": "3.6.0",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.5.1.01.b64.txt",
-    "releases/v3.5.1.02.b64.txt",
-    "releases/v3.5.1.03.b64.txt",
-    "releases/v3.5.1.04.b64.txt"
+    "releases/v3.6.0.01.b64.txt",
+    "releases/v3.6.0.02.b64.txt",
+    "releases/v3.6.0.03.b64.txt",
+    "releases/v3.6.0.04.b64.txt",
+    "releases/v3.6.0.05.b64.txt",
+    "releases/v3.6.0.06.b64.txt"
   ],
-  "sha256": "5a9ac949e12ba69233bad931424c7902de26209bbbb89422c03d9cd6a9351a0a",
-  "published_at": "2026-11-02T18:52:05-03:00",
-  "cache_buster": "3.5.1-20261102",
+  "sha256": "7bf7269dcab9bbc9d43b141957aebfdd9bb4dc52843500ca925a2a9cc6bb2df7",
+  "published_at": "2026-11-02T19:17:55-03:00",
+  "cache_buster": "3.6.0-20261102",
   "notes": [
-    "Portal pessoal de contribuições e perfis de líder e membro.",
-    "Caixas por departamento integrados ao livro financeiro geral.",
-    "Permissões isoladas por igreja, pessoa e departamento.",
-    "Menu superior no computador e extrato imprimível.",
-    "Ajuste de abertura dos menus e alinhamento do cabeçalho."
+    "Cadastros de categorias, famílias, cargos e campos personalizados.",
+    "Categorias financeiras, contatos e centros de custos.",
+    "Valores a receber com parcelas e recebimentos parciais.",
+    "Resumo financeiro, relatórios por centro e exportação CSV.",
+    "Importação CSV com prévia e bloqueio de arquivo repetido.",
+    "Bloqueio auditado de períodos financeiros."
   ],
   "files": [
     {
-      "path": "public/VERSION",
-      "sha256": "eb41f86c3d67299b46490cde10158a521148fdc03641aa14a93fa2797becd78c"
+      "path": "public/database/028_finance_registers_receivables.sql",
+      "sha256": "d49f031974a7b915f2a7233e419a2fc9efbfc8825a784f471908afbf293f5363"
     },
     {
-      "path": "public/CHANGELOG.md",
-      "sha256": "0d50fa59bf98305e1da4e347102c331ba0cfa140b4ffdf6d61bc206472fd9f30"
+      "path": "public/database/029_finance_period_locks.sql",
+      "sha256": "422a1d884cf62e20bec11c398e87b759bbf8faed37d3f2b835f94c7f611bf154"
     },
     {
-      "path": "public/database/027_member_department_portals.sql",
-      "sha256": "2abede0868ff67fb9d85a1d5295bd766326c41ea33496bf9c6c70f0a45538565"
+      "path": "public/database/030_finance_import_batches.sql",
+      "sha256": "7a5138460663a8dd12c740b55dfa8c4bd4398797f7348c8c3bce8db0bb4a28a3"
     },
     {
-      "path": "public/lib/Auth.php",
-      "sha256": "ff76e06d85ee0292cc2a815cf7a5a5b008575acf41b6b82a16a659f49ca5e723"
-    },
-    {
-      "path": "public/lib/View.php",
-      "sha256": "a69a8718d39b46ae9730eee4dae4bc5ff2a1c2d5684e6f92d72a55354db1962a"
+      "path": "public/lib/FinancePeriodGuard.php",
+      "sha256": "9df2240fc5825a53e9c4005f1d3436de8eea12658ebca4099e5eebd810d86687"
     },
     {
       "path": "public/lib/PortalService.php",
-      "sha256": "778b00f804aacf487990ae2072f3032f82bdb973b626d4cbeacf0bbb4d8838c1"
+      "sha256": "02e05fbbb28504fffd156814cccee390fdffae0dc680db2e0cbf5c198443dfc2"
     },
     {
-      "path": "public/login.php",
-      "sha256": "82e6ddceb30ba2213acf3369e0f8e43a017c61eefcedd397a38d1c0c4b26064b"
+      "path": "public/lib/RegistryService.php",
+      "sha256": "cd767e03bdaa9351645a5d815290bfae209008903178cfdd290f0d28c49d95a9"
     },
     {
-      "path": "public/dashboard.php",
-      "sha256": "f1e2aaf179a5867b72b70d77855edfc4f5af6068ab143a7bbdbd4d0e6b795567"
+      "path": "public/lib/FinanceOperations.php",
+      "sha256": "d3ad29d30559eade904a469b857f0fb840856af377d988fa8d59400555ed7821"
     },
     {
-      "path": "public/finance.php",
-      "sha256": "85db849ff155eac2b62f2949a63f49c2b521b93236af098bbbe0e752134ee766"
+      "path": "public/lib/FinanceCsvImport.php",
+      "sha256": "a72bef97e6d5eb22f2df7801dca3b31a5467a7cfe23e9933272b6e642d9624fd"
     },
     {
-      "path": "public/users.php",
-      "sha256": "84fb1f86b077f7ba2d5b647d8a88834b285756d171d349bb19557e3349d9f5f3"
-    },
-    {
-      "path": "public/portal.php",
-      "sha256": "9846e23ec945a93fc0d80c545437aaef5d5d537f07c76c1a17606f1295ab4d24"
-    },
-    {
-      "path": "public/department-cash.php",
-      "sha256": "9343216faee583e3391688b2852f8ab04b609f744012955f67f6db8c21dc48f0"
+      "path": "public/lib/Ui.php",
+      "sha256": "2a6a63f3d573d66b7c20c697f77b44baf7a0dcf3d37591701a6310fb9176d0fd"
     },
     {
       "path": "public/assets/management.css",
-      "sha256": "1f37f0b1c8e0be76d950cd47437eb7e5ab57be44617d2037bd71c200160aa58d"
+      "sha256": "eb31b67387ccbd0f755f9d06107253953503d127b1e60b47e2d611c550ab8f59"
     },
     {
       "path": "public/assets/management.js",
-      "sha256": "896e7dadce5520459a3fc2ccddc095ad74374f53506f846f62e1871aaadd7e8b"
+      "sha256": "dbe4fe4fbfe834490baf07d1e5fbdaf2b96d911e466c9ef8975e454a3fa94b4b"
+    },
+    {
+      "path": "public/registers.php",
+      "sha256": "2e44b967b5b055a26101990a20d50a8bcee7e6e0164e44cc3abbd5feec4edb85"
+    },
+    {
+      "path": "public/finance-control.php",
+      "sha256": "91fd1c529f6c3ebfc732d559a5010d93a461b241a5a22584678f469abd89d2c6"
+    },
+    {
+      "path": "public/finance-import.php",
+      "sha256": "8785f304f6f5a027da66adcd577e9b42f74accc795cfbfe3b2bd23c35f499346"
+    },
+    {
+      "path": "public/finance.php",
+      "sha256": "ae0382402b9474865d2aa7810c783c80aacede454cfd1c66f75dfb981e3d7485"
+    },
+    {
+      "path": "public/members.php",
+      "sha256": "d680510a5c0a60727208fa6fb7cad30a40e511ecbc0f11fa2353fbe984ef43f5"
+    },
+    {
+      "path": "public/member-profile.php",
+      "sha256": "9c458c7e3b8f40eca1619eb21c3b7973fcee8693782225c19415fd38da7cbaa4"
+    },
+    {
+      "path": "public/payments.php",
+      "sha256": "70819321f67a65f3aa1f13f00576bdf53c632b47f06b312b7fad68970c64fdcb"
+    },
+    {
+      "path": "public/lib/View.php",
+      "sha256": "bf5d048cb1051437d19c8f06c677eafd5b04466fa4df5411f3952ef056d52f05"
+    },
+    {
+      "path": "public/CHANGELOG.md",
+      "sha256": "fa2103845bb6e0049b8eb4c0335fc7e6529ad87e52c70108b1df16048d16edc2"
+    },
+    {
+      "path": "public/VERSION",
+      "sha256": "138203e3f604a08fad0c4d0a297efe2c486219820dcdd053e72b7d843504c7a1"
     }
   ]
 }
