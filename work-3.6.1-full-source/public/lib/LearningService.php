@@ -286,6 +286,49 @@ final class LearningService
         }
     }
 
+    public function myProgress(string $classId): ?array
+    {
+        $class=$this->class($classId);
+        $person=$this->personId();
+        if(!$person)return null;
+
+        $enrollment=$this->q("SELECT * FROM learning_enrollments
+          WHERE church_id=? AND class_id=? AND member_id=? AND status<>'cancelled' LIMIT 1",[
+            $this->cid,$classId,$person
+        ])->fetch();
+        if(!$enrollment)return null;
+
+        $lessonCount=(int)$this->q('SELECT COUNT(*) FROM learning_lessons WHERE church_id=? AND class_id=?',[
+            $this->cid,$classId
+        ])->fetchColumn();
+
+        $presentCount=(int)$this->q("SELECT COUNT(*)
+          FROM learning_attendance a
+          INNER JOIN learning_lessons l ON l.id=a.lesson_id AND l.church_id=a.church_id
+          WHERE a.church_id=? AND l.class_id=? AND a.member_id=? AND a.present=1",[
+            $this->cid,$classId,$person
+        ])->fetchColumn();
+
+        $attendance=[];
+        $q=$this->q("SELECT l.id lesson_id,l.lesson_date,l.title,a.present
+          FROM learning_lessons l
+          LEFT JOIN learning_attendance a ON a.lesson_id=l.id AND a.church_id=l.church_id AND a.member_id=?
+          WHERE l.church_id=? AND l.class_id=?
+          ORDER BY l.lesson_date DESC,l.created_at DESC",[
+            $person,$this->cid,$classId
+        ]);
+        foreach($q->fetchAll() as $row)$attendance[$row['lesson_id']]=$row;
+
+        return [
+            'class'=>$class,
+            'enrollment'=>$enrollment,
+            'lesson_count'=>$lessonCount,
+            'present_count'=>$presentCount,
+            'attendance'=>$attendance,
+            'percentage'=>$lessonCount>0?round(($presentCount/$lessonCount)*100,1):0,
+        ];
+    }
+
     public function canManageClass(string $classId): bool
     {
         if($this->isManager())return true;
