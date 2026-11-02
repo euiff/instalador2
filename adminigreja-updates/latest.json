@@ -1,23 +1,25 @@
 {
-  "version": "3.6.3",
+  "version": "3.6.4",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.6.3.01.b64.txt",
-    "releases/v3.6.3.02.b64.txt",
-    "releases/v3.6.3.03.b64.txt",
-    "releases/v3.6.3.04.b64.txt",
-    "releases/v3.6.3.05.b64.txt"
+    "releases/v3.6.4.01.b64.txt",
+    "releases/v3.6.4.02.b64.txt",
+    "releases/v3.6.4.03.b64.txt",
+    "releases/v3.6.4.04.b64.txt",
+    "releases/v3.6.4.05.b64.txt",
+    "releases/v3.6.4.06.b64.txt",
+    "releases/v3.6.4.07.b64.txt"
   ],
-  "sha256": "c416866c0d1d3a539cde3bc5e797c6a202cb3f93ef7f5d849a07cdb128d88fc3",
-  "published_at": "2026-11-02T19:58:00-03:00",
-  "cache_buster": "3.6.3-20261102-1958",
+  "sha256": "d12b6f9fe75a37007b4843e18f31be6b6b922235d8361f0f4f9bc894f2a2974e",
+  "published_at": "2026-11-02T20:12:00-03:00",
+  "cache_buster": "3.6.4-20261102-2012",
   "notes": [
-    "Novo módulo Ensino, Estudos e Turmas.",
-    "Perfil Professor/líder de turma com acesso somente às próprias turmas.",
-    "Matrículas, aulas, materiais, presença e acompanhamento de conclusão.",
-    "Aluno visualiza somente seus cursos e percentual de frequência.",
-    "Pacote cumulativo: inclui Grupos/Células 3.6.1 e Mural de Avisos 3.6.2."
+    "Nova Biblioteca de Mídia e Arquivos por igreja.",
+    "Upload de imagens, PDFs, áudios, vídeos e documentos, além de links externos.",
+    "Pastas, categorias, filtros, destaques e segmentação de público.",
+    "Reutilização direta no Mural, Ensino/Turmas e cartazes de Eventos.",
+    "Pacote cumulativo: mantém Grupos/Células, Mural e Ensino das versões 3.6.1 a 3.6.3."
   ],
   "files": [
     {
@@ -33,6 +35,10 @@
       "sha256": "8761499ded1de5a46850545f633c39ee6b9fe95a9c4a171c17d5b45923fa80b8"
     },
     {
+      "path": "public/database/034_media_library.sql",
+      "sha256": "335158db430db9f1d178f14ffd782672cf6eb2593e993b7c9723cf543e936f79"
+    },
+    {
       "path": "public/lib/SmallGroupService.php",
       "sha256": "6dcf1ac15d27444fac3171d08f6ea9e1c15e3171f47ceeac0cb4a196cd903487"
     },
@@ -42,11 +48,11 @@
     },
     {
       "path": "public/lib/AnnouncementService.php",
-      "sha256": "5d9a7b1be825a4108e0d8d223ee9ebe07c51d9f2ac2b9953104fe172035193c6"
+      "sha256": "a369fdad150597b522f365e485d47694d7b46324f31ada3be52dc354cc7367b1"
     },
     {
       "path": "public/announcements.php",
-      "sha256": "aa0369ba25013e80fe57ae0d464036953f3a6e5605fca0eb5064ad167d3bc8d8"
+      "sha256": "4650e1ed021e0aa9244d2353124afda8f32628889b0ac720b1f53cbfe90ee7bf"
     },
     {
       "path": "public/board.php",
@@ -54,15 +60,31 @@
     },
     {
       "path": "public/lib/LearningService.php",
-      "sha256": "040d1a0a54b880947704f4b6ad0da1a82ca36e748e869a1e3bd13dc0fde8b33d"
+      "sha256": "d32e20cf782a150c392332895175a75925b55e9cd55986481c7ab017db15fd56"
     },
     {
       "path": "public/learning.php",
-      "sha256": "9166a2390079db076b099d1b19203ffcd0035c3281d753ce0bd4323854d3d6c5"
+      "sha256": "d7ab1d50367c43cec95e3385fff7569bbad67a7de80fe7d54f4367b02307a14a"
+    },
+    {
+      "path": "public/lib/MediaLibraryService.php",
+      "sha256": "54a04c9cf519a82f7a009870e5c65bac3e989570819f0ad0b1121e0540cf3c30"
+    },
+    {
+      "path": "public/media-library.php",
+      "sha256": "7bbfd8764650cd04b75b9f94106f535fd6fbe50dcefce5faa8d714c9c22a40b6"
+    },
+    {
+      "path": "public/lib/UploadService.php",
+      "sha256": "6919939938b61cdad9eb2620a50fd7bc083860490c9706423802ab7bf5443012"
+    },
+    {
+      "path": "public/events.php",
+      "sha256": "22083b99dadd735b0addde61d7046ca78d52a5b0de62117c62b9ddc6ac6f967b"
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "9587953cee476a7aa21dfe8189cce1e4c1bb660ad727f83d4ebf8db1729e36a1"
+      "sha256": "3c6f6e03e20530f2db14605ff1c97c678a31d1fa6c777c7165b0e97f95763a3a"
     },
     {
       "path": "public/users.php",
@@ -74,23 +96,23 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "f8a652280a9a340c9f85461da54ee7109a604d172c1c9decc5a59ef4432d0c01"
+      "sha256": "9fc7d3b454bf2f71e986eefc1dbbbbd7b11308ba0b4919cc827002eb33497e80"
     },
     {
       "path": "public/lib/Ui.php",
-      "sha256": "c9c420c492f671cc768c1a44cfb7b9a687a77db16758fc47f8fb17ec1ef5d2c6"
+      "sha256": "e56748f7182ec0cd4239582c46c4bb8314cdadb12136918d2094b1288ce9bd06"
     },
     {
       "path": "public/portal.php",
-      "sha256": "0cc4b45c8e91e05936fda9a7b80c2ccae808ce6d7c462db5eac466b6d43e4e7c"
+      "sha256": "2ec24272f709ebe07ce191c90de523f3ade55c9aa3439f265436dad2818808c6"
     },
     {
       "path": "public/VERSION",
-      "sha256": "3ad143a7bbc464452fea79e6f5614ab6a2d63e32a990a6880710d4f8cadeeb2c"
+      "sha256": "9a989ebd95efe334f4248db1d63432eaa07e6fbe0e1234e47c91e5fc88906ca1"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "2a3967b2988930c0bd164d8936a43771017321a3d2662e87929659b87634703a"
+      "sha256": "961e2a6213f9911647dafe57275fabe674921f99fc28e313cfbb6416bd2dbe8f"
     }
   ]
 }
