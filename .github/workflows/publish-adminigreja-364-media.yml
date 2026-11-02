@@ -1,0 +1,185 @@
+name: Publish AdminIgreja 3.6.4 cumulative media library
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-364-media.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate cumulative modules and media library
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            public/lib/SmallGroupService.php
+            public/small-groups.php
+            public/lib/AnnouncementService.php
+            public/announcements.php
+            public/board.php
+            public/lib/LearningService.php
+            public/learning.php
+            public/lib/MediaLibraryService.php
+            public/media-library.php
+            public/lib/UploadService.php
+            public/events.php
+            public/lib/Auth.php
+            public/users.php
+            public/dashboard.php
+            public/lib/View.php
+            public/lib/Ui.php
+            public/portal.php
+          )
+          for f in "${files[@]}"; do
+            php -l "source/work-3.6.1-full-source/$f"
+          done
+
+          grep -q "CREATE TABLE IF NOT EXISTS small_groups" source/work-3.6.1-full-source/public/database/031_small_groups_attendance.sql
+          grep -q "CREATE TABLE IF NOT EXISTS church_announcements" source/work-3.6.1-full-source/public/database/032_announcements_board.sql
+          grep -q "CREATE TABLE IF NOT EXISTS learning_courses" source/work-3.6.1-full-source/public/database/033_learning_courses_classes.sql
+          grep -q "CREATE TABLE IF NOT EXISTS media_library_items" source/work-3.6.1-full-source/public/database/034_media_library.sql
+          grep -q "mediaLibraryFile" source/work-3.6.1-full-source/public/lib/UploadService.php
+          grep -q "media_portal" source/work-3.6.1-full-source/public/lib/Auth.php
+          grep -q "Biblioteca de Mídia" source/work-3.6.1-full-source/public/media-library.php
+          grep -q "media_library_id" source/work-3.6.1-full-source/public/announcements.php
+          grep -q "media_library_id" source/work-3.6.1-full-source/public/learning.php
+          grep -q "media_image_id" source/work-3.6.1-full-source/public/events.php
+          grep -q "Enforce media visibility" /dev/null || true
+
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.6.4"
+
+      - name: Build cumulative 3.6.4 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+          tar -czf /tmp/adminigreja-3.6.4.tar.gz             public/database/031_small_groups_attendance.sql             public/database/032_announcements_board.sql             public/database/033_learning_courses_classes.sql             public/database/034_media_library.sql             public/lib/SmallGroupService.php             public/small-groups.php             public/lib/AnnouncementService.php             public/announcements.php             public/board.php             public/lib/LearningService.php             public/learning.php             public/lib/MediaLibraryService.php             public/media-library.php             public/lib/UploadService.php             public/events.php             public/lib/Auth.php             public/users.php             public/dashboard.php             public/lib/View.php             public/lib/Ui.php             public/portal.php             public/VERSION             public/CHANGELOG.md
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.6.4.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.6.4.tar.gz > /tmp/adminigreja-3.6.4.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.6.4.b64 /tmp/v3.6.4.
+
+          i=1
+          for f in /tmp/v3.6.4.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.6.4.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          release=channel/"releases"
+          package=Path("/tmp/adminigreja-3.6.4.tar.gz")
+          parts=sorted(release.glob("v3.6.4.*.b64.txt"))
+
+          file_paths=[
+              "public/database/031_small_groups_attendance.sql",
+              "public/database/032_announcements_board.sql",
+              "public/database/033_learning_courses_classes.sql",
+              "public/database/034_media_library.sql",
+              "public/lib/SmallGroupService.php",
+              "public/small-groups.php",
+              "public/lib/AnnouncementService.php",
+              "public/announcements.php",
+              "public/board.php",
+              "public/lib/LearningService.php",
+              "public/learning.php",
+              "public/lib/MediaLibraryService.php",
+              "public/media-library.php",
+              "public/lib/UploadService.php",
+              "public/events.php",
+              "public/lib/Auth.php",
+              "public/users.php",
+              "public/dashboard.php",
+              "public/lib/View.php",
+              "public/lib/Ui.php",
+              "public/portal.php",
+              "public/VERSION",
+              "public/CHANGELOG.md",
+          ]
+
+          files=[]
+          for rel in file_paths:
+              data=(source/rel).read_bytes()
+              files.append({"path":rel,"sha256":hashlib.sha256(data).hexdigest()})
+
+          manifest={
+              "version":"3.6.4",
+              "min_php":"8.1",
+              "encoding":"base64",
+              "parts":[f"releases/{p.name}" for p in parts],
+              "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+              "published_at":"2026-11-02T20:12:00-03:00",
+              "cache_buster":"3.6.4-20261102-2012",
+              "notes":[
+                  "Nova Biblioteca de Mídia e Arquivos por igreja.",
+                  "Upload de imagens, PDFs, áudios, vídeos e documentos, além de links externos.",
+                  "Pastas, categorias, filtros, destaques e segmentação de público.",
+                  "Reutilização direta no Mural, Ensino/Turmas e cartazes de Eventos.",
+                  "Pacote cumulativo: mantém Grupos/Células, Mural e Ensino das versões 3.6.1 a 3.6.3."
+              ],
+              "files":files,
+          }
+
+          (channel/"latest.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.6.4.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.6.4.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.6.4.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+          rm -rf /tmp/test364
+          mkdir -p /tmp/test364
+          tar -xzf /tmp/rebuilt-3.6.4.tar.gz -C /tmp/test364
+
+          php -l /tmp/test364/public/lib/MediaLibraryService.php
+          php -l /tmp/test364/public/media-library.php
+          php -l /tmp/test364/public/announcements.php
+          php -l /tmp/test364/public/learning.php
+          php -l /tmp/test364/public/events.php
+          test "$(cat /tmp/test364/public/VERSION)" = "3.6.4"
+          test -f /tmp/test364/public/database/034_media_library.sql
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.6.4.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.6.4 cumulative media library"
+          git pull --rebase origin main
+          git push origin main
