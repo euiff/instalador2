@@ -52,6 +52,7 @@ final class View
             'visitors.php' => ['visitors','Visitantes e acolhimento','♡','secretary'],
             'pastoral-care.php' => ['pastoral-care','Cuidado pastoral','♡','pastoral'],
             'departments.php' => ['departments','Departamentos','♙','secretary'],
+            'small-groups.php' => ['small-groups','Grupos e Células','♙','group_portal'],
             'church-insights.php' => ['church-insights','Pessoas e crescimento','▥','secretary'],
             'assets.php' => ['assets','Patrimônio','▣','finance'],
             'documents.php' => ['documents','Documentos','▤','secretary'],
@@ -60,7 +61,7 @@ final class View
             'event-registrations.php' => ['event-registrations','Inscrições de Eventos','☑','secretary'],
             'service-types.php' => ['service-types','Cultos e reuniões','♢','secretary'],
             'prayers.php' => ['prayers','Pedidos de Oração','♡','secretary'],
-            'groups.php' => ['groups','Grupos da Igreja','☏','communications'],
+            'groups.php' => ['groups','Grupos do WhatsApp','☏','communications'],
             'campaigns.php' => ['campaigns','Comunicados','✉','communications'],
             'automations.php' => ['automations','Automações','↻','settings'],
             'messages.php' => ['messages','Histórico WhatsApp','≡','communications'],
@@ -90,7 +91,7 @@ final class View
         }
         $groups = [
             'Visão geral'=>['home',['dashboard.php','portal.php','church-insights.php','reports.php']],
-            'Pessoas e cadastros'=>['people',['members.php','registers.php?kind=person_category','registers.php?kind=family','registers.php?kind=position','registers.php?kind=custom_field','visitors.php','pastoral-care.php','departments.php','congregations.php','documents.php','prayers.php']],
+            'Pessoas e cadastros'=>['people',['members.php','registers.php?kind=person_category','registers.php?kind=family','registers.php?kind=position','registers.php?kind=custom_field','visitors.php','pastoral-care.php','departments.php','small-groups.php','congregations.php','documents.php','prayers.php']],
             'Agenda da igreja'=>['calendar',['events.php','service-types.php','event-registrations.php']],
             'Financeiro'=>['wallet',['finance-control.php','finance.php','finance-control.php?view=receivables','department-cash.php','registers.php?kind=finance_category','registers.php?kind=cost_center','registers.php?kind=contact','finance-control.php?view=report','finance-import.php','finance-control.php?view=history','finance-control.php?view=periods','assets.php','needs.php']],
             'Comunicação'=>['message',['groups.php','campaigns.php','messages.php','polls.php','prayer-clock.php','raffles.php','bible.php','group-moderation.php']],
@@ -107,6 +108,7 @@ final class View
             ['visitors.php','Visitante','Acolhimento e próximo contato','heart','secretary'],
             ['congregations.php','Congregação','Unidades e responsáveis','building','secretary'],
             ['departments.php','Departamento','Ministérios e participantes','people','secretary'],
+            ['small-groups.php','Grupo ou célula','Líderes, participantes e frequência','people','secretary'],
             ['events.php','Evento','Programação e inscrições','calendar','secretary'],
             ['service-types.php','Culto ou reunião','Agenda recorrente da igreja','calendar','secretary'],
             ['event-registrations.php','Inscrição em evento','Registrar um participante','calendar','secretary'],
