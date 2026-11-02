@@ -2,6 +2,7 @@
 require __DIR__.'/bootstrap.php';
 if(in_array($auth->churchRole(),['member','department_leader'],true))redirect('/portal.php');
 if($auth->churchRole()==='group_leader')redirect('/small-groups.php');
+if($auth->churchRole()==='teacher')redirect('/learning.php');
 if($auth->isSuperAdmin()&&!$auth->isMasterSupportMode())redirect('/master.php');
 $user=$auth->requireAbility('dashboard');
 $church=$auth->currentChurch();
