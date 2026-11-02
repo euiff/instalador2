@@ -193,7 +193,7 @@ View::flash();
   </div>
 </dialog>
 
-<dialog class="app-dialog" id="media-item-editor" aria-labelledby="media-item-title" <?=$edit?'open':''?>>
+<dialog class="app-dialog" id="media-item-editor" aria-labelledby="media-item-title" <?=$edit||isset($_GET['new'])?'open':''?>>
   <div class="dialog-shell">
     <header class="dialog-heading"><div><h2 id="media-item-title"><?=$edit?'Editar arquivo':'Adicionar à Biblioteca'?></h2><p>Faça upload ou cadastre um link externo.</p></div><button class="icon-button" type="button" data-close-dialog>×</button></header>
     <div class="dialog-body">
