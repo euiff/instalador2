@@ -106,9 +106,20 @@ final class CronTasks
                 if(!is_array($ids))$ids=[];
                 try{
                     $service=new GroupBroadcastService($this->pdo);
+                    $mediaPath=null;
+                    $relative=trim((string)($campaign['media_path']??''));
+                    if($relative!==''){
+                        $candidate=dirname(__DIR__).'/'.ltrim(str_replace('\\','/',$relative),'/');
+                        if(is_file($candidate)&&is_readable($candidate))$mediaPath=$candidate;
+                    }
+
                     $result=$ids
-                        ?$service->sendIds($church,$ids,(string)$campaign['message'],(string)$campaign['id'])
-                        :$service->sendPurpose($church,'announcements',(string)$campaign['message'],null,(string)$campaign['id']);
+                        ?($mediaPath
+                            ?$service->sendIdsRich($church,$ids,(string)$campaign['message'],$mediaPath,(string)$campaign['id'])
+                            :$service->sendIds($church,$ids,(string)$campaign['message'],(string)$campaign['id']))
+                        :($mediaPath
+                            ?$service->sendPurposeRich($church,'announcements',(string)$campaign['message'],null,$mediaPath,(string)$campaign['id'])
+                            :$service->sendPurpose($church,'announcements',(string)$campaign['message'],null,(string)$campaign['id']));
                     $status=(int)$result['sent']>0?'sent':'error';
                     $this->pdo->prepare('UPDATE communication_campaigns SET status=?,sent_at=IF(?="sent",NOW(),sent_at) WHERE id=?')->execute([$status,$status,$campaign['id']]);
                     $sent+=(int)$result['sent'];
