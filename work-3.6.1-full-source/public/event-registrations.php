@@ -129,6 +129,12 @@ View::flash();
       <label>Nascimento<input class="input" type="date" name="birth_date"></label>
       <label>CPF<input class="input" name="cpf"></label>
       <label>Convidados<input class="input" type="number" min="0" max="20" name="guests_count" value="0"></label>
+      <label>CEP<input class="input" name="cep"></label>
+      <label>Rua<input class="input" name="address_street"></label>
+      <label>Número<input class="input" name="address_number"></label>
+      <label>Bairro<input class="input" name="address_neighborhood"></label>
+      <label>Cidade<input class="input" name="address_city"></label>
+      <label>UF<input class="input" name="address_state" maxlength="2"></label>
       <label class="full">Observações<textarea class="textarea" name="notes"></textarea></label>
     </div>
     <button class="btn btn-primary">Cadastrar inscrição</button>
