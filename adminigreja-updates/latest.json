@@ -1,25 +1,26 @@
 {
-  "version": "3.6.5",
+  "version": "3.6.6",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.6.5.01.b64.txt",
-    "releases/v3.6.5.02.b64.txt",
-    "releases/v3.6.5.03.b64.txt",
-    "releases/v3.6.5.04.b64.txt",
-    "releases/v3.6.5.05.b64.txt",
-    "releases/v3.6.5.06.b64.txt",
-    "releases/v3.6.5.07.b64.txt",
-    "releases/v3.6.5.08.b64.txt"
+    "releases/v3.6.6.01.b64.txt",
+    "releases/v3.6.6.02.b64.txt",
+    "releases/v3.6.6.03.b64.txt",
+    "releases/v3.6.6.04.b64.txt",
+    "releases/v3.6.6.05.b64.txt",
+    "releases/v3.6.6.06.b64.txt",
+    "releases/v3.6.6.07.b64.txt",
+    "releases/v3.6.6.08.b64.txt",
+    "releases/v3.6.6.09.b64.txt"
   ],
-  "sha256": "c0dbfaa5a7e82529232b5e2e156160ebb83dc5ad43a89dc7162d0443caf73fa9",
-  "published_at": "2026-11-02T20:25:00-03:00",
-  "cache_buster": "3.6.5-20261102-2025",
+  "sha256": "5f5b8fe525710237bf624cba37719fb550bcd09e4492aaf0b50d55ae1175ab65",
+  "published_at": "2026-11-02T20:42:00-03:00",
+  "cache_buster": "3.6.6-20261102-2042",
   "notes": [
-    "Biblioteca integrada aos Comunicados do WhatsApp.",
-    "Campanhas podem enviar mídia local da Biblioteca e manter a mesma mídia em agendamentos.",
-    "Cron envia a mídia selecionada no horário programado.",
-    "Pacote cumulativo com Grupos/Células, Mural, Ensino e Biblioteca."
+    "Novo módulo Estudos por categorias com capa, material e registro de leitura.",
+    "Biblioteca agora cria Álbuns de Fotos e Álbuns de Vídeos.",
+    "Novo acesso Fotos e Vídeos para membros e líderes.",
+    "Pacote cumulativo com Grupos/Células, Mural, Ensino, Biblioteca e WhatsApp com mídia."
   ],
   "files": [
     {
@@ -41,6 +42,10 @@
     {
       "path": "public/database/035_campaign_media.sql",
       "sha256": "97e48039e502ad28de52ceac1f563efd012073d508a48a37b7980d8a8a61e633"
+    },
+    {
+      "path": "public/database/036_studies_albums.sql",
+      "sha256": "74a1efa1211ff7b82dc2999c8493090e7eb9ac3291ffc5b9f1816523c1a6487d"
     },
     {
       "path": "public/lib/SmallGroupService.php",
@@ -72,11 +77,23 @@
     },
     {
       "path": "public/lib/MediaLibraryService.php",
-      "sha256": "54a04c9cf519a82f7a009870e5c65bac3e989570819f0ad0b1121e0540cf3c30"
+      "sha256": "7c43aa41edb3490b192bbfb0a9bed6bc1f2a0eff717c9018684d61c2ac3d60a0"
     },
     {
       "path": "public/media-library.php",
-      "sha256": "7bbfd8764650cd04b75b9f94106f535fd6fbe50dcefce5faa8d714c9c22a40b6"
+      "sha256": "db58508a350e87724237c171ded0bdcc7b631da066b862b3dd003aad7cabde04"
+    },
+    {
+      "path": "public/albums.php",
+      "sha256": "0a4e92157d702b99d43c8a93db237856ddb22d041fe5630379dbd02556cc7dbc"
+    },
+    {
+      "path": "public/lib/StudyService.php",
+      "sha256": "7a8f4f8e5a0d9b92e402b4f04505ae5281f53562f9e058d875b112c2edff415d"
+    },
+    {
+      "path": "public/studies.php",
+      "sha256": "54feb99a9002930405e29e8e7e8616fb39b604ba42b045704c87bd1add35ac8d"
     },
     {
       "path": "public/lib/UploadService.php",
@@ -104,7 +121,7 @@
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "3c6f6e03e20530f2db14605ff1c97c678a31d1fa6c777c7165b0e97f95763a3a"
+      "sha256": "d55ac77517902cecc1f5741292c7b80959797fbb3a4f6f8d4e3a7274bd1d9c14"
     },
     {
       "path": "public/users.php",
@@ -116,23 +133,23 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "9fc7d3b454bf2f71e986eefc1dbbbbd7b11308ba0b4919cc827002eb33497e80"
+      "sha256": "f517d96365fd102edaa6a774bd457caacdef171d5d66ea013f96993466bee27f"
     },
     {
       "path": "public/lib/Ui.php",
-      "sha256": "e56748f7182ec0cd4239582c46c4bb8314cdadb12136918d2094b1288ce9bd06"
+      "sha256": "866bd3099b03564032519e34a3872ff6f1b363e4c9f13186f58f8ba93ab89e55"
     },
     {
       "path": "public/portal.php",
-      "sha256": "2ec24272f709ebe07ce191c90de523f3ade55c9aa3439f265436dad2818808c6"
+      "sha256": "001e616571dd75ba2eca59a49fc95c777b33c97366b70f5811baa83204e0d967"
     },
     {
       "path": "public/VERSION",
-      "sha256": "40803a7a78dc98a2ebe1d1d0a901433465279db2c2d9314a6206eff688386016"
+      "sha256": "14e0f057c25f7d383ad4f3b04ef946cca611c629e5c0366ad78a7eac8bbd794b"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "7afd05513f5773b91995a462cccb3809cb4a3035d6819b5e12c95c0f969d2c74"
+      "sha256": "487682ecb37e14dd6e07a267bd49760935d2e44a6012ec4a1af6d7fd2a6d6ff2"
     }
   ]
 }
