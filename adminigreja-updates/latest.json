@@ -1,29 +1,31 @@
 {
-  "version": "3.7.0",
+  "version": "3.7.1",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.0.01.b64.txt",
-    "releases/v3.7.0.02.b64.txt",
-    "releases/v3.7.0.03.b64.txt",
-    "releases/v3.7.0.04.b64.txt",
-    "releases/v3.7.0.05.b64.txt",
-    "releases/v3.7.0.06.b64.txt",
-    "releases/v3.7.0.07.b64.txt",
-    "releases/v3.7.0.08.b64.txt",
-    "releases/v3.7.0.09.b64.txt",
-    "releases/v3.7.0.10.b64.txt",
-    "releases/v3.7.0.11.b64.txt"
+    "releases/v3.7.1.01.b64.txt",
+    "releases/v3.7.1.02.b64.txt",
+    "releases/v3.7.1.03.b64.txt",
+    "releases/v3.7.1.04.b64.txt",
+    "releases/v3.7.1.05.b64.txt",
+    "releases/v3.7.1.06.b64.txt",
+    "releases/v3.7.1.07.b64.txt",
+    "releases/v3.7.1.08.b64.txt",
+    "releases/v3.7.1.09.b64.txt",
+    "releases/v3.7.1.10.b64.txt",
+    "releases/v3.7.1.11.b64.txt",
+    "releases/v3.7.1.12.b64.txt",
+    "releases/v3.7.1.13.b64.txt"
   ],
-  "sha256": "8ec296c5a87c5f7732796bdc303b19626f02edc9d071a87bc4e93295fed60f9b",
-  "published_at": "2026-11-02T21:05:00-03:00",
-  "cache_buster": "3.7.0-20261102-2105",
+  "sha256": "f2ea3aefa226a377341387d55f5347a4705e02a92615dd49e2cf3a5afa270108",
+  "published_at": "2026-11-02T21:28:00-03:00",
+  "cache_buster": "3.7.1-20261102-2128",
   "notes": [
-    "Novo módulo Kids com turmas, salas, equipe, crianças e responsáveis.",
-    "Check-in assistido, checkout com código de segurança e controle de capacidade.",
-    "Link público por programação com solicitação e aprovação da equipe.",
-    "Registros da aula com mídia e relatórios básicos.",
-    "Pacote cumulativo com todos os módulos 3.6.1 a 3.6.6."
+    "Eventos 2.0 com inscrição pública, QR, vagas e pagamento manual/PIX.",
+    "Secretaria acompanha confirmação, pagamento, vagas e valores.",
+    "Bot do WhatsApp respeita regras do evento e gera PIX quando aplicável.",
+    "Nova página pública de Doações Online por PIX.",
+    "Pacote cumulativo com todos os módulos 3.6.1 a 3.7.0."
   ],
   "files": [
     {
@@ -53,6 +55,10 @@
     {
       "path": "public/database/037_kids_module.sql",
       "sha256": "9196396b77413c8ba593c23e6aa0418daca09dd7119e857a91360b504cdcd8d9"
+    },
+    {
+      "path": "public/database/038_events_donations_qr.sql",
+      "sha256": "43eebff4edaed75075034481bd18466790ce951b5c0dcd81acdf2cc3266ecba8"
     },
     {
       "path": "public/lib/SmallGroupService.php",
@@ -115,12 +121,40 @@
       "sha256": "50fffd7aa723bf99ca16bd8b4dab3080e3e14178079a086a628898a78e4e23b2"
     },
     {
+      "path": "public/lib/PixPayloadService.php",
+      "sha256": "0e4519825f37cc4f3a0ff9dbc49e088750e26ced4cd60794dd642b36f5da0f39"
+    },
+    {
+      "path": "public/lib/EventRegistrationService.php",
+      "sha256": "0c1e96e9b370885ec4bc75f79900188be4b0f89859b659c33301a1ae18c1569a"
+    },
+    {
+      "path": "public/event-register.php",
+      "sha256": "6f9910c51dfe76e7d3120e68d0271331e8fa363d184bf7fda1ab462fbff68699"
+    },
+    {
+      "path": "public/event-registrations.php",
+      "sha256": "a5f217f275ab40af3fe1841fe386984e68bf1418ec1875a0ed33196a7bd04e91"
+    },
+    {
+      "path": "public/donate.php",
+      "sha256": "a2ba9d2ae44fc35b91832858097b1f24eb7efbf76b2512362b8dad3d9421b98d"
+    },
+    {
+      "path": "public/lib/BotEventFlow.php",
+      "sha256": "12474e23e52a560e6bd3e553e699cba8faa213b4596aebda043f24c487702160"
+    },
+    {
+      "path": "public/settings.php",
+      "sha256": "b70c89ee94ad2e1d18697a61d6bc7a9fd4beace46a9f02ae8aeb2c64cfc4c97e"
+    },
+    {
       "path": "public/lib/UploadService.php",
       "sha256": "6919939938b61cdad9eb2620a50fd7bc083860490c9706423802ab7bf5443012"
     },
     {
       "path": "public/events.php",
-      "sha256": "22083b99dadd735b0addde61d7046ca78d52a5b0de62117c62b9ddc6ac6f967b"
+      "sha256": "8ceb97a762b8ebd75900f22e10fa38644db1dd7fc47952df6f0ba2cd8075cfae"
     },
     {
       "path": "public/lib/EvolutionClient.php",
@@ -160,15 +194,15 @@
     },
     {
       "path": "public/portal.php",
-      "sha256": "001e616571dd75ba2eca59a49fc95c777b33c97366b70f5811baa83204e0d967"
+      "sha256": "d699acc5965920a3861e321845cea27bd822a3cf5aed708f2822b9b233bc3142"
     },
     {
       "path": "public/VERSION",
-      "sha256": "84746b20a3a72f6ff85a629706e50507c1bd200907456b76dd808a2a5ca0efba"
+      "sha256": "4e99e7eac21c2b71a97139cacca695d98c93fbd7dd26505f04f5271809ac4b94"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "c226922a3c369c4b8f42b448b50410fcac997d757c5bc57159ef31e92766f9b4"
+      "sha256": "ab05ccbd76b0b3a4a8cd288a34ebbe49f1bfb82a71fadfe713a0df5a902789ce"
     }
   ]
 }
