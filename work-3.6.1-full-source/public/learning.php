@@ -94,7 +94,7 @@ $q->execute([$cid]);$memberOptions=$q->fetchAll();
 $q=$pdo->prepare('SELECT id,name FROM congregations WHERE church_id=? AND active=1 ORDER BY name');
 $q->execute([$cid]);$congregations=$q->fetchAll();
 
-$mediaItems=$isManager?$mediaLibrary->reusableItems():[];
+$mediaItems=$isManager?$mediaLibrary->reusableItems():$mediaLibrary->visibleForCurrentUser();
 
 $teachers=[];$students=[];$lessons=[];$myProgress=null;$canManageSelected=false;
 if($selected){
