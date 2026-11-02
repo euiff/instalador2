@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/bootstrap.php';
-if(in_array($auth->churchRole(),['member','department_leader'],true))redirect('/portal.php');
+if(in_array($auth->churchRole(),['member','department_leader'],true))redirect('/portal-home.php');
 if($auth->churchRole()==='group_leader')redirect('/small-groups.php');
 if($auth->churchRole()==='teacher')redirect('/learning.php');
 if($auth->churchRole()==='kids_worker')redirect('/kids.php');
