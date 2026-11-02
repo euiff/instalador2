@@ -185,7 +185,7 @@ final class Auth
         if(($membership['church_role']??'')==='super_admin')return 'super_admin';
         if(!empty($membership['is_owner']))return 'owner';
         $role=strtolower(trim((string)($membership['church_role']??'admin')));
-        return in_array($role,['owner','admin','pastor','secretary','treasurer','department_leader','group_leader','member'],true)?$role:'';
+        return in_array($role,['owner','admin','pastor','secretary','treasurer','department_leader','group_leader','teacher','member'],true)?$role:'';
     }
 
     public function can(string $ability): bool
@@ -203,14 +203,17 @@ final class Auth
 
         $role=$this->churchRole();
         // Restricted profiles cannot acquire general permissions through old JSON overrides.
-        if(in_array($role,['member','department_leader','group_leader'],true)) {
+        if(in_array($role,['member','department_leader','group_leader','teacher'],true)) {
             return $ability==='member_board'
-                || $ability==='member_portal'
+                || ($ability==='member_portal' && !empty($membership['person_id']))
+                || ($ability==='learning_portal' && !empty($membership['person_id']))
                 || ($role==='department_leader' && $ability==='department_portal')
-                || ($role==='group_leader' && $ability==='group_portal');
+                || ($role==='group_leader' && $ability==='group_portal')
+                || ($role==='teacher' && $ability==='learning_portal');
         }
         if($role==='')return false;
         if($ability==='member_board')return true;
+        if($ability==='learning_portal')return !empty($membership['person_id'])||in_array($role,['owner','admin','pastor','secretary'],true);
         if($ability==='member_portal')return !empty($membership['person_id']);
         if($ability==='department_portal')return $this->can('finance');
         if(in_array($role,['owner','admin','pastor'],true))return true;
@@ -224,7 +227,7 @@ final class Auth
         }
 
         $matrix=[
-            'secretary'=>['dashboard','secretary','communications','needs','group_portal'],
+            'secretary'=>['dashboard','secretary','communications','needs','group_portal','learning_portal'],
             'treasurer'=>['dashboard','finance','reports','needs'],
         ];
         return in_array($ability,$matrix[$role]??[],true);
