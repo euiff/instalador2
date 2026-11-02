@@ -1,3 +1,16 @@
+# 3.6.2 — 02/11/2026
+
+- Novo Mural de Avisos para comunicação interna da igreja.
+- Pastor e secretaria podem publicar, editar, fixar, programar e arquivar avisos.
+- Segmentação por todos os usuários, membros, liderança, departamento ou grupo/célula.
+- Membros e líderes visualizam somente os avisos destinados ao seu acesso.
+- Confirmação de leitura e contador de leituras por aviso.
+- Avisos podem ter prioridade normal, importante ou urgente.
+- Período de exibição com início e término automáticos.
+- Links de ação e de arquivo/cartaz/vídeo podem ser anexados ao aviso.
+- Mural aparece no menu do usuário e dentro do fluxo do portal pessoal.
+- Todos os registros permanecem separados por igreja.
+
 # 3.6.1 — 02/11/2026
 
 - Novo módulo Grupos e Células, separado dos grupos de WhatsApp.
