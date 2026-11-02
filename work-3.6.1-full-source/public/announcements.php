@@ -1,12 +1,14 @@
 <?php
 require __DIR__.'/bootstrap.php';
 require_once __DIR__.'/lib/AnnouncementService.php';
+require_once __DIR__.'/lib/MediaLibraryService.php';
 
 $user=$auth->requireAbility('communications');
 $church=$auth->currentChurch();
 if(!$church)redirect('/dashboard.php');
 $cid=(string)$church['id'];
 $service=new AnnouncementService($pdo,$auth,$cid);
+$mediaLibrary=new MediaLibraryService($pdo,$auth,$cid,__DIR__);
 
 $error=flash('error');
 $success=flash('success');
@@ -27,6 +29,13 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             $_POST['target_id']=$audience==='department'
                 ?(string)($_POST['department_id']??'')
                 :($audience==='group'?(string)($_POST['group_id']??''):'');
+            $mediaId=trim((string)($_POST['media_library_id']??''));
+            if($mediaId!==''){
+                $mediaItem=$mediaLibrary->item($mediaId);
+                $mediaUrl=$mediaLibrary->url($mediaItem);
+                if(!$mediaUrl)throw new RuntimeException('O arquivo selecionado na Biblioteca não possui endereço disponível.');
+                $_POST['attachment_url']=$mediaUrl;
+            }
             $id=$service->save($_POST);
             flash('success','Aviso salvo no Mural.');
             redirect('/announcements.php?edit='.rawurlencode($id));
@@ -51,6 +60,8 @@ $q->execute([$cid]);$departments=$q->fetchAll();
 
 $q=$pdo->prepare('SELECT id,name FROM small_groups WHERE church_id=? AND active=1 ORDER BY name');
 $q->execute([$cid]);$groups=$q->fetchAll();
+
+$mediaItems=$mediaLibrary->reusableItems();
 
 $priorityLabels=['normal'=>'Normal','important'=>'Importante','urgent'=>'Urgente'];
 $audienceLabels=['all'=>'Todos os usuários','members'=>'Membros','leaders'=>'Liderança','department'=>'Departamento','group'=>'Grupo/Célula'];
@@ -142,6 +153,7 @@ $readTotal=array_sum(array_map(fn($r)=>(int)$r['read_count'],$rows));
           <label>Começar a exibir<input class="input" type="datetime-local" name="starts_at" value="<?=e(!empty($edit['starts_at'])?date('Y-m-d\TH:i',strtotime($edit['starts_at'])):'')?>"></label>
           <label>Parar de exibir<input class="input" type="datetime-local" name="ends_at" value="<?=e(!empty($edit['ends_at'])?date('Y-m-d\TH:i',strtotime($edit['ends_at'])):'')?>"></label>
           <label class="full">Link de ação<input class="input" type="url" name="link_url" value="<?=e($edit['link_url']??'')?>" placeholder="https://..."><small class="muted">Ex.: inscrição, formulário, página do evento.</small></label>
+          <label class="full">Arquivo da Biblioteca<select class="select" name="media_library_id"><option value="">Nenhum / usar link abaixo</option><?php foreach($mediaItems as $media):?><option value="<?=e($media['id'])?>"><?=e($media['title'])?> · <?=e($media['media_type'])?></option><?php endforeach?></select><small class="muted">Ao selecionar um arquivo, ele substitui o link manual abaixo.</small></label>
           <label class="full">Link de arquivo/cartaz/vídeo<input class="input" type="url" name="attachment_url" value="<?=e($edit['attachment_url']??'')?>" placeholder="https://..."></label>
           <label><input type="checkbox" name="pinned" value="1" <?=!empty($edit['pinned'])?'checked':''?>> Fixar no topo</label>
           <label><input type="checkbox" name="active" value="1" <?=($edit ? (!empty($edit['active'])?'checked':'') : 'checked')?>> Aviso ativo</label>
