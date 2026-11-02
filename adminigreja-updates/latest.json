@@ -1,25 +1,25 @@
 {
-  "version": "3.6.4",
+  "version": "3.6.5",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.6.4.01.b64.txt",
-    "releases/v3.6.4.02.b64.txt",
-    "releases/v3.6.4.03.b64.txt",
-    "releases/v3.6.4.04.b64.txt",
-    "releases/v3.6.4.05.b64.txt",
-    "releases/v3.6.4.06.b64.txt",
-    "releases/v3.6.4.07.b64.txt"
+    "releases/v3.6.5.01.b64.txt",
+    "releases/v3.6.5.02.b64.txt",
+    "releases/v3.6.5.03.b64.txt",
+    "releases/v3.6.5.04.b64.txt",
+    "releases/v3.6.5.05.b64.txt",
+    "releases/v3.6.5.06.b64.txt",
+    "releases/v3.6.5.07.b64.txt",
+    "releases/v3.6.5.08.b64.txt"
   ],
-  "sha256": "d12b6f9fe75a37007b4843e18f31be6b6b922235d8361f0f4f9bc894f2a2974e",
-  "published_at": "2026-11-02T20:12:00-03:00",
-  "cache_buster": "3.6.4-20261102-2012",
+  "sha256": "c0dbfaa5a7e82529232b5e2e156160ebb83dc5ad43a89dc7162d0443caf73fa9",
+  "published_at": "2026-11-02T20:25:00-03:00",
+  "cache_buster": "3.6.5-20261102-2025",
   "notes": [
-    "Nova Biblioteca de Mídia e Arquivos por igreja.",
-    "Upload de imagens, PDFs, áudios, vídeos e documentos, além de links externos.",
-    "Pastas, categorias, filtros, destaques e segmentação de público.",
-    "Reutilização direta no Mural, Ensino/Turmas e cartazes de Eventos.",
-    "Pacote cumulativo: mantém Grupos/Células, Mural e Ensino das versões 3.6.1 a 3.6.3."
+    "Biblioteca integrada aos Comunicados do WhatsApp.",
+    "Campanhas podem enviar mídia local da Biblioteca e manter a mesma mídia em agendamentos.",
+    "Cron envia a mídia selecionada no horário programado.",
+    "Pacote cumulativo com Grupos/Células, Mural, Ensino e Biblioteca."
   ],
   "files": [
     {
@@ -37,6 +37,10 @@
     {
       "path": "public/database/034_media_library.sql",
       "sha256": "335158db430db9f1d178f14ffd782672cf6eb2593e993b7c9723cf543e936f79"
+    },
+    {
+      "path": "public/database/035_campaign_media.sql",
+      "sha256": "97e48039e502ad28de52ceac1f563efd012073d508a48a37b7980d8a8a61e633"
     },
     {
       "path": "public/lib/SmallGroupService.php",
@@ -83,6 +87,22 @@
       "sha256": "22083b99dadd735b0addde61d7046ca78d52a5b0de62117c62b9ddc6ac6f967b"
     },
     {
+      "path": "public/lib/EvolutionClient.php",
+      "sha256": "73fbe32c3f328b3fd051fe7dfcaec93c9ba68c664da929af4d2a6e1af1f6eaa2"
+    },
+    {
+      "path": "public/lib/GroupBroadcastService.php",
+      "sha256": "7ba174c1068a0c918f2f0bc6117114e36b1b48cdfaeea9b24f3ec659ac959fc2"
+    },
+    {
+      "path": "public/lib/CronTasks.php",
+      "sha256": "ae67f5d5fcc1df9e7ed043980f1bec1a8c5b01b8fe44bfa9f22a9de60b020bdf"
+    },
+    {
+      "path": "public/campaigns.php",
+      "sha256": "e89b41a89455ae3be4161600ec07c03d0e5abdd962b216ec9355789fdf84fa9a"
+    },
+    {
       "path": "public/lib/Auth.php",
       "sha256": "3c6f6e03e20530f2db14605ff1c97c678a31d1fa6c777c7165b0e97f95763a3a"
     },
@@ -108,11 +128,11 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "9a989ebd95efe334f4248db1d63432eaa07e6fbe0e1234e47c91e5fc88906ca1"
+      "sha256": "40803a7a78dc98a2ebe1d1d0a901433465279db2c2d9314a6206eff688386016"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "961e2a6213f9911647dafe57275fabe674921f99fc28e313cfbb6416bd2dbe8f"
+      "sha256": "7afd05513f5773b91995a462cccb3809cb4a3035d6819b5e12c95c0f969d2c74"
     }
   ]
 }
