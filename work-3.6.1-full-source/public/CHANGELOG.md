@@ -1,3 +1,20 @@
+# 3.7.1 — 02/11/2026
+
+- Eventos 2.0 com link público de inscrição e QR Code.
+- Evento pode ser gratuito ou ter valor por participante.
+- Controle de capacidade considera titular + convidados e ignora inscrições canceladas.
+- Formas de pagamento configuráveis: PIX e pagamento no local.
+- PIX copia-e-cola e QR são gerados localmente pelo sistema, sem gateway bancário obrigatório.
+- Inscrições pagas ficam pendentes até confirmação manual da igreja.
+- Secretaria acompanha confirmados, pendentes, cancelados, vagas, total previsto e total recebido.
+- Histórico de inscrição não é apagado ao cancelar; o status preserva a movimentação.
+- Bot do WhatsApp passa a respeitar a configuração de inscrição de cada evento, prazo, vagas e valor.
+- Quando o evento exige CPF/endereço, o bot encaminha para a página pública completa em vez de gravar dados incompletos.
+- Novo módulo público de Doações Online por PIX, configurável por igreja, com link e QR Code.
+- Página de doação apenas gera o PIX da própria igreja; não processa nem confirma o pagamento automaticamente.
+- Portal do membro ganhou atalho Contribuir / PIX quando a igreja ativa a página.
+- Atualização cumulativa: mantém todos os módulos das versões 3.6.1 a 3.7.0.
+
 # 3.7.0 — 02/11/2026
 
 - Novo módulo Kids para gestão do ministério infantil.
