@@ -1,31 +1,31 @@
 {
-  "version": "3.7.1",
+  "version": "3.7.2",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.1.01.b64.txt",
-    "releases/v3.7.1.02.b64.txt",
-    "releases/v3.7.1.03.b64.txt",
-    "releases/v3.7.1.04.b64.txt",
-    "releases/v3.7.1.05.b64.txt",
-    "releases/v3.7.1.06.b64.txt",
-    "releases/v3.7.1.07.b64.txt",
-    "releases/v3.7.1.08.b64.txt",
-    "releases/v3.7.1.09.b64.txt",
-    "releases/v3.7.1.10.b64.txt",
-    "releases/v3.7.1.11.b64.txt",
-    "releases/v3.7.1.12.b64.txt",
-    "releases/v3.7.1.13.b64.txt"
+    "releases/v3.7.2.01.b64.txt",
+    "releases/v3.7.2.02.b64.txt",
+    "releases/v3.7.2.03.b64.txt",
+    "releases/v3.7.2.04.b64.txt",
+    "releases/v3.7.2.05.b64.txt",
+    "releases/v3.7.2.06.b64.txt",
+    "releases/v3.7.2.07.b64.txt",
+    "releases/v3.7.2.08.b64.txt",
+    "releases/v3.7.2.09.b64.txt",
+    "releases/v3.7.2.10.b64.txt",
+    "releases/v3.7.2.11.b64.txt",
+    "releases/v3.7.2.12.b64.txt",
+    "releases/v3.7.2.13.b64.txt"
   ],
-  "sha256": "f2ea3aefa226a377341387d55f5347a4705e02a92615dd49e2cf3a5afa270108",
-  "published_at": "2026-11-02T21:28:00-03:00",
-  "cache_buster": "3.7.1-20261102-2128",
+  "sha256": "8664935906b913b2bfa375bbdbd40e4729c970889f8055f623cc1d6d779ec07c",
+  "published_at": "2026-11-02T21:44:00-03:00",
+  "cache_buster": "3.7.2-20261102-2144",
   "notes": [
-    "Eventos 2.0 com inscrição pública, QR, vagas e pagamento manual/PIX.",
-    "Secretaria acompanha confirmação, pagamento, vagas e valores.",
-    "Bot do WhatsApp respeita regras do evento e gera PIX quando aplicável.",
-    "Nova página pública de Doações Online por PIX.",
-    "Pacote cumulativo com todos os módulos 3.6.1 a 3.7.0."
+    "Portal do Membro 2.0 em formato de painel/aplicativo.",
+    "Home reúne avisos, estudos, eventos, turmas, biblioteca, aniversariantes e contribuições.",
+    "Novo Meu Cadastro com edição segura de contato e endereço.",
+    "Atalhos respeitam as permissões de cada usuário.",
+    "Pacote cumulativo com todos os módulos 3.6.1 a 3.7.1."
   ],
   "files": [
     {
@@ -141,6 +141,18 @@
       "sha256": "a2ba9d2ae44fc35b91832858097b1f24eb7efbf76b2512362b8dad3d9421b98d"
     },
     {
+      "path": "public/lib/MemberSelfService.php",
+      "sha256": "f762d4dd370f6226b53640562bae08f7cc94d99099a4e31e29b8bab58244e47d"
+    },
+    {
+      "path": "public/my-profile.php",
+      "sha256": "05ea2a644d7f17c7cb8984f32842516239f19cabedf7abf47b76b1efb8bc8a8d"
+    },
+    {
+      "path": "public/portal-home.php",
+      "sha256": "6b12bd313a74e3d0700065e1ffa872671c327283d8b908f12b3ebfe1031f7e5d"
+    },
+    {
       "path": "public/lib/BotEventFlow.php",
       "sha256": "12474e23e52a560e6bd3e553e699cba8faa213b4596aebda043f24c487702160"
     },
@@ -182,27 +194,27 @@
     },
     {
       "path": "public/dashboard.php",
-      "sha256": "cc0da37d0767542bbd2081d0a3d7865007a9813b4d109f52949ad0d8a81eb4f0"
+      "sha256": "9c0bb15c8e8295f70a67d4292553a2cc39d5c1740a3d58cace2c46eb28149ace"
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "6fcd7b9f2d615aeec4181107bd6f63e000949bc576fcff86d40ad400132269df"
+      "sha256": "4593c3e8222b58841b2cd9003b04256849b080a93a48808f317dd5a719796885"
     },
     {
       "path": "public/lib/Ui.php",
-      "sha256": "39cbac26e22107bc85489cbbfd76757df1058ab1e121d875603269f40ec76a0a"
+      "sha256": "fcfd57f006863a07bc7f4199cfe3e09f081290d0e70396012158e7aa28f39cb5"
     },
     {
       "path": "public/portal.php",
-      "sha256": "d699acc5965920a3861e321845cea27bd822a3cf5aed708f2822b9b233bc3142"
+      "sha256": "ec24dfd89e167ba2f305d17c39b07cafc0141133c1a835535dc99f65228ee53a"
     },
     {
       "path": "public/VERSION",
-      "sha256": "4e99e7eac21c2b71a97139cacca695d98c93fbd7dd26505f04f5271809ac4b94"
+      "sha256": "c6985d515b3473f1ea6ec6306d74ea3cb913b64740172689a8e2b1edde3ec9fc"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "ab05ccbd76b0b3a4a8cd288a34ebbe49f1bfb82a71fadfe713a0df5a902789ce"
+      "sha256": "93f17e83f6cba9b3db0ac0389535ac8dfd90dce736d7d5db18044aede2f1bdf4"
     }
   ]
 }
