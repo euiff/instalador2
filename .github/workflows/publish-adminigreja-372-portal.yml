@@ -1,0 +1,191 @@
+name: Publish AdminIgreja 3.7.2 cumulative member portal
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-adminigreja-372-portal.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: channel
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: work-3.6.1-full
+          path: source
+          fetch-depth: 1
+
+      - name: Validate cumulative PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            public/lib/SmallGroupService.php public/small-groups.php
+            public/lib/AnnouncementService.php public/announcements.php public/board.php
+            public/lib/LearningService.php public/learning.php
+            public/lib/MediaLibraryService.php public/media-library.php public/albums.php
+            public/lib/StudyService.php public/studies.php
+            public/lib/KidsService.php public/kids.php public/kids-checkin.php
+            public/lib/PixPayloadService.php public/lib/EventRegistrationService.php
+            public/event-register.php public/event-registrations.php public/donate.php
+            public/lib/MemberSelfService.php public/my-profile.php public/portal-home.php
+            public/lib/BotEventFlow.php public/settings.php
+            public/lib/UploadService.php public/events.php
+            public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php
+            public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php
+          )
+          for f in "${files[@]}"; do php -l "source/work-3.6.1-full-source/$f"; done
+
+          for m in             031_small_groups_attendance             032_announcements_board             033_learning_courses_classes             034_media_library             035_campaign_media             036_studies_albums             037_kids_module             038_events_donations_qr; do
+            test -f "source/work-3.6.1-full-source/public/database/$m.sql"
+          done
+
+          grep -q "Meu Cadastro" source/work-3.6.1-full-source/public/portal-home.php
+          grep -q "Aniversariantes" source/work-3.6.1-full-source/public/portal-home.php
+          grep -q "Contribuições" source/work-3.6.1-full-source/public/portal-home.php
+          grep -q "portal-home.php" source/work-3.6.1-full-source/public/lib/View.php
+          grep -q "member_self_profile_updated" source/work-3.6.1-full-source/public/lib/MemberSelfService.php
+          grep -q "Contribuir / PIX" source/work-3.6.1-full-source/public/portal.php
+          test "$(cat source/work-3.6.1-full-source/public/VERSION)" = "3.7.2"
+
+      - name: Regression test PIX generator
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -r '
+            require "source/work-3.6.1-full-source/public/lib/PixPayloadService.php";
+            $p=PixPayloadService::payload("teste@example.com",37.50,"Casa da Bencao","Catalao","Oferta");
+            if(!str_contains($p,"CASA DA BENCAO")||!preg_match("/6304[0-9A-F]{4}$/",$p))exit(1);
+            echo "PIX regression OK\n";
+          '
+
+      - name: Build cumulative 3.7.2 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source/work-3.6.1-full-source
+
+          files=(
+            public/database/031_small_groups_attendance.sql
+            public/database/032_announcements_board.sql
+            public/database/033_learning_courses_classes.sql
+            public/database/034_media_library.sql
+            public/database/035_campaign_media.sql
+            public/database/036_studies_albums.sql
+            public/database/037_kids_module.sql
+            public/database/038_events_donations_qr.sql
+            public/lib/SmallGroupService.php public/small-groups.php
+            public/lib/AnnouncementService.php public/announcements.php public/board.php
+            public/lib/LearningService.php public/learning.php
+            public/lib/MediaLibraryService.php public/media-library.php public/albums.php
+            public/lib/StudyService.php public/studies.php
+            public/lib/KidsService.php public/kids.php public/kids-checkin.php
+            public/lib/PixPayloadService.php public/lib/EventRegistrationService.php
+            public/event-register.php public/event-registrations.php public/donate.php
+            public/lib/MemberSelfService.php public/my-profile.php public/portal-home.php
+            public/lib/BotEventFlow.php public/settings.php
+            public/lib/UploadService.php public/events.php
+            public/lib/EvolutionClient.php public/lib/GroupBroadcastService.php public/lib/CronTasks.php public/campaigns.php
+            public/lib/Auth.php public/users.php public/dashboard.php public/lib/View.php public/lib/Ui.php public/portal.php
+            public/VERSION public/CHANGELOG.md
+          )
+
+          tar -czf /tmp/adminigreja-3.7.2.tar.gz "${files[@]}"
+
+          cd ../../channel
+          rm -f adminigreja-updates/releases/v3.7.2.*.b64.txt
+          base64 -w0 /tmp/adminigreja-3.7.2.tar.gz > /tmp/adminigreja-3.7.2.b64
+          split -b 12000 -d -a 2 /tmp/adminigreja-3.7.2.b64 /tmp/v3.7.2.
+
+          i=1
+          for f in /tmp/v3.7.2.*; do
+            printf -v n "%02d" "$i"
+            cp "$f" "adminigreja-updates/releases/v3.7.2.$n.b64.txt"
+            i=$((i+1))
+          done
+
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          channel=Path("adminigreja-updates")
+          source=Path("../source/work-3.6.1-full-source")
+          package=Path("/tmp/adminigreja-3.7.2.tar.gz")
+          parts=sorted((channel/"releases").glob("v3.7.2.*.b64.txt"))
+          file_paths=[
+            "public/database/031_small_groups_attendance.sql","public/database/032_announcements_board.sql",
+            "public/database/033_learning_courses_classes.sql","public/database/034_media_library.sql",
+            "public/database/035_campaign_media.sql","public/database/036_studies_albums.sql",
+            "public/database/037_kids_module.sql","public/database/038_events_donations_qr.sql",
+            "public/lib/SmallGroupService.php","public/small-groups.php",
+            "public/lib/AnnouncementService.php","public/announcements.php","public/board.php",
+            "public/lib/LearningService.php","public/learning.php",
+            "public/lib/MediaLibraryService.php","public/media-library.php","public/albums.php",
+            "public/lib/StudyService.php","public/studies.php",
+            "public/lib/KidsService.php","public/kids.php","public/kids-checkin.php",
+            "public/lib/PixPayloadService.php","public/lib/EventRegistrationService.php",
+            "public/event-register.php","public/event-registrations.php","public/donate.php",
+            "public/lib/MemberSelfService.php","public/my-profile.php","public/portal-home.php",
+            "public/lib/BotEventFlow.php","public/settings.php",
+            "public/lib/UploadService.php","public/events.php",
+            "public/lib/EvolutionClient.php","public/lib/GroupBroadcastService.php","public/lib/CronTasks.php","public/campaigns.php",
+            "public/lib/Auth.php","public/users.php","public/dashboard.php","public/lib/View.php","public/lib/Ui.php","public/portal.php",
+            "public/VERSION","public/CHANGELOG.md"
+          ]
+          files=[{"path":rel,"sha256":hashlib.sha256((source/rel).read_bytes()).hexdigest()} for rel in file_paths]
+          manifest={
+            "version":"3.7.2",
+            "min_php":"8.1",
+            "encoding":"base64",
+            "parts":[f"releases/{p.name}" for p in parts],
+            "sha256":hashlib.sha256(package.read_bytes()).hexdigest(),
+            "published_at":"2026-11-02T21:44:00-03:00",
+            "cache_buster":"3.7.2-20261102-2144",
+            "notes":[
+              "Portal do Membro 2.0 em formato de painel/aplicativo.",
+              "Home reúne avisos, estudos, eventos, turmas, biblioteca, aniversariantes e contribuições.",
+              "Novo Meu Cadastro com edição segura de contato e endereço.",
+              "Atalhos respeitam as permissões de cada usuário.",
+              "Pacote cumulativo com todos os módulos 3.6.1 a 3.7.1."
+            ],
+            "files":files
+          }
+          (channel/"latest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          cat adminigreja-updates/releases/v3.7.2.*.b64.txt | tr -d '\r\n' | base64 -d > /tmp/rebuilt-3.7.2.tar.gz
+          expected="$(python3 -c 'import json;print(json.load(open("adminigreja-updates/latest.json"))["sha256"])')"
+          actual="$(sha256sum /tmp/rebuilt-3.7.2.tar.gz | awk '{print $1}')"
+          test "$expected" = "$actual"
+          rm -rf /tmp/test372 && mkdir -p /tmp/test372
+          tar -xzf /tmp/rebuilt-3.7.2.tar.gz -C /tmp/test372
+          php -l /tmp/test372/public/portal-home.php
+          php -l /tmp/test372/public/my-profile.php
+          php -l /tmp/test372/public/lib/MemberSelfService.php
+          test "$(cat /tmp/test372/public/VERSION)" = "3.7.2"
+
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd channel
+          git config user.name "AdminIgreja Update Bot"
+          git config user.email "actions@github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.2.*.b64.txt
+          git commit -m "Publish AdminIgreja 3.7.2 cumulative member portal"
+          git pull --rebase origin main
+          git push origin main
