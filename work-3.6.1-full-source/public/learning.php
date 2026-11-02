@@ -257,7 +257,7 @@ View::flash();
   </form></div></div>
 </dialog>
 
-<dialog class="app-dialog" id="class-editor" aria-labelledby="class-title">
+<dialog class="app-dialog" id="class-editor" aria-labelledby="class-title" <?=isset($_GET['new'])&&!$selected?'open':''?>>
   <div class="dialog-shell"><header class="dialog-heading"><div><h2 id="class-title"><?=$selected?'Editar turma':'Nova turma'?></h2><p>Datas, local, capacidade e situação.</p></div><button class="icon-button" type="button" data-close-dialog>×</button></header>
   <div class="dialog-body"><form method="post"><?=csrf_field()?><input type="hidden" name="action" value="save_class"><input type="hidden" name="id" value="<?=e($selected['id']??'')?>">
     <div class="form-grid">
