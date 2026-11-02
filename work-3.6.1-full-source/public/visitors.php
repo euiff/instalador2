@@ -1,0 +1,20 @@
+<?php
+require __DIR__.'/bootstrap.php'; require __DIR__.'/lib/CareView.php';
+$auth->requireAbility('secretary'); $church=$auth->currentChurch(); if(!$church) redirect('/logout.php');
+$care=new ChurchCare($pdo,(string)$church['id']); $error=null; $edit=[];
+if($_SERVER['REQUEST_METHOD']==='POST') {
+    csrf_check(); try { $care->visitor($_POST); flash('success','Visitante salvo.'); redirect('/visitors.php'); } catch(Throwable $e) { $error=care_error($e); $edit=$_POST; }
+} elseif(!empty($_GET['edit'])) { try { $edit=$care->owned('church_visitors',(string)$_GET['edit']); } catch(Throwable $e) { $error=care_error($e); } }
+$search=trim((string)($_GET['q']??'')); $status=(string)($_GET['status']??'all');
+$sql='SELECT * FROM church_visitors WHERE church_id=?'; $params=[];
+if($search!=='') { $sql.=' AND (name LIKE ? OR phone LIKE ?)'; $params=['%'.$search.'%','%'.$search.'%']; }
+if(isset(ChurchCare::VISITOR_STATUS[$status])) { $sql.=' AND status=?'; $params[]=$status; }
+if(isset($_GET['due'])) $sql.=" AND status NOT IN ('closed','integrated') AND next_contact<=CURDATE()";
+$rows=$care->all($sql.' ORDER BY first_visit DESC,name LIMIT 500',$params);
+View::header('Visitantes',$auth,'visitors.php'); care_heading('Visitantes e acolhimento','Da primeira visita ao discipulado: acompanhe cada pessoa e agende o próximo contato.'); care_notice($error);
+?>
+<div class="grid two-col"><section class="card card-pad"><form class="toolbar no-print" method="get"><input class="input" name="q" value="<?=e($search)?>" placeholder="Nome ou telefone" aria-label="Buscar visitante"><select class="select" name="status" aria-label="Situação"><option value="all">Todas as situações</option><?php foreach(ChurchCare::VISITOR_STATUS as $k=>$v):?><option value="<?=e($k)?>" <?=$k===$status?'selected':''?>><?=e($v)?></option><?php endforeach?></select><label><input type="checkbox" name="due" value="1" <?=isset($_GET['due'])?'checked':''?>> Retornos até hoje</label><button class="btn btn-light">Filtrar</button></form><p class="muted"><?=count($rows)?> visitante(s), até 500 por consulta.</p><div class="table-wrap"><table class="table"><thead><tr><th>Visitante</th><th>Primeira visita</th><th>Próximo contato</th><th>Situação</th><th class="no-print"></th></tr></thead><tbody><?php if(!$rows):?><tr><td colspan="5">Nenhum visitante encontrado.</td></tr><?php endif?><?php foreach($rows as $r):?><tr><td><strong><?=e($r['name'])?></strong><div><?=e($r['phone'])?></div><small><?=e($r['responsible'])?></small></td><td><?=e(ChurchCare::displayDate($r['first_visit']))?></td><td><?=e(ChurchCare::displayDate($r['next_contact']))?></td><td><?=e(ChurchCare::VISITOR_STATUS[$r['status']]??$r['status'])?></td><td class="no-print"><a class="btn btn-light" href="?edit=<?=e($r['id'])?>#visitor-form">Acompanhar</a></td></tr><?php endforeach?></tbody></table></div></section>
+<section class="card card-pad no-print" id="visitor-form"><h2><?=$edit?'Acompanhar visitante':'Novo visitante'?></h2><form method="post"><?=csrf_field()?><input type="hidden" name="id" value="<?=e($edit['id']??'')?>"><div class="form-grid"><?php
+care_field('name','Nome',$edit['name']??'','text',true); care_field('phone','Telefone',$edit['phone']??'','tel'); care_field('first_visit','Primeira visita',$edit['first_visit']??date('Y-m-d'),'date',true); care_field('next_contact','Próximo contato',$edit['next_contact']??'','date'); care_field('responsible','Responsável pelo acolhimento',$edit['responsible']??''); care_field('status','Situação',$edit['status']??'new','select',true,ChurchCare::VISITOR_STATUS); care_field('member_id','Vincular ao cadastro de membro',$edit['member_id']??'','select',false,[''=>'Sem vínculo',...array_filter(care_member_options($care),fn($k)=>$k!=='',ARRAY_FILTER_USE_KEY)]); care_field('notes','Observações de acolhimento',$edit['notes']??'','textarea');
+?></div><p class="muted">O vínculo usa um membro já cadastrado, evitando duplicar a pessoa.</p><button class="btn btn-primary">Salvar visitante</button> <a class="btn btn-light" href="visitors.php">Novo / limpar</a></form></section></div>
+<?php View::footer();

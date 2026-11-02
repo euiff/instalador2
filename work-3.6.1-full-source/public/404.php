@@ -1,0 +1,3 @@
+<?php
+http_response_code(404);
+?><!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Página não encontrada · Igreja Master</title><link rel="stylesheet" href="/assets/public.css?v=1"></head><body><main style="min-height:100vh;display:grid;place-items:center;padding:24px"><div class="contact-card" style="max-width:520px;text-align:center"><div style="font-size:72px;font-weight:900">404</div><h1>Página não encontrada</h1><p style="color:#64748b">O endereço acessado não existe ou foi alterado.</p><a class="btn btn-primary" href="/">Voltar ao início</a></div></main></body></html>

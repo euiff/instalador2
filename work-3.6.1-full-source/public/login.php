@@ -1,0 +1,21 @@
+<?php
+require __DIR__ . '/bootstrap.php';
+if ($auth->user()) redirect($auth->isSuperAdmin()?'/master.php':'/dashboard.php');
+$error = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+    $password = (string)($_POST['password'] ?? '');
+    if ($auth->login($email, $password)) redirect($auth->isSuperAdmin()?'/master.php':'/dashboard.php');
+    $error = 'E-mail ou senha inválidos.';
+}
+?><!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entrar · Sistema de Gestão</title><link rel="stylesheet" href="assets/app.css?v=9"><link rel="stylesheet" href="assets/admin-ui.css?v=340"></head>
+<body class="login-page"><div class="card login-card">
+<div class="login-logo">✦</div><h1>Entrar no Igreja Master</h1><p>Acesse sua igreja, seu departamento ou suas contribuições.</p>
+<?php if ($error): ?><div class="alert alert-error"><?=e($error)?></div><?php endif; ?>
+<form method="post" autocomplete="on">
+<div class="field"><label for="email">E-mail</label><input class="input" id="email" name="email" type="email" autocomplete="username" required autofocus value="<?=e($_POST['email'] ?? '')?>"></div>
+<div class="field"><label for="password">Senha</label><input class="input" id="password" name="password" type="password" autocomplete="current-password" required></div>
+<button class="btn btn-primary" type="submit">Entrar</button>
+</form>
+</div></body></html>

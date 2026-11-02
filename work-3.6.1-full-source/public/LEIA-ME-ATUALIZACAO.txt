@@ -1,0 +1,14 @@
+IGREJA MASTER 3.2.2 - ATUALIZACAO CPANEL
+
+1. Faça backup dos arquivos e banco antes de atualizar.
+2. Extraia este ZIP por cima da instalação atual.
+3. NÃO apague config/database.php.
+4. Abra https://SEU-DOMINIO/install.php uma vez.
+5. Aguarde "Banco preparado com sucesso".
+6. Entre novamente em https://SEU-DOMINIO/login
+
+Esta atualização preserva:
+- config/database.php
+- uploads de membros
+- cartazes
+- banco de dados existente
