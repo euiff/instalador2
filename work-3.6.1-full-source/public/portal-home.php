@@ -84,7 +84,7 @@ View::flash();
     <h1>Olá, <?=e($firstName)?> 👋</h1>
     <p>Este é o seu acesso à <?=e($church['name'])?>. Avisos, eventos, estudos, cursos e suas informações ficam reunidos aqui.</p>
     <div class="member-hero-actions">
-      <?php if($member):?><a class="btn" href="/my-profile.php">Meu cadastro</a><a class="btn" href="/portal.php?view=personal">Minhas contribuições</a><?php endif?>
+      <?php if($member):?><a class="btn" href="/my-profile.php">Meu Cadastro</a><a class="btn" href="/portal.php?view=personal">Minhas contribuições</a><?php endif?>
       <?php if($donationUrl):?><a class="btn" target="_blank" rel="noopener noreferrer" href="<?=e($donationUrl)?>">Contribuir / PIX</a><?php endif?>
     </div>
   </section>
@@ -112,7 +112,7 @@ View::flash();
     </section>
 
     <section class="card member-section">
-      <div class="member-section-head"><h2>Meu cadastro</h2><?php if($member):?><a class="muted" href="/my-profile.php">Atualizar</a><?php endif?></div>
+      <div class="member-section-head"><h2>Meu Cadastro</h2><?php if($member):?><a class="muted" href="/my-profile.php">Atualizar</a><?php endif?></div>
       <?php if($member):?>
         <strong><?=$profileCompleteness?>% preenchido</strong>
         <div class="profile-meter"><span style="width:<?=max(0,min(100,$profileCompleteness))?>%"></span></div>
