@@ -30,6 +30,7 @@ final class View
         $isMasterSupport = $auth->isMasterSupportMode();
         $items = [
             'dashboard.php' => ['dashboard','Início','⌂','dashboard'],
+            'insights.php' => ['insights','Indicadores e Pendências','▥','dashboard'],
             'portal-home.php' => ['portal-home','Meu acesso','⌂','member_board'],
             'portal.php' => ['portal','Contribuições / Caixa','◈','member_portal'],
             'my-profile.php' => ['my-profile','Meu Cadastro','♙','member_portal'],
@@ -99,7 +100,7 @@ final class View
             }
         }
         $groups = [
-            'Visão geral'=>['home',['dashboard.php','portal-home.php','portal.php','my-profile.php','board.php','church-insights.php','reports.php']],
+            'Visão geral'=>['home',['dashboard.php','insights.php','portal-home.php','portal.php','my-profile.php','board.php','church-insights.php','reports.php']],
             'Pessoas e cadastros'=>['people',['members.php','registers.php?kind=person_category','registers.php?kind=family','registers.php?kind=position','registers.php?kind=custom_field','visitors.php','pastoral-care.php','departments.php','small-groups.php','congregations.php','documents.php','prayers.php']],
             'Agenda da igreja'=>['calendar',['events.php','service-types.php','event-registrations.php']],
             'Ensino'=>['file',['learning.php','studies.php']],
