@@ -1,30 +1,31 @@
 {
-  "version": "3.5.0",
+  "version": "3.5.1",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.5.0.01.b64.txt",
-    "releases/v3.5.0.02.b64.txt",
-    "releases/v3.5.0.03.b64.txt",
-    "releases/v3.5.0.04.b64.txt"
+    "releases/v3.5.1.01.b64.txt",
+    "releases/v3.5.1.02.b64.txt",
+    "releases/v3.5.1.03.b64.txt",
+    "releases/v3.5.1.04.b64.txt"
   ],
-  "sha256": "39dc671156c85657f38179f73ba730f831dc56dcd610f0f89318fc00b03d8480",
-  "published_at": "2026-11-02T18:47:25-03:00",
-  "cache_buster": "3.5.0-20261102",
+  "sha256": "5a9ac949e12ba69233bad931424c7902de26209bbbb89422c03d9cd6a9351a0a",
+  "published_at": "2026-11-02T18:52:05-03:00",
+  "cache_buster": "3.5.1-20261102",
   "notes": [
     "Portal pessoal de contribuições e perfis de líder e membro.",
     "Caixas por departamento integrados ao livro financeiro geral.",
     "Permissões isoladas por igreja, pessoa e departamento.",
-    "Menu superior no computador e extrato imprimível."
+    "Menu superior no computador e extrato imprimível.",
+    "Ajuste de abertura dos menus e alinhamento do cabeçalho."
   ],
   "files": [
     {
       "path": "public/VERSION",
-      "sha256": "76120c1f2c4311c2154c22a6b58e00e411e0ebe76afae0daf608d9196c61f114"
+      "sha256": "eb41f86c3d67299b46490cde10158a521148fdc03641aa14a93fa2797becd78c"
     },
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "639f1c890818c9038de501affd403a8dd06a34045d552ab18dfaf77e84443482"
+      "sha256": "0d50fa59bf98305e1da4e347102c331ba0cfa140b4ffdf6d61bc206472fd9f30"
     },
     {
       "path": "public/database/027_member_department_portals.sql",
@@ -36,7 +37,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "c5778f2f953a6557cc6ca3bd0d95b907f05b31a44d4baf948a7f9105682f59c8"
+      "sha256": "a69a8718d39b46ae9730eee4dae4bc5ff2a1c2d5684e6f92d72a55354db1962a"
     },
     {
       "path": "public/lib/PortalService.php",
@@ -60,7 +61,7 @@
     },
     {
       "path": "public/portal.php",
-      "sha256": "633fb875fa44d40b1123d282e418a16ebd2d6906f72c8334f3a0e699fdf19782"
+      "sha256": "9846e23ec945a93fc0d80c545437aaef5d5d537f07c76c1a17606f1295ab4d24"
     },
     {
       "path": "public/department-cash.php",
@@ -68,11 +69,11 @@
     },
     {
       "path": "public/assets/management.css",
-      "sha256": "5e5dbeded0590ab5f81a723c78e73889733836edffb977a72ee99b69be92630e"
+      "sha256": "1f37f0b1c8e0be76d950cd47437eb7e5ab57be44617d2037bd71c200160aa58d"
     },
     {
       "path": "public/assets/management.js",
-      "sha256": "064f46877e2e9e3a2f916b449a5a1283555e560f760240ec312abb52ccbbf490"
+      "sha256": "896e7dadce5520459a3fc2ccddc095ad74374f53506f846f62e1871aaadd7e8b"
     }
   ]
 }
