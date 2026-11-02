@@ -1,110 +1,63 @@
 {
-  "version": "3.6.0",
+  "version": "3.6.1",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.6.0.01.b64.txt",
-    "releases/v3.6.0.02.b64.txt",
-    "releases/v3.6.0.03.b64.txt",
-    "releases/v3.6.0.04.b64.txt",
-    "releases/v3.6.0.05.b64.txt",
-    "releases/v3.6.0.06.b64.txt"
+    "releases/v3.6.1.01.b64.txt",
+    "releases/v3.6.1.02.b64.txt",
+    "releases/v3.6.1.03.b64.txt",
+    "releases/v3.6.1.04.b64.txt"
   ],
-  "sha256": "7bf7269dcab9bbc9d43b141957aebfdd9bb4dc52843500ca925a2a9cc6bb2df7",
-  "published_at": "2026-11-02T19:17:55-03:00",
-  "cache_buster": "3.6.0-20261102",
+  "sha256": "11ecca7f58d826941c3b56aafa282e1de01779bf3ece867d201a00ad64e63199",
+  "published_at": "2026-11-02T19:35:00-03:00",
+  "cache_buster": "3.6.1-20261102-1935",
   "notes": [
-    "Cadastros de categorias, famílias, cargos e campos personalizados.",
-    "Categorias financeiras, contatos e centros de custos.",
-    "Valores a receber com parcelas e recebimentos parciais.",
-    "Resumo financeiro, relatórios por centro e exportação CSV.",
-    "Importação CSV com prévia e bloqueio de arquivo repetido.",
-    "Bloqueio auditado de períodos financeiros."
+    "Novo módulo Grupos e Células separado dos grupos do WhatsApp.",
+    "Até quatro líderes por grupo e participantes vinculados.",
+    "Novo perfil Líder de grupo/célula com acesso somente aos próprios grupos.",
+    "Registro de reunião com presença individual, visitantes, tema e observações.",
+    "Relatório por período com reuniões, presenças, média e visitantes."
   ],
   "files": [
     {
-      "path": "public/database/028_finance_registers_receivables.sql",
-      "sha256": "d49f031974a7b915f2a7233e419a2fc9efbfc8825a784f471908afbf293f5363"
+      "path": "public/database/031_small_groups_attendance.sql",
+      "sha256": "685a4b86935f59762985fd61133081cd5bbcc58d73e103bcb1912234ad1a6d6b"
     },
     {
-      "path": "public/database/029_finance_period_locks.sql",
-      "sha256": "422a1d884cf62e20bec11c398e87b759bbf8faed37d3f2b835f94c7f611bf154"
+      "path": "public/lib/SmallGroupService.php",
+      "sha256": "6dcf1ac15d27444fac3171d08f6ea9e1c15e3171f47ceeac0cb4a196cd903487"
     },
     {
-      "path": "public/database/030_finance_import_batches.sql",
-      "sha256": "7a5138460663a8dd12c740b55dfa8c4bd4398797f7348c8c3bce8db0bb4a28a3"
+      "path": "public/small-groups.php",
+      "sha256": "a84fbe5fcd2143d8f15a45f1ded90aa352179fc9a114b247dda72fab1b019618"
     },
     {
-      "path": "public/lib/FinancePeriodGuard.php",
-      "sha256": "9df2240fc5825a53e9c4005f1d3436de8eea12658ebca4099e5eebd810d86687"
+      "path": "public/lib/Auth.php",
+      "sha256": "432b8af19d077508a88b6020c68f0844ea45e6ae5049bd86dc77c39f24aaf137"
     },
     {
-      "path": "public/lib/PortalService.php",
-      "sha256": "02e05fbbb28504fffd156814cccee390fdffae0dc680db2e0cbf5c198443dfc2"
+      "path": "public/users.php",
+      "sha256": "9b18e3752066d6d4e7d6b31ac6dad7462d2cf0ec0e8763150ac744ce1c54b1e6"
     },
     {
-      "path": "public/lib/RegistryService.php",
-      "sha256": "cd767e03bdaa9351645a5d815290bfae209008903178cfdd290f0d28c49d95a9"
-    },
-    {
-      "path": "public/lib/FinanceOperations.php",
-      "sha256": "d3ad29d30559eade904a469b857f0fb840856af377d988fa8d59400555ed7821"
-    },
-    {
-      "path": "public/lib/FinanceCsvImport.php",
-      "sha256": "a72bef97e6d5eb22f2df7801dca3b31a5467a7cfe23e9933272b6e642d9624fd"
-    },
-    {
-      "path": "public/lib/Ui.php",
-      "sha256": "2a6a63f3d573d66b7c20c697f77b44baf7a0dcf3d37591701a6310fb9176d0fd"
-    },
-    {
-      "path": "public/assets/management.css",
-      "sha256": "eb31b67387ccbd0f755f9d06107253953503d127b1e60b47e2d611c550ab8f59"
-    },
-    {
-      "path": "public/assets/management.js",
-      "sha256": "dbe4fe4fbfe834490baf07d1e5fbdaf2b96d911e466c9ef8975e454a3fa94b4b"
-    },
-    {
-      "path": "public/registers.php",
-      "sha256": "2e44b967b5b055a26101990a20d50a8bcee7e6e0164e44cc3abbd5feec4edb85"
-    },
-    {
-      "path": "public/finance-control.php",
-      "sha256": "91fd1c529f6c3ebfc732d559a5010d93a461b241a5a22584678f469abd89d2c6"
-    },
-    {
-      "path": "public/finance-import.php",
-      "sha256": "8785f304f6f5a027da66adcd577e9b42f74accc795cfbfe3b2bd23c35f499346"
-    },
-    {
-      "path": "public/finance.php",
-      "sha256": "ae0382402b9474865d2aa7810c783c80aacede454cfd1c66f75dfb981e3d7485"
-    },
-    {
-      "path": "public/members.php",
-      "sha256": "d680510a5c0a60727208fa6fb7cad30a40e511ecbc0f11fa2353fbe984ef43f5"
-    },
-    {
-      "path": "public/member-profile.php",
-      "sha256": "9c458c7e3b8f40eca1619eb21c3b7973fcee8693782225c19415fd38da7cbaa4"
-    },
-    {
-      "path": "public/payments.php",
-      "sha256": "70819321f67a65f3aa1f13f00576bdf53c632b47f06b312b7fad68970c64fdcb"
+      "path": "public/dashboard.php",
+      "sha256": "acb37e1e680aef1a83c44626d20822daae34bb6e60d45eb5c8b42c84c70163da"
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "bf5d048cb1051437d19c8f06c677eafd5b04466fa4df5411f3952ef056d52f05"
+      "sha256": "e9684ccf1de7e7fab345799b777ee4af8f688c237da8306d0bb468ff67a49b51"
     },
     {
-      "path": "public/CHANGELOG.md",
-      "sha256": "fa2103845bb6e0049b8eb4c0335fc7e6529ad87e52c70108b1df16048d16edc2"
+      "path": "public/lib/Ui.php",
+      "sha256": "a98099a0f5551dffcea0310d59a4d5d2359848dc01e0b466e703b81e935ff235"
     },
     {
       "path": "public/VERSION",
-      "sha256": "138203e3f604a08fad0c4d0a297efe2c486219820dcdd053e72b7d843504c7a1"
+      "sha256": "de58d841bd709aa85a66ecc500dfbb48e7c207e84c399e30e751e8ccad6e8c9b"
+    },
+    {
+      "path": "public/CHANGELOG.md",
+      "sha256": "349a8a3994130a75a953a7cdd0407ce7f47db65a0f194bec1cb366b814e29a20"
     }
   ]
 }
