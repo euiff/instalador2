@@ -1,3 +1,16 @@
+# 3.6.3 — 02/11/2026
+
+- Novo módulo Ensino, Estudos e Turmas.
+- Catálogo de cursos, discipulados e estudos com categoria, descrição e carga horária.
+- Turmas por congregação com datas, local, capacidade e situação.
+- Novo perfil Professor / líder de turma, vinculado ao cadastro do membro.
+- Professor visualiza somente as turmas em que foi definido como responsável.
+- Matrícula de membros e acompanhamento de situação: matriculado, concluído ou cancelado.
+- Registro de aulas com data, conteúdo, link de material e frequência individual.
+- Aluno visualiza somente suas matrículas, aulas, materiais e percentual de frequência.
+- Administração pode definir até quatro professores/líderes por turma.
+- Atualização cumulativa: inclui também Grupos/Células da 3.6.1 e Mural de Avisos da 3.6.2 para permitir atualização direta a partir da 3.6.0.
+
 # 3.6.2 — 02/11/2026
 
 - Novo Mural de Avisos para comunicação interna da igreja.
