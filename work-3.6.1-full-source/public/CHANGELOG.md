@@ -1,3 +1,14 @@
+# 3.6.1 — 02/11/2026
+
+- Novo módulo Grupos e Células, separado dos grupos de WhatsApp.
+- Cadastro de células, pequenos grupos, discipulados e grupos nos lares.
+- Até quatro líderes por grupo, vinculados aos cadastros de membros.
+- Novo perfil de usuário Líder de grupo/célula, com acesso somente aos grupos que lidera.
+- Participantes podem ser vinculados e removidos pelo administrador ou pelo líder autorizado.
+- Relatório de reunião com data, tema, visitantes, observações e presença individual.
+- Relatório por período com total de reuniões, presenças, média por reunião e visitantes.
+- Grupos de comunicação passam a aparecer no menu como Grupos do WhatsApp para evitar confusão.
+
 # 3.6.0 — 02/11/2026
 
 - Categorias de pessoas, famílias, cargos e campos personalizados.
