@@ -1,45 +1,46 @@
 {
-  "version": "3.7.3",
+  "version": "3.7.4",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.3.01.b64.txt",
-    "releases/v3.7.3.02.b64.txt",
-    "releases/v3.7.3.03.b64.txt",
-    "releases/v3.7.3.04.b64.txt",
-    "releases/v3.7.3.05.b64.txt",
-    "releases/v3.7.3.06.b64.txt",
-    "releases/v3.7.3.07.b64.txt",
-    "releases/v3.7.3.08.b64.txt",
-    "releases/v3.7.3.09.b64.txt",
-    "releases/v3.7.3.10.b64.txt",
-    "releases/v3.7.3.11.b64.txt",
-    "releases/v3.7.3.12.b64.txt",
-    "releases/v3.7.3.13.b64.txt",
-    "releases/v3.7.3.14.b64.txt",
-    "releases/v3.7.3.15.b64.txt",
-    "releases/v3.7.3.16.b64.txt",
-    "releases/v3.7.3.17.b64.txt",
-    "releases/v3.7.3.18.b64.txt"
+    "releases/v3.7.4.01.b64.txt",
+    "releases/v3.7.4.02.b64.txt",
+    "releases/v3.7.4.03.b64.txt",
+    "releases/v3.7.4.04.b64.txt",
+    "releases/v3.7.4.05.b64.txt",
+    "releases/v3.7.4.06.b64.txt",
+    "releases/v3.7.4.07.b64.txt",
+    "releases/v3.7.4.08.b64.txt",
+    "releases/v3.7.4.09.b64.txt",
+    "releases/v3.7.4.10.b64.txt",
+    "releases/v3.7.4.11.b64.txt",
+    "releases/v3.7.4.12.b64.txt",
+    "releases/v3.7.4.13.b64.txt",
+    "releases/v3.7.4.14.b64.txt",
+    "releases/v3.7.4.15.b64.txt",
+    "releases/v3.7.4.16.b64.txt",
+    "releases/v3.7.4.17.b64.txt",
+    "releases/v3.7.4.18.b64.txt",
+    "releases/v3.7.4.19.b64.txt"
   ],
-  "sha256": "9f9a79f09ea47994c8ad325abc4bbb8da883de10db9f1d2aeb516cfe578a22b3",
-  "published_at": "2026-11-02T20:41:31-03:00",
-  "cache_buster": "3.7.3-orcamento",
+  "sha256": "831e2ff068870d889476d6a23b6a0ffae521cd82c647dae78bc02c032a97e80c",
+  "published_at": "2026-11-02T20:56:39-03:00",
+  "cache_buster": "3.7.4-master-cron",
   "notes": [
-    "Orçamento e realizado por mês e ano, categorias e alertas de limite.",
-    "Cópia de previsões entre meses sem sobrescrever o destino.",
-    "Exportação CSV e impressão/PDF, cadastro em janela flutuante.",
-    "Isolamento por igreja, auditoria e respeito a períodos fechados.",
-    "Pacote cumulativo: preserva módulos 3.6.0 a 3.7.2."
+    "Cron e comandos de servidor na Central de automações exclusiva do Master.",
+    "Cliente acompanha apenas seus agendamentos e histórico.",
+    "Histórico por igreja, filtros de falhas e indicador de execução automática.",
+    "Trava contra execuções simultâneas e isolamento de falhas por igreja.",
+    "Preserva o financeiro e os módulos da versão 3.7.3."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "affacc85b35f46fce0b340629da5957cf565b619509802e55533c052d360a04e"
+      "sha256": "3fb21fde97f76dc596e7d46867feff5c1e0cd342b43a6ad320b1278ded7a303a"
     },
     {
       "path": "public/VERSION",
-      "sha256": "c5c590b00cd6c1d7a69736ea08aa29cdd07d75eae430122c5b6651d299368c49"
+      "sha256": "ca55f5e83e89fc12dca7a46e705a708a050d83ec4a0567fab5e647bc39236b79"
     },
     {
       "path": "public/albums.php",
@@ -58,12 +59,20 @@
       "sha256": "dbe4fe4fbfe834490baf07d1e5fbdaf2b96d911e466c9ef8975e454a3fa94b4b"
     },
     {
+      "path": "public/automations.php",
+      "sha256": "e3e89a7abd681da11ccc8cc139375c2267a177a34e2c5c66c6983e5a0e1ef71a"
+    },
+    {
       "path": "public/board.php",
       "sha256": "246e598f29c38e1b53894c0a151bbd87092a983314b18324e886e326a3db07fb"
     },
     {
       "path": "public/campaigns.php",
       "sha256": "e89b41a89455ae3be4161600ec07c03d0e5abdd962b216ec9355789fdf84fa9a"
+    },
+    {
+      "path": "public/cron.php",
+      "sha256": "b613661bce8767333a3f6a4341aeb3b26fe8d8147d0a7d9ada9d2c28e8a4f768"
     },
     {
       "path": "public/dashboard.php",
@@ -166,6 +175,14 @@
       "sha256": "acaf91bb5d6f14c14d3b43201d231778c3c967569f8c7bbd832b174cbf890753"
     },
     {
+      "path": "public/lib/AutomationMonitor.php",
+      "sha256": "a5362a553f746521c9f652ca68728fae48f8130df55f73f119a08057ef78f75e"
+    },
+    {
+      "path": "public/lib/AutomationRunner.php",
+      "sha256": "f12472001ba637388f9299972c80d76cd5e8ea59846a0a9468fe6fac660f8a0f"
+    },
+    {
       "path": "public/lib/BotEventFlow.php",
       "sha256": "12474e23e52a560e6bd3e553e699cba8faa213b4596aebda043f24c487702160"
     },
@@ -247,7 +264,15 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "2d3b37726709f92e0fb9dc803ab580edf58e02b2f52ae2b65a9314263ab78abe"
+      "sha256": "4506354cea1115c52865d25c727d7764699c20a1c22e93a3ebfc96f13d53c72d"
+    },
+    {
+      "path": "public/master-automations.php",
+      "sha256": "fd480ed6bb18668b11db52eb5211434f026e04b956ae84dfab96f58fcf5066a6"
+    },
+    {
+      "path": "public/master.php",
+      "sha256": "0d12fe79a03c731261234804b47c0e43e24251db1f2ea70e2775a931e961121b"
     },
     {
       "path": "public/media-library.php",
