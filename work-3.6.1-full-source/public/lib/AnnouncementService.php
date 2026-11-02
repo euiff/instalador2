@@ -58,7 +58,7 @@ final class AnnouncementService
             if(!$q->fetchColumn())throw new RuntimeException('Grupo/célula não encontrado.');
         }
         foreach([$link,$attachment] as $url){
-            if($url!==null&&!filter_var($url,FILTER_VALIDATE_URL))throw new InvalidArgumentException('Informe links válidos começando com http:// ou https://.');
+            if($url!==null&&!$this->validResourceUrl($url))throw new InvalidArgumentException('Informe um link válido ou escolha um arquivo da Biblioteca.');
         }
         if($starts&&$ends&&$ends<$starts)throw new InvalidArgumentException('O fim da exibição deve ser depois do início.');
 
@@ -170,6 +170,14 @@ final class AnnouncementService
         $count=0;
         foreach($this->visibleForCurrentUser() as $row)if(empty($row['is_read']))$count++;
         return $count;
+    }
+
+    private function validResourceUrl(string $value): bool
+    {
+        $value=trim($value);
+        if($value==='')return false;
+        if(filter_var($value,FILTER_VALIDATE_URL))return true;
+        return str_starts_with($value,'/storage/uploads/library/');
     }
 
     private function dateTimeOrNull(string $value): ?string
