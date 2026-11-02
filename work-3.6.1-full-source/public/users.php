@@ -15,12 +15,13 @@ $roleLabels=[
     'secretary'=>'Secretaria',
     'treasurer'=>'Tesouraria',
     'department_leader'=>'Líder de departamento',
+    'group_leader'=>'Líder de grupo/célula',
     'member'=>'Membro (somente seus dados)',
 ];
 
 function allowed_church_roles(string $currentRole,bool $isMaster): array {
-    if($isMaster||$currentRole==='owner')return ['admin','pastor','secretary','treasurer','department_leader','member'];
-    return ['secretary','treasurer','department_leader','member'];
+    if($isMaster||$currentRole==='owner')return ['admin','pastor','secretary','treasurer','department_leader','group_leader','member'];
+    return ['secretary','treasurer','department_leader','group_leader','member'];
 }
 function church_user_audit(PDO $pdo,string $userId,string $churchId,string $action,array $details=[]): void {
     try{
@@ -33,7 +34,7 @@ $allowed=allowed_church_roles($currentRole,$isMaster);
 
 function save_portal_scope(PDO $pdo,string $cid,string $uid,string $role,array $input): void {
     $personId=trim((string)($input['person_id']??''))?:null;
-    if($role==='member'&&!$personId)throw new RuntimeException('Selecione o cadastro do membro para definir quais contribuições ele pode consultar.');
+    if(in_array($role,['member','group_leader'],true)&&!$personId)throw new RuntimeException('Vincule este acesso a um cadastro de membro. O líder de grupo precisa desse vínculo para enxergar somente os grupos em que foi definido como líder.');
     if($personId){
         $q=$pdo->prepare('SELECT id FROM members WHERE church_id=? AND id=? AND active=1');$q->execute([$cid,$personId]);
         if(!$q->fetchColumn())throw new RuntimeException('Membro não encontrado nesta igreja.');
@@ -58,7 +59,7 @@ $q=$pdo->prepare('SELECT id,name FROM ministry_departments WHERE church_id=? AND
 $q=$pdo->prepare('SELECT user_id,department_id FROM department_access WHERE church_id=?');$q->execute([$cid]);$portalScopes=[];
 foreach($q->fetchAll() as $scope)$portalScopes[$scope['user_id']][]=$scope['department_id'];
 function portal_scope_fields(array $people,array $departments,?string $personId=null,array $ids=[]): void { ?>
-<div class="field"><label>Cadastro pessoal vinculado<select class="select" name="person_id"><option value="">Sem vínculo pessoal</option><?php foreach($people as $p):?><option value="<?=e($p['id'])?>" <?=$personId===$p['id']?'selected':''?>><?=e($p['name'])?></option><?php endforeach?></select></label><small>O membro verá somente as entradas vinculadas a este cadastro.</small></div>
+<div class="field"><label>Cadastro pessoal vinculado<select class="select" name="person_id"><option value="">Sem vínculo pessoal</option><?php foreach($people as $p):?><option value="<?=e($p['id'])?>" <?=$personId===$p['id']?'selected':''?>><?=e($p['name'])?></option><?php endforeach?></select></label><small>Usado no portal pessoal e também para reconhecer líderes de grupos/células.</small></div>
 <div class="field"><label>Departamentos autorizados (para líderes)<select class="select" name="department_ids[]" multiple size="4"><?php foreach($departments as $d):?><option value="<?=e($d['id'])?>" <?=in_array($d['id'],$ids,true)?'selected':''?>><?=e($d['name'])?></option><?php endforeach?></select></label><small>Escolha os departamentos que o líder poderá administrar.</small></div>
 <?php }
 
