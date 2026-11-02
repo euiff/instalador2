@@ -31,6 +31,7 @@ final class View
         $items = [
             'dashboard.php' => ['dashboard','Início','⌂','dashboard'],
             'portal.php' => ['portal','Meu acesso','⌂','member_portal'],
+            'board.php' => ['board','Mural','✉','member_board'],
             'department-cash.php' => ['department-cash','Caixas dos departamentos','◈','department_portal'],
             'finance.php' => ['finance','Tesouraria','◈','finance'],
             'finance-control.php' => ['finance-control','Resumo financeiro','▥','finance'],
@@ -62,6 +63,7 @@ final class View
             'service-types.php' => ['service-types','Cultos e reuniões','♢','secretary'],
             'prayers.php' => ['prayers','Pedidos de Oração','♡','secretary'],
             'groups.php' => ['groups','Grupos do WhatsApp','☏','communications'],
+            'announcements.php' => ['announcements','Mural de Avisos','✉','communications'],
             'campaigns.php' => ['campaigns','Comunicados','✉','communications'],
             'automations.php' => ['automations','Automações','↻','settings'],
             'messages.php' => ['messages','Histórico WhatsApp','≡','communications'],
@@ -90,11 +92,11 @@ final class View
             }
         }
         $groups = [
-            'Visão geral'=>['home',['dashboard.php','portal.php','church-insights.php','reports.php']],
+            'Visão geral'=>['home',['dashboard.php','portal.php','board.php','church-insights.php','reports.php']],
             'Pessoas e cadastros'=>['people',['members.php','registers.php?kind=person_category','registers.php?kind=family','registers.php?kind=position','registers.php?kind=custom_field','visitors.php','pastoral-care.php','departments.php','small-groups.php','congregations.php','documents.php','prayers.php']],
             'Agenda da igreja'=>['calendar',['events.php','service-types.php','event-registrations.php']],
             'Financeiro'=>['wallet',['finance-control.php','finance.php','finance-control.php?view=receivables','department-cash.php','registers.php?kind=finance_category','registers.php?kind=cost_center','registers.php?kind=contact','finance-control.php?view=report','finance-import.php','finance-control.php?view=history','finance-control.php?view=periods','assets.php','needs.php']],
-            'Comunicação'=>['message',['groups.php','campaigns.php','messages.php','polls.php','prayer-clock.php','raffles.php','bible.php','group-moderation.php']],
+            'Comunicação'=>['message',['announcements.php','groups.php','campaigns.php','messages.php','polls.php','prayer-clock.php','raffles.php','bible.php','group-moderation.php']],
             'Administração'=>['settings',['users.php','settings.php','bot-settings.php','automations.php','logs.php','master.php','updates.php']],
         ];
         $pageFile=str_ends_with($active,'.php')?$active:$active.'.php';
@@ -116,6 +118,7 @@ final class View
             ['assets.php','Bem patrimonial','Inventário e manutenção','building','finance'],
             ['pastoral-care.php','Acompanhamento pastoral','Visitas e retornos','heart','pastoral'],
             ['groups.php','Grupo de WhatsApp','Destinos dos comunicados','message','communications'],
+            ['announcements.php','Aviso no Mural','Mensagem para membros e líderes','message','communications'],
             ['campaigns.php','Comunicado','Mensagem para os grupos','message','communications'],
         ];
         $canCreate=(bool)array_filter($quickCreates,fn($c)=>$auth->can($c[4]));
