@@ -265,23 +265,32 @@ final class SmallGroupService
         $to=$this->validDate($to);
         if($from>$to)throw new InvalidArgumentException('A data inicial deve ser anterior à final.');
 
-        $groups=$this->groups(true);
-        if(!$groups)return [];
-        $ids=array_column($groups,'id');
-        $placeholders=implode(',',array_fill(0,count($ids),'?'));
+        $rows=[];
+        foreach($this->groups(true) as $group){
+            $summary=$this->q("SELECT COUNT(*) meetings,COALESCE(SUM(visitor_count),0) visitors
+              FROM small_group_meetings
+              WHERE church_id=? AND group_id=? AND meeting_date BETWEEN ? AND ?",[
+                $this->cid,$group['id'],$from,$to
+            ])->fetch()?:['meetings'=>0,'visitors'=>0];
 
-        $sql="SELECT g.id,g.name,g.group_type,g.active,
-          COUNT(DISTINCT mt.id) meetings,
-          COALESCE(SUM(mt.visitor_count),0) visitors,
-          COALESCE(SUM((SELECT COUNT(*) FROM small_group_attendance a WHERE a.meeting_id=mt.id AND a.church_id=mt.church_id AND a.present=1)),0) total_presence,
-          COALESCE(AVG((SELECT COUNT(*) FROM small_group_attendance a2 WHERE a2.meeting_id=mt.id AND a2.church_id=mt.church_id AND a2.present=1)),0) avg_presence
-          FROM small_groups g
-          LEFT JOIN small_group_meetings mt ON mt.group_id=g.id AND mt.church_id=g.church_id AND mt.meeting_date BETWEEN ? AND ?
-          WHERE g.church_id=? AND g.id IN ($placeholders)
-          GROUP BY g.id,g.name,g.group_type,g.active
-          ORDER BY g.name";
+            $presence=(int)$this->q("SELECT COUNT(*)
+              FROM small_group_attendance a
+              INNER JOIN small_group_meetings mt ON mt.id=a.meeting_id AND mt.church_id=a.church_id
+              WHERE a.church_id=? AND mt.group_id=? AND mt.meeting_date BETWEEN ? AND ? AND a.present=1",[
+                $this->cid,$group['id'],$from,$to
+            ])->fetchColumn();
 
-        return $this->q($sql,[$from,$to,$this->cid,...$ids])->fetchAll();
+            $rows[]=[
+                'id'=>$group['id'],
+                'name'=>$group['name'],
+                'group_type'=>$group['group_type'],
+                'active'=>$group['active'],
+                'meetings'=>(int)$summary['meetings'],
+                'visitors'=>(int)$summary['visitors'],
+                'total_presence'=>$presence,
+            ];
+        }
+        return $rows;
     }
 
     private function validDate(string $value): string
