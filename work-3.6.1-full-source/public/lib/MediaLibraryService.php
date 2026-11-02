@@ -39,21 +39,23 @@ final class MediaLibraryService
         $id=trim((string)($input['id']??''));
         $name=trim((string)($input['name']??''));
         $description=trim((string)($input['description']??''))?:null;
+        $folderType=(string)($input['folder_type']??'folder');
         $sort=(int)($input['sort_order']??0);
         $active=isset($input['active'])?1:0;
 
         if($name===''||mb_strlen($name)>160)throw new InvalidArgumentException('Informe o nome da pasta.');
+        if(!in_array($folderType,['folder','photo_album','video_album'],true))$folderType='folder';
         if($description!==null&&mb_strlen($description)>500)throw new InvalidArgumentException('Descrição da pasta muito longa.');
 
         if($id===''){
             $id=app_uuid();
-            $this->q('INSERT INTO media_library_folders(id,church_id,name,description,sort_order,active,created_by_user_id) VALUES(?,?,?,?,?,?,?)',[
-                $id,$this->cid,$name,$description,$sort,$active,$this->auth->requireLogin()['id']
+            $this->q('INSERT INTO media_library_folders(id,church_id,name,folder_type,description,sort_order,active,created_by_user_id) VALUES(?,?,?,?,?,?,?,?)',[
+                $id,$this->cid,$name,$folderType,$description,$sort,$active,$this->auth->requireLogin()['id']
             ]);
             $this->audit('media_folder_created',['folder_id'=>$id,'name'=>$name]);
         }else{
-            $q=$this->q('UPDATE media_library_folders SET name=?,description=?,sort_order=?,active=? WHERE id=? AND church_id=?',[
-                $name,$description,$sort,$active,$id,$this->cid
+            $q=$this->q('UPDATE media_library_folders SET name=?,folder_type=?,description=?,sort_order=?,active=? WHERE id=? AND church_id=?',[
+                $name,$folderType,$description,$sort,$active,$id,$this->cid
             ]);
             if($q->rowCount()===0){
                 $exists=$this->q('SELECT 1 FROM media_library_folders WHERE id=? AND church_id=?',[$id,$this->cid])->fetchColumn();
