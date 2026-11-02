@@ -54,6 +54,11 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             'address'=>null_if_blank($_POST['address']??null),
             'pastor_name'=>null_if_blank($_POST['pastor_name']??null),
             'pix_key'=>null_if_blank($_POST['pix_key']??null),
+            'donation_enabled'=>isset($_POST['donation_enabled'])?1:0,
+            'donation_title'=>null_if_blank($_POST['donation_title']??null),
+            'donation_instructions'=>null_if_blank($_POST['donation_instructions']??null),
+            'donation_merchant_name'=>null_if_blank($_POST['donation_merchant_name']??null),
+            'donation_merchant_city'=>null_if_blank($_POST['donation_merchant_city']??null),
             'welcome_message'=>null_if_blank($_POST['welcome_message']??null),
             'evolution_api_url'=>null_if_blank($_POST['evolution_api_url']??null),
             'evolution_api_key'=>$evolutionKey,
@@ -68,6 +73,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             'transparency_enabled'=>isset($_POST['transparency_enabled'])?1:0,
         ];
         if($values['name']==='')throw new RuntimeException('Informe o nome da igreja.');
+        $donationToken=trim((string)($s['donation_public_token']??''));
+        if($values['donation_enabled']&&$donationToken==='')$donationToken=bin2hex(random_bytes(16));
+        if($values['donation_enabled']&&empty($values['pix_key']))throw new RuntimeException('Informe a chave PIX para ativar a página pública de doações.');
 
         if(!empty($values['evolution_instance_name'])){
             $dup=$pdo->prepare('SELECT id,name FROM churches WHERE evolution_instance_name=? AND id<>? AND active=1 LIMIT 1');
@@ -77,10 +85,12 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             }
         }
 
-        $sql='UPDATE churches SET name=?,phone=?,email=?,address=?,pastor_name=?,pix_key=?,welcome_message=?,evolution_api_url=?,evolution_api_key=?,evolution_instance_name=?,evolution_webhook_token=?,gemini_api_key=?,tts_enabled=?,tts_api_key=?,tts_voice_id=?,daily_devotional_time=?,ai_enabled=?,transparency_enabled=? WHERE id=?';
+        $sql='UPDATE churches SET name=?,phone=?,email=?,address=?,pastor_name=?,pix_key=?,donation_enabled=?,donation_title=?,donation_instructions=?,donation_merchant_name=?,donation_merchant_city=?,donation_public_token=?,welcome_message=?,evolution_api_url=?,evolution_api_key=?,evolution_instance_name=?,evolution_webhook_token=?,gemini_api_key=?,tts_enabled=?,tts_api_key=?,tts_voice_id=?,daily_devotional_time=?,ai_enabled=?,transparency_enabled=? WHERE id=?';
         $pdo->prepare($sql)->execute([
             $values['name'],$values['phone'],$values['email'],$values['address'],$values['pastor_name'],
-            $values['pix_key'],$values['welcome_message'],$values['evolution_api_url'],$values['evolution_api_key'],
+            $values['pix_key'],$values['donation_enabled'],$values['donation_title'],$values['donation_instructions'],
+            $values['donation_merchant_name'],$values['donation_merchant_city'],$values['donation_enabled']?$donationToken:null,
+            $values['welcome_message'],$values['evolution_api_url'],$values['evolution_api_key'],
             $values['evolution_instance_name'],$values['evolution_webhook_token'],$values['gemini_api_key'],
             $values['tts_enabled'],$values['tts_api_key'],$values['tts_voice_id'],$values['daily_devotional_time'],
             $values['ai_enabled'],$values['transparency_enabled'],$churchId
@@ -172,6 +182,23 @@ View::header('Configurações','settings',$auth,$church);
     <div class="field"><label>Chave PIX</label><input class="input" name="pix_key" value="<?=e($s['pix_key']??'')?>" placeholder="CPF, CNPJ, e-mail, telefone ou chave aleatória"></div>
     <div class="field"><label>Horário do devocional diário</label><input class="input" type="time" name="daily_devotional_time" value="<?=e(!empty($s['daily_devotional_time'])?substr((string)$s['daily_devotional_time'],0,5):'')?>"></div>
     <div class="field full"><label>Mensagem de boas-vindas do bot</label><textarea class="textarea" name="welcome_message" placeholder="Ex.: 🙏 Seja bem-vindo à nossa igreja!"><?=e($s['welcome_message']??'')?></textarea></div>
+  </div>
+</section>
+
+<section class="settings-section card">
+  <div class="settings-section-head">
+    <div class="settings-icon">R$</div>
+    <div><h2>Doações Online · PIX</h2><p>Crie uma página pública para dízimos, ofertas e campanhas sem processar o pagamento dentro do sistema.</p></div>
+  </div>
+  <div class="form-grid">
+    <label class="toggle-row full"><input type="checkbox" name="donation_enabled" <?=!empty($s['donation_enabled'])?'checked':''?>><span><strong>Ativar página pública de doações</strong><small>Usa a chave PIX informada acima e gera QR/copia-e-cola.</small></span></label>
+    <div class="field"><label>Título</label><input class="input" name="donation_title" value="<?=e($s['donation_title']??'')?>" placeholder="Ex.: Dízimos e Ofertas"></div>
+    <div class="field"><label>Nome no PIX</label><input class="input" name="donation_merchant_name" value="<?=e($s['donation_merchant_name']??'')?>" maxlength="50" placeholder="Ex.: CASA DA BENCAO"></div>
+    <div class="field"><label>Cidade no PIX</label><input class="input" name="donation_merchant_city" value="<?=e($s['donation_merchant_city']??'')?>" maxlength="30" placeholder="Ex.: CATALAO"></div>
+    <div class="field full"><label>Orientações ao doador</label><textarea class="textarea" name="donation_instructions" placeholder="Ex.: Escolha o valor e gere seu PIX. Deus abençoe sua contribuição."><?=e($s['donation_instructions']??'')?></textarea></div>
+    <?php if(!empty($s['donation_enabled'])&&!empty($s['donation_public_token'])):$donationUrl=$basePublicUrl.'/donate.php?t='.rawurlencode((string)$s['donation_public_token']);?>
+      <div class="field full"><label>Link público</label><div class="copy-row"><input class="input" id="donation-url" readonly value="<?=e($donationUrl)?>"><button class="btn btn-light" type="button" onclick="navigator.clipboard?.writeText(document.getElementById('donation-url').value)">Copiar</button><a class="btn btn-light" target="_blank" rel="noopener noreferrer" href="https://quickchart.io/qr?size=300&text=<?=rawurlencode($donationUrl)?>">QR</a><a class="btn btn-light" target="_blank" href="<?=e($donationUrl)?>">Abrir</a></div></div>
+    <?php endif?>
   </div>
 </section>
 
