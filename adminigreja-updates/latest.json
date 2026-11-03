@@ -1,34 +1,33 @@
 {
-  "version": "3.7.12",
+  "version": "3.7.13",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.12.01.b64.txt",
-    "releases/v3.7.12.02.b64.txt",
-    "releases/v3.7.12.03.b64.txt",
-    "releases/v3.7.12.04.b64.txt",
-    "releases/v3.7.12.05.b64.txt",
-    "releases/v3.7.12.06.b64.txt"
+    "releases/v3.7.13.01.b64.txt",
+    "releases/v3.7.13.02.b64.txt",
+    "releases/v3.7.13.03.b64.txt",
+    "releases/v3.7.13.04.b64.txt",
+    "releases/v3.7.13.05.b64.txt",
+    "releases/v3.7.13.06.b64.txt"
   ],
-  "sha256": "b570a8cc5ed8c26629d7ab8d69790b3638bc68fe0ae41e69f5b4c6b4f2ef3a78",
-  "published_at": "2026-11-03T12:55:42.233636+00:00",
-  "cache_buster": "3.7.12-master-enuves-migration",
+  "sha256": "d93e51d4eba67d11db577e86d345f040f375c923713998ceca2ef6953e8002b4",
+  "published_at": "2026-11-03T13:31:47.270621+00:00",
+  "cache_buster": "3.7.13-members-departments-portal",
   "notes": [
-    "Importar membros do Enuves pelo painel Master, com prévia e seleção da igreja.",
-    "Proteção contra duplicidade, 193 cadastros compatíveis e preservação de arquivados.",
-    "Departamentos criados a partir de interesses voluntários; líderes somente com indicação explícita.",
-    "Designação de líderes e vinculação de login já autorizado para o departamento.",
-    "Arquivar e restaurar membros; excluir definitivamente somente sem vínculos e com confirmação.",
-    "Atualização cumulativa 3.7.12; dados e tesouraria das igrejas preservados."
+    "Cadastro de membros: listas reais de departamentos e cargos, em vez de texto livre.",
+    "Nova tela Pessoas e Lideranças para vincular membro, ministério e líder com permissão.",
+    "Master transfere membros em massa para congregações e pode desfazer lotes.",
+    "Ativação orientada de login pessoal para consultar dízimos, ofertas e avisos.",
+    "Permissões multi-igrejas e dados financeiros preservados."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "d7e43407b987a330bbd61e01988a164898c18d7a4042885ab75181f7df276064"
+      "sha256": "b41503d391490f6100510c4231e1daf4d90f7973d911646cab1d7e91f1736529"
     },
     {
       "path": "public/VERSION",
-      "sha256": "926f06bd7a6c03a254a03aeaa402fde86cdf9f6081ac8da71f15d67e51780e9a"
+      "sha256": "bfbfd8d92b14edc70e25b4e4da7b6a4076f7688abfaed40afcbe3eaf88d49224"
     },
     {
       "path": "public/accounting-file.php",
@@ -153,6 +152,18 @@
     {
       "path": "public/database/042_enuves_migration.sql",
       "sha256": "f6ab5a6c32989715cdbd849673882b58378c02a410518080b554aadfe1ae805e"
+    },
+    {
+      "path": "public/database/043_member_departments.sql",
+      "sha256": "e315fd777be4a06cf560c90610acee089d51a4bb1547d6ef3dc674cff407387f"
+    },
+    {
+      "path": "public/database/044_master_congregation_moves.sql",
+      "sha256": "f4acad9a724ff4ecca9f17c3a666f3ee58925ae8b63c0b1a4699cb504bac3b84"
+    },
+    {
+      "path": "public/department-people.php",
+      "sha256": "a09e5ced10dbb3b44209765e7e9150609c081d5f2b6b1cc3861daf1e409b3ef1"
     },
     {
       "path": "public/department-report.php",
@@ -307,6 +318,10 @@
       "sha256": "43a6cf6c984b57678c3f67f23272cfbf47138d8e8ab5018f29dad88c0654c6b2"
     },
     {
+      "path": "public/lib/MasterCongregationService.php",
+      "sha256": "5f07bc5425e5a1d02e4f83547e73ed911efd7cee25734533dd88ee983887cb36"
+    },
+    {
       "path": "public/lib/MasterMemberService.php",
       "sha256": "a5f18fd77af0c5e27deb5be5ee16a910a8e6e4d7b62d524d60b018dc722a4706"
     },
@@ -315,8 +330,16 @@
       "sha256": "7c43aa41edb3490b192bbfb0a9bed6bc1f2a0eff717c9018684d61c2ac3d60a0"
     },
     {
+      "path": "public/lib/MemberDepartmentService.php",
+      "sha256": "58ad761397ecc7e10ebf23a0ccf1ceb04f975dd8afe79e944bb080618a7b270d"
+    },
+    {
       "path": "public/lib/MemberDirectoryService.php",
       "sha256": "7fe9bc4be88db99cdf988d7e339bf7cfaf637eff007e5891b8fe199317243455"
+    },
+    {
+      "path": "public/lib/MemberPortalAccessService.php",
+      "sha256": "d868be379f950b424b78e67d53bea8741b6e5d6549467db39c3f42fc590edc94"
     },
     {
       "path": "public/lib/MemberSelfService.php",
@@ -360,7 +383,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "e06ab2eaafc5cc5c360097cef70cfc3403d6d6abac5b24004dcf10b2c58cb6c2"
+      "sha256": "ae857f9f3853debb4bba9f4cebcf67f96a74cf28c3a965295dedf6b8ec85fa10"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -383,12 +406,16 @@
       "sha256": "fd480ed6bb18668b11db52eb5211434f026e04b956ae84dfab96f58fcf5066a6"
     },
     {
+      "path": "public/master-congregations.php",
+      "sha256": "a48c16678451e337cd50efb649a5414e751d8d1d0fe00e7704c152b068a29364"
+    },
+    {
       "path": "public/master-enuves.php",
       "sha256": "e9a7de983445ffd1da3f4f73d8543350b0cbbfd28e58833046e8cb1544dc8956"
     },
     {
       "path": "public/master-members.php",
-      "sha256": "26bd51c43879648150635c35a18473fd11e54368773af4846f727fb0f9a4e93d"
+      "sha256": "1f5157897918bf6db6dd48dd3793234fcf10423d5a4846655469e9a08bfb6019"
     },
     {
       "path": "public/master.php",
@@ -399,8 +426,12 @@
       "sha256": "db58508a350e87724237c171ded0bdcc7b631da066b862b3dd003aad7cabde04"
     },
     {
+      "path": "public/member-portal-access.php",
+      "sha256": "4a4d968be3d36b25255683da14334b8cfce19aeb3f90a8d18709d75eac545181"
+    },
+    {
       "path": "public/member-profile.php",
-      "sha256": "9c458c7e3b8f40eca1619eb21c3b7973fcee8693782225c19415fd38da7cbaa4"
+      "sha256": "7a3aaaf5669125c4f1129810346ff471688db51fc0781742421c4c0c140645b5"
     },
     {
       "path": "public/members-print.php",
@@ -408,7 +439,7 @@
     },
     {
       "path": "public/members.php",
-      "sha256": "02cf479d117e3c7a279bea9252b88cb4775a0f94d7504c3800760f96d1d59890"
+      "sha256": "73f1cf33da43b2e67612d92cc0adbb6da1965c861c52e800622a682a5320086d"
     },
     {
       "path": "public/my-profile.php",
