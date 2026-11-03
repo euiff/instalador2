@@ -152,7 +152,7 @@ def modify_members(source:bytes)->bytes:
     txt=once(txt,old,new,"department dropdown")
     anchor="""<datalist id="church-positions">"""
     if anchor not in txt:raise RuntimeError("positions anchor missing")
-    txt=txt.replace(anchor,"<p class=\\"muted\\">O cargo do cadastro não libera funções administrativas; o perfil de login é configurado separadamente.</p>\\n"+anchor,1)
+    txt=txt.replace(anchor,'<p class="muted">O cargo do cadastro não libera funções administrativas; o perfil de login é configurado separadamente.</p>\\n'+anchor,1)
     return txt.encode('utf-8')
 
 
