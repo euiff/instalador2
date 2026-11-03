@@ -1,0 +1,38 @@
+name: Igreja Master 3.7.8 cumulative release
+on:
+  push:
+    branches: [feature/igreja-master-3.7.8-pastoral]
+    paths:
+      - ".github/workflows/igreja-master-378-build.yml"
+      - "adminigreja-updates/staging/3.7.8/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/igreja-master-378-build.yml"
+      - "adminigreja-updates/staging/3.7.8/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/igreja-master-3.7.8-pastoral
+          persist-credentials: true
+      - name: Verify base, integrate pastoral module and package full update
+        run: |
+          php -v | head -2
+          python3 adminigreja-updates/staging/3.7.8/build_release.py
+      - name: Commit release only after all checks pass
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.8.*.b64.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Igreja Master 3.7.8: verified cumulative pastoral agenda"
+            git push origin HEAD:feature/igreja-master-3.7.8-pastoral
+          fi

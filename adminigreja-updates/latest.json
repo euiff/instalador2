@@ -1,48 +1,31 @@
 {
-  "version": "3.7.7",
+  "version": "3.7.8",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.7.01.b64.txt",
-    "releases/v3.7.7.02.b64.txt",
-    "releases/v3.7.7.03.b64.txt",
-    "releases/v3.7.7.04.b64.txt",
-    "releases/v3.7.7.05.b64.txt",
-    "releases/v3.7.7.06.b64.txt",
-    "releases/v3.7.7.07.b64.txt",
-    "releases/v3.7.7.08.b64.txt",
-    "releases/v3.7.7.09.b64.txt",
-    "releases/v3.7.7.10.b64.txt",
-    "releases/v3.7.7.11.b64.txt",
-    "releases/v3.7.7.12.b64.txt",
-    "releases/v3.7.7.13.b64.txt",
-    "releases/v3.7.7.14.b64.txt",
-    "releases/v3.7.7.15.b64.txt",
-    "releases/v3.7.7.16.b64.txt",
-    "releases/v3.7.7.17.b64.txt",
-    "releases/v3.7.7.18.b64.txt",
-    "releases/v3.7.7.19.b64.txt",
-    "releases/v3.7.7.20.b64.txt",
-    "releases/v3.7.7.21.b64.txt"
+    "releases/v3.7.8.01.b64.txt",
+    "releases/v3.7.8.02.b64.txt",
+    "releases/v3.7.8.03.b64.txt",
+    "releases/v3.7.8.04.b64.txt"
   ],
-  "sha256": "bde5d8b0f929760f906c25d4981f38cf89f9c0b372923c43cc5cbe1707925f96",
-  "published_at": "2026-11-02T21:24:17-03:00",
-  "cache_buster": "3.7.7-visitor-followups",
+  "sha256": "42f488c4abab847d95290c7bd2c462042bc811a267df104805350b3342bf43e6",
+  "published_at": "2026-11-02T22:00:00-03:00",
+  "cache_buster": "3.7.8-pastoral-agenda",
   "notes": [
-    "Histórico de acolhimento por visitante: data, responsável, observação e próximo retorno.",
-    "Indicadores de retornos pendentes e visitantes integrados.",
-    "Paginação, filtros por responsável e exportação CSV completa.",
-    "Preserva observações antigas e vínculo com membro existente.",
-    "Migração 039 cria o histórico; preserva os módulos da versão 3.7.6."
+    "Agenda pastoral: atendimentos, visitas e histórico de contatos por igreja.",
+    "Retornos atrasados, filtros, paginação e indicação de responsáveis.",
+    "Anotações confidenciais restritas aos usuários com permissão pastoral.",
+    "Cadastro em janela flutuante e acompanhamento pelo menu Pessoas e cadastros.",
+    "Migração 040: novas tabelas com UUIDs; preserva as versões anteriores."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "602844dc8530ebf5cb736b4ed2b53a43a6dfee655ce2e911479c30c1cf333013"
+      "sha256": "35d1be0add507db4048533310924bf3f7c05b011181d0dd361181cd52b8c5a69"
     },
     {
       "path": "public/VERSION",
-      "sha256": "d0c6e5ceb9efa6e1d67eededf866d8e540b780fba2c94c2892f9161f5e0a9651"
+      "sha256": "05785661211541aea0f1a50c5105320c93e34767c5158392da0f50bf9c13c4b4"
     },
     {
       "path": "public/albums.php",
@@ -127,6 +110,10 @@
     {
       "path": "public/database/039_visitor_followups.sql",
       "sha256": "c493b1ce58c79cbcdacf6789ec6a94f607f5cfd7a9b79221e300df36bdf729b8"
+    },
+    {
+      "path": "public/database/040_pastoral_agenda.sql",
+      "sha256": "1ae8295da0246d3747158cd1f2eb94113f3a3d55b38bd3ed2954e7471ba7c6cd"
     },
     {
       "path": "public/department-report.php",
@@ -261,6 +248,10 @@
       "sha256": "f762d4dd370f6226b53640562bae08f7cc94d99099a4e31e29b8bab58244e47d"
     },
     {
+      "path": "public/lib/PastoralAgendaService.php",
+      "sha256": "d87224a845b9ec40271ddeff55fd937f7b23f4d8b107d26c2642498154b6304c"
+    },
+    {
       "path": "public/lib/PixPayloadService.php",
       "sha256": "0e4519825f37cc4f3a0ff9dbc49e088750e26ced4cd60794dd642b36f5da0f39"
     },
@@ -290,7 +281,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "57d07b41883f509b1015c77857158b202bfb1f5dd0695c5cafb999e02b5ca92d"
+      "sha256": "c5d5bfbd1cbdb6a72b29881ba6067cfe0399894471b9d5123420f09d07974592"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -323,6 +314,10 @@
     {
       "path": "public/my-profile.php",
       "sha256": "05ea2a644d7f17c7cb8984f32842516239f19cabedf7abf47b76b1efb8bc8a8d"
+    },
+    {
+      "path": "public/pastoral-agenda.php",
+      "sha256": "7b237d6e618b04805b4919ef6e56b876657169830444facb04608801b76fdcf4"
     },
     {
       "path": "public/payments.php",
