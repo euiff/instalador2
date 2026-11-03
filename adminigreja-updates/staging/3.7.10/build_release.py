@@ -120,7 +120,7 @@ def modify_portal_home(source:bytes)->bytes:
         found=False
         for i,line in enumerate(lines):
             if anchor in line and 'Caixa do Departamento' in line:
-                extra='      <?php if($auth->can(\\'department_treasury\\')):?><a href="/department-treasury.php"><strong>Abrir tesouraria do departamento</strong><small>Caixa, lançamentos e comprovantes</small></a><?php endif?>\n'
+                extra="      <?php if($auth->can('department_treasury')):?><a href='/department-treasury.php'><strong>Abrir tesouraria do departamento</strong><small>Caixa, lançamentos e comprovantes</small></a><?php endif?>\\n"
                 lines.insert(i+1,extra)
                 found=True
                 break
