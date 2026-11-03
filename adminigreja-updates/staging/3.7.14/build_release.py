@@ -116,10 +116,12 @@ def modify_treasury_service(source:bytes)->bytes:
     end=txt.index("    }\n",start)
     txt=txt[:start]+"""        return DepartmentRoleAccess::listFinancialDepartments($this->pdo,$this->churchId,$this->userId);
 """+txt[end:]
-    anchor="""$allowed=$this->query('SELECT 1 FROM department_access WHERE church_id=? AND department_id=? AND user_id=? LIMIT 1',
-                 [$this->churchId,$departmentId,$this->userId])->fetchColumn();"""
-    replacement="""$allowed=DepartmentRoleAccess::hasFinancialScope($this->pdo,$this->churchId,$this->userId,$departmentId);"""
-    txt=once(txt,anchor,replacement,"department ID authorization")
+    marker="$allowed=$this->query('SELECT 1 FROM department_access"
+    start=txt.find(marker)
+    if start<0:raise RuntimeError("Scoped department access anchor missing")
+    end=txt.find("->fetchColumn();",start)
+    if end<0:raise RuntimeError("Scoped department access end missing")
+    txt=txt[:start]+"$allowed=DepartmentRoleAccess::hasFinancialScope($this->pdo,$this->churchId,$this->userId,$departmentId);"+txt[end+len("->fetchColumn();"):]
     txt=once(txt,"O contador possui acesso de consulta, não de movimentação.",
        "O contador ou seu perfil não pode lançar movimentações neste departamento.","treasury denial")
     return txt.encode("utf-8")
