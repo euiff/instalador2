@@ -211,6 +211,58 @@ final class AccountingService
         }
     }
 
+    public function confirmDocument(string $id,array $input):void
+    {
+        $this->manage();
+        $doc=$this->document($id);
+        if($doc['finance_entry_id'])throw new RuntimeException('Documento já vinculado a lançamento. Faça correções pela tesouraria, preservando o histórico.');
+        $name=mb_substr(trim((string)($input['supplier_name']??$doc['supplier_name']??'')),0,190);
+        $cnpj=preg_replace('/\D/','',(string)($input['supplier_cnpj']??$doc['supplier_cnpj']??''))??'';
+        if($cnpj!==''&&strlen($cnpj)!==14)throw new InvalidArgumentException('CNPJ inválido.');
+        $number=mb_substr(trim((string)($input['document_number']??$doc['document_number']??'')),0,60);
+        $issued=self::date($input['issued_on']??$doc['issued_on']??'');
+        $amount=ReceiptParser::amount((string)($input['total']??$doc['total']??''));
+        $category=mb_substr(trim((string)($input['confirmed_category']??$doc['confirmed_category']??'')),0,160);
+        $items=$this->normalizeItems($input['items_json']??$doc['item_details_json']??[]);
+        $needsFields=in_array($doc['document_kind'],['fiscal_coupon','invoice','receipt','proof'],true);
+        if($needsFields&&($issued===null||$amount===null||$category===''))throw new InvalidArgumentException('Preencha data, valor e categoria antes de confirmar.');
+        $post=!empty($input['post_expense']);
+        if($post&&(!$needsFields||(float)$amount<=0))throw new InvalidArgumentException('Somente despesas comprovadas podem ser lançadas.');
+        $accountId=trim((string)($input['account_id']??''))?:null;
+        if($accountId&&!$this->q('SELECT 1 FROM finance_accounts WHERE church_id=? AND id=? AND active=1',[$this->churchId,$accountId])->fetchColumn())
+            throw new InvalidArgumentException('Conta financeira inválida.');
+        if($post){
+            require_once __DIR__.'/FinancePeriodGuard.php';
+            FinancePeriodGuard::assertOpen($this->pdo,$this->churchId,$issued);
+        }
+        $this->pdo->beginTransaction();
+        try{
+            $entryId=null;$financeDocId=null;
+            if($post){
+                $entryId=app_uuid();
+                $description=mb_substr('Documento '.($number?:$doc['document_kind']).' — '.($name?:'Fornecedor'),0,255);
+                $this->q("INSERT INTO finance_entries
+                    (id,church_id,account_id,direction,category,description,amount,transaction_date,status,source,created_by_user_id,counterparty,document_number,notes)
+                    VALUES (?,?,?,'expense',?,?,?,?, 'posted','manual',?,?,?,?)",
+                    [$entryId,$this->churchId,$accountId,$category,$description,$amount,$issued,$this->userId,$name?:null,$number?:null,'Documento contábil '.$id]);
+                $financeDocId=app_uuid();
+                $this->q('INSERT INTO finance_documents
+                    (id,church_id,entry_id,payable_id,document_type,document_number,issued_at,original_name,storage_path,mime_type,file_size,notes,created_by_user_id)
+                    VALUES(?,?,?,NULL,?,?,?,?,?,?,?,?,?)',
+                    [$financeDocId,$this->churchId,$entryId,
+                    $doc['document_kind']==='fiscal_coupon'?'fiscal_coupon':($doc['document_kind']==='invoice'?'invoice':'proof'),$number?:null,$issued,$doc['original_name'],
+                    $doc['storage_path'],$doc['mime_type'],$doc['file_size'],'Documento contábil '.$id,$this->userId]);
+            }
+            $this->q("UPDATE accounting_documents SET supplier_name=?,supplier_cnpj=?,document_number=?,issued_on=?,total=?,
+                confirmed_category=?,item_details_json=?,status='ready',review_note=NULL,reviewed_by_user_id=NULL,reviewed_at=NULL,
+                finance_entry_id=?,finance_document_id=? WHERE church_id=? AND id=?",
+                [$name?:null,$cnpj?:null,$number?:null,$issued,$amount,$category?:null,json_encode($items,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR),
+                    $entryId,$financeDocId,$this->churchId,$id]);
+            $this->audit($post?'confirm_and_post':'confirm_document',$id,$doc['reference_period']);
+            $this->pdo->commit();
+        }catch(Throwable $e){if($this->pdo->inTransaction())$this->pdo->rollBack();throw $e;}
+    }
+
     public function documents(string $period,int $limit=500):array
     {
         $period=self::period($period);$limit=max(1,min(1000,$limit));
