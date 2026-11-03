@@ -1,33 +1,34 @@
 {
-  "version": "3.7.13",
+  "version": "3.7.14",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.13.01.b64.txt",
-    "releases/v3.7.13.02.b64.txt",
-    "releases/v3.7.13.03.b64.txt",
-    "releases/v3.7.13.04.b64.txt",
-    "releases/v3.7.13.05.b64.txt",
-    "releases/v3.7.13.06.b64.txt"
+    "releases/v3.7.14.01.b64.txt",
+    "releases/v3.7.14.02.b64.txt",
+    "releases/v3.7.14.03.b64.txt",
+    "releases/v3.7.14.04.b64.txt",
+    "releases/v3.7.14.05.b64.txt",
+    "releases/v3.7.14.06.b64.txt"
   ],
-  "sha256": "d93e51d4eba67d11db577e86d345f040f375c923713998ceca2ef6953e8002b4",
-  "published_at": "2026-11-03T13:31:47.270621+00:00",
-  "cache_buster": "3.7.13-members-departments-portal",
+  "sha256": "f8fa6609516c43736a9d0f48a6b025934a2dd119766b5312848c281749849bee",
+  "published_at": "2026-11-03T14:04:45.173169+00:00",
+  "cache_buster": "3.7.14-department-leader-treasurer",
   "notes": [
-    "Cadastro de membros: listas reais de departamentos e cargos, em vez de texto livre.",
-    "Nova tela Pessoas e Lideranças para vincular membro, ministério e líder com permissão.",
-    "Master transfere membros em massa para congregações e pode desfazer lotes.",
-    "Ativação orientada de login pessoal para consultar dízimos, ofertas e avisos.",
-    "Permissões multi-igrejas e dados financeiros preservados."
+    "Participante continua no Portal do Membro, sem acesso financeiro do departamento.",
+    "Líder recebe acesso restrito somente aos departamentos que lidera.",
+    "Líder pode indicar e remover tesoureiro entre participantes de sua equipe.",
+    "Tesoureiro departamental movimenta só o caixa do departamento; não recebe tesouraria geral.",
+    "Comprovante obrigatório nas despesas de perfis departamentais; consolidação geral mantida.",
+    "Permissões por igreja e departamento verificadas por testes automatizados."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "b41503d391490f6100510c4231e1daf4d90f7973d911646cab1d7e91f1736529"
+      "sha256": "04466bd95dd83d3f5e920563c135717baf5d80fff1dacbcb074d7d36a787ff4e"
     },
     {
       "path": "public/VERSION",
-      "sha256": "bfbfd8d92b14edc70e25b4e4da7b6a4076f7688abfaed40afcbe3eaf88d49224"
+      "sha256": "a99ff7a315022de5d477df6c50fcda573416b47af21d8bfe211c225369168643"
     },
     {
       "path": "public/accounting-file.php",
@@ -163,15 +164,19 @@
     },
     {
       "path": "public/department-people.php",
-      "sha256": "a09e5ced10dbb3b44209765e7e9150609c081d5f2b6b1cc3861daf1e409b3ef1"
+      "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
     },
     {
       "path": "public/department-report.php",
       "sha256": "581524b906038d13213f1b7092704caadfdb64a48458839ae492adffd2467d78"
     },
     {
+      "path": "public/department-team.php",
+      "sha256": "53c59f9d427ddd4d0f57b776df2c268a193120d5459acd2dc7e6bb41b3b857a3"
+    },
+    {
       "path": "public/department-treasury.php",
-      "sha256": "7032b6828b7b57fd9de9bad61bfa091db27f57a544fbb8eecda9b637cdf0ffa6"
+      "sha256": "f712037c0e12e2257057474043c230d9dd51bc78c061fc8160a83d8a61508b3c"
     },
     {
       "path": "public/donate.php",
@@ -227,7 +232,7 @@
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "208fea72e394e07fd8fd00f61c2cce29b35bb81738873c7efdaaddea6868ed84"
+      "sha256": "8c376c62ddd777f97b52c6583e974334060d69653f8874b0fb2c38d5d64467ad"
     },
     {
       "path": "public/lib/AutomationMonitor.php",
@@ -258,12 +263,20 @@
       "sha256": "ae67f5d5fcc1df9e7ed043980f1bec1a8c5b01b8fe44bfa9f22a9de60b020bdf"
     },
     {
+      "path": "public/lib/DepartmentDelegationService.php",
+      "sha256": "c912885b07df9aee1473999690970d18fb9f630373a4fda5a1de24c3faf31d30"
+    },
+    {
       "path": "public/lib/DepartmentReportService.php",
       "sha256": "988ab9b594e9bf6b19d8a582f0b0950bc29b4d50030cf057dcf8465ab6ea947e"
     },
     {
+      "path": "public/lib/DepartmentRoleAccess.php",
+      "sha256": "46cd8dff14530321d15b8c178ad5e5355df7234e30b8aacab3b1703a5367d123"
+    },
+    {
       "path": "public/lib/DepartmentTreasuryService.php",
-      "sha256": "310a5b155c305c33c8176530699a6adaac9313eeb5f2ed51cf0330aa09f8fb2a"
+      "sha256": "f71dfd891babd2093a5b081f34d3416286dc767cf1ee8799e2618307418a3d82"
     },
     {
       "path": "public/lib/EnuvesImportMap.php",
@@ -331,7 +344,7 @@
     },
     {
       "path": "public/lib/MemberDepartmentService.php",
-      "sha256": "58ad761397ecc7e10ebf23a0ccf1ceb04f975dd8afe79e944bb080618a7b270d"
+      "sha256": "5c1ed661e83ed3f9035690ebe57dafeca00d8c23acb0bbb0b49b96e176c74ac1"
     },
     {
       "path": "public/lib/MemberDirectoryService.php",
@@ -355,7 +368,7 @@
     },
     {
       "path": "public/lib/PortalService.php",
-      "sha256": "02e05fbbb28504fffd156814cccee390fdffae0dc680db2e0cbf5c198443dfc2"
+      "sha256": "d02eaaa9d4932a695ead1ab3ca6dc2bad74799759cf2db188e46a778e8f6da4e"
     },
     {
       "path": "public/lib/ReceiptParser.php",
@@ -383,7 +396,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "ae857f9f3853debb4bba9f4cebcf67f96a74cf28c3a965295dedf6b8ec85fa10"
+      "sha256": "f0bb29586ef2e6088bbae1ba6d87ab70317b47a2c00269321d851a55d708d995"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -455,11 +468,11 @@
     },
     {
       "path": "public/portal-home.php",
-      "sha256": "d6dad3348a35c717e117d4ee86e78921a9990f4b8fbb14451cac6d3b4257a218"
+      "sha256": "a8c56c5ebca618ce72df2cfa4d79d0598ce96777324a7d860161802322248b54"
     },
     {
       "path": "public/portal.php",
-      "sha256": "c17382d60d7974c3d03d39ac95fefcf4bc10cec6b6d1b037327df401b0b6bd5b"
+      "sha256": "59ef18135535f5dca30c194eedf6eb557cd45021332449848a5bbcee7960ba9b"
     },
     {
       "path": "public/registers.php",
