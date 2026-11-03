@@ -162,8 +162,8 @@ def modify_accounting_package(source:bytes)->bytes:
     new="'Conta','Departamento','Contraparte','Método','Documento','Valor','Situação','ID'"
     if old not in txt and new not in txt:raise RuntimeError("Cannot locate accountant CSV columns")
     txt=txt.replace(old,new,1)
-    old="$e['description'],$e['category'],$e['account_name']??'',\n         $e['counterparty']"
-    new="$e['description'],$e['category'],$e['account_name']??'',$e['department_name']??'',\n         $e['counterparty']"
+    old="$e['description'],$e['category'],$e['account_name']??'',\n        $e['counterparty']"
+    new="$e['description'],$e['category'],$e['account_name']??'',$e['department_name']??'',\n        $e['counterparty']"
     if old not in txt and new not in txt:raise RuntimeError("Accountant CSV rows do not match")
     txt=txt.replace(old,new,1)
     target="$zip->addFromString('contas-a-pagar.csv'"
