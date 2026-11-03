@@ -162,3 +162,8 @@ dialog::backdrop{background:rgba(11,28,46,.58)}
  .im-360 a,.im-360 button{transition:none!important}
  dialog:open{animation:none}
 }
+
+.im-filter-label{display:grid;gap:7px;margin:-2px 0 15px;max-width:420px;font-size:11px;font-weight:730;color:#577489}
+.im-filter-label input{width:100%;min-height:40px;border-radius:10px;border:1px solid #d6e6ed;background:#fbfdfe;padding:8px 12px;font:inherit;font-size:13px;color:#2e4958}
+.im-app-card[hidden]{display:none!important}
+.im-no-results{padding:17px;text-align:center;background:#f6fafb;border:1px dashed #cddfe7;color:#657e8d;font-size:12px;border-radius:12px}
