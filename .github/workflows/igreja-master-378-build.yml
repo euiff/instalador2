@@ -5,6 +5,8 @@ on:
     paths:
       - ".github/workflows/igreja-master-378-build.yml"
       - "adminigreja-updates/staging/3.7.8/**"
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
