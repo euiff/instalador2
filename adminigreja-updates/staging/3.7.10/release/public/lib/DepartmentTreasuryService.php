@@ -137,7 +137,7 @@ final class DepartmentTreasuryService
         // pending documentation, visible to accountant as expense_without_proof.
         $hasFile=(int)($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_OK;
         if($direction==='expense'&&!$hasFile&&!$this->fullAccess)
-            throw new InvalidArgumentException('Anexe uma foto, PDF ou cupom para registrar esta despesa.');
+            throw new InvalidArgumentException('Anexe um comprovante (foto, PDF ou cupom) para registrar esta despesa.');
         FinancePeriodGuard::assertOpen($this->pdo,$this->churchId,$date);
         $saved=null;$entryId=app_uuid();
         try{
