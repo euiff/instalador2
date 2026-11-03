@@ -1,33 +1,33 @@
 {
-  "version": "3.7.9",
+  "version": "3.7.10",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.9.01.b64.txt",
-    "releases/v3.7.9.02.b64.txt",
-    "releases/v3.7.9.03.b64.txt",
-    "releases/v3.7.9.04.b64.txt",
-    "releases/v3.7.9.05.b64.txt"
+    "releases/v3.7.10.01.b64.txt",
+    "releases/v3.7.10.02.b64.txt",
+    "releases/v3.7.10.03.b64.txt",
+    "releases/v3.7.10.04.b64.txt",
+    "releases/v3.7.10.05.b64.txt"
   ],
-  "sha256": "ac9306b5795d857c101bfde99c5917ffd53a1147999ae061fe026a09f44e13d3",
-  "published_at": "2026-11-02T22:55:00-03:00",
-  "cache_buster": "3.7.9-accounting-portal",
+  "sha256": "91c48772b00a006d9bde3f3ac5240ba3bbb4d84767fa9ec38140a49c14371b94",
+  "published_at": "2026-11-02T23:35:00-03:00",
+  "cache_buster": "3.7.10-department-treasury",
   "notes": [
-    "Portal do Contador com login individual e acesso restrito à igreja.",
-    "Organização mensal de notas, cupons, comprovantes, extratos e contratos.",
-    "Leitura automática de foto (OCR no navegador) e XML NF-e, com revisão manual obrigatória.",
-    "Sugestão de categorias para itens e lançamento opcional na tesouraria após confirmação.",
-    "Pacote ZIP contábil mensal: entradas, saídas, anexos e pendências.",
-    "Migração 041 aditiva; preserva o financeiro e as versões anteriores."
+    "Tesourarias individuais para cada departamento, com acesso apenas aos líderes autorizados.",
+    "Entradas e saídas dos departamentos integradas uma só vez na tesouraria geral.",
+    "Pastor e tesoureiro visualizam saldos, movimentações e pendências por departamento.",
+    "Portal do Contador recebe relatórios departamentais e categorias no pacote mensal.",
+    "Anexos obrigatórios para despesas lançadas por líderes; documentos arquivados.",
+    "Atualização cumulativa que preserva os módulos e lançamentos anteriores."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "0a541851ea0e988ed39711ddc217cb6f27121f94dbd7ed50e21c3f197fd1081e"
+      "sha256": "11da2039eef7fa41f42d0d04fe71c6f4ed8666c28cbe60b82a033bcda5cc138d"
     },
     {
       "path": "public/VERSION",
-      "sha256": "900decdfc4c4ed2f843c330804d276394277dcbc685f601f1b8e4ee1d2df51fa"
+      "sha256": "8c7229c71b8d301b1c9154890cbda0e4fce4e93e514fb82d492416dda5c11668"
     },
     {
       "path": "public/accounting-file.php",
@@ -35,7 +35,7 @@
     },
     {
       "path": "public/accounting-package.php",
-      "sha256": "f6c619cf498915d78ba87ad068c90e088ac1536902dd450bc8e19a8bbab4801c"
+      "sha256": "e20a1a325951fa85ab9e05ec4e8472ba300eb96abd4d14c48b9f3895a67e7b93"
     },
     {
       "path": "public/accounting-parse.php",
@@ -43,7 +43,7 @@
     },
     {
       "path": "public/accounting.php",
-      "sha256": "3dc9fb9b7f64ffe630417100d2411334746d1bcd08430f66f9de4ac65067008a"
+      "sha256": "323394d8b01d0f7a6fe54da0fe6f18aa085e509f6765563574216f9347f1df6e"
     },
     {
       "path": "public/albums.php",
@@ -83,7 +83,7 @@
     },
     {
       "path": "public/dashboard.php",
-      "sha256": "9ac432bbcab6fac77a72556352044725e6b6e56b784c37ce160dc51c045e8bf0"
+      "sha256": "231c2a02dd957a79529de2c50b359cb8ef09db6e4b4464eee44a7f431c948035"
     },
     {
       "path": "public/database/028_finance_registers_receivables.sql",
@@ -146,6 +146,10 @@
       "sha256": "581524b906038d13213f1b7092704caadfdb64a48458839ae492adffd2467d78"
     },
     {
+      "path": "public/department-treasury.php",
+      "sha256": "7032b6828b7b57fd9de9bad61bfa091db27f57a544fbb8eecda9b637cdf0ffa6"
+    },
+    {
       "path": "public/donate.php",
       "sha256": "a2ba9d2ae44fc35b91832858097b1f24eb7efbf76b2512362b8dad3d9421b98d"
     },
@@ -191,7 +195,7 @@
     },
     {
       "path": "public/lib/AccountingService.php",
-      "sha256": "99569773470818301613acb56bc8ec61dcf1c5066dc34e343be0430f674d7a3d"
+      "sha256": "8c43d9c501deafda879606f3a3cdd5af82279522c13213a07f6b3f99421be740"
     },
     {
       "path": "public/lib/AnnouncementService.php",
@@ -199,7 +203,7 @@
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "58aaa8539f9511a9f33f9e83dbad6ab764f4bc6ed0e4c86d6635e3b2cd79dada"
+      "sha256": "208fea72e394e07fd8fd00f61c2cce29b35bb81738873c7efdaaddea6868ed84"
     },
     {
       "path": "public/lib/AutomationMonitor.php",
@@ -232,6 +236,10 @@
     {
       "path": "public/lib/DepartmentReportService.php",
       "sha256": "988ab9b594e9bf6b19d8a582f0b0950bc29b4d50030cf057dcf8465ab6ea947e"
+    },
+    {
+      "path": "public/lib/DepartmentTreasuryService.php",
+      "sha256": "310a5b155c305c33c8176530699a6adaac9313eeb5f2ed51cf0330aa09f8fb2a"
     },
     {
       "path": "public/lib/EventRegistrationService.php",
@@ -315,11 +323,19 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "c294d9a85408bf4bd2f5458d7fb4d49d8d7d4878bf8e8018f4dcf42db6843b03"
+      "sha256": "c38b9f738b3f35422bc913e0bc87ea5e2ee6f77ca9bf91f7d682c9df9dd2e7fa"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
       "sha256": "d37f6443b668340e05fd02961c6446e8e4b46213c2378c436706fb9ee033203a"
+    },
+    {
+      "path": "public/lib/accounting-departments.php",
+      "sha256": "88c929b44b88d0d00dce2c7fee1272d9992faa3c858716ccdda04621faf3480d"
+    },
+    {
+      "path": "public/lib/dashboard-department-treasury.php",
+      "sha256": "c4c678b4b8fc34a5eb705d80de88c1b7b67c20563fdb3f706cc3cf7c41e73cd4"
     },
     {
       "path": "public/master-automations.php",
@@ -359,7 +375,7 @@
     },
     {
       "path": "public/portal-home.php",
-      "sha256": "6b12bd313a74e3d0700065e1ffa872671c327283d8b908f12b3ebfe1031f7e5d"
+      "sha256": "d6dad3348a35c717e117d4ee86e78921a9990f4b8fbb14451cac6d3b4257a218"
     },
     {
       "path": "public/portal.php",
