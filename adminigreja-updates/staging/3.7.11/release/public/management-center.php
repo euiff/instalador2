@@ -70,7 +70,10 @@ View::flash();
           <p>Abra a função que precisa sem procurar nos submenus.</p></div>
         </div>
         <?php if($links):?>
-        <div class="im-app-grid">
+        <label class="im-filter-label" for="im-module-filter">Buscar módulo ou função
+          <input id="im-module-filter" class="input" type="search" autocomplete="off" placeholder="Ex.: membros, cupons, escalas, tesouraria…">
+        </label>
+        <div class="im-app-grid" id="im-app-results">
           <?php foreach($links as $link):?>
           <a class="im-app-card" href="<?=e($link['href'])?>">
             <span class="im-app-icon" aria-hidden="true"><?=e($iconFor[$link['icon']]??'◈')?></span>
@@ -79,6 +82,7 @@ View::flash();
           </a>
           <?php endforeach;?>
         </div>
+        <p class="im-no-results" hidden role="status">Nenhuma área encontrada. Tente outra palavra ou use a busca geral.</p>
         <?php else:?>
         <p>Seu perfil possui acesso limitado. Consulte um administrador para liberar funções adicionais.</p>
         <?php endif;?>
