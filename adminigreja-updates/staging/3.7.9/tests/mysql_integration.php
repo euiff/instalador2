@@ -25,7 +25,7 @@ $pdo->exec('SET FOREIGN_KEY_CHECKS=0');
 foreach(['accounting_audit','accounting_periods','accounting_requests','accounting_documents','finance_documents','finance_entries','finance_payables','finance_accounts','church_registers','church_members','user_roles','users','churches'] as $table)
     $pdo->exec('DROP TABLE IF EXISTS '.$table);
 $pdo->exec('SET FOREIGN_KEY_CHECKS=1');
-$pdo->exec("CREATE TABLE churches (id CHAR(36) PRIMARY KEY,name VARCHAR(150),active TINYINT DEFAULT 1) ENGINE=InnoDB");
+$pdo->exec("CREATE TABLE churches (id CHAR(36) PRIMARY KEY,name VARCHAR(150),active TINYINT DEFAULT 1) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 $pdo->exec("CREATE TABLE users (id CHAR(36) PRIMARY KEY,email VARCHAR(150),full_name VARCHAR(150),password_hash VARCHAR(255),active TINYINT DEFAULT 1) ENGINE=InnoDB");
 $pdo->exec("CREATE TABLE user_roles (user_id CHAR(36),role VARCHAR(50)) ENGINE=InnoDB");
 $pdo->exec("CREATE TABLE church_members (id CHAR(36) PRIMARY KEY,church_id CHAR(36),user_id CHAR(36),is_owner TINYINT DEFAULT 0,church_role VARCHAR(50),permissions TEXT NULL,person_id CHAR(36) NULL) ENGINE=InnoDB");
