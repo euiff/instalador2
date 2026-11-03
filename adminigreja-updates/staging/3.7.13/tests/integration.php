@@ -16,7 +16,8 @@ $pdo->exec("CREATE TABLE congregations(
   active TINYINT DEFAULT 1,sort_order INT DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 $pdo->exec("ALTER TABLE churches ADD COLUMN max_users INT NULL");
-$pdo->exec("ALTER TABLE users ADD COLUMN password_hash VARCHAR(255) NULL");
+if(!$pdo->query("SHOW COLUMNS FROM users LIKE 'password_hash'")->fetch())
+    $pdo->exec("ALTER TABLE users ADD COLUMN password_hash VARCHAR(255) NULL");
 $pdo->exec("CREATE TABLE profiles(id CHAR(36) PRIMARY KEY,user_id CHAR(36) NOT NULL,full_name VARCHAR(190))
  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 MemberDepartmentService::ensure($pdo);
