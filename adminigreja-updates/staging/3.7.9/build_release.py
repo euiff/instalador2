@@ -170,7 +170,7 @@ def lint_and_assert(files:dict[str,bytes]):
     assert b"church_id CHAR(36)" in files["public/database/041_accounting_portal.sql"]
     assert b"NOT EXISTS(SELECT 1 FROM finance_documents" in files["public/lib/AccountingService.php"]
     assert b"hash_file('sha256'" in files["public/lib/AccountingService.php"]
-    assert b"finance_entries" in files["public/accounting-package.php"]
+    assert b"movimentacoes.csv" in files["public/accounting-package.php"]
     assert b"post_expense" in files["public/accounting.php"]
     with tempfile.TemporaryDirectory(prefix="igreja-master-379-") as d:
         for path,body in files.items():
