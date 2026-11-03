@@ -21,6 +21,7 @@ $pdo=new PDO($dsn,(string)getenv('TEST_ACCOUNTING_USER'),(string)getenv('TEST_AC
     PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES=>false
 ]);
+$pdo->exec('ALTER DATABASE igreja_accounting_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
 $pdo->exec('SET FOREIGN_KEY_CHECKS=0');
 foreach(['accounting_audit','accounting_periods','accounting_requests','accounting_documents','finance_documents','finance_entries','finance_payables','finance_accounts','church_registers','church_members','user_roles','users','churches'] as $table)
     $pdo->exec('DROP TABLE IF EXISTS '.$table);
