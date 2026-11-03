@@ -27,6 +27,16 @@ with tarfile.open(fileobj=io.BytesIO(gzip.decompress(archive))) as tf:
       if re.search(r'(password|secret|token|apikey)',line,re.I):
         if len(line)>240:continue
       print(f'{i+1:03d}: {line[:330]}')
+  print('\n===== MEMBER INSERT AND ROLES =====')
+  t=files.get('public/members.php','')
+  for l in t.splitlines():
+    if "'INSERT INTO members" in l or "$q->execute([app_uuid()" in l:
+      print(l[:2500])
+  print('\n===== MASTER SELECTED MENU =====')
+  v=files.get('public/lib/View.php','')
+  for l in v.splitlines():
+    if "'master.php'" in l or "'updates.php'" in l or "'Administração'" in l:
+      print(l[:1800])
   print('\n===== TABLE DEFINITIONS =====')
   patterns=[r'CREATE TABLE IF NOT EXISTS\s+(?:\w+\.)?(?:members|ministry_departments|department_access|church_members|congregations|users|churches)\s*\(',r'CREATE TABLE\s+(?:members|ministry_departments|department_access|church_members|congregations|users|churches)\s*\(']
   for name,src in files.items():
