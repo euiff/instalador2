@@ -1,47 +1,48 @@
 {
-  "version": "3.7.6",
+  "version": "3.7.7",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.6.01.b64.txt",
-    "releases/v3.7.6.02.b64.txt",
-    "releases/v3.7.6.03.b64.txt",
-    "releases/v3.7.6.04.b64.txt",
-    "releases/v3.7.6.05.b64.txt",
-    "releases/v3.7.6.06.b64.txt",
-    "releases/v3.7.6.07.b64.txt",
-    "releases/v3.7.6.08.b64.txt",
-    "releases/v3.7.6.09.b64.txt",
-    "releases/v3.7.6.10.b64.txt",
-    "releases/v3.7.6.11.b64.txt",
-    "releases/v3.7.6.12.b64.txt",
-    "releases/v3.7.6.13.b64.txt",
-    "releases/v3.7.6.14.b64.txt",
-    "releases/v3.7.6.15.b64.txt",
-    "releases/v3.7.6.16.b64.txt",
-    "releases/v3.7.6.17.b64.txt",
-    "releases/v3.7.6.18.b64.txt",
-    "releases/v3.7.6.19.b64.txt",
-    "releases/v3.7.6.20.b64.txt"
+    "releases/v3.7.7.01.b64.txt",
+    "releases/v3.7.7.02.b64.txt",
+    "releases/v3.7.7.03.b64.txt",
+    "releases/v3.7.7.04.b64.txt",
+    "releases/v3.7.7.05.b64.txt",
+    "releases/v3.7.7.06.b64.txt",
+    "releases/v3.7.7.07.b64.txt",
+    "releases/v3.7.7.08.b64.txt",
+    "releases/v3.7.7.09.b64.txt",
+    "releases/v3.7.7.10.b64.txt",
+    "releases/v3.7.7.11.b64.txt",
+    "releases/v3.7.7.12.b64.txt",
+    "releases/v3.7.7.13.b64.txt",
+    "releases/v3.7.7.14.b64.txt",
+    "releases/v3.7.7.15.b64.txt",
+    "releases/v3.7.7.16.b64.txt",
+    "releases/v3.7.7.17.b64.txt",
+    "releases/v3.7.7.18.b64.txt",
+    "releases/v3.7.7.19.b64.txt",
+    "releases/v3.7.7.20.b64.txt",
+    "releases/v3.7.7.21.b64.txt"
   ],
-  "sha256": "83a8068a9aeda516efd8650e5e074057dc16c0259863cbd2fa27cfb397f5b513",
-  "published_at": "2026-11-02T21:15:58-03:00",
-  "cache_buster": "3.7.6-member-directory",
+  "sha256": "bde5d8b0f929760f906c25d4981f38cf89f9c0b372923c43cc5cbe1707925f96",
+  "published_at": "2026-11-02T21:24:17-03:00",
+  "cache_buster": "3.7.7-visitor-followups",
   "notes": [
-    "Membros com paginação e total real, sem corte silencioso de 500 registros.",
-    "Novos filtros: departamento, aniversariantes por mês e batismo.",
-    "CSV e impressão/PDF de todos os resultados filtrados.",
-    "Filtros e exportações restritos à secretaria e à igreja atual.",
-    "Preserva os relatórios financeiros e a Central de automações do Master."
+    "Histórico de acolhimento por visitante: data, responsável, observação e próximo retorno.",
+    "Indicadores de retornos pendentes e visitantes integrados.",
+    "Paginação, filtros por responsável e exportação CSV completa.",
+    "Preserva observações antigas e vínculo com membro existente.",
+    "Migração 039 cria o histórico; preserva os módulos da versão 3.7.6."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "de58fa9e298795f89b094f6546fe6c016c793cd01ec5055bfcf5571dc0f3b00d"
+      "sha256": "602844dc8530ebf5cb736b4ed2b53a43a6dfee655ce2e911479c30c1cf333013"
     },
     {
       "path": "public/VERSION",
-      "sha256": "00bf9eb8a692f4af7a002a22d53f83ecd00abc32ff5968d9e81f6ecde6819d98"
+      "sha256": "d0c6e5ceb9efa6e1d67eededf866d8e540b780fba2c94c2892f9161f5e0a9651"
     },
     {
       "path": "public/albums.php",
@@ -124,6 +125,10 @@
       "sha256": "43eebff4edaed75075034481bd18466790ce951b5c0dcd81acdf2cc3266ecba8"
     },
     {
+      "path": "public/database/039_visitor_followups.sql",
+      "sha256": "c493b1ce58c79cbcdacf6789ec6a94f607f5cfd7a9b79221e300df36bdf729b8"
+    },
+    {
       "path": "public/department-report.php",
       "sha256": "581524b906038d13213f1b7092704caadfdb64a48458839ae492adffd2467d78"
     },
@@ -194,6 +199,14 @@
     {
       "path": "public/lib/BudgetService.php",
       "sha256": "9c8dd59010e36d2b81058967713dcc767af7d2da4d0306e0d8523b3d074b9e7b"
+    },
+    {
+      "path": "public/lib/CareView.php",
+      "sha256": "cfc09e3f77f8e7096fee44d02cd646659e44262b47646b1780a5a131976b037b"
+    },
+    {
+      "path": "public/lib/ChurchCare.php",
+      "sha256": "263bc6315fada6f9d337f932066419af13e3a0dd9064c32f8f1438e03da34d8c"
     },
     {
       "path": "public/lib/CronTasks.php",
@@ -280,6 +293,10 @@
       "sha256": "57d07b41883f509b1015c77857158b202bfb1f5dd0695c5cafb999e02b5ca92d"
     },
     {
+      "path": "public/lib/VisitorFollowupService.php",
+      "sha256": "d37f6443b668340e05fd02961c6446e8e4b46213c2378c436706fb9ee033203a"
+    },
+    {
       "path": "public/master-automations.php",
       "sha256": "fd480ed6bb18668b11db52eb5211434f026e04b956ae84dfab96f58fcf5066a6"
     },
@@ -338,6 +355,10 @@
     {
       "path": "public/users.php",
       "sha256": "4907b77a7121a34d15ae06fec39ab02995e6fb51d0a04f63a7f6541ae789722c"
+    },
+    {
+      "path": "public/visitors.php",
+      "sha256": "0257be48a3ae7d75fe5833aaad00d7b8bb06dd7f00355da1be46d37230b98085"
     }
   ]
 }
