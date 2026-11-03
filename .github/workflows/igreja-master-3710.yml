@@ -1,15 +1,60 @@
-name: Igreja Master 3.7.10 inspection
+name: Igreja Master 3.7.10 departmental treasuries
 on:
+  push:
+    branches: [feature/igreja-master-3.7.10-tesourarias-integradas]
+    paths:
+      - ".github/workflows/igreja-master-3710.yml"
+      - "adminigreja-updates/staging/3.7.10/**"
   pull_request:
     branches: [main]
+    paths:
+      - ".github/workflows/igreja-master-3710.yml"
+      - "adminigreja-updates/staging/3.7.10/**"
   workflow_dispatch:
+concurrency:
+  group: igreja-master-3710-release
+  cancel-in-progress: true
 permissions:
-  contents: read
+  contents: write
 jobs:
-  inspect:
+  test-and-package:
     runs-on: ubuntu-latest
+    timeout-minutes: 18
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: localtestonly
+          MARIADB_DATABASE: igreja_accounting_test
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mariadb-admin ping --host=127.0.0.1 --user=root --password=localtestonly"
+          --health-interval=5s --health-timeout=4s --health-retries=15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feature/igreja-master-3.7.10-tesourarias-integradas
-      - run: python3 adminigreja-updates/staging/3.7.10/inspect_release.py
+          persist-credentials: true
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql,mbstring,dom,zip,fileinfo,iconv
+          coverage: none
+      - name: Validate full release, role segregation and general/accountant reconciliation
+        env:
+          TEST_ACCOUNTING_DSN: mysql:host=127.0.0.1;port=3306;dbname=igreja_accounting_test;charset=utf8mb4
+          TEST_ACCOUNTING_USER: root
+          TEST_ACCOUNTING_PASSWORD: localtestonly
+        run: python3 adminigreja-updates/staging/3.7.10/build_release.py
+      - name: Commit manifest and release files only after passing all checks
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.10.*.b64.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Build Igreja Master 3.7.10 departmental cash release"
+            git fetch origin feature/igreja-master-3.7.10-tesourarias-integradas
+            git rebase FETCH_HEAD
+            git push origin HEAD:feature/igreja-master-3.7.10-tesourarias-integradas
+          fi
