@@ -267,9 +267,6 @@ def modified_files(existing:dict[str,bytes])->dict[str,bytes]:
     files["public/department-people.php"]=modify_department_people(files["public/department-people.php"])
     files["public/department-treasury.php"]=modify_treasury_page(files["public/department-treasury.php"])
     files["public/portal-home.php"]=modify_portal_home(files["public/portal-home.php"])
-    files["public/members.php"]=modify_members(files["public/members.php"])
-    files["public/member-profile.php"]=modify_member_profile(files["public/member-profile.php"])
-    files["public/master-members.php"]=modify_master_members(files["public/master-members.php"])
     files["public/VERSION"]=(VERSION+"\n").encode()
     changelog=files.get("public/CHANGELOG.md",b"").decode("utf-8",errors="replace")
     heading=f"## {VERSION} — Participantes, líderes e tesoureiros de cada departamento\n"
