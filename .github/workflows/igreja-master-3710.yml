@@ -1,19 +1,11 @@
 name: Igreja Master 3.7.10 departmental treasuries
 on:
-  push:
-    branches: [feature/igreja-master-3.7.10-tesourarias-integradas]
-    paths:
-      - ".github/workflows/igreja-master-3710.yml"
-      - "adminigreja-updates/staging/3.7.10/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/igreja-master-3710.yml"
       - "adminigreja-updates/staging/3.7.10/**"
   workflow_dispatch:
-concurrency:
-  group: igreja-master-3710-release
-  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
