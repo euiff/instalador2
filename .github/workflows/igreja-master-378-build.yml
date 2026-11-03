@@ -1,0 +1,44 @@
+name: Igreja Master 3.7.8 inspection and build
+on:
+  push:
+    branches: [feature/igreja-master-3.7.8-pastoral]
+    paths:
+      - ".github/workflows/igreja-master-378-build.yml"
+      - "adminigreja-updates/staging/3.7.8/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover 3.7.7 source and inspect integration points
+        run: |
+          python3 - <<'PY'
+          import json,base64,gzip,tarfile,io
+          from pathlib import Path
+          root=Path('adminigreja-updates')
+          m=json.loads((root/'latest.json').read_text())
+          assert m['version']=='3.7.7',m['version']
+          raw=''.join((root/p).read_text().strip() for p in m['parts'])
+          import hashlib
+          compressed=base64.b64decode(raw)
+          assert hashlib.sha256(compressed).hexdigest()==m['sha256']
+          tar=gzip.decompress(compressed)
+          with tarfile.open(fileobj=io.BytesIO(tar),mode='r:') as tf:
+            names=tf.getnames()
+            print('VERSION',m['version'],'FILES',len(names))
+            for name in names:
+              if name.startswith('public/') and (name.count('/')<=2 and name.endswith('.php')): print('FILE',name)
+            for path in ['public/bootstrap.php','public/lib/Auth.php','public/lib/View.php','public/lib/Schema.php','public/visitors.php','public/members.php','public/dashboard.php','public/master.php','public/database/039_visitor_followups.sql','public/updates.php']:
+              if path not in names: continue
+              content=tf.extractfile(path).read().decode('utf-8','replace')
+              lines=content.splitlines()
+              print('\n===',path,'LINES',len(lines),'===')
+              if path in ('public/bootstrap.php','public/lib/Auth.php','public/lib/View.php','public/lib/Schema.php','public/database/039_visitor_followups.sql'):
+                for i,s in enumerate(lines[:150]):print(str(i+1)+': '+s[:220])
+              else:
+                for i,s in enumerate(lines[:100]):print(str(i+1)+': '+s[:220])
+          PY
