@@ -2,7 +2,9 @@
 declare(strict_types=1);
 require __DIR__.'/bootstrap.php';
 require_once __DIR__.'/lib/MasterMemberService.php';
+require_once __DIR__.'/lib/EnuvesImportService.php';
 $user=$auth->requireRole('super_admin');
+EnuvesImportService::ensureSchema($pdo);
 $manager=new MasterMemberService($pdo,$auth,(string)$user['id']);
 $cid=trim((string)($_GET['church']??$_POST['church_id']??''));
 $q=$pdo->query('SELECT id,name FROM churches ORDER BY name');
