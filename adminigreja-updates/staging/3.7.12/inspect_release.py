@@ -9,7 +9,7 @@ assert hashlib.sha256(archive).hexdigest()==m['sha256']
 with tarfile.open(fileobj=io.BytesIO(gzip.decompress(archive))) as tf:
   print('RELEASE',m['version'],'FILES',len(m['files']))
   files={a.name:tf.extractfile(a).read().decode('utf-8','replace') for a in tf if a.isfile() and a.name.endswith(('.php','.sql'))}
-  names=['public/departments.php','public/lib/Schema.php','public/lib/MemberDirectoryService.php','public/lib/RegistryService.php','public/database/001_initial.sql','public/database/025_department_members.sql','public/database/024_ministry_departments.sql']
+  names=['public/department-report.php','public/department-treasury.php','public/lib/DepartmentReportService.php','public/lib/DepartmentTreasuryService.php','public/master.php','public/members.php','public/lib/View.php']
   for name in names:
     if name not in files:continue
     lines=files[name].splitlines()
