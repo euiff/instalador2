@@ -1,31 +1,49 @@
 {
-  "version": "3.7.8",
+  "version": "3.7.9",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.8.01.b64.txt",
-    "releases/v3.7.8.02.b64.txt",
-    "releases/v3.7.8.03.b64.txt",
-    "releases/v3.7.8.04.b64.txt"
+    "releases/v3.7.9.01.b64.txt",
+    "releases/v3.7.9.02.b64.txt",
+    "releases/v3.7.9.03.b64.txt",
+    "releases/v3.7.9.04.b64.txt",
+    "releases/v3.7.9.05.b64.txt"
   ],
-  "sha256": "42f488c4abab847d95290c7bd2c462042bc811a267df104805350b3342bf43e6",
-  "published_at": "2026-11-02T22:00:00-03:00",
-  "cache_buster": "3.7.8-pastoral-agenda",
+  "sha256": "ac9306b5795d857c101bfde99c5917ffd53a1147999ae061fe026a09f44e13d3",
+  "published_at": "2026-11-02T22:55:00-03:00",
+  "cache_buster": "3.7.9-accounting-portal",
   "notes": [
-    "Agenda pastoral: atendimentos, visitas e histórico de contatos por igreja.",
-    "Retornos atrasados, filtros, paginação e indicação de responsáveis.",
-    "Anotações confidenciais restritas aos usuários com permissão pastoral.",
-    "Cadastro em janela flutuante e acompanhamento pelo menu Pessoas e cadastros.",
-    "Migração 040: novas tabelas com UUIDs; preserva as versões anteriores."
+    "Portal do Contador com login individual e acesso restrito à igreja.",
+    "Organização mensal de notas, cupons, comprovantes, extratos e contratos.",
+    "Leitura automática de foto (OCR no navegador) e XML NF-e, com revisão manual obrigatória.",
+    "Sugestão de categorias para itens e lançamento opcional na tesouraria após confirmação.",
+    "Pacote ZIP contábil mensal: entradas, saídas, anexos e pendências.",
+    "Migração 041 aditiva; preserva o financeiro e as versões anteriores."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "35d1be0add507db4048533310924bf3f7c05b011181d0dd361181cd52b8c5a69"
+      "sha256": "0a541851ea0e988ed39711ddc217cb6f27121f94dbd7ed50e21c3f197fd1081e"
     },
     {
       "path": "public/VERSION",
-      "sha256": "05785661211541aea0f1a50c5105320c93e34767c5158392da0f50bf9c13c4b4"
+      "sha256": "900decdfc4c4ed2f843c330804d276394277dcbc685f601f1b8e4ee1d2df51fa"
+    },
+    {
+      "path": "public/accounting-file.php",
+      "sha256": "fa6829b9d1becbcae226800e64c07b665d21efb8ca7fd36b294dee2ada4c6127"
+    },
+    {
+      "path": "public/accounting-package.php",
+      "sha256": "f6c619cf498915d78ba87ad068c90e088ac1536902dd450bc8e19a8bbab4801c"
+    },
+    {
+      "path": "public/accounting-parse.php",
+      "sha256": "5bb8d86d6e08bebfbdaa066ecea90c93442ca97a995e634d92278d828bec048c"
+    },
+    {
+      "path": "public/accounting.php",
+      "sha256": "3dc9fb9b7f64ffe630417100d2411334746d1bcd08430f66f9de4ac65067008a"
     },
     {
       "path": "public/albums.php",
@@ -34,6 +52,10 @@
     {
       "path": "public/announcements.php",
       "sha256": "4650e1ed021e0aa9244d2353124afda8f32628889b0ac720b1f53cbfe90ee7bf"
+    },
+    {
+      "path": "public/assets/accounting-ocr.js",
+      "sha256": "be73648cb72aa8747a7a9262e9bf9d0b6ba30cf55dc6516c4b5688b5860a49dc"
     },
     {
       "path": "public/assets/management.css",
@@ -61,7 +83,7 @@
     },
     {
       "path": "public/dashboard.php",
-      "sha256": "9c0bb15c8e8295f70a67d4292553a2cc39d5c1740a3d58cace2c46eb28149ace"
+      "sha256": "9ac432bbcab6fac77a72556352044725e6b6e56b784c37ce160dc51c045e8bf0"
     },
     {
       "path": "public/database/028_finance_registers_receivables.sql",
@@ -116,6 +138,10 @@
       "sha256": "1ae8295da0246d3747158cd1f2eb94113f3a3d55b38bd3ed2954e7471ba7c6cd"
     },
     {
+      "path": "public/database/041_accounting_portal.sql",
+      "sha256": "cedcabcb7043fd8de05671b1de65f34f6e576880beda30abfef9a84e73d3a824"
+    },
+    {
       "path": "public/department-report.php",
       "sha256": "581524b906038d13213f1b7092704caadfdb64a48458839ae492adffd2467d78"
     },
@@ -164,12 +190,16 @@
       "sha256": "d7ab1d50367c43cec95e3385fff7569bbad67a7de80fe7d54f4367b02307a14a"
     },
     {
+      "path": "public/lib/AccountingService.php",
+      "sha256": "99569773470818301613acb56bc8ec61dcf1c5066dc34e343be0430f674d7a3d"
+    },
+    {
       "path": "public/lib/AnnouncementService.php",
       "sha256": "a369fdad150597b522f365e485d47694d7b46324f31ada3be52dc354cc7367b1"
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "acaf91bb5d6f14c14d3b43201d231778c3c967569f8c7bbd832b174cbf890753"
+      "sha256": "58aaa8539f9511a9f33f9e83dbad6ab764f4bc6ed0e4c86d6635e3b2cd79dada"
     },
     {
       "path": "public/lib/AutomationMonitor.php",
@@ -260,6 +290,10 @@
       "sha256": "02e05fbbb28504fffd156814cccee390fdffae0dc680db2e0cbf5c198443dfc2"
     },
     {
+      "path": "public/lib/ReceiptParser.php",
+      "sha256": "322b8c4b6216107e165fdbaab016f31f6d57c7bd6490388b2fdc77052033c678"
+    },
+    {
       "path": "public/lib/RegistryService.php",
       "sha256": "cd767e03bdaa9351645a5d815290bfae209008903178cfdd290f0d28c49d95a9"
     },
@@ -281,7 +315,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "c5d5bfbd1cbdb6a72b29881ba6067cfe0399894471b9d5123420f09d07974592"
+      "sha256": "c294d9a85408bf4bd2f5458d7fb4d49d8d7d4878bf8e8018f4dcf42db6843b03"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -349,7 +383,7 @@
     },
     {
       "path": "public/users.php",
-      "sha256": "4907b77a7121a34d15ae06fec39ab02995e6fb51d0a04f63a7f6541ae789722c"
+      "sha256": "ab62f57fc358f66f20912a77ac391ac2112cfc45ea08fa99abddaf68203590ca"
     },
     {
       "path": "public/visitors.php",
