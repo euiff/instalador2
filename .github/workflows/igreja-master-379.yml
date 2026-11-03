@@ -1,4 +1,4 @@
-name: Igreja Master 3.7.9 Accounting
+name: Igreja Master 3.7.9 accountant release
 on:
   push:
     branches: [feature/igreja-master-3.7.9-contabilidade]
@@ -7,17 +7,52 @@ on:
       - "adminigreja-updates/staging/3.7.9/**"
   pull_request:
     branches: [main]
+    paths:
+      - ".github/workflows/igreja-master-379.yml"
+      - "adminigreja-updates/staging/3.7.9/**"
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
-  inspect:
+  build-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 17
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: localtestonly
+          MARIADB_DATABASE: igreja_accounting_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mariadb-admin ping --host=127.0.0.1 --user=root --password=localtestonly"
+          --health-interval=5s --health-timeout=4s --health-retries=15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feature/igreja-master-3.7.9-contabilidade
           persist-credentials: true
-      - name: Inspect previous release
-        run: python3 adminigreja-updates/staging/3.7.9/inspect.py
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, mbstring, dom, zip, fileinfo, iconv
+          coverage: none
+      - name: Build incremental + full cumulative package and run isolated MariaDB regressions
+        env:
+          TEST_ACCOUNTING_DSN: mysql:host=127.0.0.1;port=3306;dbname=igreja_accounting_test;charset=utf8mb4
+          TEST_ACCOUNTING_USER: root
+          TEST_ACCOUNTING_PASSWORD: localtestonly
+        run: |
+          php -v | head -2
+          php -m | grep -Ei 'pdo_mysql|mbstring|dom|zip|iconv'
+          python3 adminigreja-updates/staging/3.7.9/build_release.py
+      - name: Commit validated release to branch for PR merge
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.9.*.b64.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Build validated Igreja Master 3.7.9 accountant release"
+            git push origin HEAD:feature/igreja-master-3.7.9-contabilidade
+          fi
