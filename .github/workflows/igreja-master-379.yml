@@ -11,6 +11,9 @@ on:
       - ".github/workflows/igreja-master-379.yml"
       - "adminigreja-updates/staging/3.7.9/**"
   workflow_dispatch:
+concurrency:
+  group: igreja-master-379-release
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -54,5 +57,7 @@ jobs:
           git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.9.*.b64.txt
           if ! git diff --cached --quiet; then
             git commit -m "Build validated Igreja Master 3.7.9 accountant release"
+            git fetch origin feature/igreja-master-3.7.9-contabilidade
+            git rebase FETCH_HEAD
             git push origin HEAD:feature/igreja-master-3.7.9-contabilidade
           fi
