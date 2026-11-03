@@ -245,7 +245,7 @@ def modify_portal_home(source:bytes)->bytes:
     txt=source.decode("utf-8")
     anchor="<?php if($auth->can('department_treasury')):?>"
     if anchor not in txt:raise RuntimeError("Member portal scoped finance link missing")
-    txt=txt.replace(anchor,'<?php if($auth->can(\\'department_team_manage\\')):?><a href=\"/department-team.php\"><strong>Equipe do meu departamento</strong><small>Indicar tesoureiro entre os participantes</small></a><?php endif?>\\n      '+anchor,1)
+    txt=txt.replace(anchor,"""<?php if($auth->can('department_team_manage')):?><a href="/department-team.php"><strong>Equipe do meu departamento</strong><small>Indicar tesoureiro entre os participantes</small></a><?php endif?>\n      """+anchor,1)
     return txt.encode('utf-8')
 
 
