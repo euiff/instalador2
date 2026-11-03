@@ -1,47 +1,47 @@
 {
-  "version": "3.7.5",
+  "version": "3.7.6",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.5.01.b64.txt",
-    "releases/v3.7.5.02.b64.txt",
-    "releases/v3.7.5.03.b64.txt",
-    "releases/v3.7.5.04.b64.txt",
-    "releases/v3.7.5.05.b64.txt",
-    "releases/v3.7.5.06.b64.txt",
-    "releases/v3.7.5.07.b64.txt",
-    "releases/v3.7.5.08.b64.txt",
-    "releases/v3.7.5.09.b64.txt",
-    "releases/v3.7.5.10.b64.txt",
-    "releases/v3.7.5.11.b64.txt",
-    "releases/v3.7.5.12.b64.txt",
-    "releases/v3.7.5.13.b64.txt",
-    "releases/v3.7.5.14.b64.txt",
-    "releases/v3.7.5.15.b64.txt",
-    "releases/v3.7.5.16.b64.txt",
-    "releases/v3.7.5.17.b64.txt",
-    "releases/v3.7.5.18.b64.txt",
-    "releases/v3.7.5.19.b64.txt",
-    "releases/v3.7.5.20.b64.txt"
+    "releases/v3.7.6.01.b64.txt",
+    "releases/v3.7.6.02.b64.txt",
+    "releases/v3.7.6.03.b64.txt",
+    "releases/v3.7.6.04.b64.txt",
+    "releases/v3.7.6.05.b64.txt",
+    "releases/v3.7.6.06.b64.txt",
+    "releases/v3.7.6.07.b64.txt",
+    "releases/v3.7.6.08.b64.txt",
+    "releases/v3.7.6.09.b64.txt",
+    "releases/v3.7.6.10.b64.txt",
+    "releases/v3.7.6.11.b64.txt",
+    "releases/v3.7.6.12.b64.txt",
+    "releases/v3.7.6.13.b64.txt",
+    "releases/v3.7.6.14.b64.txt",
+    "releases/v3.7.6.15.b64.txt",
+    "releases/v3.7.6.16.b64.txt",
+    "releases/v3.7.6.17.b64.txt",
+    "releases/v3.7.6.18.b64.txt",
+    "releases/v3.7.6.19.b64.txt",
+    "releases/v3.7.6.20.b64.txt"
   ],
-  "sha256": "2a93d45839ad36533984ed7faf2361f74bf1cbe800ee9bab3809398a3da6757b",
-  "published_at": "2026-11-02T21:09:36-03:00",
-  "cache_buster": "3.7.5-department-reports",
+  "sha256": "83a8068a9aeda516efd8650e5e074057dc16c0259863cbd2fa27cfb397f5b513",
+  "published_at": "2026-11-02T21:15:58-03:00",
+  "cache_buster": "3.7.6-member-directory",
   "notes": [
-    "Prestação de contas dos departamentos: saldo anterior, entradas, saídas e saldo final por período.",
-    "Contas e departamentos inativos preservados na consulta histórica.",
-    "CSV e impressão/PDF da prestação de contas.",
-    "Líderes e membros podem exportar somente o histórico permitido ao seu acesso.",
-    "Preserva a Central de automações do Master e os módulos da 3.7.4."
+    "Membros com paginação e total real, sem corte silencioso de 500 registros.",
+    "Novos filtros: departamento, aniversariantes por mês e batismo.",
+    "CSV e impressão/PDF de todos os resultados filtrados.",
+    "Filtros e exportações restritos à secretaria e à igreja atual.",
+    "Preserva os relatórios financeiros e a Central de automações do Master."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "9db78da5316187cc6ca751e08b3aed80ae279766d5b1295d4e607d53d29d1373"
+      "sha256": "de58fa9e298795f89b094f6546fe6c016c793cd01ec5055bfcf5571dc0f3b00d"
     },
     {
       "path": "public/VERSION",
-      "sha256": "56a9fb1e3ee277fa386a0193cd8b39ebd826cfd473ea03e6cba6017cb5833e29"
+      "sha256": "00bf9eb8a692f4af7a002a22d53f83ecd00abc32ff5968d9e81f6ecde6819d98"
     },
     {
       "path": "public/albums.php",
@@ -240,6 +240,10 @@
       "sha256": "7c43aa41edb3490b192bbfb0a9bed6bc1f2a0eff717c9018684d61c2ac3d60a0"
     },
     {
+      "path": "public/lib/MemberDirectoryService.php",
+      "sha256": "7fe9bc4be88db99cdf988d7e339bf7cfaf637eff007e5891b8fe199317243455"
+    },
+    {
       "path": "public/lib/MemberSelfService.php",
       "sha256": "f762d4dd370f6226b53640562bae08f7cc94d99099a4e31e29b8bab58244e47d"
     },
@@ -292,8 +296,12 @@
       "sha256": "9c458c7e3b8f40eca1619eb21c3b7973fcee8693782225c19415fd38da7cbaa4"
     },
     {
+      "path": "public/members-print.php",
+      "sha256": "6395052045a72dcd5ed70d7eea617e1813f50567f1cf6297f9bfcd5b2a0b9699"
+    },
+    {
       "path": "public/members.php",
-      "sha256": "d680510a5c0a60727208fa6fb7cad30a40e511ecbc0f11fa2353fbe984ef43f5"
+      "sha256": "02cf479d117e3c7a279bea9252b88cb4775a0f94d7504c3800760f96d1d59890"
     },
     {
       "path": "public/my-profile.php",
