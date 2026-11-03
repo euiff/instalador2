@@ -92,6 +92,7 @@ final class MemberDepartmentService
     }
     public function assign(string $memberId,string $departmentId,string $role):string {
         if(!in_array($role,['participant','leader'],true))throw new InvalidArgumentException('Função inválida.');
+        if($role==='leader'&&!$this->auth->can('manage_users'))throw new RuntimeException('Somente pastor ou administrador autorizado pode designar líderes.');
         $this->member($memberId);
         $dept=$this->department($departmentId);
         if(empty($dept['active']))throw new InvalidArgumentException('Departamento inativo.');
@@ -117,6 +118,8 @@ final class MemberDepartmentService
     }
     public function remove(string $memberId,string $departmentId):void {
         $this->member($memberId,false);$this->department($departmentId);
+        $current=$this->q('SELECT role_name FROM member_department_roles WHERE church_id=? AND member_id=? AND department_id=?',[$this->cid,$memberId,$departmentId])->fetchColumn();
+        if($current==='leader'&&!$this->auth->can('manage_users'))throw new RuntimeException('Somente pastor ou administrador pode remover uma liderança.');
         $outer=$this->pdo->inTransaction();if(!$outer)$this->pdo->beginTransaction();
         try{
             $this->q('DELETE FROM member_department_roles WHERE church_id=? AND member_id=? AND department_id=?',
