@@ -1,0 +1,21 @@
+name: Igreja Master 3.7.9 Accounting
+on:
+  push:
+    branches: [feature/igreja-master-3.7.9-contabilidade]
+    paths:
+      - ".github/workflows/igreja-master-379.yml"
+      - "adminigreja-updates/staging/3.7.9/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/igreja-master-3.7.9-contabilidade
+          persist-credentials: true
+      - name: Inspect previous release
+        run: python3 adminigreja-updates/staging/3.7.9/inspect.py
