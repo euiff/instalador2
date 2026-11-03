@@ -6,7 +6,7 @@ Run only in the GitHub Actions staging pipeline; no production DB access.
 from __future__ import annotations
 from pathlib import Path
 from io import BytesIO
-import base64, gzip, hashlib, json, re, subprocess, tarfile, tempfile, sys
+import base64, gzip, hashlib, json, re, subprocess, tarfile, tempfile, sys, os
 
 ROOT=Path(__file__).resolve().parents[2]
 STAGING=Path(__file__).resolve().parent
@@ -182,6 +182,13 @@ def lint_and_assert(files:dict[str,bytes]):
             p=subprocess.run(["php",str(STAGING/"tests"/"parse_samples.php")],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
             if p.returncode:raise RuntimeError("Receipt parser tests failed: "+p.stdout)
             print(p.stdout.strip())
+            if os.getenv("TEST_ACCOUNTING_DSN"):
+                env=dict(os.environ)
+                env["ACCOUNTING_RELEASE_DIR"]=d
+                p=subprocess.run(["php",str(STAGING/"tests"/"mysql_integration.php")],
+                    env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=90)
+                if p.returncode:raise RuntimeError("Accounting DB integration failed: "+p.stdout)
+                print(p.stdout.strip())
         except FileNotFoundError:raise RuntimeError("PHP binary missing")
     print("PHP syntax checked",sum(x.endswith(".php") for x in files),"files")
 
