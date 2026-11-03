@@ -100,12 +100,8 @@ $check(is_string($json)&&str_contains($json,'Recepção'),'original activity det
 
 try{$service->import($zipfile,$churchA,true);throw new RuntimeException('duplicate upload allowed');}
 catch(InvalidArgumentException $e){$check(str_contains($e->getMessage(),'já foi importada'),'same spreadsheet cannot duplicate records');}
-try{$service->import($zipfile,$churchB,true);throw new RuntimeException('other tenant allowed without explicit selection');}
-catch(Throwable $e){
-    // Explicit other tenant import is allowed for Master, but test rolls back to
-    // maintain strict isolation check; a real user must select+confirm target church.
-    if($pdo->inTransaction())$pdo->rollBack();
-}
+$check((int)$pdo->query("SELECT COUNT(*) FROM enuves_import_people WHERE church_id='".str_replace("'","''",$churchB)."'")->fetchColumn()===0,
+    'no source data automatically moved into another church');
 $lead=new EnuvesLeadershipService($pdo,$authMaster,$master);
 $dep=$lead->departments($churchA)[0];
 $people=$lead->people($churchA);
@@ -113,10 +109,11 @@ $check(count($people)>=3,'Master lists target church members');
 $peopleAlice=$pdo->prepare('SELECT member_id FROM enuves_import_people WHERE church_id=? AND source_id=?');
 $peopleAlice->execute([$churchA,'301']);$alice=$peopleAlice->fetchColumn();
 $check($lead->assign($churchA,$dep['id'],$alice)==='pending_login','no automatic login or promotions');
+$newLeader=app_uuid();
 $pdo->prepare("INSERT INTO users(id,email,full_name,active) VALUES(?,?,?,1)")
-    ->execute([$leader,'new-leader-test@example.com','Líder de teste']);
+    ->execute([$newLeader,'new-leader-test@example.com','Líder de teste']);
 $pdo->prepare("INSERT INTO church_members(id,church_id,user_id,person_id,church_role)
-    VALUES(?,?,?,?,'department_leader')")->execute([app_uuid(),$churchA,$leader,$alice]);
+    VALUES(?,?,?,?,'department_leader')")->execute([app_uuid(),$churchA,$newLeader,$alice]);
 $check($lead->assign($churchA,$dep['id'],$alice)==='active','explicit existing leader login gains department');
 $check((int)$pdo->query('SELECT COUNT(*) FROM enuves_department_leaders')->fetchColumn()>=1,'leader designation persisted');
 $check($lead->departments($churchB)===[] || count($lead->departments($churchB))>=0,
