@@ -161,13 +161,13 @@ def modify_member_profile(source:bytes)->bytes:
     anchor="""<a class="btn btn-primary" href="members.php?edit=<?=e($m['id'])?>#cadastro">Editar cadastro</a>"""
     links="""<?php if($auth->can('manage_users')):?><a class="btn btn-light" href="/member-portal-access.php?member=<?=e($m['id'])?>">Ativar Portal do Membro</a><?php endif;?>
     <a class="btn btn-light" href="/department-people.php">Vincular departamento / liderança</a>"""
-    return once(txt,anchor,anchor+links,"profile links")
+    return once(txt,anchor,anchor+links,"profile links").encode("utf-8")
 
 
 def modify_master_members(source:bytes)->bytes:
     txt=source.decode('utf-8')
     anchor='<a class="btn btn-light" href="/master.php">Painel Master</a>'
-    return once(txt,anchor,'<a class="btn btn-light" href="/master-congregations.php?church=<?=rawurlencode($cid)?>">Vincular congregação em massa</a>'+anchor,"bulk button")
+    return once(txt,anchor,'<a class="btn btn-light" href="/master-congregations.php?church=<?=rawurlencode($cid)?>">Vincular congregação em massa</a>'+anchor,"bulk button").encode("utf-8")
 
 
 def modified_files(existing:dict[str,bytes])->dict[str,bytes]:
