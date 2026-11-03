@@ -10,7 +10,7 @@
     "releases/v3.7.10.05.b64.txt"
   ],
   "sha256": "91c48772b00a006d9bde3f3ac5240ba3bbb4d84767fa9ec38140a49c14371b94",
-  "published_at": "2026-11-02T23:35:00-03:00",
+  "published_at": "2026-11-03T01:58:00Z",
   "cache_buster": "3.7.10-department-treasury",
   "notes": [
     "Tesourarias individuais para cada departamento, com acesso apenas aos líderes autorizados.",
