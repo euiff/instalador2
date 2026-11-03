@@ -1,20 +1,9 @@
 <?php
 declare(strict_types=1);
 /** Reuse 3.7.9 disposable-database test, then verify departmental financial segregation. */
-require __DIR__.'/../../3.7.9/tests/mysql_integration.php';
+require __DIR__.'/baseline_379.php';
 require_once $dir.'/public/lib/DepartmentTreasuryService.php';
 require_once $dir.'/public/lib/AccountingService.php';
-
-$pdo->exec('ALTER TABLE finance_accounts ADD COLUMN department_id CHAR(36) NULL, ADD COLUMN opening_balance DECIMAL(14,2) NOT NULL DEFAULT 0');
-$pdo->exec('ALTER TABLE finance_entries ADD COLUMN department_id CHAR(36) NULL');
-$pdo->exec('CREATE TABLE ministry_departments (
-    id CHAR(36) PRIMARY KEY,church_id CHAR(36) NOT NULL,name VARCHAR(160) NOT NULL,active TINYINT NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
-$pdo->exec('CREATE TABLE department_access (church_id CHAR(36),user_id CHAR(36),department_id CHAR(36),PRIMARY KEY(church_id,user_id,department_id))
-    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
-$pdo->exec('CREATE TABLE platform_audit_logs (
-    id CHAR(36) PRIMARY KEY,user_id CHAR(36),church_id CHAR(36),action VARCHAR(70),details TEXT,created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
 
 $deptYouth=app_uuid();$deptMusic=app_uuid();$deptOther=app_uuid();$leader=app_uuid();
 foreach([[$deptYouth,$churchA,'Jovens'],[$deptMusic,$churchA,'Louvor'],[$deptOther,$churchB,'Outra igreja']] as $d)
