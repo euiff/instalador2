@@ -1,33 +1,33 @@
 {
-  "version": "3.7.10",
+  "version": "3.7.11",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.10.01.b64.txt",
-    "releases/v3.7.10.02.b64.txt",
-    "releases/v3.7.10.03.b64.txt",
-    "releases/v3.7.10.04.b64.txt",
-    "releases/v3.7.10.05.b64.txt"
+    "releases/v3.7.11.01.b64.txt",
+    "releases/v3.7.11.02.b64.txt",
+    "releases/v3.7.11.03.b64.txt",
+    "releases/v3.7.11.04.b64.txt",
+    "releases/v3.7.11.05.b64.txt"
   ],
-  "sha256": "91c48772b00a006d9bde3f3ac5240ba3bbb4d84767fa9ec38140a49c14371b94",
-  "published_at": "2026-11-03T01:58:00Z",
-  "cache_buster": "3.7.10-department-treasury",
+  "sha256": "9a410291e9ccc001b191f5b4a84b946a6a3da03ad28a8faa4f3ee60b13532366",
+  "published_at": "2026-11-03T11:57:55.547721+00:00",
+  "cache_buster": "3.7.11-central-360-ui",
   "notes": [
-    "Tesourarias individuais para cada departamento, com acesso apenas aos líderes autorizados.",
-    "Entradas e saídas dos departamentos integradas uma só vez na tesouraria geral.",
-    "Pastor e tesoureiro visualizam saldos, movimentações e pendências por departamento.",
-    "Portal do Contador recebe relatórios departamentais e categorias no pacote mensal.",
-    "Anexos obrigatórios para despesas lançadas por líderes; documentos arquivados.",
-    "Atualização cumulativa que preserva os módulos e lançamentos anteriores."
+    "Central de Gestão 360 com painéis modernos, indicadores e prioridades da igreja.",
+    "Atalhos para membros, ministérios, grupos, finanças, Kids, eventos e contador segundo as permissões.",
+    "Busca rápida de módulos e atalho Ctrl+K para localizar funções.",
+    "Gráficos de entradas e saídas com dados reais do livro caixa sem duplicação de departamentos.",
+    "Layout responsivo, modais e cadastros mais fáceis de utilizar.",
+    "Atualização cumulativa e não destrutiva, mantendo dados e funcionalidades anteriores."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "11da2039eef7fa41f42d0d04fe71c6f4ed8666c28cbe60b82a033bcda5cc138d"
+      "sha256": "e306ad3417f051155958c5f545a2c98016933ddf598b739601551ace4ab899e3"
     },
     {
       "path": "public/VERSION",
-      "sha256": "8c7229c71b8d301b1c9154890cbda0e4fce4e93e514fb82d492416dda5c11668"
+      "sha256": "0b796016492a207c2695359208aacdc7c1e2e86e317fdbfefd7d21b8d133ef8b"
     },
     {
       "path": "public/accounting-file.php",
@@ -58,6 +58,14 @@
       "sha256": "be73648cb72aa8747a7a9262e9bf9d0b6ba30cf55dc6516c4b5688b5860a49dc"
     },
     {
+      "path": "public/assets/management-3711.css",
+      "sha256": "5d9c6297bf9668b0a8147713fcf6151284649e0c07728883a9d58ae6e072d20e"
+    },
+    {
+      "path": "public/assets/management-3711.js",
+      "sha256": "7b2f0273645a16b2afa1e311130f4ed032966e3a42f5b499d225af7426670874"
+    },
+    {
       "path": "public/assets/management.css",
       "sha256": "eb31b67387ccbd0f755f9d06107253953503d127b1e60b47e2d611c550ab8f59"
     },
@@ -83,7 +91,7 @@
     },
     {
       "path": "public/dashboard.php",
-      "sha256": "231c2a02dd957a79529de2c50b359cb8ef09db6e4b4464eee44a7f431c948035"
+      "sha256": "6ba9d9930f443eeab6e14d4db37b3556c18a6e35203586fe43c0a14cdeec64ab"
     },
     {
       "path": "public/database/028_finance_registers_receivables.sql",
@@ -274,6 +282,10 @@
       "sha256": "d32e20cf782a150c392332895175a75925b55e9cd55986481c7ab017db15fd56"
     },
     {
+      "path": "public/lib/ManagementOverviewService.php",
+      "sha256": "43a6cf6c984b57678c3f67f23272cfbf47138d8e8ab5018f29dad88c0654c6b2"
+    },
+    {
       "path": "public/lib/MediaLibraryService.php",
       "sha256": "7c43aa41edb3490b192bbfb0a9bed6bc1f2a0eff717c9018684d61c2ac3d60a0"
     },
@@ -323,7 +335,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "c38b9f738b3f35422bc913e0bc87ea5e2ee6f77ca9bf91f7d682c9df9dd2e7fa"
+      "sha256": "a92b446c6227235ed09841ce689576effccb81f29e9498e1924d5c17d6b89ab4"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -336,6 +348,10 @@
     {
       "path": "public/lib/dashboard-department-treasury.php",
       "sha256": "c4c678b4b8fc34a5eb705d80de88c1b7b67c20563fdb3f706cc3cf7c41e73cd4"
+    },
+    {
+      "path": "public/management-center.php",
+      "sha256": "d3be1349275bb2b09e51f136b82f8090c15778a24282ee2e2c242fb5e954055b"
     },
     {
       "path": "public/master-automations.php",
