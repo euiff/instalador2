@@ -59,6 +59,12 @@ $pdo->exec("CREATE TABLE department_access (
 $pdo->exec("CREATE TABLE platform_audit_logs (
  id CHAR(36) PRIMARY KEY,user_id CHAR(36),church_id CHAR(36),action VARCHAR(70),details TEXT,created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+$pdo->exec("CREATE TABLE finance_period_locks (
+ id CHAR(36) PRIMARY KEY,church_id CHAR(36) NOT NULL,period_start DATE NOT NULL,period_end DATE NOT NULL,
+ reason VARCHAR(1000) NOT NULL,active TINYINT NOT NULL DEFAULT 1,created_by_user_id CHAR(36) NOT NULL,
+ reopened_by_user_id CHAR(36) NULL,reopened_at DATETIME NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
 
 $churchA=app_uuid();$churchB=app_uuid();$accountant=app_uuid();$treasurer=app_uuid();$outsider=app_uuid();$bank=app_uuid();
 foreach([[$churchA,'Igreja A'],[$churchB,'Igreja B']] as $c)$pdo->prepare('INSERT INTO churches(id,name) VALUES(?,?)')->execute($c);
@@ -95,12 +101,6 @@ $treasury->periodStatus('2026-11','submit');
 $_SESSION=['user_id'=>$accountant,'church_id'=>$churchA];
 try{$acc->periodStatus('2026-11','review');throw new RuntimeException('open request ignored');}catch(RuntimeException $e){$check(str_contains($e->getMessage(),'solicitados'),'pending docs block review');}
 
-// Guard stub only inside this disposable test suite; production uses FinancePeriodGuard.php.
-class FinancePeriodGuard {
-    public static function assertOpen(PDO $pdo,string $churchId,string $date):void {
-        if($date!=='2026-11-02')throw new RuntimeException('Periodo fechado na simulacao');
-    }
-}
 $expenseDocId=app_uuid();
 $pdo->prepare("INSERT INTO accounting_documents
 (id,church_id,document_kind,reference_period,original_name,storage_path,mime_type,file_size,sha256,status,created_by_user_id)
