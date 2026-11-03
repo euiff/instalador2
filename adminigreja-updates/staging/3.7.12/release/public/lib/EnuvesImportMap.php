@@ -36,7 +36,7 @@ final class EnuvesImportMap {
         return null;
     }
     public static function interests(array $row):array {
-        $raw=mb_strtolower((string)($row['Que tipo de atividade você deseja participar na igreja? ']??''),'UTF-8');
+        $raw=mb_strtolower((string)($row['Que tipo de atividade você deseja participar na igreja?']??''),'UTF-8');
         $names=[];
         foreach(self::GROUPS as $name=>$keys)foreach($keys as $key)if(str_contains($raw,$key)){$names[$name]=$name;break;}
         return array_values($names);
@@ -72,7 +72,7 @@ final class EnuvesImportMap {
             if($p['source_id']===''||$p['name']==='')$status['bad']++;
             if($p['source_id']!==''&&isset($seen[$p['source_id']]))$status['duplicate_ids']++;
             $seen[$p['source_id']]=true;
-            if(trim((string)($row['Que tipo de atividade você deseja participar na igreja? ']??''))!=='')$status['activity_rows']++;
+            if(trim((string)($row['Que tipo de atividade você deseja participar na igreja?']??''))!=='')$status['activity_rows']++;
             foreach(self::interests($row) as $name)$status['departments'][$name]=($status['departments'][$name]??0)+1;
         }
         ksort($status['departments'],SORT_NATURAL|SORT_FLAG_CASE);
