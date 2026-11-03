@@ -121,7 +121,7 @@ def modify_treasury_service(source:bytes)->bytes:
     replacement="""$allowed=DepartmentRoleAccess::hasFinancialScope($this->pdo,$this->churchId,$this->userId,$departmentId);"""
     txt=once(txt,anchor,replacement,"department ID authorization")
     txt=once(txt,"O contador possui acesso de consulta, não de movimentação.",
-       "Seu perfil não pode lançar movimentações neste departamento.","treasury denial")
+       "O contador ou seu perfil não pode lançar movimentações neste departamento.","treasury denial")
     return txt.encode("utf-8")
 
 
