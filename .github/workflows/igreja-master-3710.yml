@@ -47,7 +47,6 @@ jobs:
           TEST_ACCOUNTING_PASSWORD: localtestonly
         run: python3 adminigreja-updates/staging/3.7.10/build_release.py
       - name: Commit manifest and release files only after passing all checks
-        if: github.event_name != 'pull_request'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
