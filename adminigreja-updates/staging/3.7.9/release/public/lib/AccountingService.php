@@ -83,6 +83,7 @@ final class AccountingService
         $mime=(string)(new finfo(FILEINFO_MIME_TYPE))->file($tmp);
         $name=$this->filename((string)($file['name']??''));
         $xml=in_array($mime,['application/xml','text/xml','text/plain'],true)&&str_ends_with(strtolower($name),'.xml');
+        if($xml && !class_exists('DOMDocument'))throw new RuntimeException('A extensão PHP XML precisa estar habilitada para ler notas XML.');
         if($xml){
             $bytes=file_get_contents($tmp);
             if(!is_string($bytes)||strlen($bytes)>8*1024*1024)throw new InvalidArgumentException('XML inválido ou maior que 8 MB.');
@@ -147,17 +148,20 @@ final class AccountingService
             $raw=trim((string)($input['ocr_text']??''));
             if($parsed===null && $raw!=='')$parsed=ReceiptParser::parse(mb_substr($raw,0,25000),$this->categoryNames());
             $parsed??=[];
-            $supplier=mb_substr(trim((string)($input['supplier_name']??$parsed['supplier']??'')),0,190);
-            $cnpj=preg_replace('/\D/','',(string)($input['supplier_cnpj']??$parsed['cnpj']??''))??'';
+            $pick=static function(string $key,string $fallback='')use($input):string{
+                $value=trim((string)($input[$key]??''));return $value!==''?$value:$fallback;
+            };
+            $supplier=mb_substr(trim((string)$pick('supplier_name',(string)($parsed['supplier']??''))),0,190);
+            $cnpj=preg_replace('/\D/','',(string)$pick('supplier_cnpj',(string)($parsed['cnpj']??'')))??'';
             if($cnpj!==''&&strlen($cnpj)!==14)throw new InvalidArgumentException('CNPJ deve ter 14 dígitos.');
-            $number=mb_substr(trim((string)($input['document_number']??$parsed['number']??'')),0,60);
-            $key=preg_replace('/\D/','',(string)($input['access_key']??$parsed['access_key']??''))??'';
+            $number=mb_substr(trim((string)$pick('document_number',(string)($parsed['number']??''))),0,60);
+            $key=preg_replace('/\D/','',(string)$pick('access_key',(string)($parsed['access_key']??'')))??'';
             if($key!==''&&strlen($key)!==44)throw new InvalidArgumentException('Chave de acesso deve ter 44 dígitos.');
-            $issued=self::date($input['issued_on']??$parsed['issued_on']??'');
-            $amount=ReceiptParser::amount((string)($input['total']??$parsed['total']??''));
+            $issued=self::date($pick('issued_on',(string)($parsed['issued_on']??'')));
+            $amount=ReceiptParser::amount((string)$pick('total',(string)($parsed['total']??'')));
             $suggested=mb_substr((string)($parsed['category']??''),0,160);
             $confirmed=mb_substr(trim((string)($input['confirmed_category']??'')),0,160);
-            $items=$this->normalizeItems($input['items_json']??$parsed['items']??[]);
+            $items=$this->normalizeItems(trim((string)($input['items_json']??''))!==''?$input['items_json']:($parsed['items']??[]));
             $approved=!empty($input['confirmed']);
             // Raw OCR is a hint; never silently post an unapproved receipt.
             $ready=$approved && ($kind==='bank_statement'||$kind==='contract'||$kind==='payroll'||$kind==='other'||
@@ -350,12 +354,12 @@ final class AccountingService
     public function respondRequest(string $requestId,string $docId):void
     {
         $this->manage();$doc=$this->document($docId);
-        $req=$this->q("SELECT id,reference_period,status FROM accounting_requests WHERE church_id=? AND id=? FOR UPDATE",
-            [$this->churchId,$requestId])->fetch(PDO::FETCH_ASSOC);
-        if(!$req||$req['status']!=='open'||$req['reference_period']!==$doc['reference_period'])
-            throw new InvalidArgumentException('Solicitação ou competência inválida.');
         $this->pdo->beginTransaction();
         try{
+            $req=$this->q("SELECT id,reference_period,status FROM accounting_requests WHERE church_id=? AND id=? FOR UPDATE",
+                [$this->churchId,$requestId])->fetch(PDO::FETCH_ASSOC);
+            if(!$req||$req['status']!=='open'||$req['reference_period']!==$doc['reference_period'])
+                throw new InvalidArgumentException('Solicitação ou competência inválida.');
             $this->q("UPDATE accounting_requests SET status='responded',responded_document_id=?,resolved_at=NOW() WHERE church_id=? AND id=?",
                 [$docId,$this->churchId,$requestId]);
             $this->audit('answer_request',$docId,$req['reference_period']);$this->pdo->commit();
@@ -402,6 +406,7 @@ final class AccountingService
                 $counts=$this->summary($period);
                 if((int)$counts['open_requests']>0)throw new RuntimeException('Há documentos solicitados ainda pendentes.');
                 if((int)$counts['pending_review']>0)throw new RuntimeException('Há documentos aguardando correção ou conferência.');
+                if((int)$counts['expense_without_proof']>0)throw new RuntimeException('Há despesas sem comprovante anexado.');
                 $this->q("UPDATE accounting_periods SET status='reviewed',reviewed_by_user_id=?,reviewed_at=NOW(),notes=?
                     WHERE church_id=? AND reference_period=?",[$this->userId,$note?:null,$this->churchId,$period]);
             }else{
