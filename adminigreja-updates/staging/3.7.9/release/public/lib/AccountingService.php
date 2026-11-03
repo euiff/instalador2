@@ -299,6 +299,8 @@ final class AccountingService
         $note=mb_substr(trim($note),0,2000);
         if($status==='needs_fix'&&$note==='')throw new InvalidArgumentException('Explique o que precisa ser corrigido.');
         $doc=$this->document($id);
+        if($status==='reviewed' && !in_array($doc['status'],['ready','reviewed'],true))
+            throw new InvalidArgumentException('O documento ainda não foi conferido pelo pastor ou tesoureiro.');
         $this->pdo->beginTransaction();
         try{
             $this->q('UPDATE accounting_documents SET status=?,review_note=?,reviewed_by_user_id=?,reviewed_at=NOW() WHERE church_id=? AND id=?',
