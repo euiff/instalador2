@@ -49,6 +49,14 @@ final class AccountingService
         return $s;
     }
 
+    private static function assertFinancePeriodOpen(PDO $pdo,string $churchId,string $issued):void
+    {
+        $file=__DIR__.'/FinancePeriodGuard.php';
+        if(!class_exists('FinancePeriodGuard',false)&&is_file($file))require_once $file;
+        if(!class_exists('FinancePeriodGuard',false))throw new RuntimeException('Bloqueio de período financeiro indisponível. Não é seguro lançar a despesa.');
+        FinancePeriodGuard::assertOpen($pdo,$churchId,$issued);
+    }
+
     private function audit(string $action,?string $docId=null,?string $period=null):void
     {
         $this->q('INSERT INTO accounting_audit(id,church_id,actor_user_id,document_id,reference_period,action) VALUES(?,?,?,?,?,?)',
@@ -174,8 +182,7 @@ final class AccountingService
             if($post && (!$ready||$amount===null||(float)$amount<=0||$issued===null||$confirmed===''||$kind==='bank_statement'||$kind==='payroll'||$kind==='contract'))
                 throw new InvalidArgumentException('Para lançar despesa, confira o valor, a data, a categoria e confirme o comprovante.');
             if($post){
-                require_once __DIR__.'/FinancePeriodGuard.php';
-                FinancePeriodGuard::assertOpen($this->pdo,$this->churchId,$issued);
+                self::assertFinancePeriodOpen($this->pdo,$this->churchId,$issued);
             }
 
             $id=app_uuid();$entryId=null;$financeDocId=null;
@@ -236,8 +243,7 @@ final class AccountingService
         if($accountId&&!$this->q('SELECT 1 FROM finance_accounts WHERE church_id=? AND id=? AND active=1',[$this->churchId,$accountId])->fetchColumn())
             throw new InvalidArgumentException('Conta financeira inválida.');
         if($post){
-            require_once __DIR__.'/FinancePeriodGuard.php';
-            FinancePeriodGuard::assertOpen($this->pdo,$this->churchId,$issued);
+            self::assertFinancePeriodOpen($this->pdo,$this->churchId,$issued);
         }
         $this->pdo->beginTransaction();
         try{
