@@ -180,7 +180,7 @@ def pack_release(files:dict[str,bytes]):
     manifest={
       "version":VERSION,"min_php":"8.1","encoding":"base64",
       "parts":paths,"sha256":sha(compressed),
-      "published_at":datetime.now(timezone.utc).isoformat()",
+      "published_at":datetime.now(timezone.utc).isoformat(),
       "cache_buster":"3.7.11-central-360-ui",
       "notes":[
         "Central de Gestão 360 com painéis modernos, indicadores e prioridades da igreja.",
