@@ -1,33 +1,34 @@
 {
-  "version": "3.7.11",
+  "version": "3.7.12",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.11.01.b64.txt",
-    "releases/v3.7.11.02.b64.txt",
-    "releases/v3.7.11.03.b64.txt",
-    "releases/v3.7.11.04.b64.txt",
-    "releases/v3.7.11.05.b64.txt"
+    "releases/v3.7.12.01.b64.txt",
+    "releases/v3.7.12.02.b64.txt",
+    "releases/v3.7.12.03.b64.txt",
+    "releases/v3.7.12.04.b64.txt",
+    "releases/v3.7.12.05.b64.txt",
+    "releases/v3.7.12.06.b64.txt"
   ],
-  "sha256": "9a410291e9ccc001b191f5b4a84b946a6a3da03ad28a8faa4f3ee60b13532366",
-  "published_at": "2026-11-03T11:57:55.547721+00:00",
-  "cache_buster": "3.7.11-central-360-ui",
+  "sha256": "b570a8cc5ed8c26629d7ab8d69790b3638bc68fe0ae41e69f5b4c6b4f2ef3a78",
+  "published_at": "2026-11-03T12:55:42.233636+00:00",
+  "cache_buster": "3.7.12-master-enuves-migration",
   "notes": [
-    "Central de Gestão 360 com painéis modernos, indicadores e prioridades da igreja.",
-    "Atalhos para membros, ministérios, grupos, finanças, Kids, eventos e contador segundo as permissões.",
-    "Busca rápida de módulos e atalho Ctrl+K para localizar funções.",
-    "Gráficos de entradas e saídas com dados reais do livro caixa sem duplicação de departamentos.",
-    "Layout responsivo, modais e cadastros mais fáceis de utilizar.",
-    "Atualização cumulativa e não destrutiva, mantendo dados e funcionalidades anteriores."
+    "Importar membros do Enuves pelo painel Master, com prévia e seleção da igreja.",
+    "Proteção contra duplicidade, 193 cadastros compatíveis e preservação de arquivados.",
+    "Departamentos criados a partir de interesses voluntários; líderes somente com indicação explícita.",
+    "Designação de líderes e vinculação de login já autorizado para o departamento.",
+    "Arquivar e restaurar membros; excluir definitivamente somente sem vínculos e com confirmação.",
+    "Atualização cumulativa 3.7.12; dados e tesouraria das igrejas preservados."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "e306ad3417f051155958c5f545a2c98016933ddf598b739601551ace4ab899e3"
+      "sha256": "d7e43407b987a330bbd61e01988a164898c18d7a4042885ab75181f7df276064"
     },
     {
       "path": "public/VERSION",
-      "sha256": "0b796016492a207c2695359208aacdc7c1e2e86e317fdbfefd7d21b8d133ef8b"
+      "sha256": "926f06bd7a6c03a254a03aeaa402fde86cdf9f6081ac8da71f15d67e51780e9a"
     },
     {
       "path": "public/accounting-file.php",
@@ -150,6 +151,10 @@
       "sha256": "cedcabcb7043fd8de05671b1de65f34f6e576880beda30abfef9a84e73d3a824"
     },
     {
+      "path": "public/database/042_enuves_migration.sql",
+      "sha256": "f6ab5a6c32989715cdbd849673882b58378c02a410518080b554aadfe1ae805e"
+    },
+    {
       "path": "public/department-report.php",
       "sha256": "581524b906038d13213f1b7092704caadfdb64a48458839ae492adffd2467d78"
     },
@@ -250,6 +255,22 @@
       "sha256": "310a5b155c305c33c8176530699a6adaac9313eeb5f2ed51cf0330aa09f8fb2a"
     },
     {
+      "path": "public/lib/EnuvesImportMap.php",
+      "sha256": "4a7276af8383852ada00e22359a4514468102a47c797245ad922d93b9cd2ee6e"
+    },
+    {
+      "path": "public/lib/EnuvesImportService.php",
+      "sha256": "36b380806fd77cf88f83a950e555ccdd61bf26ae6831d77c728591a87ee243ad"
+    },
+    {
+      "path": "public/lib/EnuvesLeadershipService.php",
+      "sha256": "ce6b314aa925f091d1d55877674f79372f639da1d1eaf1b3e9023bd013fb9ee5"
+    },
+    {
+      "path": "public/lib/EnuvesXlsxReader.php",
+      "sha256": "ba43034b19db9d8290b20b10d963b76ebff701065fb913ea31c543fb0717465d"
+    },
+    {
       "path": "public/lib/EventRegistrationService.php",
       "sha256": "0c1e96e9b370885ec4bc75f79900188be4b0f89859b659c33301a1ae18c1569a"
     },
@@ -284,6 +305,10 @@
     {
       "path": "public/lib/ManagementOverviewService.php",
       "sha256": "43a6cf6c984b57678c3f67f23272cfbf47138d8e8ab5018f29dad88c0654c6b2"
+    },
+    {
+      "path": "public/lib/MasterMemberService.php",
+      "sha256": "a5f18fd77af0c5e27deb5be5ee16a910a8e6e4d7b62d524d60b018dc722a4706"
     },
     {
       "path": "public/lib/MediaLibraryService.php",
@@ -335,7 +360,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "a92b446c6227235ed09841ce689576effccb81f29e9498e1924d5c17d6b89ab4"
+      "sha256": "e06ab2eaafc5cc5c360097cef70cfc3403d6d6abac5b24004dcf10b2c58cb6c2"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -356,6 +381,14 @@
     {
       "path": "public/master-automations.php",
       "sha256": "fd480ed6bb18668b11db52eb5211434f026e04b956ae84dfab96f58fcf5066a6"
+    },
+    {
+      "path": "public/master-enuves.php",
+      "sha256": "e9a7de983445ffd1da3f4f73d8543350b0cbbfd28e58833046e8cb1544dc8956"
+    },
+    {
+      "path": "public/master-members.php",
+      "sha256": "26bd51c43879648150635c35a18473fd11e54368773af4846f727fb0f9a4e93d"
     },
     {
       "path": "public/master.php",
