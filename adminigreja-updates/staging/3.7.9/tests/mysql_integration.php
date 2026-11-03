@@ -82,6 +82,33 @@ $treasury->periodStatus('2026-11','submit');
 $_SESSION=['user_id'=>$accountant,'church_id'=>$churchA];
 try{$acc->periodStatus('2026-11','review');throw new RuntimeException('open request ignored');}catch(RuntimeException $e){$check(str_contains($e->getMessage(),'solicitados'),'pending docs block review');}
 
+// Guard stub only inside this disposable test suite; production uses FinancePeriodGuard.php.
+class FinancePeriodGuard {
+    public static function assertOpen(PDO $pdo,string $churchId,string $date):void {
+        if($date!=='2026-11-02')throw new RuntimeException('Periodo fechado na simulacao');
+    }
+}
+$expenseDocId=app_uuid();
+$pdo->prepare("INSERT INTO accounting_documents
+(id,church_id,document_kind,reference_period,original_name,storage_path,mime_type,file_size,sha256,status,created_by_user_id)
+VALUES(?,?,'fiscal_coupon','2026-11','cupom.jpg',?,'image/jpeg',120,?,'draft',?)")
+->execute([$expenseDocId,$churchA,'storage/private/finance/'.$churchA.'/cupom.jpg',str_repeat('b',64),$treasurer]);
+$_SESSION=['user_id'=>$treasurer,'church_id'=>$churchA];
+$treasury->confirmDocument($expenseDocId,[
+    'supplier_name'=>'Papelaria Teste','document_number'=>'1020','issued_on'=>'2026-11-02',
+    'total'=>'25,50','confirmed_category'=>'Material de escritório','account_id'=>$bank,
+    'post_expense'=>'1'
+]);
+$posted=$treasury->document($expenseDocId);
+$check($posted['status']==='ready' && !empty($posted['finance_entry_id']),'expense confirmed and linked');
+$check(count($treasury->entries('2026-11'))===1,'expense posted exactly once');
+$check(count($treasury->legacyDocuments('2026-11'))===1,'document appears in treasury');
+try{$treasury->confirmDocument($expenseDocId,['total'=>'25,50']);throw new RuntimeException('duplicate posting allowed');}
+catch(RuntimeException $e){$check(str_contains($e->getMessage(),'já vinculado'),'duplicate financial posting blocked');}
+$_SESSION=['user_id'=>$accountant,'church_id'=>$churchA];
+try{$acc->confirmDocument($expenseDocId,['total'=>'25,50']);throw new RuntimeException('accountant could mutate ledger');}
+catch(RuntimeException $e){$check(str_contains($e->getMessage(),'Somente'),'accountant barred from ledger mutation');}
+$_SESSION=['user_id'=>$treasurer,'church_id'=>$churchA];
 $docId=app_uuid();
 $pdo->prepare("INSERT INTO accounting_documents
 (id,church_id,document_kind,reference_period,original_name,storage_path,mime_type,file_size,sha256,status,created_by_user_id)
@@ -91,6 +118,7 @@ $req=$acc->requests('2026-11')[0];
 $_SESSION=['user_id'=>$treasurer,'church_id'=>$churchA];
 $treasury->respondRequest($req['id'],$docId);
 $check($treasury->requests('2026-11')[0]['status']==='responded','request can be resolved only with a document');
+$check((int)$treasury->summary('2026-11')['expense_without_proof']===0,'posted expense has invoice linked');
 $_SESSION=['user_id'=>$accountant,'church_id'=>$churchA];
 $acc->reviewDocument($docId,'reviewed');
 $check($acc->document($docId)['status']==='reviewed','accountant reviewed uploaded statement');
