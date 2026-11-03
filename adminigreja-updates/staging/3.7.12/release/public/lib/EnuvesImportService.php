@@ -82,7 +82,7 @@ final class EnuvesImportService
         foreach(['phone_2','address_1','address_2','address_number','postal_code','id_city',
             'id_state','id_country','spouse_name','spouse_christian','conversion_date',
             'baptism_date','scholarity','avatar_file','avatar_date','lang','id_lead',
-            'id_lead_exact','created_at','Que tipo de atividade você deseja participar na igreja? '] as $key){
+            'id_lead_exact','created_at','Que tipo de atividade você deseja participar na igreja?'] as $key){
             $v=EnuvesImportMap::text($r[$key]??'',1800);
             if($v!=='')$extra[$key]=$v;
         }
@@ -127,7 +127,7 @@ final class EnuvesImportService
                     if(!$deptId)continue;
                     $q=$this->q('INSERT IGNORE INTO enuves_department_interests
                         (church_id,member_id,department_id,interest_label) VALUES(?,?,?,?)',
-                        [$cid,$memberId,$deptId,mb_substr((string)($row['Que tipo de atividade você deseja participar na igreja? ']??''),0,190)]);
+                        [$cid,$memberId,$deptId,mb_substr((string)($row['Que tipo de atividade você deseja participar na igreja?']??''),0,190)]);
                     $preferences+=$q->rowCount();
                 }
             }
