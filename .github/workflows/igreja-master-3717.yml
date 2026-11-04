@@ -40,7 +40,7 @@ jobs:
           TEST_ACCOUNTING_DSN: mysql:host=127.0.0.1;port=3306;dbname=igreja_accounting_test;charset=utf8mb4
           TEST_ACCOUNTING_USER: root
           TEST_ACCOUNTING_PASSWORD: localtestonly
-        run: python3 adminigreja-updates/staging/3.7.17/build_release.py
+        run: python3 adminigreja-updates/staging/3.7.17/build_course.py
       - name: Publish validated release files to feature branch
         run: |
           git config user.name "github-actions[bot]"
