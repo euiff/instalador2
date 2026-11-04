@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/igreja-master-3.7.18-curso-manual
+          ref: feature/igreja-master-3.7.18-tutorial-imagens-clientes
           persist-credentials: true
       - uses: shivammathur/setup-php@v2
         with:
@@ -48,7 +48,7 @@ jobs:
           git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.18.*.b64.txt
           if ! git diff --cached --quiet; then
             git commit -m "Build validated Igreja Master 3.7.18 customer visual training images"
-            git fetch origin feature/igreja-master-3.7.18-curso-manual
+            git fetch origin feature/igreja-master-3.7.18-tutorial-imagens-clientes
             git rebase FETCH_HEAD
-            git push origin HEAD:feature/igreja-master-3.7.18-curso-manual
+            git push origin HEAD:feature/igreja-master-3.7.18-tutorial-imagens-clientes
           fi
