@@ -209,10 +209,14 @@ def modify_department_service(source:bytes)->bytes:
     txt=replace_once(txt,"'has_proof'=>(bool)$saved",
         "'has_proof'=>(bool)$saved||($generateReceipt&&$proofMethod==='receipt_screen')",
         "department receipt audit")
-    anchor="""           EXISTS(SELECT 1 FROM finance_documents fd WHERE fd.church_id=e.church_id AND fd.entry_id=e.id) has_proof"""
-    repl="""           EXISTS(SELECT 1 FROM finance_documents fd WHERE fd.church_id=e.church_id AND fd.entry_id=e.id) has_proof,
-           (SELECT er.status FROM expense_receipts er WHERE er.church_id=e.church_id AND er.entry_id=e.id LIMIT 1) receipt_status"""
-    txt=replace_once(txt,anchor,repl,"department ledger receipt status")
+    pattern=r"(?m)^([ \t]*)EXISTS\(SELECT 1 FROM finance_documents fd WHERE fd\.church_id=e\.church_id AND fd\.entry_id=e\.id\) has_proof[ \t]*$"
+    hits=list(re.finditer(pattern,txt))
+    if len(hits)!=1:raise RuntimeError("Department ledger has_proof SQL anchor missing")
+    m=hits[0]
+    substitution=m.group(0)+""",
+           (SELECT er.status FROM expense_receipts er WHERE er.church_id=e.church_id
+               AND er.entry_id=e.id LIMIT 1) receipt_status"""
+    txt=txt[:m.start()]+substitution+txt[m.end():]
     return txt.encode("utf-8")
 
 
