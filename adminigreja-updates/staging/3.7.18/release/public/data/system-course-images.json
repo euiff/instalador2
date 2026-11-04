@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "scope": "client-churches-only",
+  "description": "Telas de treinamento anonimizadas. Upload central de ZIP pelo suporte autorizado; todas as igrejas visualizam o mesmo conteúdo.",
+  "images": [
+    {
+      "id": "01-painel-inicial",
+      "file": "01-painel-inicial.png",
+      "lesson_slug": "primeiros-passos-02",
+      "title": "Painel inicial e atalhos",
+      "description": "Novo cadastro, Cadastrar membro e Central 360"
+    },
+    {
+      "id": "02-cadastrar-membro",
+      "file": "02-cadastrar-membro.png",
+      "lesson_slug": "membros-01",
+      "title": "Como cadastrar novo membro",
+      "description": "Nome, congregação e botão para salvar"
+    },
+    {
+      "id": "03-lista-membros",
+      "file": "03-lista-membros.png",
+      "lesson_slug": "membros-05",
+      "title": "Pesquisar e exportar membros",
+      "description": "Campo de busca, Exportar CSV e Novo cadastro"
+    },
+    {
+      "id": "04-usuarios-permissoes",
+      "file": "04-usuarios-permissoes.png",
+      "lesson_slug": "usuarios-02",
+      "title": "Usuários internos da igreja",
+      "description": "Onde conferir os acessos e criar usuário"
+    },
+    {
+      "id": "05-criar-acesso",
+      "file": "05-criar-acesso.png",
+      "lesson_slug": "usuarios-02",
+      "title": "Novo acesso interno",
+      "description": "Perfil, pessoa vinculada e criação do acesso"
+    },
+    {
+      "id": "06-departamentos",
+      "file": "06-departamentos.png",
+      "lesson_slug": "departamentos-01",
+      "title": "Cadastro de departamentos",
+      "description": "Criar departamento e consultar a lista"
+    },
+    {
+      "id": "07-menu-financeiro",
+      "file": "07-menu-financeiro.png",
+      "lesson_slug": "tesourarias-ministerios-01",
+      "title": "Localizar tesourarias de ministérios",
+      "description": "Tesouraria geral, equipe e caixas dos departamentos"
+    },
+    {
+      "id": "08-novo-lancamento",
+      "file": "08-novo-lancamento.png",
+      "lesson_slug": "tesouraria-geral-04",
+      "title": "Novo lançamento de entrada ou saída",
+      "description": "Tipo de movimento, categoria e registro"
+    },
+    {
+      "id": "09-perfil-membro",
+      "file": "09-perfil-membro.png",
+      "lesson_slug": "membros-06",
+      "title": "Perfil pessoal e vínculos",
+      "description": "Editar cadastro e vincular departamento"
+    },
+    {
+      "id": "10-portal-contador",
+      "file": "10-portal-contador.png",
+      "lesson_slug": "contador-02",
+      "title": "Portal do Contador",
+      "description": "Competência, livro caixa e pacote mensal"
+    },
+    {
+      "id": "11-agenda-eventos",
+      "file": "11-agenda-eventos.png",
+      "lesson_slug": "agenda-eventos-01",
+      "title": "Agenda de eventos",
+      "description": "Abrir Eventos e cadastrar atividade"
+    },
+    {
+      "id": "12-cargos-funcoes",
+      "file": "12-cargos-funcoes.png",
+      "lesson_slug": "configuracoes-04",
+      "title": "Cargos e funções",
+      "description": "Selecionar aba e cadastrar cargo"
+    },
+    {
+      "id": "13-tesouraria-geral",
+      "file": "13-tesouraria-geral.png",
+      "lesson_slug": "tesouraria-geral-06",
+      "title": "Resumo da tesouraria",
+      "description": "Filtrar período, lançar e salvar PDF"
+    },
+    {
+      "id": "14-prestacao-de-contas",
+      "file": "14-prestacao-de-contas.png",
+      "lesson_slug": "tesourarias-ministerios-06",
+      "title": "Relatórios dos departamentos",
+      "description": "Datas, departamento e consulta"
+    },
+    {
+      "id": "15-pessoas-lideres",
+      "file": "15-pessoas-lideres.png",
+      "lesson_slug": "departamentos-02",
+      "title": "Vincular participantes",
+      "description": "Selecionar departamento e abrir equipe"
+    },
+    {
+      "id": "16-configuracoes",
+      "file": "16-configuracoes.png",
+      "lesson_slug": "configuracoes-01",
+      "title": "Dados da igreja",
+      "description": "Identificação, contatos e botão salvar"
+    },
+    {
+      "id": "17-central-360",
+      "file": "17-central-360.png",
+      "lesson_slug": "primeiros-passos-02",
+      "title": "Central de Gestão 360",
+      "description": "Departamentos, caixas e acesso ao ensino"
+    }
+  ]
+}
