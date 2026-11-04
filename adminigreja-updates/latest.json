@@ -1,35 +1,35 @@
 {
-  "version": "3.7.18",
+  "version": "3.7.19",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.18.01.b64.txt",
-    "releases/v3.7.18.02.b64.txt",
-    "releases/v3.7.18.03.b64.txt",
-    "releases/v3.7.18.04.b64.txt",
-    "releases/v3.7.18.05.b64.txt",
-    "releases/v3.7.18.06.b64.txt",
-    "releases/v3.7.18.07.b64.txt"
+    "releases/v3.7.19.01.b64.txt",
+    "releases/v3.7.19.02.b64.txt",
+    "releases/v3.7.19.03.b64.txt",
+    "releases/v3.7.19.04.b64.txt",
+    "releases/v3.7.19.05.b64.txt",
+    "releases/v3.7.19.06.b64.txt",
+    "releases/v3.7.19.07.b64.txt"
   ],
-  "sha256": "fa215691eb6fd9d89ef2146d0276434ce8b22e4998c58a2819a1ff5a870fcadc",
-  "published_at": "2026-11-04T21:57:22.686016+00:00",
-  "cache_buster": "3.7.18-client-course-images",
+  "sha256": "7bb572697ad497a55624ce0c687b15108bae1eae164fddb003be09657b814c7d",
+  "published_at": "2026-11-04T22:18:29.622405+00:00",
+  "cache_buster": "3.7.19-login-eye-auto-guides",
   "notes": [
-    "Curso Tutorial exclusivo das igrejas e clientes: removidos conteúdos internos do Master.",
-    "25 módulos, 144 aulas passo a passo, com exemplos de funções da igreja.",
-    "Suporte a 17 imagens reais com dados ocultos e botões indicados por números.",
-    "Master importa as imagens aprovadas uma única vez para todas as igrejas.",
-    "Arquivos exibidos somente para usuários autenticados do curso; upload exige aprovação SHA-256.",
-    "Preserva progresso dos alunos e todas as funcionalidades anteriores da plataforma."
+    "Botão de olho para revelar e ocultar senha agora também na tela de login.",
+    "Login original, autenticação, permissões e sessões preservados.",
+    "17 imagens ilustrativas com setas e botões destacados exibidas sem importar ZIP.",
+    "Primeira aula do curso também possui imagem explicativa.",
+    "Fotos reais anonimizadas, quando importadas, substituem automaticamente as ilustrações.",
+    "Proteção por login e regras de acesso preservadas. Configure HTTPS no cPanel para segurança."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "8c28172e7ecd50dba827b4b9f59429c1a3b6a321b031b97ccca66d1e77ae4fea"
+      "sha256": "8acc2510a5968a6e731a6c6445a1ba02d2eb3c4f871d1a5f719a1c58645cacc0"
     },
     {
       "path": "public/VERSION",
-      "sha256": "e2fa1550de5a1f3f899fac8b04478e7c1447895bacecc723e49f9b59595002a7"
+      "sha256": "341814b55e1aa8e96a649bce2f647c4a209a9cfcdb389af1f7f359a5ff4fe0a9"
     },
     {
       "path": "public/accounting-file.php",
@@ -113,7 +113,7 @@
     },
     {
       "path": "public/data/system-course-images.json",
-      "sha256": "9277efc2e2bd6eff89c37cab58479fbcafd731267af158897259a8f1a3248a1e"
+      "sha256": "1b40508d7dd6b2b2000600e839796b7c19b1e1af0fdb598efd7811033ca11b9a"
     },
     {
       "path": "public/data/system-course.json",
@@ -269,7 +269,7 @@
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "e2d0d56662ca6d7ca9ec5ebba5b7ebe6aa565c8ca03e011920a25e52470cf8c0"
+      "sha256": "8d3baa482ad3ce03b6cc8abe29f08a59473b0303d4f7b664213ea20197403126"
     },
     {
       "path": "public/lib/AutomationMonitor.php",
@@ -432,8 +432,12 @@
       "sha256": "7a8f4f8e5a0d9b92e402b4f04505ae5281f53562f9e058d875b112c2edff415d"
     },
     {
+      "path": "public/lib/SystemCourseIllustration.php",
+      "sha256": "5a33fb3bc54e41dfb88a811443d249a00f485da4feff967cfe35672d0f4a74d0"
+    },
+    {
       "path": "public/lib/SystemCourseImageService.php",
-      "sha256": "7e6ffc45feecc52462645952667466bfc52de908d345968d0fed80fd8a3e0241"
+      "sha256": "413f7999202372ddf7ff7d8aa710eca3f65681df2b541a8a1823681ca0369364"
     },
     {
       "path": "public/lib/SystemCourseService.php",
@@ -549,11 +553,11 @@
     },
     {
       "path": "public/system-course-image.php",
-      "sha256": "d363724641f4dbc6ff9559dc15455ebc9b43b385331674db28f2c6807699f5ab"
+      "sha256": "1fbf4f6e8447200148a8e5694d497375806bf5634032b36b85a97148705d3358"
     },
     {
       "path": "public/system-course.php",
-      "sha256": "256a803851f44dcd643ea84ae7bacd05965fa3450516b400b7652fc9dcd16867"
+      "sha256": "a1bb60196f144a2e3f7ec5426707d1aca0cf33a4606e36555a33536a5eee19a0"
     },
     {
       "path": "public/users.php",
