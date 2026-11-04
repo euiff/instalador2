@@ -1,0 +1,17 @@
+.expense-sign-canvas{
+ display:block;width:100%;height:auto;max-width:800px;aspect-ratio:800/230;background:#fff;
+ border:1.8px dashed #8aaab8;border-radius:11px;touch-action:none;cursor:crosshair;
+ box-shadow:inset 0 0 0 5px #f9fcfd;
+}
+.expense-sign-canvas:focus-visible{outline:3px solid #2884a5;outline-offset:2px}
+[data-receipt-signature]{display:grid;gap:10px}
+[data-receipt-signature][hidden], [data-receipt-proof-choice][hidden],[data-receipt-upload][hidden]{display:none!important}
+.expense-receipt-option{padding:12px 14px;border:1px solid #d5e5e9;border-radius:12px;background:#f7fbfc;margin-top:12px}
+.expense-receipt-option label{display:grid;gap:6px}
+.expense-receipt-option p{font-size:12px;line-height:1.55;color:#647b8a}
+.expense-receipt-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.expense-receipt-fields label{display:grid;gap:6px}
+.expense-receipt-full{grid-column:1/-1}
+@media(max-width:620px){.expense-receipt-fields{grid-template-columns:1fr}}
+
+.expense-receipt-fields[data-receipt-details][hidden]{display:none!important}
