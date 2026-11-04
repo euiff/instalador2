@@ -8,7 +8,7 @@ $first=$imageService->forLesson('primeiros-passos-01');
 $check(count($first)===1,'first lesson has one picture from the opening dashboard');
 $check(($first[0]['id']??'')==='01-painel-inicial','first lesson image is mapped to current home screen');
 $check(($first[0]['is_illustration']??false)===true,'visual guide appears before images ZIP is imported');
-$check(count($imageService->forLesson('primeiros-passos-02'))===1,'same picture is also available on navigation lesson');
+$check(in_array('01-painel-inicial',array_column($imageService->forLesson('primeiros-passos-02'),'id'),true),'same picture is also available on navigation lesson');
 $all=$imageService->catalog();
 $check(count($all)===17,'17 approved tutorial picture mappings still exist');
 
