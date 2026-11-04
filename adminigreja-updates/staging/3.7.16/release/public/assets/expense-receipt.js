@@ -55,6 +55,7 @@ function activate(form) {
  const proof=form.querySelector('[data-receipt-proof-choice]');
  const upload=form.querySelector('[data-receipt-upload]');
  const recipient=form.querySelector('[name="recipient_name"]');
+ const details=form.querySelector('[data-receipt-details]');
  const consent=form.querySelector('[data-signature-consent]');
  function update(){
    const expense=!isEntry||dir?.value==='expense';
@@ -62,6 +63,7 @@ function activate(form) {
    const mode=method?.value||'receipt_screen';
    const generated=expense&&mode!=='upload';
    if(upload)upload.hidden=generated;
+   if(details)details.hidden=!generated;
    const wantsSign=generated&&mode==='receipt_screen';
    if(signBox)signBox.hidden=!wantsSign;
    if(recipient)recipient.required=generated;
