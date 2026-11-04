@@ -1,35 +1,34 @@
 {
-  "version": "3.7.20",
+  "version": "3.7.21",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.20.01.b64.txt",
-    "releases/v3.7.20.02.b64.txt",
-    "releases/v3.7.20.03.b64.txt",
-    "releases/v3.7.20.04.b64.txt",
-    "releases/v3.7.20.05.b64.txt",
-    "releases/v3.7.20.06.b64.txt",
-    "releases/v3.7.20.07.b64.txt"
+    "releases/v3.7.21.01.b64.txt",
+    "releases/v3.7.21.02.b64.txt",
+    "releases/v3.7.21.03.b64.txt",
+    "releases/v3.7.21.04.b64.txt",
+    "releases/v3.7.21.05.b64.txt",
+    "releases/v3.7.21.06.b64.txt",
+    "releases/v3.7.21.07.b64.txt"
   ],
-  "sha256": "c1613e2aa5d1b7ac1021689c80e1bcfce2e3a9218290313dbaf7e9e76b9f5931",
-  "published_at": "2026-11-04T22:37:24.194241+00:00",
-  "cache_buster": "3.7.20-member-leadership-provision",
+  "sha256": "57f4407d7c29530c8ac12869c1f46247e33a232726b61400802b4e3052fcd0b5",
+  "published_at": "2026-11-04T22:46:09.626872+00:00",
+  "cache_buster": "3.7.21-ministry-member-joined-on",
   "notes": [
-    "Novo acesso agora usa nome e e-mail do membro selecionado, sem redigitar dados.",
-    "Se o membro já tem login, aproveita o acesso e a senha atual sem duplicar conta.",
-    "Ao indicar Líder e Jovens, registra a liderança real em Pessoas e Líderes dos Departamentos.",
-    "Líder visualiza equipe e caixa somente do seu departamento, sem acesso à tesouraria geral.",
-    "Alterar a liderança revoga somente os acessos correspondentes e mantém o histórico.",
-    "Inclui validações de segurança e isolamento entre igrejas."
+    "Corrigido erro SQLSTATE[HY000] 1364: campo joined_on sem valor ao salvar líder de departamento.",
+    "A data de vínculo é inserida automaticamente, respeitando colunas DATE e DATETIME do banco.",
+    "Compatível com igrejas antigas e novas, sem mexer nos cadastros existentes.",
+    "Liderança vinculada ao departamento escolhido com acesso financeiro limitado ao próprio ministério.",
+    "Operação transacional e isolamento por igreja preservados."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "688d6abe30409b9fa9f2d65da63e136b1c088ba0a6a8b6d26778557a45b3d3c9"
+      "sha256": "cbee2de42b454e3767baa0faf66f261592d53b37521f0fda894e91dc5ac17ed4"
     },
     {
       "path": "public/VERSION",
-      "sha256": "54dac65cc3e9e04a857465901a1b2eec9e76a7379722a9f9807719c6fd1cb49c"
+      "sha256": "fc36a80b91205e7a6ecf25527caf4301b111eb19299dbac4ab0c4d161cfb5b4c"
     },
     {
       "path": "public/accounting-file.php",
@@ -397,7 +396,7 @@
     },
     {
       "path": "public/lib/MemberDepartmentService.php",
-      "sha256": "5c1ed661e83ed3f9035690ebe57dafeca00d8c23acb0bbb0b49b96e176c74ac1"
+      "sha256": "1911667faaf559b84085fd222f9837828876254e0152ab8b67c1960dc66e0243"
     },
     {
       "path": "public/lib/MemberDirectoryService.php",
