@@ -1,0 +1,2320 @@
+{
+  "id": "igreja-master-manual-oficial",
+  "version": "2026-11-04.18",
+  "title": "Curso Oficial do Igreja Master — para Igrejas e Clientes",
+  "subtitle": "Tutoriais práticos para pastor, secretária, líderes, tesoureiros, contador e membros.",
+  "intro": "Aprenda a usar os módulos da sua igreja com instruções simples, imagens de telas reais e orientação por função. O curso não ensina operações internas do Master. Os passos respeitam as permissões de cada usuário.",
+  "level": "Iniciante a avançado",
+  "modules": [
+    {
+      "slug": "primeiros-passos",
+      "title": "Primeiros passos e navegação",
+      "summary": "Conheça o painel, encontre funções e organize o trabalho inicial.",
+      "audience": [
+        "Todos os usuários"
+      ],
+      "lessons": [
+        {
+          "slug": "primeiros-passos-01",
+          "title": "Entrar com segurança",
+          "steps": [
+            "Abra o endereço do Igreja Master e informe o e-mail que foi autorizado pela igreja.",
+            "Digite sua senha. Use o ícone de olho para conferir os caracteres nos formulários que oferecem esse recurso.",
+            "Depois da entrada, confira no cabeçalho se está na igreja e no perfil corretos.",
+            "Nunca compartilhe login ou senha por grupos de WhatsApp."
+          ],
+          "route": "/portal-home.php",
+          "permission": "member_board",
+          "tip": "Se o botão de olho ainda não aparecer na tela de login, digite com atenção e procure o gestor para redefinir o acesso.",
+          "warning": ""
+        },
+        {
+          "slug": "primeiros-passos-02",
+          "title": "Entender o painel e os menus",
+          "steps": [
+            "Comece pela Visão geral para acompanhar indicadores e avisos.",
+            "Use Pessoas e cadastros para membros, departamentos, congregações e visitantes.",
+            "Abra Financeiro para tesouraria, comprovantes e relatórios, conforme seu perfil.",
+            "No grupo Ensino, abra o Curso Oficial para consultar estas aulas sempre que precisar."
+          ],
+          "route": "/dashboard.php",
+          "permission": "dashboard",
+          "tip": "As opções do menu mudam conforme suas permissões. Isso é intencional.",
+          "warning": ""
+        },
+        {
+          "slug": "primeiros-passos-03",
+          "title": "Encontrar uma ferramenta rapidamente",
+          "steps": [
+            "No topo do sistema, localize a busca Encontrar uma função.",
+            "Digite palavras como membro, recibo, líder, evento ou relatório.",
+            "Escolha a opção apresentada e confirme o título da página antes de trabalhar.",
+            "Se uma opção não aparecer, consulte as permissões do seu usuário com a administração."
+          ],
+          "route": "/management-center.php",
+          "permission": "dashboard",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "primeiros-passos-04",
+          "title": "Entender perfis e limites",
+          "steps": [
+            "O Master administra clientes e atualizações da plataforma, não é proprietário de cada igreja.",
+            "O pastor e os gestores autorizados administram sua própria igreja.",
+            "Secretaria, tesouraria, líderes, contador e membros possuem telas e direitos diferentes.",
+            "O acesso de participante a um ministério não libera finanças nem dá cargo de liderança."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "primeiros-passos-05",
+          "title": "Preparar a igreja para uso diário",
+          "steps": [
+            "Confira nome, contato, logo e congregações da igreja.",
+            "Cadastre categorias, cargos e departamentos antes de importar muitos membros.",
+            "Crie contas financeiras, convide os responsáveis e estabeleça as regras de comprovação.",
+            "Passe este curso à equipe e teste cada perfil com dados fictícios antes de usar valores reais."
+          ],
+          "route": "/settings.php",
+          "permission": "settings",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "configuracoes",
+      "title": "Configurações da igreja e congregações",
+      "summary": "Estrutura inicial, identidade da igreja, unidades e responsáveis.",
+      "audience": [
+        "Pastor",
+        "Secretaria"
+      ],
+      "lessons": [
+        {
+          "slug": "configuracoes-01",
+          "title": "Conferir os dados da igreja",
+          "steps": [
+            "Abra Administração e depois Configurações.",
+            "Revise nome da igreja, logo, dados de contato, endereço e demais campos disponíveis.",
+            "Salve e confira como os dados aparecem nos documentos e cabeçalhos de relatórios.",
+            "Mantenha a identificação atualizada para os comprovantes financeiros e comunicações."
+          ],
+          "route": "/settings.php",
+          "permission": "settings",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "configuracoes-02",
+          "title": "Criar uma congregação ou unidade",
+          "steps": [
+            "Abra Pessoas e cadastros > Congregações.",
+            "Clique em Novo cadastro, informe o nome da unidade e os dados solicitados.",
+            "Salve e confirme que a congregação aparece nas opções dos membros e relatórios.",
+            "Crie as unidades primeiro para não ter que alterar membros individualmente depois."
+          ],
+          "route": "/congregations.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "configuracoes-03",
+          "title": "Separar congregação, departamento e grupo",
+          "steps": [
+            "Congregação é a unidade/localidade da igreja à qual a pessoa está vinculada.",
+            "Departamento é o ministério funcional, como Jovens, Louvor ou Infantil.",
+            "Grupo ou célula é uma equipe pequena com reuniões e presenças próprias.",
+            "Uma pessoa pode pertencer a uma congregação, participar de mais de um departamento e frequentar um grupo."
+          ],
+          "route": "/departments.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "configuracoes-04",
+          "title": "Cadastrar cargos e categorias",
+          "steps": [
+            "Abra Cadastros e selecione Cargos/Funções para criar nomes padronizados.",
+            "Cadastre categorias e famílias quando necessárias aos relatórios e filtros.",
+            "No formulário do membro, escolha o cargo e o departamento nas listas salvas.",
+            "Lembre-se: escrever um cargo no cadastro não cria automaticamente uma permissão de acesso."
+          ],
+          "route": "/registers.php?kind=position",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "configuracoes-05",
+          "title": "Organizar centros de custo e contatos",
+          "steps": [
+            "Abra Cadastros financeiros para criar categorias de lançamento e centros de custo.",
+            "Separe projetos ou atividades como Reforma, Missões e Ação Social, se fizer sentido.",
+            "Cadastre fornecedores/contatos com nomes consistentes para pesquisar contas e comprovantes.",
+            "Use os mesmos cadastros na hora de lançar despesas, evitando descrições divergentes."
+          ],
+          "route": "/registers.php?kind=cost_center",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "configuracoes-06",
+          "title": "Conferir estrutura antes da operação",
+          "steps": [
+            "Verifique se todas as congregações estão ativas e corretamente nomeadas.",
+            "Confira a lista de departamentos e marque os inativos antes de vincular novos membros.",
+            "Confirme que existe ao menos uma conta/caixa para os setores que movimentam recursos.",
+            "Faça uma simulação simples de cadastro, lançamento e relatório para testar os vínculos."
+          ],
+          "route": "/departments.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "membros",
+      "title": "Cadastro completo de membros",
+      "summary": "Novo cadastro, edição, dados pessoais, congregações, famílias e histórico.",
+      "audience": [
+        "Secretaria",
+        "Pastor"
+      ],
+      "lessons": [
+        {
+          "slug": "membros-01",
+          "title": "Cadastrar um membro novo",
+          "steps": [
+            "Abra Pessoas e cadastros > Membros e clique Novo membro.",
+            "Informe nome, contato disponível e demais dados, usando somente informações reais.",
+            "Selecione a congregação, o cargo e um departamento existente quando aplicável.",
+            "Salve e confira se a pessoa aparece na lista; ter um cadastro não significa possuir senha de acesso."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "membros-02",
+          "title": "Escolher departamento no cadastro",
+          "steps": [
+            "Abra o cadastro do membro e localize o campo Departamento.",
+            "Escolha o ministério da lista, sem digitar nomes diferentes do cadastro central.",
+            "Se o membro participa de vários ministérios, abra Pessoas e Lideranças para criar vínculos adicionais.",
+            "Indicar um departamento aqui não o transforma em líder ou tesoureiro."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "membros-03",
+          "title": "Editar membro e corrigir dados importados",
+          "steps": [
+            "Busque pelo nome, telefone, e-mail ou pelo filtro disponível.",
+            "Clique Editar e revise congregação, data de membresia, documentos e campos pessoais.",
+            "Se algum registro veio de planilha sem telefone, complete-o quando houver dado confiável.",
+            "Salve e abra Perfil para conferir os detalhes antes de fazer novos vínculos."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "membros-04",
+          "title": "Vincular família, categoria e cargo",
+          "steps": [
+            "Abra o cadastro e selecione a família e a categoria adequadas.",
+            "Escolha um cargo que já esteja configurado no sistema.",
+            "Use Pessoas e Lideranças para a função efetiva de líder; cargo e permissão não são a mesma coisa.",
+            "Verifique os filtros após salvar para confirmar que o vínculo é exibido corretamente."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "membros-05",
+          "title": "Localizar, filtrar e exportar membros",
+          "steps": [
+            "Na lista de Membros, utilize os filtros de situação, congregação e departamento.",
+            "Aplique a pesquisa antes de exportar para evitar compartilhar dados desnecessários.",
+            "Use Exportar CSV ou Imprimir/PDF de resultados, conforme a necessidade.",
+            "Guarde as planilhas exportadas em local seguro, pois contêm dados pessoais."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "membros-06",
+          "title": "Abrir o perfil e os vínculos",
+          "steps": [
+            "Na lista, escolha Perfil para abrir o cadastro completo.",
+            "Confira dados pessoais, congregação e vínculos departamentais.",
+            "Use os atalhos apropriados para corrigir departamentos ou ativar o Portal do Membro.",
+            "Não exclua ou transfira a pessoa apenas para resolver um erro de permissão; ajuste o vínculo correto."
+          ],
+          "route": "/member-profile.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "departamentos",
+      "title": "Departamentos: participantes, líderes e tesoureiros",
+      "summary": "Vínculos reais com ministérios e permissões diferentes por função.",
+      "audience": [
+        "Pastor",
+        "Secretaria",
+        "Líder"
+      ],
+      "lessons": [
+        {
+          "slug": "departamentos-01",
+          "title": "Criar departamento",
+          "steps": [
+            "Abra Pessoas e cadastros > Departamentos.",
+            "Clique Novo cadastro, escolha nome e estado ativo, e salve.",
+            "Confira a nova opção na lista de departamentos e no cadastro de membros.",
+            "Crie ministérios distintos apenas quando tiverem responsabilidade e organização próprias."
+          ],
+          "route": "/departments.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "departamentos-02",
+          "title": "Vincular participante sem liberar caixa",
+          "steps": [
+            "Abra Pessoas e Lideranças, selecione o departamento.",
+            "Escolha um membro já cadastrado e marque Participante.",
+            "Salve. O membro mantém seu portal pessoal e não consegue ver o caixa do ministério.",
+            "Não atribua liderança apenas para permitir a pessoa consultar as atividades."
+          ],
+          "route": "/department-people.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "departamentos-03",
+          "title": "Vincular o líder do departamento",
+          "steps": [
+            "Na mesma tela, selecione o membro e marque Líder do departamento.",
+            "O pastor/administrador autorizado confirma a atribuição.",
+            "Ative ou vincule o login pessoal do líder, se ainda não existir.",
+            "Ao entrar, o líder verá a administração e a tesouraria apenas do departamento que lidera, respeitando as permissões."
+          ],
+          "route": "/department-people.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "departamentos-04",
+          "title": "Indicar tesoureiro do ministério",
+          "steps": [
+            "O líder abre Equipe e Tesoureiro do Departamento.",
+            "Escolhe uma pessoa que já está vinculada como participante daquele ministério.",
+            "Clica Indicar tesoureiro; a pessoa usa seu login pessoal para trabalhar no caixa específico.",
+            "Ela não ganha acesso à tesouraria geral nem ao caixa de outros departamentos."
+          ],
+          "route": "/department-team.php",
+          "permission": "department_team_manage",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "departamentos-05",
+          "title": "Retirar a função de tesoureiro",
+          "steps": [
+            "Abra a equipe do departamento autorizado.",
+            "Localize o tesoureiro e clique Remover tesouraria.",
+            "Confirme a alteração e teste o acesso ao caixa com o usuário.",
+            "A pessoa continua como participante e mantém seu Portal do Membro."
+          ],
+          "route": "/department-team.php",
+          "permission": "department_team_manage",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "departamentos-06",
+          "title": "Membro em vários departamentos",
+          "steps": [
+            "Cadastre a pessoa somente uma vez na igreja.",
+            "Faça vínculos separados com Jovens, Louvor ou outros ministérios em Pessoas e Lideranças.",
+            "Defina o papel em cada departamento, sem copiar automaticamente o cargo de um para o outro.",
+            "Confira no portal de cada líder se são mostrados apenas os departamentos e caixas autorizados."
+          ],
+          "route": "/department-people.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "departamentos-07",
+          "title": "Alterações de liderança com segurança",
+          "steps": [
+            "Antes de trocar um líder, veja quem responde pelo caixa e pelas atividades atuais.",
+            "Vincule o novo responsável com autorização do pastor.",
+            "Revogue a função antiga; confira os acessos ao departamento e à tesouraria.",
+            "Não compartilhe a senha do líder anterior nem mantenha contas compartilhadas."
+          ],
+          "route": "/department-people.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "usuarios",
+      "title": "Acessos, senhas e permissões",
+      "summary": "Criação de usuários e diferença entre cargo, perfil e permissões efetivas.",
+      "audience": [
+        "Pastor",
+        "Secretaria"
+      ],
+      "lessons": [
+        {
+          "slug": "usuarios-01",
+          "title": "Entender a diferença entre membro e usuário",
+          "steps": [
+            "Membro é a ficha da pessoa no cadastro da igreja.",
+            "Usuário é o login, com e-mail, senha e perfil autorizado.",
+            "Uma pessoa pode ser membro de vários departamentos sem receber permissão administrativa.",
+            "Sempre vincule o usuário à pessoa correta para o Portal do Membro identificar seus dados."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "usuarios-02",
+          "title": "Criar um usuário para a equipe",
+          "steps": [
+            "Abra Administração > Usuários e Permissões.",
+            "Informe e-mail pessoal, nome e perfil correspondente à função autorizada.",
+            "Vincule o cadastro do membro e a igreja certa, quando a tela permitir.",
+            "Confira se o novo usuário entra apenas nos módulos esperados."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "usuarios-03",
+          "title": "Acesso de pastor e administração",
+          "steps": [
+            "O proprietário da igreja é definido no Painel Master durante a criação ou alteração autorizada.",
+            "Perfis de pastor e administração possuem responsabilidades mais amplas que líderes departamentais.",
+            "Não ofereça acesso de administrador para resolver simples dificuldade de consulta.",
+            "Confirme com o pastor antes de ampliar permissões de alguém."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "usuarios-04",
+          "title": "Acesso da secretaria e equipes",
+          "steps": [
+            "Cadastre a pessoa no módulo Membros antes de abrir seu login, se necessário.",
+            "Escolha Secretaria para quem cuida de cadastros, documentos e rotinas atribuídas.",
+            "Para líder de ministério, crie o vínculo explícito no departamento; o cadastro isolado de cargo não basta.",
+            "Teste os menus apresentados ao novo usuário depois de salvar."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "usuarios-05",
+          "title": "Conceder acesso do contador",
+          "steps": [
+            "Crie o usuário com e-mail próprio e perfil Contador, usando a igreja correta.",
+            "Peça para entrar no Portal do Contador e conferir documentos/pendências.",
+            "O contador não deve usar o login do pastor nem registrar movimentações gerais se seu papel for somente revisão.",
+            "Revogue o acesso quando o contrato de prestação de serviço for encerrado."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "usuarios-06",
+          "title": "Trocar ou recuperar senha",
+          "steps": [
+            "Na área de usuário, procure a opção de atualização de senha disponível para seu perfil.",
+            "Digite a senha nova com cuidado; o ícone de olho pode facilitar a conferência.",
+            "Use senhas únicas, suficientemente longas, sem enviar por mensagens de grupo.",
+            "Se não houver opção de recuperação no seu perfil, solicite redefinição segura ao administrador."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "usuarios-07",
+          "title": "Retirar acessos sem apagar pessoa",
+          "steps": [
+            "Quando alguém deixa um ministério, retire o vínculo de liderança/tesouraria antes de tudo.",
+            "Desative ou altere a permissão do usuário, conforme orientação do pastor.",
+            "Preserve o cadastro histórico da pessoa e os documentos financeiros legítimos.",
+            "Teste o acesso depois da mudança e registre quem a autorizou."
+          ],
+          "route": "/department-people.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "portal-membro",
+      "title": "Portal do Membro e contribuições pessoais",
+      "summary": "Ativar login, consultar dízimos, avisos e dados pessoais sem expor valores alheios.",
+      "audience": [
+        "Membro",
+        "Secretaria",
+        "Pastor"
+      ],
+      "lessons": [
+        {
+          "slug": "portal-membro-01",
+          "title": "Acesso ao Portal do Membro e e-mail cadastrado",
+          "steps": [
+            "Confira no cadastro do membro se o e-mail está correto e pertence à pessoa.",
+            "Abra a entrada do Portal do Membro e verifique as opções de acesso e recuperação de senha disponíveis nesta versão.",
+            "Se o login ainda exigir ativação manual, solicite ao administrador a vinculação da pessoa; não use credenciais compartilhadas.",
+            "Depois de entrar, confira se o portal mostra somente as informações, contribuições e avisos do próprio membro."
+          ],
+          "route": "/member-portal-access.php",
+          "permission": "manage_users",
+          "tip": "O acesso automático por e-mail e recuperação de senha depende da implantação do fluxo seguro de credenciais; não envie senhas por WhatsApp.",
+          "warning": ""
+        },
+        {
+          "slug": "portal-membro-02",
+          "title": "Entrar e reconhecer meu portal",
+          "steps": [
+            "Use o endereço de login e informe suas credenciais.",
+            "No Meu acesso, confira se o nome e a igreja são os seus.",
+            "Abra as seções de cadastro, contribuições e mural disponíveis.",
+            "Se aparecer outra pessoa, saia imediatamente e informe à secretaria para corrigir o vínculo."
+          ],
+          "route": "/portal-home.php",
+          "permission": "member_board",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "portal-membro-03",
+          "title": "Consultar dízimos e ofertas",
+          "steps": [
+            "Abra Contribuições / Caixa no portal pessoal.",
+            "Selecione o período, quando houver filtro, e confira as movimentações vinculadas ao seu cadastro.",
+            "Se uma oferta estiver faltando, peça à tesouraria para corrigir o vínculo do membro ao lançamento.",
+            "O membro não vê contribuições de outras pessoas nem o saldo total da igreja."
+          ],
+          "route": "/portal.php",
+          "permission": "member_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "portal-membro-04",
+          "title": "Ver avisos do pastor e comunicados",
+          "steps": [
+            "Abra o Mural para ver comunicados publicados para sua igreja.",
+            "Confira data, título, descrição e eventuais links ou arquivos anexados.",
+            "Mantenha telefone e e-mail atualizados para receber avisos corretamente.",
+            "Um aviso não modifica seu cadastro nem autoriza transferências financeiras."
+          ],
+          "route": "/board.php",
+          "permission": "member_board",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "portal-membro-05",
+          "title": "Atualizar meu cadastro",
+          "steps": [
+            "Abra Meu Cadastro para consultar seus dados pessoais.",
+            "Onde houver edição habilitada, atualize os campos permitidos.",
+            "Para mudar congregação, cargo ou vínculos ministeriais, solicite a alteração à secretaria.",
+            "Verifique se as informações permanecem corretas após salvar."
+          ],
+          "route": "/my-profile.php",
+          "permission": "member_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "portal-membro-06",
+          "title": "Entender minhas permissões",
+          "steps": [
+            "Participar do departamento de Jovens não torna alguém líder de Jovens.",
+            "Receber função de líder libera só áreas explicitamente autorizadas daquele ministério.",
+            "Quando a função acaba, o acesso departamental é retirado, mas o Portal do Membro permanece.",
+            "Se aparecer uma tela negada, não use credenciais de terceiros; peça revisão do papel."
+          ],
+          "route": "/department-people.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "visitantes",
+      "title": "Visitantes, recepção e acompanhamento pastoral",
+      "summary": "Captar visitantes, registrar retornos e encaminhar atendimentos.",
+      "audience": [
+        "Recepção",
+        "Pastor",
+        "Secretaria"
+      ],
+      "lessons": [
+        {
+          "slug": "visitantes-01",
+          "title": "Cadastrar visitante",
+          "steps": [
+            "Abra Pessoas e cadastros > Visitantes.",
+            "Registre nome, telefone quando fornecido e dados de visita solicitados.",
+            "Evite anotar detalhes sensíveis em campos abertos sem necessidade pastoral.",
+            "Salve e confirme a ficha antes de programar retorno."
+          ],
+          "route": "/visitors.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "visitantes-02",
+          "title": "Registrar a primeira visita",
+          "steps": [
+            "Abra a ficha do visitante e confirme a data da visita.",
+            "Anote a recepção ou responsável que acolheu a pessoa.",
+            "Cadastre observações objetivas e uma próxima data de contato, se apropriado.",
+            "Não confunda o visitante com membro ativo enquanto a integração não for confirmada."
+          ],
+          "route": "/visitors.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "visitantes-03",
+          "title": "Acompanhar retornos pendentes",
+          "steps": [
+            "Na lista de visitantes, procure o filtro de retorno ou a fila de acompanhamento.",
+            "Priorize quem tem data vencida ou pedido de retorno autorizado.",
+            "Registre cada conversa no histórico, com data e responsável.",
+            "Ao finalizar, marque a providência realizada e agende outro contato somente quando necessário."
+          ],
+          "route": "/visitors.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "visitantes-04",
+          "title": "Transformar visitante em membro",
+          "steps": [
+            "Confirme que a pessoa deseja integrar a igreja e que seus dados estão corretos.",
+            "Abra o vínculo existente ou use a opção de integração ao cadastro de membros.",
+            "Evite duplicar a ficha com o mesmo telefone/e-mail.",
+            "Depois da integração, vincule a congregação e os departamentos corretos."
+          ],
+          "route": "/visitors.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "visitantes-05",
+          "title": "Registrar agenda pastoral e visitas",
+          "steps": [
+            "Abra Cuidado pastoral ou Agenda Pastoral.",
+            "Escolha a pessoa, o responsável e a data/horário da visita.",
+            "Registre encaminhamentos e estado da tarefa, respeitando a privacidade.",
+            "Permita acesso às observações apenas aos perfis pastorais autorizados."
+          ],
+          "route": "/pastoral-agenda.php",
+          "permission": "pastoral",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "visitantes-06",
+          "title": "Acompanhar solicitações e orações",
+          "steps": [
+            "Acesse a área de cuidado pastoral ou pedidos de oração.",
+            "Verifique quem tem permissão para visualizar cada informação.",
+            "Defina responsável e próximo contato quando necessário.",
+            "Evite mandar conteúdo confidencial automaticamente para grupos gerais."
+          ],
+          "route": "/pastoral-care.php",
+          "permission": "pastoral",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "grupos",
+      "title": "Grupos, células e líderes",
+      "summary": "Criação, vínculo de participantes, reuniões e frequência por grupo.",
+      "audience": [
+        "Pastor",
+        "Líder de grupo",
+        "Secretaria"
+      ],
+      "lessons": [
+        {
+          "slug": "grupos-01",
+          "title": "Criar uma célula",
+          "steps": [
+            "Abra Grupos e Células em Pessoas e cadastros.",
+            "Clique novo cadastro, informe nome e informações de reunião.",
+            "Selecione a congregação e os responsáveis autorizados.",
+            "Salve e confira a lista de grupos."
+          ],
+          "route": "/small-groups.php",
+          "permission": "group_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "grupos-02",
+          "title": "Escolher líder do grupo",
+          "steps": [
+            "Abra o cadastro do grupo e localize o responsável.",
+            "Escolha a pessoa na lista de membros existentes.",
+            "Garanta que a pessoa tenha login ou papel de liderança adequado às funções que usará.",
+            "Confira se ela acessa somente seu grupo e não os grupos de outras equipes."
+          ],
+          "route": "/small-groups.php",
+          "permission": "group_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "grupos-03",
+          "title": "Adicionar participantes à célula",
+          "steps": [
+            "Entre no grupo e selecione a ação de associar participantes.",
+            "Procure membros existentes para evitar cadastros repetidos.",
+            "Salve e confira a relação de integrantes.",
+            "Se alguém sair da célula, atualize o vínculo preservando históricos de presença."
+          ],
+          "route": "/small-groups.php",
+          "permission": "group_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "grupos-04",
+          "title": "Registrar encontros e presença",
+          "steps": [
+            "Abra o grupo e registre a data do encontro.",
+            "Marque as pessoas presentes conforme o recurso de frequência disponível.",
+            "Revise os nomes e salve a reunião.",
+            "Use o histórico para acompanhar a participação, sem confundir presença com membresia."
+          ],
+          "route": "/small-groups.php",
+          "permission": "group_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "grupos-05",
+          "title": "Consultar relatórios do grupo",
+          "steps": [
+            "Use os filtros por período e, quando disponíveis, por líder ou congregação.",
+            "Confira quantidade de participantes, encontros e presenças.",
+            "Exporte ou imprima os dados necessários ao acompanhamento pastoral.",
+            "Compartilhe somente com quem precisa receber esses dados."
+          ],
+          "route": "/small-groups.php",
+          "permission": "group_portal",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "tesouraria-geral",
+      "title": "Tesouraria geral: entradas, saídas e contas",
+      "summary": "Lançamentos do livro caixa, contas, categorias, vínculos e prestação de contas.",
+      "audience": [
+        "Tesoureiro geral",
+        "Pastor",
+        "Administração"
+      ],
+      "lessons": [
+        {
+          "slug": "tesouraria-geral-01",
+          "title": "Criar uma conta ou caixa",
+          "steps": [
+            "Abra Financeiro > Tesouraria.",
+            "Procure a seção de Contas financeiras e escolha cadastrar conta.",
+            "Informe nome claro, como Caixa Geral ou Banco Principal, tipo de conta e saldo inicial autorizado.",
+            "Salve e confira se a conta aparece nas opções de novo lançamento."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesouraria-geral-02",
+          "title": "Registrar dízimo vinculado ao membro",
+          "steps": [
+            "Abra Novo lançamento e selecione Entrada.",
+            "Informe data, categoria Dízimos, valor e conta de destino.",
+            "No campo Membro contribuinte, selecione a pessoa correta.",
+            "Salve; a entrada passa ao livro caixa e ao histórico do Portal do Membro correspondente."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesouraria-geral-03",
+          "title": "Registrar oferta ou doação",
+          "steps": [
+            "Selecione Entrada, conta, categoria e data.",
+            "Informe a descrição e o valor recebido, usando centro de custo quando fizer sentido.",
+            "Quando for contribuição pessoal, associe o membro; se for oferta coletiva, deixe sem vínculo pessoal.",
+            "Confira o total no Resumo financeiro, sem criar o mesmo recebimento duas vezes."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesouraria-geral-04",
+          "title": "Registrar uma saída",
+          "steps": [
+            "Selecione Saída, escolha conta/caixa e data do pagamento.",
+            "Indique categoria, favorecido, descrição, valor e forma de pagamento.",
+            "Anexe nota/cupom ou gere recibo para assinatura na tela ou impressão, conforme o caso.",
+            "Salve e confirme que a despesa aparece na listagem com documentação correta."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesouraria-geral-05",
+          "title": "Selecionar categoria e centro de custos",
+          "steps": [
+            "Em Cadastros financeiros, prepare categorias e centros de custo reutilizáveis.",
+            "Ao lançar, escolha a categoria que melhor representa a finalidade do gasto.",
+            "Use o centro de custo para separar projetos, reformas, missões ou eventos sem criar duplicações.",
+            "Revise o relatório por centro de custo ao final do período."
+          ],
+          "route": "/registers.php?kind=finance_category",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesouraria-geral-06",
+          "title": "Conferir o saldo por período",
+          "steps": [
+            "Abra Resumo financeiro e escolha datas de início e fim.",
+            "Confira saldo anterior, entradas, saídas e saldo final.",
+            "Compare o resultado com extrato bancário e dinheiro físico quando aplicável.",
+            "Se houver divergência, revise lançamentos e conciliação antes de encerrar o mês."
+          ],
+          "route": "/finance-control.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesouraria-geral-07",
+          "title": "Corrigir lançamento sem apagar histórico",
+          "steps": [
+            "Localize a movimentação pela data, conta e descrição.",
+            "Use o recurso Estornar com justificativa, quando autorizado e em período aberto.",
+            "Registre o novo movimento correto apenas se realmente necessário.",
+            "Evite excluir comprovantes originais; o histórico de auditoria deve explicar a correção."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "tesourarias-ministerios",
+      "title": "Caixas e tesoureiros dos departamentos",
+      "summary": "Como cada departamento movimenta e a tesouraria geral consolida sem duplicar.",
+      "audience": [
+        "Líder",
+        "Tesoureiro departamental",
+        "Pastor"
+      ],
+      "lessons": [
+        {
+          "slug": "tesourarias-ministerios-01",
+          "title": "Criar o caixa de um departamento",
+          "steps": [
+            "O pastor ou a tesouraria geral abre Tesourarias dos Departamentos.",
+            "Escolhe o departamento e clica Criar caixa.",
+            "Informe o nome do caixa e o tipo (dinheiro ou banco), conforme a realidade.",
+            "O líder ou tesoureiro departamental poderá usar somente os caixas a que tiver autorização."
+          ],
+          "route": "/department-treasury.php",
+          "permission": "department_treasury",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesourarias-ministerios-02",
+          "title": "Liberar líder e tesoureiro corretamente",
+          "steps": [
+            "Vincule os participantes ao departamento em Pessoas e Lideranças.",
+            "Defina o líder com autorização da administração.",
+            "O próprio líder poderá indicar um participante como tesoureiro do ministério.",
+            "Não selecione o papel Tesoureiro Geral para quem só administra Jovens, Louvor ou Infantil."
+          ],
+          "route": "/department-team.php",
+          "permission": "department_team_manage",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesourarias-ministerios-03",
+          "title": "Lançar uma despesa de ministério",
+          "steps": [
+            "Entre em Tesourarias dos Departamentos e selecione o departamento autorizado.",
+            "Clique Novo lançamento, escolha Saída, conta, valor, categoria e descrição.",
+            "Anexe comprovante ou gere recibo assinado; despesas de perfis departamentais precisam de documentação.",
+            "Salve; o lançamento entra no livro caixa do departamento e também no consolidado geral, uma única vez."
+          ],
+          "route": "/department-treasury.php",
+          "permission": "department_treasury",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesourarias-ministerios-04",
+          "title": "Lançar entrada do ministério",
+          "steps": [
+            "Selecione a conta do departamento e o tipo Entrada.",
+            "Registre origem, valor, data e finalidade da arrecadação.",
+            "Se houver documentação, anexe-a ao movimento.",
+            "Confirme os totais do departamento; não registre a mesma quantia novamente na tesouraria geral."
+          ],
+          "route": "/department-treasury.php",
+          "permission": "department_treasury",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesourarias-ministerios-05",
+          "title": "Ver o relatório do próprio caixa",
+          "steps": [
+            "Escolha o departamento e o período na área de tesouraria.",
+            "Confira entradas, saídas, saldo anterior e saldo final.",
+            "Use Exportar CSV para conferir os registros quando necessário.",
+            "O líder do setor não pode abrir o caixa de outro departamento apenas por ser membro da igreja."
+          ],
+          "route": "/department-treasury.php",
+          "permission": "department_treasury",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "tesourarias-ministerios-06",
+          "title": "Consolidar setores e consultar pelo pastor",
+          "steps": [
+            "No Financeiro geral, abra a prestação de contas dos departamentos.",
+            "Escolha o intervalo e confira os totais por ministério.",
+            "Compare comprovantes pendentes e lançamentos para localizar falhas.",
+            "O consolidado já contém as movimentações dos setores; nunca some o mesmo caixa duas vezes."
+          ],
+          "route": "/department-report.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "comprovantes",
+      "title": "Nota fiscal, cupom e recibo de despesa",
+      "summary": "Documentos fiscais, OCR, recibos impressos e assinaturas na tela.",
+      "audience": [
+        "Tesoureiro",
+        "Pastor",
+        "Líder",
+        "Contador"
+      ],
+      "lessons": [
+        {
+          "slug": "comprovantes-01",
+          "title": "Enviar uma nota ou foto de cupom",
+          "steps": [
+            "Em Novo lançamento de Saída, escolha Anexar comprovante.",
+            "Use a câmera do celular ou selecione PDF, JPG, PNG ou WEBP.",
+            "Confirme valor, fornecedor, categoria e data; a leitura automática pode sugerir dados, mas precisa de revisão.",
+            "Salve o lançamento e confira o documento anexado."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "A leitura automática pode errar valores e produtos; confira cada campo antes de confirmar.",
+          "warning": ""
+        },
+        {
+          "slug": "comprovantes-02",
+          "title": "Classificar produtos e despesas",
+          "steps": [
+            "Abra Portal do Contador ou a tela de documento financeiro preparada pelo gestor.",
+            "Confira fornecedor, documento, valor e itens reconhecidos do cupom.",
+            "Ajuste categoria de cada despesa à estrutura de sua igreja.",
+            "Conclua a revisão para que o contador receba dados coerentes; não invente números que não estejam no documento."
+          ],
+          "route": "/accounting.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comprovantes-03",
+          "title": "Gerar recibo sem nota fiscal",
+          "steps": [
+            "Ao registrar Saída, escolha Gerar recibo em vez de anexar arquivo.",
+            "Informe nome de quem recebeu e CPF/CNPJ quando conhecido.",
+            "Escolha assinatura na tela ou impressão para assinar depois.",
+            "Revise valor, data e motivo, salve e abra o PDF vinculado ao lançamento."
+          ],
+          "route": "/expense-receipt.php",
+          "permission": "finance",
+          "tip": "O recibo não substitui a nota fiscal quando a legislação exigir sua emissão.",
+          "warning": ""
+        },
+        {
+          "slug": "comprovantes-04",
+          "title": "Assinar recibo na tela do celular",
+          "steps": [
+            "No formulário do recibo, selecione Assinar agora na tela.",
+            "Peça ao próprio recebedor que faça a assinatura com dedo ou mouse.",
+            "Ele deve confirmar que recebeu o valor e assinar; use Limpar se a assinatura estiver ilegível.",
+            "Salve. O PDF assinado será arquivado no financeiro, sem repetir a despesa."
+          ],
+          "route": "/expense-receipt.php",
+          "permission": "finance",
+          "tip": "A assinatura desenhada é uma declaração do signatário; não verifica automaticamente sua identidade.",
+          "warning": ""
+        },
+        {
+          "slug": "comprovantes-05",
+          "title": "Imprimir e anexar recibo assinado",
+          "steps": [
+            "Escolha Gerar recibo para imprimir e assinar depois.",
+            "Abra o PDF e imprima, solicitando assinatura do recebedor.",
+            "Depois, localize a mesma despesa e envie foto ou PDF do recibo com assinatura.",
+            "O documento só sai de pendente após o arquivo assinado ser anexado."
+          ],
+          "route": "/expense-receipt.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comprovantes-06",
+          "title": "Ver recibo já emitido",
+          "steps": [
+            "Localize a despesa no livro caixa geral ou departamental.",
+            "Clique Gerar recibo, Ver recibo ou Recibo pendente, conforme o estado.",
+            "Abra o PDF para conferência, impressão ou arquivo.",
+            "Se o documento estiver pendente, peça à pessoa autorizada para concluir a assinatura."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comprovantes-07",
+          "title": "Diferenciar os documentos contábeis",
+          "steps": [
+            "Nota fiscal e cupom fiscal são documentos de natureza fiscal que podem ter exigências próprias.",
+            "Recibo de despesa documenta o pagamento a um recebedor, com assinatura quando aplicável.",
+            "Comprovante de transferência mostra o pagamento, mas pode não explicar a finalidade.",
+            "Para situações fiscais, retenções e exigências legais, o contador deve orientar a documentação adequada."
+          ],
+          "route": "/accounting.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "contador",
+      "title": "Portal do Contador e prestação de contas",
+      "summary": "Documentação mensal, classificação de despesas, auditoria e correções.",
+      "audience": [
+        "Contador",
+        "Pastor",
+        "Tesoureiro geral"
+      ],
+      "lessons": [
+        {
+          "slug": "contador-01",
+          "title": "Criar acesso para o contador",
+          "steps": [
+            "Abra Usuários e Permissões com um gestor autorizado.",
+            "Crie o usuário com perfil Contador e a igreja correta.",
+            "Envie as credenciais somente por canal seguro.",
+            "Peça que o contador confirme acesso ao Portal do Contador, sem permissões para mudar o livro caixa geral."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "contador-02",
+          "title": "Preparar documentos todo mês",
+          "steps": [
+            "Organize notas, cupons, recibos, extratos e folha de pagamentos por competência.",
+            "Revise que cada despesa tenha data, valor, categoria e documento compatível.",
+            "Confirme o vínculo à conta e ao departamento quando houver.",
+            "Use o portal para localizar documentos ainda pendentes antes do fechamento."
+          ],
+          "route": "/accounting.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "contador-03",
+          "title": "Enviar arquivo para análise contábil",
+          "steps": [
+            "Abra Portal do Contador e selecione a competência correta.",
+            "Adicione PDF, foto ou XML quando aceito pelo recurso.",
+            "Confira a leitura sugerida, principalmente fornecedor, CNPJ, valor e itens.",
+            "Categorize a despesa e salve; não envie o mesmo arquivo repetidas vezes."
+          ],
+          "route": "/accounting.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "contador-04",
+          "title": "Revisar documento como contador",
+          "steps": [
+            "Acesse o módulo com seu próprio perfil Contador.",
+            "Consulte os documentos da competência e abra o arquivo original.",
+            "Marque revisão ou solicite correção com justificativa objetiva.",
+            "O pastor ou tesoureiro deve resolver as pendências e reenviar os dados corretos."
+          ],
+          "route": "/accounting.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "contador-05",
+          "title": "Consultar movimentos dos departamentos",
+          "steps": [
+            "No Portal do Contador, selecione o período de trabalho.",
+            "Confira origem departamental dos lançamentos, centro de custo e comprovantes.",
+            "Verifique que entradas e saídas dos departamentos são as mesmas do livro caixa geral, sem duplicação.",
+            "Separe documentos de despesas pendentes dos documentos já conferidos."
+          ],
+          "route": "/accounting.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "contador-06",
+          "title": "Preparar pacote contábil e fechar competência",
+          "steps": [
+            "Revise a lista de pendências e a documentação obrigatória.",
+            "Gere o pacote ou relatório da competência conforme opção disponível.",
+            "Solicite correções antes do fechamento contábil definitivo.",
+            "O fechamento administrativo não substitui avaliação técnica do contador responsável."
+          ],
+          "route": "/accounting-package.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "controle-financeiro",
+      "title": "Orçamento, contas a pagar e fechamento",
+      "summary": "Planejamento financeiro, importação, conciliação e períodos.",
+      "audience": [
+        "Pastor",
+        "Tesoureiro geral",
+        "Contador"
+      ],
+      "lessons": [
+        {
+          "slug": "controle-financeiro-01",
+          "title": "Cadastrar orçamento do ministério",
+          "steps": [
+            "Abra Orçamento e Realizado.",
+            "Escolha mês, categoria ou departamento, conforme os filtros disponíveis.",
+            "Defina o valor aprovado pela liderança da igreja.",
+            "Acompanhe a variação entre previsto e realizado antes de liberar novas despesas."
+          ],
+          "route": "/finance-budget.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "controle-financeiro-02",
+          "title": "Registrar conta a pagar",
+          "steps": [
+            "No Financeiro, procure Contas a pagar.",
+            "Informe fornecedor, vencimento, valor e motivo do compromisso.",
+            "Vincule conta financeira e anexe o documento quando disponível.",
+            "Dê baixa somente quando o pagamento tiver ocorrido de fato."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "controle-financeiro-03",
+          "title": "Conferir recebimentos e parcelas",
+          "steps": [
+            "Abra Valores a receber em Resumo financeiro.",
+            "Cadastre devedor/pagador, valor, vencimento e parcelas quando aplicável.",
+            "Ao receber, escolha a conta certa e confirme o valor realmente pago.",
+            "Evite reconhecer como receita recebida valores que ainda estão somente previstos."
+          ],
+          "route": "/finance-control.php?view=receivables",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "controle-financeiro-04",
+          "title": "Fazer conciliação bancária",
+          "steps": [
+            "Separe o extrato da conta pelo período.",
+            "Compare o saldo do extrato com os lançamentos do livro caixa.",
+            "Use Conciliação para registrar o saldo e investigar diferenças.",
+            "Não ajuste artificialmente o saldo inicial para esconder divergências."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "controle-financeiro-05",
+          "title": "Fechar um mês de movimentações",
+          "steps": [
+            "Confira todas as entradas, saídas, estornos e comprovantes.",
+            "Resolva recibos pendentes e solicite os documentos que faltam.",
+            "Use o fechamento ou bloqueio de períodos para preservar lançamentos concluídos.",
+            "Guarde os relatórios finais e deixe claro o período coberto."
+          ],
+          "route": "/finance-control.php?view=periods",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "controle-financeiro-06",
+          "title": "Importar extrato ou movimentações",
+          "steps": [
+            "Abra Importar movimentações financeiras.",
+            "Selecione o arquivo apropriado e faça a prévia antes de confirmar.",
+            "Mapeie data, valor, direção e descrição e revise possíveis duplicidades.",
+            "Confirme apenas linhas validadas e compare saldo depois da importação."
+          ],
+          "route": "/finance-import.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "agenda-eventos",
+      "title": "Agenda da igreja, cultos e eventos",
+      "summary": "Cadastro de encontros, inscrições e avisos com cartazes.",
+      "audience": [
+        "Pastor",
+        "Secretaria",
+        "Comunicação"
+      ],
+      "lessons": [
+        {
+          "slug": "agenda-eventos-01",
+          "title": "Cadastrar culto ou evento",
+          "steps": [
+            "Abra Agenda da Igreja > Eventos.",
+            "Clique Novo evento, preencha título, data, horário, local e descrição.",
+            "Selecione congregação ou público quando houver opções no formulário.",
+            "Salve e confira a exibição no calendário da igreja."
+          ],
+          "route": "/events.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "agenda-eventos-02",
+          "title": "Organizar cultos recorrentes",
+          "steps": [
+            "Abra Tipos de culto ou reunião.",
+            "Cadastre o formato recorrente, como Culto da Família ou reunião de oração.",
+            "Revise dia, horário e congregação quando aplicável.",
+            "Use o recurso correto de recorrência em vez de criar uma sequência manual de eventos iguais."
+          ],
+          "route": "/service-types.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "agenda-eventos-03",
+          "title": "Adicionar arte ou cartaz",
+          "steps": [
+            "No evento ou biblioteca de mídia, envie o cartaz autorizado.",
+            "Use arquivo legível, formato suportado e tamanho adequado.",
+            "Confira se a arte aparece na página do evento ou mensagem quando habilitado.",
+            "Não publique imagem com dados pessoais sem autorização."
+          ],
+          "route": "/events.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "agenda-eventos-04",
+          "title": "Gerenciar inscrições",
+          "steps": [
+            "Abra Inscrições de eventos para consultar as pessoas cadastradas.",
+            "Filtre por evento e confira limites ou confirmações.",
+            "Ao receber lista externa, confira nomes antes de acrescentá-los.",
+            "Exporte ou imprima a lista apenas para quem vai organizar o evento."
+          ],
+          "route": "/event-registrations.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "agenda-eventos-05",
+          "title": "Compartilhar link de inscrição",
+          "steps": [
+            "Abra o evento e localize o endereço público de inscrição quando disponível.",
+            "Envie aos participantes a data, o local e orientações claras.",
+            "Teste o link em outro aparelho sem login administrativo.",
+            "Após o evento, revise inscritos e participantes para o relatório."
+          ],
+          "route": "/event-registrations.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "comunicacao",
+      "title": "Avisos, mural e WhatsApp",
+      "summary": "Publicação de avisos, grupos, provedores de mensagens e boas práticas.",
+      "audience": [
+        "Pastor",
+        "Secretaria",
+        "Comunicação"
+      ],
+      "lessons": [
+        {
+          "slug": "comunicacao-01",
+          "title": "Criar um aviso interno",
+          "steps": [
+            "Abra Comunicação > Mural ou Avisos.",
+            "Clique Novo aviso, escreva título e texto objetivo.",
+            "Selecione o público ou a congregação correta quando houver filtro.",
+            "Publique e confira o resultado com um usuário comum."
+          ],
+          "route": "/announcements.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comunicacao-02",
+          "title": "Enviar comunicado ao grupo",
+          "steps": [
+            "Abra Comunicação e selecione a função de mensagens ou grupos.",
+            "Confira qual grupo e número estão conectados.",
+            "Escreva uma mensagem que explique o assunto e a ação esperada.",
+            "Faça o envio e verifique o histórico de entrega; enviado não significa necessariamente recebido."
+          ],
+          "route": "/messages.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comunicacao-03",
+          "title": "Configurar integração WhatsApp",
+          "steps": [
+            "Um gestor autorizado abre as configurações do bot/WhatsApp.",
+            "Verifica se a instância/API está conectada e vinculada à igreja correta.",
+            "Escolhe grupos autorizados, sem compartilhar credenciais da API.",
+            "Faça um teste controlado e confirme entrega antes de automatizar mensagens em massa."
+          ],
+          "route": "/bot-settings.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comunicacao-04",
+          "title": "Adicionar imagem em aviso",
+          "steps": [
+            "Escolha arquivo ou item da Biblioteca de Mídia para acompanhar a publicação.",
+            "Confira legibilidade de horários, endereços e texto do cartaz.",
+            "Use a mesma arte aprovada para o envio e para os compartilhamentos.",
+            "Se não houver entrega da mídia, teste somente com uma imagem pequena e formato compatível."
+          ],
+          "route": "/media-library.php",
+          "permission": "media_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comunicacao-05",
+          "title": "Avisar alterações e lembretes",
+          "steps": [
+            "Antes de reenviar, revise data, horário e informação atualizada.",
+            "Prefira uma mensagem curta explicando o que mudou.",
+            "Evite excesso de repetição para não incomodar os participantes.",
+            "Confirme destinatários e grupo antes de enviar novamente."
+          ],
+          "route": "/announcements.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "comunicacao-06",
+          "title": "Privacidade em grupos de WhatsApp",
+          "steps": [
+            "Não divulgue senhas, CPF, listas completas de ofertas ou documentos privados em grupo.",
+            "Peça autorização ao compartilhar imagens de pessoas ou menores.",
+            "Use permissões da igreja para decidir quem publica mensagens.",
+            "No caso de temas alheios ao objetivo do grupo, a moderação pode remover a publicação conforme regras anunciadas."
+          ],
+          "route": "/group-moderation.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "campanhas",
+      "title": "Campanhas, rifas, enquetes e relógio de oração",
+      "summary": "Criar participações e informar exatamente como a pessoa deve responder.",
+      "audience": [
+        "Pastor",
+        "Secretaria",
+        "Comunicação"
+      ],
+      "lessons": [
+        {
+          "slug": "campanhas-01",
+          "title": "Criar campanha especial",
+          "steps": [
+            "Abra Comunicação > Campanhas.",
+            "Informe nome, objetivo, datas e orientações.",
+            "Anexe cartaz e selecione o público quando aplicável.",
+            "Antes de publicar, faça uma prévia e confirme se o conteúdo está correto."
+          ],
+          "route": "/campaigns.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "campanhas-02",
+          "title": "Criar enquete",
+          "steps": [
+            "Abra a ferramenta Enquetes.",
+            "Escreva uma pergunta objetiva e opções de resposta claras.",
+            "Defina regras de participação e duração quando disponíveis.",
+            "Compartilhe o convite e depois confira os resultados com cuidado."
+          ],
+          "route": "/polls.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "campanhas-03",
+          "title": "Organizar relógio de oração",
+          "steps": [
+            "Abra Relógio de oração.",
+            "Defina data, intervalos e orientações para inscrição.",
+            "Explique na mensagem como cada participante escolhe seu horário.",
+            "Gere ou imprima a lista quando necessário e reenvie lembretes sem duplicar participantes."
+          ],
+          "route": "/prayer-clock.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "campanhas-04",
+          "title": "Criar e divulgar rifa",
+          "steps": [
+            "Abra Rifa e configure nome, objetivo e números disponíveis.",
+            "Informe claramente como a pessoa deve escolher ou reservar um número.",
+            "Confira regras locais aplicáveis à realização de rifas antes de divulgar.",
+            "Use os registros para controlar reservas e evitar disponibilizar o mesmo número duas vezes."
+          ],
+          "route": "/raffles.php",
+          "permission": "communications",
+          "tip": "A realização de rifas pode estar sujeita a normas legais; confirme as exigências com responsável competente.",
+          "warning": ""
+        },
+        {
+          "slug": "campanhas-05",
+          "title": "Enviar lembrete com cartaz",
+          "steps": [
+            "Na atividade, localize o comando de notificação ou reenvio.",
+            "Confira se o texto explica a inscrição e contém data e horário.",
+            "Anexe o cartaz correto quando disponível.",
+            "Envie apenas para destinatários autorizados e verifique possíveis falhas de entrega."
+          ],
+          "route": "/campaigns.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "infantil",
+      "title": "Ministério Infantil e check-in",
+      "summary": "Crianças, responsáveis, equipe, turmas e acompanhamento.",
+      "audience": [
+        "Infantil",
+        "Pastor",
+        "Secretaria"
+      ],
+      "lessons": [
+        {
+          "slug": "infantil-01",
+          "title": "Cadastrar criança",
+          "steps": [
+            "Abra Ministério Infantil > Kids.",
+            "Registre a criança com dados estritamente necessários à participação.",
+            "Vincule responsável autorizado e informações de contato.",
+            "Confira consentimentos e orientações de segurança antes de usar os dados."
+          ],
+          "route": "/kids.php",
+          "permission": "kids_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "infantil-02",
+          "title": "Vincular responsável",
+          "steps": [
+            "Abra o registro infantil e procure o responsável na lista existente.",
+            "Confirme vínculo e contatos antes de salvar.",
+            "Não entregue informações da criança a pessoas sem autorização.",
+            "Atualize o cadastro quando os contatos ou responsáveis mudarem."
+          ],
+          "route": "/kids.php",
+          "permission": "kids_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "infantil-03",
+          "title": "Organizar turma e sala",
+          "steps": [
+            "No Kids, abra as opções de turmas ou salas.",
+            "Informe nome, faixa etária e pessoas responsáveis.",
+            "Revise a capacidade e disponibilidade da equipe.",
+            "Confira a turma associada a cada criança."
+          ],
+          "route": "/kids.php",
+          "permission": "kids_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "infantil-04",
+          "title": "Registrar entrada no Kids",
+          "steps": [
+            "Abra Check-in Kids na hora do evento.",
+            "Localize a criança e confirme a pessoa que a está trazendo.",
+            "Registre a entrada na turma correta.",
+            "Não registre presença de crianças que não compareceram."
+          ],
+          "route": "/kids-checkin.php",
+          "permission": "kids_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "infantil-05",
+          "title": "Realizar saída segura",
+          "steps": [
+            "No encerramento, localize a criança registrada no check-in.",
+            "Confirme a pessoa autorizada a buscá-la conforme o procedimento da igreja.",
+            "Registre a saída e verifique se não restaram pendências.",
+            "Trate divergências pessoalmente com a liderança responsável."
+          ],
+          "route": "/kids-checkin.php",
+          "permission": "kids_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "infantil-06",
+          "title": "Relatórios e proteção infantil",
+          "steps": [
+            "Consulte a presença e o cadastro infantil com o perfil apropriado.",
+            "Não exporte ou compartilhe fotos e dados das crianças sem autorização.",
+            "Use somente os dados necessários à segurança e ao acompanhamento.",
+            "Revise periodicamente quem possui acesso ao módulo Kids."
+          ],
+          "route": "/kids.php",
+          "permission": "kids_portal",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "cursos-aulas",
+      "title": "Criar cursos, turmas, professores e aulas",
+      "summary": "Uso da área de Ensino para os cursos próprios de cada igreja.",
+      "audience": [
+        "Professor",
+        "Secretaria",
+        "Pastor"
+      ],
+      "lessons": [
+        {
+          "slug": "cursos-aulas-01",
+          "title": "Entender Curso versus Turma",
+          "steps": [
+            "Curso/Estudo define o assunto e a carga horária.",
+            "Turma é a edição daquele curso, com datas, professor e participantes próprios.",
+            "É possível abrir turmas diferentes para o mesmo curso.",
+            "O Curso Oficial do Sistema é permanente e separado das matrículas religiosas da igreja."
+          ],
+          "route": "/learning.php",
+          "permission": "learning_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "cursos-aulas-02",
+          "title": "Cadastrar curso próprio",
+          "steps": [
+            "Abra Ensino > Cursos e Estudos.",
+            "Clique Novo curso e informe nome, categoria, duração e descrição.",
+            "Deixe o curso ativo e salve.",
+            "Esse curso aparecerá na seleção ao criar uma turma."
+          ],
+          "route": "/learning.php?view=courses",
+          "permission": "learning_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "cursos-aulas-03",
+          "title": "Criar e programar turma",
+          "steps": [
+            "Clique Nova turma e escolha um curso ativo.",
+            "Preencha nome da turma, congregação, datas e local de encontro.",
+            "Defina capacidade e situação de matrículas quando necessário.",
+            "Salve e abra a turma para escolher professores."
+          ],
+          "route": "/learning.php",
+          "permission": "learning_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "cursos-aulas-04",
+          "title": "Vincular professores e líderes de turma",
+          "steps": [
+            "Abra a turma existente e clique Editar professores/líderes.",
+            "Selecione membros cadastrados para ocupar os espaços disponíveis.",
+            "Salve e confira a relação; o recurso atual permite até quatro professores por turma.",
+            "Não confunda professor com líder financeiro de departamento."
+          ],
+          "route": "/learning.php",
+          "permission": "learning_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "cursos-aulas-05",
+          "title": "Matricular alunos",
+          "steps": [
+            "Abra a turma e escolha Matricular aluno.",
+            "Selecione o membro da mesma igreja na lista.",
+            "Confirme a matrícula e a capacidade da turma.",
+            "O professor e a secretaria acompanham a lista; o membro consulta apenas o curso a que está vinculado."
+          ],
+          "route": "/learning.php",
+          "permission": "learning_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "cursos-aulas-06",
+          "title": "Registrar aula e frequência",
+          "steps": [
+            "Dentro da turma, clique Registrar aula.",
+            "Informe data, título, conteúdo, link ou material da Biblioteca.",
+            "Marque presença das pessoas que compareceram.",
+            "Salve e confira os totais de frequência apresentados aos alunos."
+          ],
+          "route": "/learning.php",
+          "permission": "learning_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "cursos-aulas-07",
+          "title": "Concluir ou cancelar matrícula",
+          "steps": [
+            "Abra a turma e consulte a tabela de alunos.",
+            "Escolha situação Matriculado, Concluído ou Cancelado para a pessoa correta.",
+            "Salve e confira a atualização no progresso do aluno.",
+            "Não apague as aulas antigas apenas para encerrar uma matrícula."
+          ],
+          "route": "/learning.php",
+          "permission": "learning_portal",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "estudos-biblioteca",
+      "title": "Estudos, Bíblia e Biblioteca de Mídia",
+      "summary": "Textos, álbuns, arquivos compartilhados e materiais de ensino.",
+      "audience": [
+        "Pastor",
+        "Professor",
+        "Membro",
+        "Comunicação"
+      ],
+      "lessons": [
+        {
+          "slug": "estudos-biblioteca-01",
+          "title": "Publicar um estudo",
+          "steps": [
+            "Abra Ensino > Estudos.",
+            "Crie ou localize o estudo, informe título e texto conforme formulário.",
+            "Organize links e recursos de leitura para o público apropriado.",
+            "Antes de publicar, confira formatação e permissões de visualização."
+          ],
+          "route": "/studies.php",
+          "permission": "study_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "estudos-biblioteca-02",
+          "title": "Consultar material como membro",
+          "steps": [
+            "Entre no seu portal e abra Estudos.",
+            "Selecione o tema disponível e leia o conteúdo.",
+            "Abra links somente quando reconhecer a origem.",
+            "Informe à secretaria caso haja arquivo indisponível."
+          ],
+          "route": "/studies.php",
+          "permission": "study_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "estudos-biblioteca-03",
+          "title": "Enviar mídia à Biblioteca",
+          "steps": [
+            "Abra Biblioteca de Mídia.",
+            "Selecione arquivo autorizado, como imagem, PDF, áudio ou vídeo em formato suportado.",
+            "Informe título e destino/visibilidade da mídia.",
+            "Salve e teste a abertura do arquivo com o público escolhido."
+          ],
+          "route": "/media-library.php",
+          "permission": "media_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "estudos-biblioteca-04",
+          "title": "Anexar mídia a curso ou aviso",
+          "steps": [
+            "No formulário da aula, escolha um item da Biblioteca ou cole link autorizado.",
+            "Confirme que o arquivo poderá ser aberto pelo aluno.",
+            "Para avisos e eventos, use um cartaz aprovado e legível.",
+            "Não use link privado que dependa de credencial de uma pessoa específica."
+          ],
+          "route": "/media-library.php",
+          "permission": "media_portal",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "estudos-biblioteca-05",
+          "title": "Gerenciar álbuns de fotos e vídeos",
+          "steps": [
+            "Abra Álbuns em Comunicação ou na área de mídia.",
+            "Crie o álbum, escolha a coleção e envie arquivos adequados.",
+            "Confira quais pessoas podem visualizar.",
+            "Ao remover conteúdo, siga as regras de retenção e privacidade da igreja."
+          ],
+          "route": "/albums.php",
+          "permission": "media_portal",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "relatorios",
+      "title": "Relatórios, impressão e exportação",
+      "summary": "Buscar resultados, exportar CSV/PDF e compartilhar com segurança.",
+      "audience": [
+        "Pastor",
+        "Secretaria",
+        "Tesoureiro"
+      ],
+      "lessons": [
+        {
+          "slug": "relatorios-01",
+          "title": "Filtrar uma lista antes de imprimir",
+          "steps": [
+            "Abra a lista de membros, visitantes, finanças ou outro módulo.",
+            "Aplique filtros por data, congregação, responsável ou departamento.",
+            "Confira a prévia dos resultados.",
+            "Depois gere CSV, PDF ou impressão para o público correto."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "relatorios-02",
+          "title": "Relatório geral financeiro",
+          "steps": [
+            "Abra Resumo financeiro ou Relatórios.",
+            "Escolha o mês e as contas necessárias.",
+            "Verifique abertura, entradas, saídas, pendências e fechamento.",
+            "Gere arquivo para arquivo interno ou para o contador, evitando envio em grupos abertos."
+          ],
+          "route": "/finance-control.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "relatorios-03",
+          "title": "Relatório dos ministérios",
+          "steps": [
+            "Abra Prestação de contas dos departamentos.",
+            "Selecione período e examine movimentações por ministério.",
+            "Confira recibos e documentos ausentes.",
+            "Compartilhe o consolidado apenas com pastor, tesoureiro geral e contador autorizados."
+          ],
+          "route": "/department-report.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "relatorios-04",
+          "title": "Exportar membros e conferir quantidade",
+          "steps": [
+            "Em Membros, use os filtros para a igreja/congregação desejada.",
+            "Use Exportar CSV para planilha ou Imprimir/PDF para prestação interna.",
+            "Confirme número de registros, inclusive páginas não visíveis na tela.",
+            "Proteja a planilha com dados pessoais e evite encaminhá-la a destinatários indevidos."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "relatorios-05",
+          "title": "Ver histórico de atividades e auditoria",
+          "steps": [
+            "Abra Histórico financeiro ou Logs conforme seu perfil.",
+            "Filtre por ação, data ou responsável quando disponível.",
+            "Compare operações com documentação antes de corrigir algo.",
+            "Não apague o histórico para corrigir divergência; use ações documentadas."
+          ],
+          "route": "/finance-control.php?view=history",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "automacoes",
+      "title": "Automações, CRON e entregas",
+      "summary": "Agendamentos, fila de notificações e responsabilidades do Master.",
+      "audience": [
+        "Pastor",
+        "Comunicação"
+      ],
+      "lessons": [
+        {
+          "slug": "automacoes-02",
+          "title": "Criar automação da igreja",
+          "steps": [
+            "Abra Automações no painel da igreja, se seu perfil permitir.",
+            "Escolha um evento ou tipo de aviso a ser lembrado.",
+            "Defina destinatários, prazo e mensagem objetiva.",
+            "Salve e verifique se existe tarefa pendente para execução."
+          ],
+          "route": "/automations.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "automacoes-03",
+          "title": "Configurar a instância de envio",
+          "steps": [
+            "Abra as configurações do WhatsApp da igreja.",
+            "Confira se o dispositivo/instância está conectado e se o grupo está correto.",
+            "Envie uma mensagem de teste com destinatário autorizado.",
+            "Se houver falhas de entrega, consulte os registros de integração e evite repetição descontrolada."
+          ],
+          "route": "/bot-settings.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "automacoes-05",
+          "title": "Reenviar avisos quando necessário",
+          "steps": [
+            "Antes de reenviar, confira se a entrega anterior foi concluída.",
+            "Revise destinatários, cartaz e texto da campanha.",
+            "Use o botão de reenvio do módulo quando disponível.",
+            "Documente falhas recorrentes e comunique o responsável pela integração."
+          ],
+          "route": "/automations.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "documentos",
+      "title": "Cartas, certificados, carteirinhas e patrimônio",
+      "summary": "Identificação institucional, impressão e manutenção de arquivos.",
+      "audience": [
+        "Secretaria",
+        "Pastor",
+        "Tesoureiro"
+      ],
+      "lessons": [
+        {
+          "slug": "documentos-01",
+          "title": "Preparar dados para documentos",
+          "steps": [
+            "Revise o nome da igreja e a logo em Configurações.",
+            "Confirme dados pessoais e nomes antes de emitir documentos.",
+            "Escolha a congregação correta para que o cabeçalho corresponda à unidade.",
+            "Evite preencher documentos com campos vazios ou informações presumidas."
+          ],
+          "route": "/settings.php",
+          "permission": "settings",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "documentos-02",
+          "title": "Emitir carta da secretaria",
+          "steps": [
+            "Abra Documentos e escolha o modelo de carta apropriado.",
+            "Selecione o membro e confira informações antes de gerar.",
+            "Gere a carta preferencialmente em orientação retrato, conforme o modelo disponível.",
+            "Imprima ou envie somente após autorização da secretaria/pastor."
+          ],
+          "route": "/documents.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "documentos-03",
+          "title": "Emitir certificado e carteirinha",
+          "steps": [
+            "Abra Documentos da igreja e selecione certificado ou carteirinha.",
+            "Escolha o membro e confira fotografia quando necessária.",
+            "Nos certificados, utilize o modelo em paisagem quando disponível.",
+            "Visualize o resultado antes de imprimir ou compartilhar por WhatsApp."
+          ],
+          "route": "/documents.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "documentos-04",
+          "title": "Registrar bens do patrimônio",
+          "steps": [
+            "Abra Patrimônio no Financeiro.",
+            "Cadastre o bem com identificação, local, data e valor confiáveis.",
+            "Vincule nota fiscal ou comprovante da aquisição quando houver.",
+            "Revise o inventário periodicamente e registre baixas com autorização."
+          ],
+          "route": "/assets.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "documentos-05",
+          "title": "Gerenciar modelo e impressão",
+          "steps": [
+            "Na prévia de documento, confira que o nome do membro e a logo não foram cortados.",
+            "Escolha a orientação correta, retrato ou paisagem.",
+            "Gere PDF ou use Imprimir, sem editar os dados oficiais no visualizador.",
+            "Guarde uma cópia institucional somente quando exigida pela rotina."
+          ],
+          "route": "/documents.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "seguranca",
+      "title": "Segurança, privacidade e proteção de dados",
+      "summary": "Permissões, isolamento entre igrejas, backups e resposta a problemas.",
+      "audience": [
+        "Todos",
+        "Pastor"
+      ],
+      "lessons": [
+        {
+          "slug": "seguranca-01",
+          "title": "Nunca compartilhar login",
+          "steps": [
+            "Cada pessoa deve usar sua própria conta de acesso.",
+            "Não peça senha por WhatsApp, redes sociais ou chamada de áudio.",
+            "Use senhas fortes e altere-as ao desconfiar de vazamento.",
+            "Encerre sessão em computadores de uso coletivo."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "seguranca-03",
+          "title": "Proteger dados de membros e crianças",
+          "steps": [
+            "Guarde CPF, telefone, endereço e documentos somente quando necessários.",
+            "Compartilhe listagens apenas com perfis que realmente precisam delas.",
+            "Evite dados médicos ou detalhes pessoais em observações de acesso geral.",
+            "Mantenha fotos e arquivos da infância sob controles de permissão."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "seguranca-04",
+          "title": "Registrar despesas sem documentação falsa",
+          "steps": [
+            "Não invente notas fiscais nem assinaturas de terceiros.",
+            "Use o comprovante real ou recibo assinado pelo recebedor quando permitido.",
+            "Mantenha recibo impresso sem assinatura como pendente até sua regularização.",
+            "Em dúvida fiscal, peça orientação ao contador antes de concluir o pacote."
+          ],
+          "route": "/expense-receipt.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "seguranca-07",
+          "title": "Atribuir e revogar permissões",
+          "steps": [
+            "Anote a pessoa, a função necessária e quem a autorizou.",
+            "Conceda somente os módulos que ela efetivamente executará.",
+            "Ao encerrar uma liderança, revogue acesso ao departamento sem apagar o membro.",
+            "Faça uma verificação regular de contas inativas e privilégios antigos."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "rotina",
+      "title": "Rotina sugerida para organizar a igreja",
+      "summary": "Sequência prática diária, semanal e mensal para evitar cadastros incompletos.",
+      "audience": [
+        "Pastor",
+        "Secretaria",
+        "Tesoureiro",
+        "Líder"
+      ],
+      "lessons": [
+        {
+          "slug": "rotina-01",
+          "title": "Rotina de abertura da igreja",
+          "steps": [
+            "Revise nome, congregações, funções e departamentos.",
+            "Cadastre líderes, tesoureiros e usuários com suas permissões reais.",
+            "Confira caixa geral e caixas departamentais.",
+            "Comunique à equipe o Curso Oficial disponível em Ensino e execute exercícios com dados de teste."
+          ],
+          "route": "/dashboard.php",
+          "permission": "dashboard",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "rotina-02",
+          "title": "Rotina da secretaria ao final do culto",
+          "steps": [
+            "Atualize visitantes, membros e pedidos de oração recebidos.",
+            "Confirme datas e cartazes dos próximos eventos.",
+            "Revise presenças, inscrições e pendências de retorno pastoral.",
+            "Publique avisos aprovados pelos responsáveis."
+          ],
+          "route": "/visitors.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "rotina-03",
+          "title": "Rotina da tesouraria após movimentos",
+          "steps": [
+            "Lance valores recebidos com conta e categoria corretas.",
+            "Associe contribuições pessoais ao membro quando cabível.",
+            "Registre despesas com comprovante ou recibo assinado.",
+            "Revise totais antes de encerrar o expediente."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "rotina-04",
+          "title": "Rotina semanal do líder departamental",
+          "steps": [
+            "Abra seu departamento e confira participantes e equipe.",
+            "Atualize o tesoureiro do setor, se houver mudança autorizada.",
+            "Confira entradas, despesas e recibos pendentes do próprio caixa.",
+            "Envie ao pastor somente os dados e relatórios permitidos."
+          ],
+          "route": "/department-treasury.php",
+          "permission": "department_treasury",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "rotina-05",
+          "title": "Rotina mensal do contador e pastor",
+          "steps": [
+            "Confira a competência e o saldo do período.",
+            "Resolva despesas sem comprovante e organize extratos.",
+            "O contador revisa documentos e aponta pendências.",
+            "Finalize o período com relatório e arquivo da documentação contábil."
+          ],
+          "route": "/accounting.php",
+          "permission": "accounting_portal",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    },
+    {
+      "slug": "solucoes",
+      "title": "Problemas frequentes e como resolver",
+      "summary": "Mensagens de erro, vínculo incorreto, acesso negado e documentos pendentes.",
+      "audience": [
+        "Todos os usuários"
+      ],
+      "lessons": [
+        {
+          "slug": "solucoes-01",
+          "title": "Não encontro um módulo no menu",
+          "steps": [
+            "Confira se está na igreja correta e se a busca Encontrar uma função tem o resultado desejado.",
+            "Identifique qual função deveria aparecer: membro, líder, tesoureiro ou secretaria.",
+            "Peça ao administrador para revisar o seu perfil, sem compartilhar senhas.",
+            "Se for um módulo recém-atualizado, confirme com o Master que a versão foi instalada."
+          ],
+          "route": "/users.php",
+          "permission": "manage_users",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "solucoes-02",
+          "title": "Membro não aparece para vincular",
+          "steps": [
+            "Confirme que a pessoa já foi cadastrada em Membros da igreja selecionada.",
+            "Verifique se o cadastro está ativo e sem duplicidade.",
+            "Atualize a lista de Pessoas e Lideranças e aplique filtros adequados.",
+            "Não crie novo usuário com nome parecido sem conferir a ficha existente."
+          ],
+          "route": "/members.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "solucoes-03",
+          "title": "Líder não vê a tesouraria do departamento",
+          "steps": [
+            "Confirme que a pessoa está vinculada como Líder, não somente Participante.",
+            "Verifique se o login pessoal dela está vinculado ao membro certo.",
+            "Confira se o departamento e o caixa estão ativos.",
+            "Se o problema persistir, peça ao pastor revisão do vínculo e teste de acesso."
+          ],
+          "route": "/department-people.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "solucoes-04",
+          "title": "Tesoureiro do setor vê acesso negado",
+          "steps": [
+            "Confirme que a pessoa pertence ao departamento correto.",
+            "O líder deve atribuir a função Tesoureiro departamental na Equipe.",
+            "Verifique se existe um login pessoal válido vinculado à pessoa.",
+            "Não corrija escolhendo Tesoureiro Geral: isso concede privilégios diferentes."
+          ],
+          "route": "/department-team.php",
+          "permission": "department_team_manage",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "solucoes-05",
+          "title": "Oferta não aparece no portal pessoal",
+          "steps": [
+            "Abra o lançamento de Entrada na tesouraria geral.",
+            "Confira o campo Membro contribuinte e a identificação correta.",
+            "Verifique se o movimento foi registrado na data e igreja certas.",
+            "Solicite ao gestor uma correção auditável; não lance uma nova entrada duplicada."
+          ],
+          "route": "/finance.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "solucoes-06",
+          "title": "Recibo aparece como pendente",
+          "steps": [
+            "Abra a despesa e clique Recibo pendente.",
+            "Se foi impresso, fotografe e anexe a via realmente assinada.",
+            "Se o recebedor está presente, utilize Assinar agora na tela e confirme o nome dele.",
+            "O estado só muda após a assinatura/documento válido ser salvo."
+          ],
+          "route": "/expense-receipt.php",
+          "permission": "finance",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "solucoes-07",
+          "title": "WhatsApp enviou mas não entregou",
+          "steps": [
+            "Confira se o número ou grupo de destino está correto.",
+            "Verifique estado da instância e registros de entrega no provedor configurado.",
+            "Não reenvie repetidamente antes de entender o erro.",
+            "Peça ao Master ou responsável técnico revisão da integração quando houver desconexão."
+          ],
+          "route": "/bot-settings.php",
+          "permission": "communications",
+          "tip": "",
+          "warning": ""
+        },
+        {
+          "slug": "solucoes-08",
+          "title": "PDF ou impressão saiu em branco",
+          "steps": [
+            "Abra a prévia antes de mandar por WhatsApp.",
+            "Confira se o arquivo abre no navegador e se a configuração de impressão usa a orientação correta.",
+            "Teste gerar PDF novamente em outro navegador ou dispositivo.",
+            "Se persistir, encaminhe ao suporte versão do sistema e nome do documento, sem expor dados pessoais."
+          ],
+          "route": "/documents.php",
+          "permission": "secretary",
+          "tip": "",
+          "warning": ""
+        }
+      ]
+    }
+  ]
+}
