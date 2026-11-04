@@ -3,7 +3,7 @@
   "version": "2026-11-04.18",
   "title": "Curso Oficial do Igreja Master — para Igrejas e Clientes",
   "subtitle": "Tutoriais práticos para pastor, secretária, líderes, tesoureiros, contador e membros.",
-  "intro": "Aprenda a usar os módulos da sua igreja com instruções simples, imagens de telas reais e orientação por função. O curso não ensina operações internas do Master. Os passos respeitam as permissões de cada usuário.",
+  "intro": "Aprenda a usar os módulos da sua igreja com instruções simples, imagens de telas reais e orientação por função. O curso aborda somente tarefas das igrejas e de seus usuários. Os passos respeitam as permissões de cada usuário.",
   "level": "Iniciante a avançado",
   "modules": [
     {
@@ -60,7 +60,7 @@
           "slug": "primeiros-passos-04",
           "title": "Entender perfis e limites",
           "steps": [
-            "O Master administra clientes e atualizações da plataforma, não é proprietário de cada igreja.",
+            "A equipe técnica mantém a plataforma, enquanto o pastor administra os dados e usuários de sua própria igreja.",
             "O pastor e os gestores autorizados administram sua própria igreja.",
             "Secretaria, tesouraria, líderes, contador e membros possuem telas e direitos diferentes.",
             "O acesso de participante a um ministério não libera finanças nem dá cargo de liderança."
@@ -427,7 +427,7 @@
           "slug": "usuarios-03",
           "title": "Acesso de pastor e administração",
           "steps": [
-            "O proprietário da igreja é definido no Painel Master durante a criação ou alteração autorizada.",
+            "O proprietário da igreja é definido na implantação e alterado somente com autorização do responsável.",
             "Perfis de pastor e administração possuem responsabilidades mais amplas que líderes departamentais.",
             "Não ofereça acesso de administrador para resolver simples dificuldade de consulta.",
             "Confirme com o pastor antes de ampliar permissões de alguém."
@@ -1912,7 +1912,7 @@
     {
       "slug": "automacoes",
       "title": "Automações, CRON e entregas",
-      "summary": "Agendamentos, fila de notificações e responsabilidades do Master.",
+      "summary": "Lembretes, agendas, filas de mensagens e integrações configuradas para a igreja.",
       "audience": [
         "Pastor",
         "Comunicação"
@@ -2209,7 +2209,7 @@
             "Confira se está na igreja correta e se a busca Encontrar uma função tem o resultado desejado.",
             "Identifique qual função deveria aparecer: membro, líder, tesoureiro ou secretaria.",
             "Peça ao administrador para revisar o seu perfil, sem compartilhar senhas.",
-            "Se for um módulo recém-atualizado, confirme com o Master que a versão foi instalada."
+            "Se for um módulo recém-atualizado, confirme com o suporte que a versão foi instalada."
           ],
           "route": "/users.php",
           "permission": "manage_users",
@@ -2293,7 +2293,7 @@
             "Confira se o número ou grupo de destino está correto.",
             "Verifique estado da instância e registros de entrega no provedor configurado.",
             "Não reenvie repetidamente antes de entender o erro.",
-            "Peça ao Master ou responsável técnico revisão da integração quando houver desconexão."
+            "Peça ao suporte ou responsável técnico revisão da integração quando houver desconexão."
           ],
           "route": "/bot-settings.php",
           "permission": "communications",
