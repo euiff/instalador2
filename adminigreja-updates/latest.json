@@ -1,34 +1,33 @@
 {
-  "version": "3.7.16",
+  "version": "3.7.15",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.16.01.b64.txt",
-    "releases/v3.7.16.02.b64.txt",
-    "releases/v3.7.16.03.b64.txt",
-    "releases/v3.7.16.04.b64.txt",
-    "releases/v3.7.16.05.b64.txt",
-    "releases/v3.7.16.06.b64.txt"
+    "releases/v3.7.15.01.b64.txt",
+    "releases/v3.7.15.02.b64.txt",
+    "releases/v3.7.15.03.b64.txt",
+    "releases/v3.7.15.04.b64.txt",
+    "releases/v3.7.15.05.b64.txt",
+    "releases/v3.7.15.06.b64.txt"
   ],
-  "sha256": "18b6684821a39a15e066d32deb4525b51dceeb2ab7c26b0ebf97829c5ae5fc4a",
-  "published_at": "2026-11-04T15:10:23.798226+00:00",
-  "cache_buster": "3.7.16-expense-receipts",
+  "sha256": "84caadbf51d90ef5dfc1891453fc8af80d353192676cd18b9ec685f47ebfdbc7",
+  "published_at": "2026-11-04T01:19:41.858076+00:00",
+  "cache_buster": "3.7.15-password-eye",
   "notes": [
-    "Novo comprovante de despesa: anexar nota, gerar recibo e assinar na tela ou imprimir.",
-    "Recibos em PDF com valor, motivo, recebedor, igreja, departamento e assinatura.",
-    "Recibo impresso sem assinatura fica pendente; pode anexar foto/PDF assinado depois.",
-    "Recibos assinados vinculados ao livro caixa e disponíveis para o contador.",
-    "Mantém isolamento entre igrejas e departamentos, sem duplicar valores.",
-    "Assinatura simples não substitui nota fiscal nem valida identidade automaticamente."
+    "Olho de mostrar/ocultar senha nos formulários autenticados do Igreja Master.",
+    "Funciona também em janelas flutuantes e campos adicionados após carregar a página.",
+    "Acessível pelo teclado e leitores de tela; preserva o que foi digitado.",
+    "Não altera contas, login, senhas gravadas, permissões ou dados financeiros.",
+    "Atualização cumulativa 3.7.15 com regressões de versões anteriores."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "c87a94cd515da026d56e9f83c58149a026a0feaf2c383110266daee0b0066c89"
+      "sha256": "26c3ae1f7cb9a0a8910a6790f607e0d0816b0168bcf5c7510c892e03f6cb8e01"
     },
     {
       "path": "public/VERSION",
-      "sha256": "0fc7e62ea715b7ebbbdc8556f0c992ad9f744a032851815926443aa67a60becc"
+      "sha256": "c55f2dd1442ffb4b8dbd25707e3bce7c9c2bf813d697fa1e47bffe8c6b76c585"
     },
     {
       "path": "public/accounting-file.php",
@@ -57,14 +56,6 @@
     {
       "path": "public/assets/accounting-ocr.js",
       "sha256": "be73648cb72aa8747a7a9262e9bf9d0b6ba30cf55dc6516c4b5688b5860a49dc"
-    },
-    {
-      "path": "public/assets/expense-receipt.css",
-      "sha256": "54904374b3d22424ac8266075c5b0b98729e9bbe79b5eab844d58561bb5e9ddf"
-    },
-    {
-      "path": "public/assets/expense-receipt.js",
-      "sha256": "435340f2e80276727704110026f3bc656f69642dc1de48e2a7d73e66e2fda77d"
     },
     {
       "path": "public/assets/management-3711.css",
@@ -179,10 +170,6 @@
       "sha256": "f4acad9a724ff4ecca9f17c3a666f3ee58925ae8b63c0b1a4699cb504bac3b84"
     },
     {
-      "path": "public/database/045_expense_receipts.sql",
-      "sha256": "97c12877acdf24c52b043e344662f4ee41a3f6a71c441d4ecf2c3e0d335a65d8"
-    },
-    {
       "path": "public/department-people.php",
       "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
     },
@@ -196,7 +183,7 @@
     },
     {
       "path": "public/department-treasury.php",
-      "sha256": "32723ea2570a0418c95661ea7a33c706008b66eab7a4bf6858cfa94d6254ca94"
+      "sha256": "f712037c0e12e2257057474043c230d9dd51bc78c061fc8160a83d8a61508b3c"
     },
     {
       "path": "public/donate.php",
@@ -215,10 +202,6 @@
       "sha256": "8ceb97a762b8ebd75900f22e10fa38644db1dd7fc47952df6f0ba2cd8075cfae"
     },
     {
-      "path": "public/expense-receipt.php",
-      "sha256": "e305e096c108aece5934b5e8a8a9727c089a4b1c25b9a13c69a12ebfc91814fe"
-    },
-    {
       "path": "public/finance-budget.php",
       "sha256": "3d345d7cfba637bfd37613c322ce3a95ae2698adb6837fb7248eba5b5f54091e"
     },
@@ -232,7 +215,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "d5fab131b065f53f5da1485af66a2911d9c4d825fb75eb8062aa25a66454ba11"
+      "sha256": "cb80e4e8a573c79f259999eb639fef610fe2d5c4d335b7d9bf79092de3e350ec"
     },
     {
       "path": "public/kids-checkin.php",
@@ -300,7 +283,7 @@
     },
     {
       "path": "public/lib/DepartmentTreasuryService.php",
-      "sha256": "16ee60ee60826c80a22534a635bfb1d62c3129cd882572785fab29ae293e3922"
+      "sha256": "f71dfd891babd2093a5b081f34d3416286dc767cf1ee8799e2618307418a3d82"
     },
     {
       "path": "public/lib/EnuvesImportMap.php",
@@ -325,14 +308,6 @@
     {
       "path": "public/lib/EvolutionClient.php",
       "sha256": "73fbe32c3f328b3fd051fe7dfcaec93c9ba68c664da929af4d2a6e1af1f6eaa2"
-    },
-    {
-      "path": "public/lib/ExpenseReceiptPdf.php",
-      "sha256": "6c01b1d40f956800a352f283faf8c0f7cea4ed40307288bbecb3ff81cfe3592a"
-    },
-    {
-      "path": "public/lib/ExpenseReceiptService.php",
-      "sha256": "82f2de4b69c69b2c837d6366ef0ee959b45b66692144312a59be5c5902fb05a8"
     },
     {
       "path": "public/lib/FinanceCsvImport.php",
@@ -428,7 +403,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "f05827ab7859a8bf5409e46d68998d571f26a164ad9f512a7431bb850bc41bb8"
+      "sha256": "55ada234a083fef9bc475748dba28eab53536227733a47e98d0437eb56b72e19"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
