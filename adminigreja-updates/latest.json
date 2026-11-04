@@ -1,34 +1,35 @@
 {
-  "version": "3.7.16",
+  "version": "3.7.17",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.16.01.b64.txt",
-    "releases/v3.7.16.02.b64.txt",
-    "releases/v3.7.16.03.b64.txt",
-    "releases/v3.7.16.04.b64.txt",
-    "releases/v3.7.16.05.b64.txt",
-    "releases/v3.7.16.06.b64.txt"
+    "releases/v3.7.17.01.b64.txt",
+    "releases/v3.7.17.02.b64.txt",
+    "releases/v3.7.17.03.b64.txt",
+    "releases/v3.7.17.04.b64.txt",
+    "releases/v3.7.17.05.b64.txt",
+    "releases/v3.7.17.06.b64.txt",
+    "releases/v3.7.17.07.b64.txt"
   ],
-  "sha256": "f6c12783b47feb54b70f01c560c1210171ef349c694fe2a5934c3232f42d61fd",
-  "published_at": "2026-11-04T15:11:58.244243+00:00",
-  "cache_buster": "3.7.16-expense-receipts",
+  "sha256": "425ff6c53b2c07abd9bc4c474b58ec2a8cd7cac58582fbde1fb9416c555dc4b4",
+  "published_at": "2026-11-04T21:13:31.083003+00:00",
+  "cache_buster": "3.7.17-official-system-course",
   "notes": [
-    "Novo comprovante de despesa: anexar nota, gerar recibo e assinar na tela ou imprimir.",
-    "Recibos em PDF com valor, motivo, recebedor, igreja, departamento e assinatura.",
-    "Recibo impresso sem assinatura fica pendente; pode anexar foto/PDF assinado depois.",
-    "Recibos assinados vinculados ao livro caixa e disponíveis para o contador.",
-    "Mantém isolamento entre igrejas e departamentos, sem duplicar valores.",
-    "Assinatura simples não substitui nota fiscal nem valida identidade automaticamente."
+    "Curso Oficial do Igreja Master fixo em Ensino/Cursos para igrejas atuais e futuras.",
+    "27 módulos e 164 aulas detalhadas sobre toda a plataforma e seus usuários.",
+    "Tutoriais de cadastros, congregações, permissões, liderança, tesourarias, recibos, contador e comunicação.",
+    "Busca por assunto, progresso por usuário e navegação por aulas com links de ações autorizadas.",
+    "Master pode consultar o curso; novas igrejas acessam sem cadastro ou replicação manual.",
+    "Isolamento por igreja preservado e permissões dos módulos não ampliadas pelo curso."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "c87a94cd515da026d56e9f83c58149a026a0feaf2c383110266daee0b0066c89"
+      "sha256": "c40baf64f09b7f9fda7c042015e86aad095b4ef643f77f4e8328f04f0eb1ad06"
     },
     {
       "path": "public/VERSION",
-      "sha256": "0fc7e62ea715b7ebbbdc8556f0c992ad9f744a032851815926443aa67a60becc"
+      "sha256": "7d8d33066940c4da3c29064117d2e13aebe4186ac7d57adde650073b783c1554"
     },
     {
       "path": "public/accounting-file.php",
@@ -111,6 +112,10 @@
       "sha256": "6ba9d9930f443eeab6e14d4db37b3556c18a6e35203586fe43c0a14cdeec64ab"
     },
     {
+      "path": "public/data/system-course.json",
+      "sha256": "66228c3c821af5cd6372c964e33e40a348883ffaf670dbd978c139d3d04a4117"
+    },
+    {
       "path": "public/database/028_finance_registers_receivables.sql",
       "sha256": "d49f031974a7b915f2a7233e419a2fc9efbfc8825a784f471908afbf293f5363"
     },
@@ -183,6 +188,10 @@
       "sha256": "97c12877acdf24c52b043e344662f4ee41a3f6a71c441d4ecf2c3e0d335a65d8"
     },
     {
+      "path": "public/database/046_system_course_progress.sql",
+      "sha256": "e09cc106b58211aab8b6d71c8958d8ca8b3404a478969e13536332a2150f0de1"
+    },
+    {
       "path": "public/department-people.php",
       "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
     },
@@ -244,7 +253,7 @@
     },
     {
       "path": "public/learning.php",
-      "sha256": "d7ab1d50367c43cec95e3385fff7569bbad67a7de80fe7d54f4367b02307a14a"
+      "sha256": "39a7cb00e0bcf97ea8b02d326c013e14af56889bfad4450ae89f8d954a39ea10"
     },
     {
       "path": "public/lib/AccountingService.php",
@@ -256,7 +265,7 @@
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "8c376c62ddd777f97b52c6583e974334060d69653f8874b0fb2c38d5d64467ad"
+      "sha256": "e2d0d56662ca6d7ca9ec5ebba5b7ebe6aa565c8ca03e011920a25e52470cf8c0"
     },
     {
       "path": "public/lib/AutomationMonitor.php",
@@ -419,6 +428,10 @@
       "sha256": "7a8f4f8e5a0d9b92e402b4f04505ae5281f53562f9e058d875b112c2edff415d"
     },
     {
+      "path": "public/lib/SystemCourseService.php",
+      "sha256": "40ff5407144657145cb9febef9b90c0d1c5edb06652f6a36c3dcf64c8f0b82db"
+    },
+    {
       "path": "public/lib/Ui.php",
       "sha256": "23f1382d48d7046e884d7733001c51b4e7dc26172362494c48b5adb15a2f9699"
     },
@@ -428,7 +441,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "f05827ab7859a8bf5409e46d68998d571f26a164ad9f512a7431bb850bc41bb8"
+      "sha256": "4456dcb6344b4cab3ca1b27ffab401217931622f9a274ce102edc7be99610a93"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -464,7 +477,7 @@
     },
     {
       "path": "public/master.php",
-      "sha256": "0d12fe79a03c731261234804b47c0e43e24251db1f2ea70e2775a931e961121b"
+      "sha256": "48db5fad7823698ff3687ec24a42fd7703309be22d01c0911661b15f11f1bf23"
     },
     {
       "path": "public/media-library.php",
@@ -521,6 +534,10 @@
     {
       "path": "public/studies.php",
       "sha256": "54feb99a9002930405e29e8e7e8616fb39b604ba42b045704c87bd1add35ac8d"
+    },
+    {
+      "path": "public/system-course.php",
+      "sha256": "ca09d4945d5107e75110f7789bb935689bcbc12af44633fc426b9f58b5c1d565"
     },
     {
       "path": "public/users.php",
