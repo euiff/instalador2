@@ -1,0 +1,16 @@
+name: Igreja Master 3.7.20 inspect member access
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions: 
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: feature/igreja-master-3.7.20-lider-vinculo-membro
+    - run: python3 adminigreja-updates/staging/3.7.20/source_map.py
