@@ -1,35 +1,35 @@
 {
-  "version": "3.7.19",
+  "version": "3.7.20",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.19.01.b64.txt",
-    "releases/v3.7.19.02.b64.txt",
-    "releases/v3.7.19.03.b64.txt",
-    "releases/v3.7.19.04.b64.txt",
-    "releases/v3.7.19.05.b64.txt",
-    "releases/v3.7.19.06.b64.txt",
-    "releases/v3.7.19.07.b64.txt"
+    "releases/v3.7.20.01.b64.txt",
+    "releases/v3.7.20.02.b64.txt",
+    "releases/v3.7.20.03.b64.txt",
+    "releases/v3.7.20.04.b64.txt",
+    "releases/v3.7.20.05.b64.txt",
+    "releases/v3.7.20.06.b64.txt",
+    "releases/v3.7.20.07.b64.txt"
   ],
-  "sha256": "7bb572697ad497a55624ce0c687b15108bae1eae164fddb003be09657b814c7d",
-  "published_at": "2026-11-04T22:18:29.622405+00:00",
-  "cache_buster": "3.7.19-login-eye-auto-guides",
+  "sha256": "c1613e2aa5d1b7ac1021689c80e1bcfce2e3a9218290313dbaf7e9e76b9f5931",
+  "published_at": "2026-11-04T22:37:24.194241+00:00",
+  "cache_buster": "3.7.20-member-leadership-provision",
   "notes": [
-    "Botão de olho para revelar e ocultar senha agora também na tela de login.",
-    "Login original, autenticação, permissões e sessões preservados.",
-    "17 imagens ilustrativas com setas e botões destacados exibidas sem importar ZIP.",
-    "Primeira aula do curso também possui imagem explicativa.",
-    "Fotos reais anonimizadas, quando importadas, substituem automaticamente as ilustrações.",
-    "Proteção por login e regras de acesso preservadas. Configure HTTPS no cPanel para segurança."
+    "Novo acesso agora usa nome e e-mail do membro selecionado, sem redigitar dados.",
+    "Se o membro já tem login, aproveita o acesso e a senha atual sem duplicar conta.",
+    "Ao indicar Líder e Jovens, registra a liderança real em Pessoas e Líderes dos Departamentos.",
+    "Líder visualiza equipe e caixa somente do seu departamento, sem acesso à tesouraria geral.",
+    "Alterar a liderança revoga somente os acessos correspondentes e mantém o histórico.",
+    "Inclui validações de segurança e isolamento entre igrejas."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "8acc2510a5968a6e731a6c6445a1ba02d2eb3c4f871d1a5f719a1c58645cacc0"
+      "sha256": "688d6abe30409b9fa9f2d65da63e136b1c088ba0a6a8b6d26778557a45b3d3c9"
     },
     {
       "path": "public/VERSION",
-      "sha256": "341814b55e1aa8e96a649bce2f647c4a209a9cfcdb389af1f7f359a5ff4fe0a9"
+      "sha256": "54dac65cc3e9e04a857465901a1b2eec9e76a7379722a9f9807719c6fd1cb49c"
     },
     {
       "path": "public/accounting-file.php",
@@ -90,6 +90,10 @@
     {
       "path": "public/assets/password-visibility.js",
       "sha256": "ff0e11b6c351cf488acc22bf3a763dcf8756f1b6857422efa63a9517a2cfacf1"
+    },
+    {
+      "path": "public/assets/users-member-autofill.js",
+      "sha256": "34e1ed9bb1f3bc2f6237f26e78f211182adf51f9ec67ea0785dadccf82c3b3f8"
     },
     {
       "path": "public/automations.php",
@@ -294,6 +298,10 @@
     {
       "path": "public/lib/ChurchCare.php",
       "sha256": "263bc6315fada6f9d337f932066419af13e3a0dd9064c32f8f1438e03da34d8c"
+    },
+    {
+      "path": "public/lib/ChurchMemberLeadershipService.php",
+      "sha256": "33c8704709c4d7649926fe7fd8d00acd69d7b32b6b5178be3ed20e3035cc1bb6"
     },
     {
       "path": "public/lib/CronTasks.php",
@@ -561,7 +569,7 @@
     },
     {
       "path": "public/users.php",
-      "sha256": "ab62f57fc358f66f20912a77ac391ac2112cfc45ea08fa99abddaf68203590ca"
+      "sha256": "938addc6f899a69fe7678db85e41bfb9a771cc11df439503b29e0608fc68a8f1"
     },
     {
       "path": "public/visitors.php",
