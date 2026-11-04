@@ -1,34 +1,33 @@
 {
-  "version": "3.7.14",
+  "version": "3.7.15",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.14.01.b64.txt",
-    "releases/v3.7.14.02.b64.txt",
-    "releases/v3.7.14.03.b64.txt",
-    "releases/v3.7.14.04.b64.txt",
-    "releases/v3.7.14.05.b64.txt",
-    "releases/v3.7.14.06.b64.txt"
+    "releases/v3.7.15.01.b64.txt",
+    "releases/v3.7.15.02.b64.txt",
+    "releases/v3.7.15.03.b64.txt",
+    "releases/v3.7.15.04.b64.txt",
+    "releases/v3.7.15.05.b64.txt",
+    "releases/v3.7.15.06.b64.txt"
   ],
-  "sha256": "f8fa6609516c43736a9d0f48a6b025934a2dd119766b5312848c281749849bee",
-  "published_at": "2026-11-03T14:04:45.173169+00:00",
-  "cache_buster": "3.7.14-department-leader-treasurer",
+  "sha256": "84caadbf51d90ef5dfc1891453fc8af80d353192676cd18b9ec685f47ebfdbc7",
+  "published_at": "2026-11-04T01:19:41.858076+00:00",
+  "cache_buster": "3.7.15-password-eye",
   "notes": [
-    "Participante continua no Portal do Membro, sem acesso financeiro do departamento.",
-    "Líder recebe acesso restrito somente aos departamentos que lidera.",
-    "Líder pode indicar e remover tesoureiro entre participantes de sua equipe.",
-    "Tesoureiro departamental movimenta só o caixa do departamento; não recebe tesouraria geral.",
-    "Comprovante obrigatório nas despesas de perfis departamentais; consolidação geral mantida.",
-    "Permissões por igreja e departamento verificadas por testes automatizados."
+    "Olho de mostrar/ocultar senha nos formulários autenticados do Igreja Master.",
+    "Funciona também em janelas flutuantes e campos adicionados após carregar a página.",
+    "Acessível pelo teclado e leitores de tela; preserva o que foi digitado.",
+    "Não altera contas, login, senhas gravadas, permissões ou dados financeiros.",
+    "Atualização cumulativa 3.7.15 com regressões de versões anteriores."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "04466bd95dd83d3f5e920563c135717baf5d80fff1dacbcb074d7d36a787ff4e"
+      "sha256": "26c3ae1f7cb9a0a8910a6790f607e0d0816b0168bcf5c7510c892e03f6cb8e01"
     },
     {
       "path": "public/VERSION",
-      "sha256": "a99ff7a315022de5d477df6c50fcda573416b47af21d8bfe211c225369168643"
+      "sha256": "c55f2dd1442ffb4b8dbd25707e3bce7c9c2bf813d697fa1e47bffe8c6b76c585"
     },
     {
       "path": "public/accounting-file.php",
@@ -73,6 +72,14 @@
     {
       "path": "public/assets/management.js",
       "sha256": "dbe4fe4fbfe834490baf07d1e5fbdaf2b96d911e466c9ef8975e454a3fa94b4b"
+    },
+    {
+      "path": "public/assets/password-visibility.css",
+      "sha256": "bae64bab91d66cd9b900faf5a61558954fc414c586fa2caa725aa2e236eb3012"
+    },
+    {
+      "path": "public/assets/password-visibility.js",
+      "sha256": "ff0e11b6c351cf488acc22bf3a763dcf8756f1b6857422efa63a9517a2cfacf1"
     },
     {
       "path": "public/automations.php",
@@ -396,7 +403,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "f0bb29586ef2e6088bbae1ba6d87ab70317b47a2c00269321d851a55d708d995"
+      "sha256": "55ada234a083fef9bc475748dba28eab53536227733a47e98d0437eb56b72e19"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
