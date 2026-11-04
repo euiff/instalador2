@@ -42,6 +42,15 @@ $q->execute([$cid]);$portalPeople=$q->fetchAll();""",
         '<?=$personId===$p[\'id\']?\'selected\':\'\'?>><?=e($p[\'name\'])?></option>',
         "member-select automatic fields")
 
+    txt=replace_once(txt,
+        "$q=$pdo->prepare('SELECT user_id,department_id FROM department_access WHERE church_id=?');$q->execute([$cid]);$portalScopes=[];",
+        """$q=$pdo->prepare("SELECT user_id,department_id FROM department_access WHERE church_id=?
+        UNION
+        SELECT cm.user_id,r.department_id FROM member_department_roles r
+        JOIN church_members cm ON cm.church_id=r.church_id AND cm.person_id=r.member_id
+        WHERE r.church_id=? AND r.role_name='leader'");
+$q->execute([$cid,$cid]);$portalScopes=[];""",
+        "leader scopes from both role and legacy access")
     begin=txt.index("        if($action==='create'){")
     end=txt.index("        if($action==='role'){",begin)
     new_create="""        if($action==='create'){
