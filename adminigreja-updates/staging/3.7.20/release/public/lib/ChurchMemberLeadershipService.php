@@ -48,9 +48,16 @@ final class ChurchMemberLeadershipService
 
     public function oldDepartmentIds(string $userId):array
     {
-        return array_map('strval',$this->select(
-           'SELECT department_id FROM department_access WHERE church_id=? AND user_id=?',
-           [$this->churchId,$userId])->fetchAll(PDO::FETCH_COLUMN));
+        // Older leader appointments can exist only in member_department_roles,
+        // without an entry in department_access. Include both sources so edit
+        // forms preserve every existing appointment and revocation is complete.
+        $sql="SELECT department_id FROM department_access WHERE church_id=? AND user_id=?
+              UNION
+              SELECT r.department_id FROM member_department_roles r
+              JOIN church_members cm ON cm.church_id=r.church_id AND cm.person_id=r.member_id
+              WHERE cm.church_id=? AND cm.user_id=? AND r.role_name='leader'";
+        return array_map('strval',$this->select($sql,
+            [$this->churchId,$userId,$this->churchId,$userId])->fetchAll(PDO::FETCH_COLUMN));
     }
 
     public function sync(
