@@ -186,6 +186,10 @@ def modify_department_service(source:bytes)->bytes:
     txt=replace_once(txt,"require_once __DIR__.'/ReceiptParser.php';",
         "require_once __DIR__.'/ReceiptParser.php';\nrequire_once __DIR__.'/ExpenseReceiptService.php';",
         "department receipt dependency")
+    txt=replace_once(txt,
+        "        $role=$auth->churchRole();",
+        "        ExpenseReceiptService::ensureSchema($pdo);\n        $role=$auth->churchRole();",
+        "department receipt schema initialization")
     anchor="""        $hasFile=(int)($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_OK;
         if($direction==='expense'&&!$hasFile&&!$this->fullAccess)
             throw new InvalidArgumentException('Anexe um comprovante (foto, PDF ou cupom) para registrar esta despesa.');"""
