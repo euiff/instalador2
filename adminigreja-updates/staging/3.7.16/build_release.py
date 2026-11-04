@@ -159,14 +159,15 @@ def modify_finance(source:bytes)->bytes:
     orig="SELECT e.*,a.name account_name,(SELECT COUNT(*) FROM finance_documents d WHERE d.entry_id=e.id) document_count FROM finance_entries e LEFT JOIN finance_accounts a ON a.id=e.account_id WHERE e.church_id=?"
     new="SELECT e.*,a.name account_name,er.id expense_receipt_id,er.status expense_receipt_status,(SELECT COUNT(*) FROM finance_documents d WHERE d.church_id=e.church_id AND d.entry_id=e.id) document_count FROM finance_entries e LEFT JOIN finance_accounts a ON a.id=e.account_id AND a.church_id=e.church_id LEFT JOIN expense_receipts er ON er.church_id=e.church_id AND er.entry_id=e.id WHERE e.church_id=?"
     txt=replace_once(txt,orig,new,"general ledger receipt link")
-    txt=replace_once(txt,
-        "         <?php if($r['status']==='posted'):?>\n           <details>",
-        """         <?php if($r['direction']==='expense'):?>
-           <a class="btn btn-light" href="/expense-receipt.php?entry=<?=e($r['id'])?>"><?=e(!empty($r['expense_receipt_id'])?($r['expense_receipt_status']==='pending_signature'?'Recibo pendente':'Ver recibo'):'Gerar recibo')?></a>
-         <?php endif;?>
-         <?php if($r['status']==='posted'):?>
-           <details>""",
-         "general entry receipt action")
+    anchor=r"(?m)^([ \t]*)<\?php if\(\$r\['status'\]==='posted'\):\?>"
+    if len(re.findall(anchor,txt))!=1:raise RuntimeError("General ledger action cell missing")
+    def receipt_action(m):
+        indent=m.group(1)
+        return indent+"""<?php if($r['direction']==='expense'):?>
+"""+indent+"""<a class="btn btn-light" href="/expense-receipt.php?entry=<?=e($r['id'])?>"><?=e(!empty($r['expense_receipt_id'])?($r['expense_receipt_status']==='pending_signature'?'Recibo pendente':'Ver recibo'):'Gerar recibo')?></a>
+"""+indent+"""<?php endif;?>
+"""+m.group(0)
+    txt=re.sub(anchor,receipt_action,txt,count=1)
     txt=replace_once(txt,
        """  <form method="post" enctype="multipart/form-data">
     <?=csrf_field()?><input type="hidden" name="action" value="entry">""",
