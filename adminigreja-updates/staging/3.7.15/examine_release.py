@@ -12,7 +12,7 @@ with tarfile.open(fileobj=io.BytesIO(gzip.decompress(raw))) as archive:
   if name not in fs:continue
   lines=fs[name].splitlines()
   print('===== '+name+' ('+str(len(lines))+' lines)')
-  keep=range(len(lines)) if name.endswith('Ui.php') else (range(min(len(lines),70)) if name.endswith('View.php') else range(min(len(lines),110)))
+  keep=range(len(lines)) if name.endswith(('Ui.php','View.php')) else (range(150,len(lines)) if name.endswith('users.php') else range(min(len(lines),110)))
   for i in keep:
    if name.endswith('management-3711.js') and i>38:continue
    if re.search(r'password_hash|secret_key|api_key',lines[i],re.I):continue
