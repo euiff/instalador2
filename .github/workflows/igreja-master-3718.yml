@@ -1,0 +1,54 @@
+name: Igreja Master 3.7.18 client-only visual course
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/igreja-master-3718.yml"
+      - "adminigreja-updates/staging/3.7.18/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: igreja-master-3718-release
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: localtestonly
+          MARIADB_DATABASE: igreja_accounting_test
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mariadb-admin ping --host=127.0.0.1 --user=root --password=localtestonly"
+          --health-interval=5s --health-timeout=4s --health-retries=15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/igreja-master-3.7.18-tutorial-imagens-clientes
+          persist-credentials: true
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql,mbstring,dom,zip,fileinfo,iconv,gd
+          coverage: none
+      - name: Check full tutorial, PHP, all previous features and tenant isolation on MariaDB
+        env:
+          TEST_ACCOUNTING_DSN: mysql:host=127.0.0.1;port=3306;dbname=igreja_accounting_test;charset=utf8mb4
+          TEST_ACCOUNTING_USER: root
+          TEST_ACCOUNTING_PASSWORD: localtestonly
+        run: python3 adminigreja-updates/staging/3.7.18/build_release.py
+      - name: Publish validated release files to feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.18.*.b64.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Build validated Igreja Master 3.7.18 customer visual training images"
+            git fetch origin feature/igreja-master-3.7.18-tutorial-imagens-clientes
+            git rebase FETCH_HEAD
+            git push origin HEAD:feature/igreja-master-3.7.18-tutorial-imagens-clientes
+          fi

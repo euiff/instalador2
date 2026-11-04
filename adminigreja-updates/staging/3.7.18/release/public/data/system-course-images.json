@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "scope": "client-churches-only",
+  "description": "Telas de treinamento anonimizadas. Upload central de ZIP pelo suporte autorizado; todas as igrejas visualizam o mesmo conteúdo.",
+  "images": [
+    {
+      "id": "01-painel-inicial",
+      "file": "01-painel-inicial.png",
+      "lesson_slug": "primeiros-passos-02",
+      "title": "Painel inicial e atalhos",
+      "description": "Novo cadastro, Cadastrar membro e Central 360",
+      "sha256": "65a1a8e07f6ef04c56d52604a544c8198a8b2db23c806753e3dd9b2cdb75a3a6"
+    },
+    {
+      "id": "02-cadastrar-membro",
+      "file": "02-cadastrar-membro.png",
+      "lesson_slug": "membros-01",
+      "title": "Como cadastrar novo membro",
+      "description": "Nome, congregação e botão para salvar",
+      "sha256": "87b2a616f4afc7e7d4960e34d3f2f454368e05b670f703394a4babf0b4ab7c5a"
+    },
+    {
+      "id": "03-lista-membros",
+      "file": "03-lista-membros.png",
+      "lesson_slug": "membros-05",
+      "title": "Pesquisar e exportar membros",
+      "description": "Campo de busca, Exportar CSV e Novo cadastro",
+      "sha256": "cd507c3f2667fcea3e1a7eeeffe083b932eafe491b8568849955b8f3ca0c6ff2"
+    },
+    {
+      "id": "04-usuarios-permissoes",
+      "file": "04-usuarios-permissoes.png",
+      "lesson_slug": "usuarios-02",
+      "title": "Usuários internos da igreja",
+      "description": "Onde conferir os acessos e criar usuário",
+      "sha256": "b5798cf64665e7bc9013c2b55bb512bdfde734c704185efb198293e120c379e3"
+    },
+    {
+      "id": "05-criar-acesso",
+      "file": "05-criar-acesso.png",
+      "lesson_slug": "usuarios-02",
+      "title": "Novo acesso interno",
+      "description": "Perfil, pessoa vinculada e criação do acesso",
+      "sha256": "2b057a584749e525387213710ffa651804040eeded53d9bdb07d6e39aeb26338"
+    },
+    {
+      "id": "06-departamentos",
+      "file": "06-departamentos.png",
+      "lesson_slug": "departamentos-01",
+      "title": "Cadastro de departamentos",
+      "description": "Criar departamento e consultar a lista",
+      "sha256": "88c30cac787b5f57469817f9708485f8cbae4ed3f5f392fc78cf85c2116c7f03"
+    },
+    {
+      "id": "07-menu-financeiro",
+      "file": "07-menu-financeiro.png",
+      "lesson_slug": "tesourarias-ministerios-01",
+      "title": "Localizar tesourarias de ministérios",
+      "description": "Tesouraria geral, equipe e caixas dos departamentos",
+      "sha256": "a801e387c7e1dfae993ccd49e398d0b43bcec2b81b3c051fa37fcf2b661281a9"
+    },
+    {
+      "id": "08-novo-lancamento",
+      "file": "08-novo-lancamento.png",
+      "lesson_slug": "tesouraria-geral-04",
+      "title": "Novo lançamento de entrada ou saída",
+      "description": "Tipo de movimento, categoria e registro",
+      "sha256": "6a7a9fc0ed716d18567556535cb5ae719d1fa69738eda978dc31fca7cb4a0d3f"
+    },
+    {
+      "id": "09-perfil-membro",
+      "file": "09-perfil-membro.png",
+      "lesson_slug": "membros-06",
+      "title": "Perfil pessoal e vínculos",
+      "description": "Editar cadastro e vincular departamento",
+      "sha256": "8d6d13cb801212d64ecb9925ef4bf57dbf11238ccc3e06c2ab545fdad2e2ebfa"
+    },
+    {
+      "id": "10-portal-contador",
+      "file": "10-portal-contador.png",
+      "lesson_slug": "contador-02",
+      "title": "Portal do Contador",
+      "description": "Competência, livro caixa e pacote mensal",
+      "sha256": "0ac99eefd4d0e010abe6d8ab0f573041b33147a7a8f9b04b528c71d70c2b31eb"
+    },
+    {
+      "id": "11-agenda-eventos",
+      "file": "11-agenda-eventos.png",
+      "lesson_slug": "agenda-eventos-01",
+      "title": "Agenda de eventos",
+      "description": "Abrir Eventos e cadastrar atividade",
+      "sha256": "426d18b1333dab239e730bea043a30c153326490c0f5c0d41dddcad61d123d8a"
+    },
+    {
+      "id": "12-cargos-funcoes",
+      "file": "12-cargos-funcoes.png",
+      "lesson_slug": "configuracoes-04",
+      "title": "Cargos e funções",
+      "description": "Selecionar aba e cadastrar cargo",
+      "sha256": "c32acb30af4f1d28e4d01a1342a83523377d70cf3e1a5209a37f8756918926a0"
+    },
+    {
+      "id": "13-tesouraria-geral",
+      "file": "13-tesouraria-geral.png",
+      "lesson_slug": "tesouraria-geral-06",
+      "title": "Resumo da tesouraria",
+      "description": "Filtrar período, lançar e salvar PDF",
+      "sha256": "1906122286a317f9b7f9c741fdeaa97627ddeb5c51ca0531407231c647267437"
+    },
+    {
+      "id": "14-prestacao-de-contas",
+      "file": "14-prestacao-de-contas.png",
+      "lesson_slug": "tesourarias-ministerios-06",
+      "title": "Relatórios dos departamentos",
+      "description": "Datas, departamento e consulta",
+      "sha256": "ac773ac3487f41a46beaec1f714202481cb6f5972ed347ac07e6ed15a153c27f"
+    },
+    {
+      "id": "15-pessoas-lideres",
+      "file": "15-pessoas-lideres.png",
+      "lesson_slug": "departamentos-02",
+      "title": "Vincular participantes",
+      "description": "Selecionar departamento e abrir equipe",
+      "sha256": "d2dd6cdb373f33ab90b2053e5d4ae62697fa2e040b1e5a546a92804aae160aa2"
+    },
+    {
+      "id": "16-configuracoes",
+      "file": "16-configuracoes.png",
+      "lesson_slug": "configuracoes-01",
+      "title": "Dados da igreja",
+      "description": "Identificação, contatos e botão salvar",
+      "sha256": "887cacb0f7e7696052473bdbcabf1db6e8758bb4fb53d9bd8c107eb01defcfc5"
+    },
+    {
+      "id": "17-central-360",
+      "file": "17-central-360.png",
+      "lesson_slug": "primeiros-passos-02",
+      "title": "Central de Gestão 360",
+      "description": "Departamentos, caixas e acesso ao ensino",
+      "sha256": "4892aeaa823c44d41fc2161fdfe15c09fa5cbe1d44d302a4f7567f9ac17f303b"
+    }
+  ]
+}

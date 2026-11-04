@@ -1,35 +1,35 @@
 {
-  "version": "3.7.17",
+  "version": "3.7.18",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.17.01.b64.txt",
-    "releases/v3.7.17.02.b64.txt",
-    "releases/v3.7.17.03.b64.txt",
-    "releases/v3.7.17.04.b64.txt",
-    "releases/v3.7.17.05.b64.txt",
-    "releases/v3.7.17.06.b64.txt",
-    "releases/v3.7.17.07.b64.txt"
+    "releases/v3.7.18.01.b64.txt",
+    "releases/v3.7.18.02.b64.txt",
+    "releases/v3.7.18.03.b64.txt",
+    "releases/v3.7.18.04.b64.txt",
+    "releases/v3.7.18.05.b64.txt",
+    "releases/v3.7.18.06.b64.txt",
+    "releases/v3.7.18.07.b64.txt"
   ],
-  "sha256": "425ff6c53b2c07abd9bc4c474b58ec2a8cd7cac58582fbde1fb9416c555dc4b4",
-  "published_at": "2026-11-04T21:13:31.083003+00:00",
-  "cache_buster": "3.7.17-official-system-course",
+  "sha256": "fa215691eb6fd9d89ef2146d0276434ce8b22e4998c58a2819a1ff5a870fcadc",
+  "published_at": "2026-11-04T21:57:22.686016+00:00",
+  "cache_buster": "3.7.18-client-course-images",
   "notes": [
-    "Curso Oficial do Igreja Master fixo em Ensino/Cursos para igrejas atuais e futuras.",
-    "27 módulos e 164 aulas detalhadas sobre toda a plataforma e seus usuários.",
-    "Tutoriais de cadastros, congregações, permissões, liderança, tesourarias, recibos, contador e comunicação.",
-    "Busca por assunto, progresso por usuário e navegação por aulas com links de ações autorizadas.",
-    "Master pode consultar o curso; novas igrejas acessam sem cadastro ou replicação manual.",
-    "Isolamento por igreja preservado e permissões dos módulos não ampliadas pelo curso."
+    "Curso Tutorial exclusivo das igrejas e clientes: removidos conteúdos internos do Master.",
+    "25 módulos, 144 aulas passo a passo, com exemplos de funções da igreja.",
+    "Suporte a 17 imagens reais com dados ocultos e botões indicados por números.",
+    "Master importa as imagens aprovadas uma única vez para todas as igrejas.",
+    "Arquivos exibidos somente para usuários autenticados do curso; upload exige aprovação SHA-256.",
+    "Preserva progresso dos alunos e todas as funcionalidades anteriores da plataforma."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "c40baf64f09b7f9fda7c042015e86aad095b4ef643f77f4e8328f04f0eb1ad06"
+      "sha256": "8c28172e7ecd50dba827b4b9f59429c1a3b6a321b031b97ccca66d1e77ae4fea"
     },
     {
       "path": "public/VERSION",
-      "sha256": "7d8d33066940c4da3c29064117d2e13aebe4186ac7d57adde650073b783c1554"
+      "sha256": "e2fa1550de5a1f3f899fac8b04478e7c1447895bacecc723e49f9b59595002a7"
     },
     {
       "path": "public/accounting-file.php",
@@ -112,8 +112,12 @@
       "sha256": "6ba9d9930f443eeab6e14d4db37b3556c18a6e35203586fe43c0a14cdeec64ab"
     },
     {
+      "path": "public/data/system-course-images.json",
+      "sha256": "9277efc2e2bd6eff89c37cab58479fbcafd731267af158897259a8f1a3248a1e"
+    },
+    {
       "path": "public/data/system-course.json",
-      "sha256": "66228c3c821af5cd6372c964e33e40a348883ffaf670dbd978c139d3d04a4117"
+      "sha256": "5c59263266bc032ff12c20f2d579d218a37f1fc16a0e11b49e66b595e7a64bec"
     },
     {
       "path": "public/database/028_finance_registers_receivables.sql",
@@ -428,6 +432,10 @@
       "sha256": "7a8f4f8e5a0d9b92e402b4f04505ae5281f53562f9e058d875b112c2edff415d"
     },
     {
+      "path": "public/lib/SystemCourseImageService.php",
+      "sha256": "7e6ffc45feecc52462645952667466bfc52de908d345968d0fed80fd8a3e0241"
+    },
+    {
       "path": "public/lib/SystemCourseService.php",
       "sha256": "40ff5407144657145cb9febef9b90c0d1c5edb06652f6a36c3dcf64c8f0b82db"
     },
@@ -476,8 +484,12 @@
       "sha256": "1f5157897918bf6db6dd48dd3793234fcf10423d5a4846655469e9a08bfb6019"
     },
     {
+      "path": "public/master-system-course-images.php",
+      "sha256": "89b91eebf6098a0b91de597513c7e16c3d507235cd31a9181296e368cee7f49c"
+    },
+    {
       "path": "public/master.php",
-      "sha256": "48db5fad7823698ff3687ec24a42fd7703309be22d01c0911661b15f11f1bf23"
+      "sha256": "0c170d0e76893f0f1225e6cbaa48d65be86078c6402588779692c43bfa45b890"
     },
     {
       "path": "public/media-library.php",
@@ -536,8 +548,12 @@
       "sha256": "54feb99a9002930405e29e8e7e8616fb39b604ba42b045704c87bd1add35ac8d"
     },
     {
+      "path": "public/system-course-image.php",
+      "sha256": "d363724641f4dbc6ff9559dc15455ebc9b43b385331674db28f2c6807699f5ab"
+    },
+    {
       "path": "public/system-course.php",
-      "sha256": "ca09d4945d5107e75110f7789bb935689bcbc12af44633fc426b9f58b5c1d565"
+      "sha256": "256a803851f44dcd643ea84ae7bacd05965fa3450516b400b7652fc9dcd16867"
     },
     {
       "path": "public/users.php",
