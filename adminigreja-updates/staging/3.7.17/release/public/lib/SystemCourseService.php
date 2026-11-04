@@ -128,6 +128,10 @@ final class SystemCourseService
     public function lookup(string $query):array
     {
         $query=mb_strtolower(trim($query),'UTF-8');
+        $synonyms=['contabilidade'=>'contador','criar membros'=>'cadastrar um membro',
+            'criar usuario'=>'criar um usuário','gerar nota'=>'nota fiscal',
+            'cadastro de igreja'=>'criar uma igreja','dizimo'=>'dízimo'];
+        $query=$synonyms[$query]??$query;
         if($query==='')return array_keys($this->lessons);
         if(mb_strlen($query,'UTF-8')>100)throw new InvalidArgumentException('Busca muito longa.');
         $result=[];
