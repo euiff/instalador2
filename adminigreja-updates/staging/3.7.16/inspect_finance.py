@@ -13,7 +13,8 @@ with tarfile.open(fileobj=io.BytesIO(gzip.decompress(raw))) as tar:
   print('\n===== '+name+' '+str(len(body.splitlines()))+' LINES =====')
   lines=body.splitlines()
   # Summarize strategic sections plus targeted contexts
-  if name.endswith('FinanceOperations.php'):keep=set(range(min(220,len(lines))))
+  if name.endswith('finance.php'):keep=set(range(420,min(605,len(lines))))
+  elif name.endswith('FinanceOperations.php'):keep=set(range(min(220,len(lines))))
   elif name.endswith('DepartmentTreasuryService.php'):keep=set(range(min(280,len(lines))))
   elif name.endswith('finance.php'):keep=set(range(min(255,len(lines))))
   elif name.endswith('department-treasury.php'):keep=set(range(min(240,len(lines))))
