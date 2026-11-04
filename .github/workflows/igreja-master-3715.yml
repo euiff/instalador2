@@ -1,0 +1,15 @@
+name: Igreja Master 3.7.15 inspect password forms
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/igreja-master-3.7.15-olho-senhas
+      - run: python3 adminigreja-updates/staging/3.7.15/examine_release.py
