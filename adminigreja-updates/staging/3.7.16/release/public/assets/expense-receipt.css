@@ -13,3 +13,5 @@
 .expense-receipt-fields label{display:grid;gap:6px}
 .expense-receipt-full{grid-column:1/-1}
 @media(max-width:620px){.expense-receipt-fields{grid-template-columns:1fr}}
+
+.expense-receipt-fields[data-receipt-details][hidden]{display:none!important}
