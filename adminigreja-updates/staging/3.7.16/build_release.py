@@ -128,7 +128,8 @@ def modify_finance(source:bytes)->bytes:
                     throw new InvalidArgumentException('Escolha anexar documento OU gerar recibo, não as duas opções.');
             }
             $financialRefs=$financeOps->references($_POST);"""
-    txt=replace_once(txt,anchor,prep,"general expense validation")
+    if anchor not in txt:raise RuntimeError("General entry finance reference missing")
+    txt=txt.replace(anchor,prep,1)  # First occurrence belongs to action=entry; later receipt action remains unchanged
     txt=replace_once(txt,"            $q=$pdo->prepare(\"INSERT INTO finance_entries(id,church_id,account_id,member_id,department_id,cost_center_id,contact_id,direction,category,description,amount,transaction_date,status,source,created_by_user_id,counterparty,payment_method,document_number,notes) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'posted','manual',?,?,?,?,?)\");",
         "            $pdo->beginTransaction();\n            try{\n            $q=$pdo->prepare(\"INSERT INTO finance_entries(id,church_id,account_id,member_id,department_id,cost_center_id,contact_id,direction,category,description,amount,transaction_date,status,source,created_by_user_id,counterparty,payment_method,document_number,notes) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'posted','manual',?,?,?,?,?)\");",
         "transaction start")
