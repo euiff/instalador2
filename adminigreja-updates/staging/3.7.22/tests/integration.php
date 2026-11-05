@@ -72,6 +72,15 @@ $generalBefore=(string)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM finance_
  WHERE church_id='".$churchA."' AND direction='income' AND status='posted'
  AND transaction_date BETWEEN '".$from."' AND '".$to."'")->fetchColumn();
 
+// Older financial fixture omits newer general-ledger metadata. Add only
+// missing columns in this disposable MariaDB instance, not in production.
+foreach(['member_id'=>'CHAR(36) NULL','cost_center_id'=>'CHAR(36) NULL',
+         'contact_id'=>'CHAR(36) NULL','request_key'=>'CHAR(64) NULL'] as $col=>$sqlType){
+  $meta=$pdo->prepare("SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE()
+                      AND TABLE_NAME='finance_entries' AND COLUMN_NAME=?");
+  $meta->execute([$col]);
+  if(!$meta->fetchColumn())$pdo->exec('ALTER TABLE finance_entries ADD COLUMN '.$col.' '.$sqlType);
+}
 // Prior feature-regression fixtures do not load optional financial import batches.
 // Apply the platform migration on this isolated test database before testing CSV.
 $batchMigration=file_get_contents($dir.'/public/database/030_finance_import_batches.sql');
