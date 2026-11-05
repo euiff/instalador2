@@ -101,6 +101,9 @@ def lint_and_assert(files:dict[str,bytes]):
        "public/kids.php","public/learning.php"]
     for name in required:assert name in files,name
     page=files["public/payments.php"]
+    assert page.startswith(b"<?php") and b"require __DIR__" in page and b"REQUEST_METHOD" in page
+    assert b"View::header('Pagamentos PIX'" in page and b"View::footer()" in page
+    assert b"Pagamento n\\xc3\\xa3o encontrado nesta igreja" in page
     assert b"PixPaymentSummary::totals" in page
     assert b"$pending=$summary[" in page
     assert b"pixEntryIds" in page
