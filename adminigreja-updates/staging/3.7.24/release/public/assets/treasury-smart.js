@@ -66,6 +66,7 @@ function bindContact(){
  const modal=document.querySelector('[data-treasury-contact-dialog]');
  const form=modal?.querySelector('form');
  if(!form)return;
+ modal.querySelector('[data-contact-close]')?.addEventListener('click',()=>modal.close());
  form.addEventListener('submit',async e=>{
    e.preventDefault();
    const source=modal._owner;if(!source)return;
