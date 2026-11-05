@@ -120,9 +120,7 @@ def finance_import_page(source:bytes)->bytes:
 
 def accounting_service(source:bytes)->bytes:
     t=source.decode("utf-8")
-    t=once(t,"require_once __DIR__.'/FinancePeriodGuard.php';",
-           "require_once __DIR__.'/FinancePeriodGuard.php';\nrequire_once __DIR__.'/GeneralTreasuryAccountScope.php';",
-           "accounting helper include") if "require_once __DIR__.'/FinancePeriodGuard.php';" in t else t
+    t=once(t,"declare(strict_types=1);","declare(strict_types=1);\nrequire_once __DIR__.'/GeneralTreasuryAccountScope.php';","accounting posting scope import")
     # Accounting OCR may still review departmental documents, but if a
     # reviewer POSTs a new expense from the general portal, its cashbox must
     # be General. The department has a separate authorized posting flow.
