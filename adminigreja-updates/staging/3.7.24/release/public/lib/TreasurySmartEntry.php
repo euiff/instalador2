@@ -80,7 +80,13 @@ final class TreasurySmartEntry
     {
         $list=[];
         foreach(self::BUILTIN as $name=>$direction)$list[mb_strtolower($name,'UTF-8')]=['name'=>$name,'direction'=>$direction];
-        $q=$pdo->prepare("SELECT name,details FROM church_registers
+        // First-generation records can predate the JSON details column;
+        // treat their category as available in both directions.
+        $meta=$pdo->prepare("SELECT COUNT(*) FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='church_registers'
+              AND COLUMN_NAME='details'");
+        $meta->execute();$hasDetails=(int)$meta->fetchColumn()>0;
+        $q=$pdo->prepare("SELECT name,".($hasDetails?'details':'NULL AS details')." FROM church_registers
             WHERE church_id=? AND kind='finance_category' AND active=1 ORDER BY name");
         $q->execute([$churchId]);
         foreach($q->fetchAll(PDO::FETCH_ASSOC) as $r){
