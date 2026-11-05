@@ -134,6 +134,18 @@ final class TreasurySmartEntry
 
     public static function ensureSchema(PDO $pdo):void
     {
+        // The update must also handle early installations where department
+        // entries predated personal contributors and registry references.
+        // DDL happens before any financial transaction is opened.
+        $columns=$pdo->query("SELECT COLUMN_NAME FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='finance_entries'")
+            ->fetchAll(PDO::FETCH_COLUMN);
+        $existing=array_fill_keys(array_map('strval',$columns),true);
+        foreach(['member_id','cost_center_id','contact_id'] as $column){
+            if(!isset($existing[$column])){
+                $pdo->exec('ALTER TABLE finance_entries ADD COLUMN '.$column.' CHAR(36) NULL');
+            }
+        }
         $q=$pdo->query("SELECT COUNT(*) FROM information_schema.TABLES
             WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='finance_entry_items'");
         if((int)$q->fetchColumn()!==0)return;
