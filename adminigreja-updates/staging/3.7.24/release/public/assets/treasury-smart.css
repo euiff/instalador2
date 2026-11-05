@@ -1,0 +1,22 @@
+[data-smart-treasury] [hidden],[data-smart-category] [hidden]{display:none!important}
+.smart-money{position:relative}
+.smart-money::before{content:'R$';position:absolute;left:12px;bottom:12px;color:#476779;font-weight:700}
+.smart-money input{padding-left:39px;text-align:right;font-variant-numeric:tabular-nums}
+[data-smart-treasury] [data-category-search]{margin-bottom:5px}
+.smart-quick-field{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
+[data-smart-treasury] [data-ocr-area]{padding:15px;border:1px solid #d5e3ec;border-radius:12px;background:#f8fbfd;display:grid;gap:10px}
+[data-smart-treasury] [data-ocr-state]{font-size:12px;line-height:1.6;color:#5d7487}
+.smart-ocr-product-list{display:grid;gap:8px}
+.smart-ocr-product{display:grid;grid-template-columns:minmax(180px,2fr) minmax(88px,.7fr) minmax(140px,1.5fr);gap:6px}
+[data-smart-treasury] [data-ocr-verify]{padding:8px 11px;border-left:3px solid #d4a24c;background:#fffbef}
+[data-smart-treasury] [data-dizimo-note]{color:#9b6124;font-weight:650}
+[data-treasury-contact-dialog]{width:min(490px,calc(100vw - 16px));border:1px solid #ccdce6;border-radius:17px;padding:22px}
+[data-treasury-contact-dialog]::backdrop{background:#0c283799}
+[data-treasury-contact-dialog] form{display:grid;gap:12px}
+[data-treasury-contact-dialog] label{display:grid;gap:6px}
+[data-treasury-contact-dialog] [data-contact-response]{font-size:13px}
+@media(max-width:650px){
+.smart-ocr-product{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.smart-ocr-product [data-item-name]{grid-column:1/-1}
+.smart-quick-field{grid-template-columns:1fr}
+}
