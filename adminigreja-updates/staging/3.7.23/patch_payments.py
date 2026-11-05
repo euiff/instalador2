@@ -14,10 +14,6 @@ def patch_payments(source:bytes)->bytes:
         "$payment=$p->fetch();if(!$payment)throw new RuntimeException('Pagamento não encontrado nesta igreja.');",
         "reject invalid or cross-church payment update")
     s=once(s,
-        " $status=(string)($_GET['status']??'all');if(!in_array($status,['all','pending','confirmed','failed','cancelled'],true))$status='all';",
-        " $status=(string)($_GET['status']??'all');if(!in_array($status,['all','pending','confirmed','failed','cancelled'],true))$status='all';",
-        "keep filtering status")
-    s=once(s,
         "$q->execute($params);$rows=$q->fetchAll();",
         "$q->execute($params);$rows=$q->fetchAll();\n"
         " $summary=PixPaymentSummary::totals($pdo,(string)$cid,$from,$to,$status);\n"
