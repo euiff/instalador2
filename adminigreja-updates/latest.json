@@ -1,35 +1,36 @@
 {
-  "version": "3.7.22",
+  "version": "3.7.23",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.22.01.b64.txt",
-    "releases/v3.7.22.02.b64.txt",
-    "releases/v3.7.22.03.b64.txt",
-    "releases/v3.7.22.04.b64.txt",
-    "releases/v3.7.22.05.b64.txt",
-    "releases/v3.7.22.06.b64.txt",
-    "releases/v3.7.22.07.b64.txt"
+    "releases/v3.7.23.01.b64.txt",
+    "releases/v3.7.23.02.b64.txt",
+    "releases/v3.7.23.03.b64.txt",
+    "releases/v3.7.23.04.b64.txt",
+    "releases/v3.7.23.05.b64.txt",
+    "releases/v3.7.23.06.b64.txt",
+    "releases/v3.7.23.07.b64.txt"
   ],
-  "sha256": "fe08f3cfa1328df3d35c9f6e110a304e71e1fa63307a7637f754d4a3f58f873d",
-  "published_at": "2026-11-05T00:15:21.422057+00:00",
-  "cache_buster": "3.7.22-finance-general-vs-department",
+  "sha256": "123a7152280c834106c763ea995a3fcda18ee84711ffe904077b75b9ee44f6a8",
+  "published_at": "2026-11-05T00:45:39.716234+00:00",
+  "cache_buster": "3.7.23-pix-workflow-full-audit",
   "notes": [
-    "O dízimo ou oferta lançado na Tesouraria Geral pertence somente ao caixa Geral, mesmo se o membro pertence a Jovens ou outro departamento.",
-    "Apenas lançamentos explícitos na Tesouraria dos Departamentos entram no caixa do ministério.",
-    "Os formulários gerais não permitem escolher uma conta financeira de departamento.",
-    "Regras aplicadas também a recibos, contas a pagar, recebíveis, importação CSV e despesas do portal contábil.",
-    "O consolidado da igreja reúne uma única vez as movimentações gerais e departamentais.",
-    "Todos os registros históricos são preservados; nenhuma movimentação existente é alterada."
+    "Auditoria geral dos módulos com dados fictícios e testes cumulativos das versões anteriores.",
+    "Pagamentos PIX: corrigidos valores dos indicadores Registrado, Confirmado e Pendente.",
+    "Indicadores PIX agora incluem todos os registros filtrados, não apenas as primeiras 1.000 linhas.",
+    "Reconfirmação de pagamento PIX não cria lançamentos duplicados no caixa geral.",
+    "Somente pagamentos da própria igreja podem ser editados; reforçada validação de valores e tipos.",
+    "Regressões de membros, líderes, caixas, relatórios, notas, recibos PDF, contador, portais e cursos.",
+    "WhatsApp, e-mail, navegador real e instalação cPanel requerem testes separados de homologação."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "871a6749321d964aaa27d2145abe74d07d0100d6227bb5e553820571fc77f1e2"
+      "sha256": "32d3373b57e0dca011fde9eafb042fb84e64e4553b5a432611d70b2c46e712db"
     },
     {
       "path": "public/VERSION",
-      "sha256": "dd76b71b3cdc6cc8940ca02d990482c471356a4ac95c8dd36d5654ccd31d2544"
+      "sha256": "b72ff9a7b359ed72f1d5725dc9fd4c70f078e451485b5153425413d10829d16e"
     },
     {
       "path": "public/accounting-file.php",
@@ -424,6 +425,10 @@
       "sha256": "0e4519825f37cc4f3a0ff9dbc49e088750e26ced4cd60794dd642b36f5da0f39"
     },
     {
+      "path": "public/lib/PixPaymentSummary.php",
+      "sha256": "c757e4f9fa3e4d96275e97f81f756c74c14d7a6ef87f2578e7ebfa6a98a3220e"
+    },
+    {
       "path": "public/lib/PortalService.php",
       "sha256": "d02eaaa9d4932a695ead1ab3ca6dc2bad74799759cf2db188e46a778e8f6da4e"
     },
@@ -537,7 +542,7 @@
     },
     {
       "path": "public/payments.php",
-      "sha256": "70819321f67a65f3aa1f13f00576bdf53c632b47f06b312b7fad68970c64fdcb"
+      "sha256": "5e95f909d82401bb891d55511019531d7938a4fff29861bb381b3fe5db537c1c"
     },
     {
       "path": "public/portal-home.php",
