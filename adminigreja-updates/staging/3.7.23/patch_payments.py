@@ -53,12 +53,14 @@ def patch_payments(source:bytes)->bytes:
           VALUES(?,?,?,'income',?,?,?,?,?,'posted','pix',?,?)");
         $f->execute([app_uuid(),$cid,$payment['member_id']??null,$payment['payment_type'],$category,$pixDescription,$payment['amount'],$pixDate,$payment['id'],$payment['created_at']]);
        }"""
-    startMarker='       $f=$pdo->prepare("INSERT INTO finance_entries'
-    endMarker='\\n      }else{'
-    if s.count(startMarker)!=1:raise RuntimeError("Legacy PIX posting anchor changed")
-    start=s.index(startMarker)
+    # Take the full existing PIX SQL block by immutable SQL/parameter anchors.
+    marker='INSERT INTO finance_entries(id,church_id,member_id,direction,income_kind'
+    if s.count(marker)!=1:raise RuntimeError("Legacy PIX posting column list changed")
+    start=s.rfind('\\n',0,s.index(marker))+1
+    endMarker="$payment['created_at']]);"
     end=s.find(endMarker,start)
-    if end<0 or 'ON DUPLICATE KEY UPDATE' not in s[start:end]:
-        raise RuntimeError("Legacy PIX duplicate update body changed")
+    if end<0:raise RuntimeError("Legacy PIX params changed")
+    end+=len(endMarker)
+    if 'ON DUPLICATE KEY UPDATE' not in s[start:end]:raise RuntimeError("Original PIX posting style changed")
     s=s[:start]+replacement+s[end:]
     return s.encode("utf-8")
