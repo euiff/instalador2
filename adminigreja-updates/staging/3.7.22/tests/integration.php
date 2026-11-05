@@ -72,6 +72,14 @@ $generalBefore=(string)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM finance_
  WHERE church_id='".$churchA."' AND direction='income' AND status='posted'
  AND transaction_date BETWEEN '".$from."' AND '".$to."'")->fetchColumn();
 
+// Prior feature-regression fixtures do not load optional financial import batches.
+// Apply the platform migration on this isolated test database before testing CSV.
+$batchMigration=file_get_contents($dir.'/public/database/030_finance_import_batches.sql');
+$check(is_string($batchMigration)&&trim($batchMigration)!=='','release contains the official CSV batch schema');
+foreach(explode(';',(string)$batchMigration) as $statement){
+  $statement=trim($statement);
+  if($statement!=='')$pdo->exec($statement);
+}
 $csv=new FinanceCsvImport($pdo,$financeAuth,$churchA);
 $head="Data;Tipo;Categoria;Descrição;Valor;Membro;Conta;Centro de custos\n";
 $line="$date;Entrada;Dízimos;Dízimo geral de membro do ministério;100,00;$memberName;Caixa Geral de Testes 3722;\n";
