@@ -67,6 +67,9 @@ final class TreasurySmartEntry
 
     public static function amount(string $raw):string
     {
+        $raw=trim(preg_replace('/^R\\$\\s*/u','',trim($raw))??'');
+        if(!preg_match('/^(?:[0-9]{1,10}(?:,[0-9]{1,2})?|[0-9]{1,3}(?:\\.[0-9]{3}){1,3},[0-9]{1,2}|[0-9]{1,10}(?:\\.[0-9]{1,2})?)$/D',$raw))
+            throw new InvalidArgumentException('Formato monetário inválido. Use 125,50.');
         $amount=ReceiptParser::amount($raw);
         if($amount===null||FinanceOperations::cents($amount)<=0||(float)$amount>999999999.99)
             throw new InvalidArgumentException('Informe valor positivo em reais, por exemplo 125,50.');
