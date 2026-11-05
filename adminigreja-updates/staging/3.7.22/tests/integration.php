@@ -98,7 +98,7 @@ $check($preview['rows'][0]['member_id']===$memberA,'donor linked to member as ex
 $check($preview['rows'][0]['account_id']===$generalAccountId,'general cashier scope selected');
 $csv->commit($preview);
 $query=$pdo->prepare("SELECT id,church_id,account_id,member_id,department_id,direction,amount,source
- FROM finance_entries WHERE church_id=? AND description=? ORDER BY created_at DESC LIMIT 1");
+ FROM finance_entries WHERE church_id=? AND description=? LIMIT 1");
 $query->execute([$churchA,'Dízimo geral de membro do ministério']);$generalEntry=$query->fetch(PDO::FETCH_ASSOC);
 $check($generalEntry['member_id']===$memberA,'dízimo remains visible in personal member history');
 $check($generalEntry['account_id']===$generalAccountId,'cash received by general cashier remains general');
