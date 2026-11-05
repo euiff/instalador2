@@ -1,15 +1,54 @@
-name: Igreja Master 3.7.24 inspect finance
+name: Igreja Master 3.7.24 - Tesouraria Inteligente
 on:
   pull_request:
     branches: [main]
+    paths:
+      - ".github/workflows/igreja-master-3724.yml"
+      - "adminigreja-updates/staging/3.7.24/**"
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: igreja-master-3724-release
+  cancel-in-progress: true
 jobs:
-  inspect:
+  validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 22
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: localtestonly
+          MARIADB_DATABASE: igreja_accounting_test
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mariadb-admin ping --host=127.0.0.1 --user=root --password=localtestonly"
+          --health-interval=5s --health-timeout=4s --health-retries=15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feature/igreja-master-3.7.24-tesouraria-inteligente
-      - run: python3 adminigreja-updates/staging/3.7.24/source_overview.py
+          persist-credentials: true
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql,mbstring,dom,zip,fileinfo,iconv,gd
+          coverage: none
+      - name: Build, lint PHP/JS, exercise finance and tenant regressions
+        env:
+          TEST_ACCOUNTING_DSN: mysql:host=127.0.0.1;port=3306;dbname=igreja_accounting_test;charset=utf8mb4
+          TEST_ACCOUNTING_USER: root
+          TEST_ACCOUNTING_PASSWORD: localtestonly
+        run: python3 adminigreja-updates/staging/3.7.24/build_release.py
+      - name: Commit validated complete update archive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.24.*.b64.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Build validated Igreja Master 3.7.24 Tesouraria Inteligente"
+            git fetch origin feature/igreja-master-3.7.24-tesouraria-inteligente
+            git rebase FETCH_HEAD
+            git push origin HEAD:feature/igreja-master-3.7.24-tesouraria-inteligente
+          fi
