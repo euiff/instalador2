@@ -56,7 +56,7 @@ for name in ['public/events.php','public/members.php','public/payments.php','pub
  print('===== TARGET '+name+' '+str(len(ls))+' =====')
  ids=set(range(min(25,len(ls))))
  for i,l in enumerate(ls):
-  if re.search(r'REQUEST_METHOD|\\$_POST|verify_csrf|\\bcsrf\\b|\\$action|INSERT INTO|UPDATE |DELETE FROM|create\\(|if\\s*\\(.*POST|requireAbility|password|token|hash_equals|sha256',l,re.I): ids.update(range(max(0,i-4),min(len(ls),i+7)))
+  if any(term in l.lower() for term in ['request_method','$_post','verify_csrf','csrf','action','insert into','update ','delete from','create(','requireability','password','token','hash_equals','sha256']): ids.update(range(max(0,i-4),min(len(ls),i+7)))
  for i in sorted(ids)[:200]:print('%04d: %s'%(i+1,ls[i][:1500]))
 print('TARGET END')
 
