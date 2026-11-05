@@ -1,0 +1,39 @@
+{
+  "version": "3.7.24",
+  "min_php": "8.1",
+  "encoding": "base64",
+  "parts": [
+    "releases/v3.7.24.01.b64.txt",
+    "releases/v3.7.24.02.b64.txt",
+    "releases/v3.7.24.03.b64.txt"
+  ],
+  "sha256": "d1e822bad137beffec21c29adc2282b86347ab16c0ad73689b818ea7d91e7b78",
+  "cache_buster": "3.7.24-finance-form-assistant-candidate",
+  "notes": [
+    "Versão candidata para validação; ainda não está no latest.json de produção.",
+    "Formulários financeiros: categorias existentes, valor R$ pt-BR, proteção visual contra clique repetido.",
+    "Mantém regras existentes de comprovantes, recibos e isolamento entre igrejas; homologação em cPanel pendente."
+  ],
+  "files": [
+    {
+      "path": "public/VERSION",
+      "sha256": "a5b2fa5603b2f6433afe6ac35b048634664c349ad7e578b1feacf030343f818a"
+    },
+    {
+      "path": "public/CHANGELOG.md",
+      "sha256": "6163659382f7daf3c57a5bf4945313abe71bca4c638af6cca00e9a5ec65c0b46"
+    },
+    {
+      "path": "public/finance.php",
+      "sha256": "3769ede970f7b0327d5b1586551e66d75ed86478b13c93bd64a95337dae4b148"
+    },
+    {
+      "path": "public/department-treasury.php",
+      "sha256": "2c7923b76a22992726ade02d40486af0a24bff451af8c2b67b66216a7f3279a7"
+    },
+    {
+      "path": "public/assets/finance-assistant-3724.js",
+      "sha256": "8b9e5957abbd8c09e419820be9407f2ffc74be3b6c678f80a4adf2c8c1a08735"
+    }
+  ]
+}
