@@ -1,0 +1,17 @@
+name: Igreja Master 3.7.23 full module inventory
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  survey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/igreja-master-3.7.23-auditoria-integral
+      - name: Run verified package coverage inventory
+        run: python3 adminigreja-updates/staging/3.7.23/audit_inventory.py
