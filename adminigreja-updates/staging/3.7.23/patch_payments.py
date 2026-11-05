@@ -10,9 +10,8 @@ def patch_payments(source:bytes)->bytes:
         "require_once __DIR__.'/lib/FinancePeriodGuard.php';\n"
         "require_once __DIR__.'/lib/PixPaymentSummary.php';", "include summary service")
     s=once(s,
-        "if($payment){\n      $checkDates=",
-        "if(!$payment)throw new RuntimeException('Pagamento não encontrado nesta igreja.');\n"
-        "     if($payment){\n      $checkDates=",
+        "$payment=$p->fetch();",
+        "$payment=$p->fetch();if(!$payment)throw new RuntimeException('Pagamento não encontrado nesta igreja.');",
         "reject invalid or cross-church payment update")
     s=once(s,
         " $status=(string)($_GET['status']??'all');if(!in_array($status,['all','pending','confirmed','failed','cancelled'],true))$status='all';",
