@@ -27,7 +27,7 @@ def patch_footer(source):
 def expose_ocr_loader(source):
     text=source.decode('utf8')
     text=replace_once(text,
-       "   const form=document.getElementById('acc-upload-form');\n   if(!form)return;",
-       "   const form=document.getElementById('acc-upload-form');\n   window.IgrejaOCRLoad=loadTesseract;\n   if(!form)return;",
+       "  const form=document.getElementById('acc-upload-form');\n  if(!form)return;",
+       "  const form=document.getElementById('acc-upload-form');\n  window.IgrejaOCRLoad=loadTesseract;\n  if(!form)return;",
        'safe existing OCR loader shared with treasury')
     return text.encode('utf8')
