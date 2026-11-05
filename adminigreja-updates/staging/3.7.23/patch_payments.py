@@ -39,10 +39,6 @@ def patch_payments(source:bytes)->bytes:
         "$p=$pdo->prepare('SELECT * FROM pix_payments WHERE id=? AND church_id=? LIMIT 1');",
         "$p=$pdo->prepare('SELECT * FROM pix_payments WHERE id=? AND church_id=? LIMIT 1 FOR UPDATE');",
         "lock one PIX payment against duplicate confirmation")
-    original="""       $f=$pdo->prepare("INSERT INTO finance_entries(id,church_id,member_id,direction,income_kind,category,description,amount,transaction_date,status,source,pix_payment_id,created_at)
-        VALUES(?,?,?,'income',?,?,?,?,?,'posted','pix',?,?)
-        ON DUPLICATE KEY UPDATE member_id=VALUES(member_id),income_kind=VALUES(income_kind),category=VALUES(category),description=VALUES(description),amount=VALUES(amount),transaction_date=VALUES(transaction_date),status='posted'");
-       $f->execute([app_uuid(),$cid,$payment['member_id']??null,$payment['payment_type'],$category,'PIX - '.(($payment['name']??'')?:$payment['phone']),$payment['amount'],date('Y-m-d',strtotime($payment['paid_at']?:$payment['created_at'])),$payment['id'],$payment['created_at']]);"""
     replacement="""       $pixDescription='PIX - '.(($payment['name']??'')?:$payment['phone']);
        $pixDate=date('Y-m-d',strtotime($payment['paid_at']?:$payment['created_at']));
        $findPix=$pdo->prepare('SELECT id FROM finance_entries WHERE church_id=? AND pix_payment_id=? FOR UPDATE');
@@ -57,5 +53,12 @@ def patch_payments(source:bytes)->bytes:
           VALUES(?,?,?,'income',?,?,?,?,?,'posted','pix',?,?)");
         $f->execute([app_uuid(),$cid,$payment['member_id']??null,$payment['payment_type'],$category,$pixDescription,$payment['amount'],$pixDate,$payment['id'],$payment['created_at']]);
        }"""
-    s=once(s,original,replacement,"re-confirm PIX without duplicate ledger inserts")
+    startMarker='       $f=$pdo->prepare("INSERT INTO finance_entries'
+    endMarker='\\n      }else{'
+    if s.count(startMarker)!=1:raise RuntimeError("Legacy PIX posting anchor changed")
+    start=s.index(startMarker)
+    end=s.find(endMarker,start)
+    if end<0 or 'ON DUPLICATE KEY UPDATE' not in s[start:end]:
+        raise RuntimeError("Legacy PIX duplicate update body changed")
+    s=s[:start]+replacement+s[end:]
     return s.encode("utf-8")
