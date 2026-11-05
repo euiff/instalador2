@@ -1,34 +1,35 @@
 {
-  "version": "3.7.21",
+  "version": "3.7.22",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.21.01.b64.txt",
-    "releases/v3.7.21.02.b64.txt",
-    "releases/v3.7.21.03.b64.txt",
-    "releases/v3.7.21.04.b64.txt",
-    "releases/v3.7.21.05.b64.txt",
-    "releases/v3.7.21.06.b64.txt",
-    "releases/v3.7.21.07.b64.txt"
+    "releases/v3.7.22.01.b64.txt",
+    "releases/v3.7.22.02.b64.txt",
+    "releases/v3.7.22.03.b64.txt",
+    "releases/v3.7.22.04.b64.txt",
+    "releases/v3.7.22.05.b64.txt",
+    "releases/v3.7.22.06.b64.txt",
+    "releases/v3.7.22.07.b64.txt"
   ],
-  "sha256": "57f4407d7c29530c8ac12869c1f46247e33a232726b61400802b4e3052fcd0b5",
-  "published_at": "2026-11-04T22:46:09.626872+00:00",
-  "cache_buster": "3.7.21-ministry-member-joined-on",
+  "sha256": "fe08f3cfa1328df3d35c9f6e110a304e71e1fa63307a7637f754d4a3f58f873d",
+  "published_at": "2026-11-05T00:15:21.422057+00:00",
+  "cache_buster": "3.7.22-finance-general-vs-department",
   "notes": [
-    "Corrigido erro SQLSTATE[HY000] 1364: campo joined_on sem valor ao salvar líder de departamento.",
-    "A data de vínculo é inserida automaticamente, respeitando colunas DATE e DATETIME do banco.",
-    "Compatível com igrejas antigas e novas, sem mexer nos cadastros existentes.",
-    "Liderança vinculada ao departamento escolhido com acesso financeiro limitado ao próprio ministério.",
-    "Operação transacional e isolamento por igreja preservados."
+    "O dízimo ou oferta lançado na Tesouraria Geral pertence somente ao caixa Geral, mesmo se o membro pertence a Jovens ou outro departamento.",
+    "Apenas lançamentos explícitos na Tesouraria dos Departamentos entram no caixa do ministério.",
+    "Os formulários gerais não permitem escolher uma conta financeira de departamento.",
+    "Regras aplicadas também a recibos, contas a pagar, recebíveis, importação CSV e despesas do portal contábil.",
+    "O consolidado da igreja reúne uma única vez as movimentações gerais e departamentais.",
+    "Todos os registros históricos são preservados; nenhuma movimentação existente é alterada."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "cbee2de42b454e3767baa0faf66f261592d53b37521f0fda894e91dc5ac17ed4"
+      "sha256": "871a6749321d964aaa27d2145abe74d07d0100d6227bb5e553820571fc77f1e2"
     },
     {
       "path": "public/VERSION",
-      "sha256": "fc36a80b91205e7a6ecf25527caf4301b111eb19299dbac4ab0c4d161cfb5b4c"
+      "sha256": "dd76b71b3cdc6cc8940ca02d990482c471356a4ac95c8dd36d5654ccd31d2544"
     },
     {
       "path": "public/accounting-file.php",
@@ -204,7 +205,7 @@
     },
     {
       "path": "public/department-report.php",
-      "sha256": "581524b906038d13213f1b7092704caadfdb64a48458839ae492adffd2467d78"
+      "sha256": "e376cc9794722e065ae7d09d7ffc2a3fba42d966613c0a4575a9f85b5705c5d1"
     },
     {
       "path": "public/department-team.php",
@@ -240,15 +241,15 @@
     },
     {
       "path": "public/finance-control.php",
-      "sha256": "c617c221496a9bfe372c1b73d576358c8ea92c7499a7890b7e4f485ddcbce510"
+      "sha256": "226a9ee4227df794585bd74fb1a1f57b37dcdcdf840ec4be8142d16290ebeafb"
     },
     {
       "path": "public/finance-import.php",
-      "sha256": "8785f304f6f5a027da66adcd577e9b42f74accc795cfbfe3b2bd23c35f499346"
+      "sha256": "8c9365df01fb2a83ee0cca48b759bb1eb9c69370c63d5339f85d1fe1ce22c085"
     },
     {
       "path": "public/finance.php",
-      "sha256": "d5fab131b065f53f5da1485af66a2911d9c4d825fb75eb8062aa25a66454ba11"
+      "sha256": "bb1a703e815dcdbc79bd0b37cc8a79a7fa85c8464fe2902a8e657470653d0149"
     },
     {
       "path": "public/kids-checkin.php",
@@ -264,7 +265,7 @@
     },
     {
       "path": "public/lib/AccountingService.php",
-      "sha256": "8c43d9c501deafda879606f3a3cdd5af82279522c13213a07f6b3f99421be740"
+      "sha256": "bb6248b797e45f7f56fc1b0b75994e85f784876f209ee6eb6225997c55c2fd8a"
     },
     {
       "path": "public/lib/AnnouncementService.php",
@@ -356,15 +357,19 @@
     },
     {
       "path": "public/lib/FinanceCsvImport.php",
-      "sha256": "a72bef97e6d5eb22f2df7801dca3b31a5467a7cfe23e9933272b6e642d9624fd"
+      "sha256": "010a562b383b82e72f7df4e8db01a34d2e7062b103bb3efd491ef3b6bd6fc0c6"
     },
     {
       "path": "public/lib/FinanceOperations.php",
-      "sha256": "d3ad29d30559eade904a469b857f0fb840856af377d988fa8d59400555ed7821"
+      "sha256": "7d3fa8b35d72f5f6aa3c3aaf861cae0dd8188c8ca6fb36c55dbaa029cd757a82"
     },
     {
       "path": "public/lib/FinancePeriodGuard.php",
       "sha256": "9df2240fc5825a53e9c4005f1d3436de8eea12658ebca4099e5eebd810d86687"
+    },
+    {
+      "path": "public/lib/GeneralTreasuryAccountScope.php",
+      "sha256": "e8e835575b0dc05ba48ada8d051f8ff30bc454840c8711c0183078521bdf6fe0"
     },
     {
       "path": "public/lib/GroupBroadcastService.php",
