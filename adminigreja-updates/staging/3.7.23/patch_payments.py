@@ -56,7 +56,8 @@ def patch_payments(source:bytes)->bytes:
     # Take the full existing PIX SQL block by immutable SQL/parameter anchors.
     marker='INSERT INTO finance_entries(id,church_id,member_id,direction,income_kind'
     if s.count(marker)!=1:raise RuntimeError("Legacy PIX posting column list changed")
-    start=s.rfind('\\n',0,s.index(marker))+1
+    start=s.rfind(chr(10),0,s.index(marker))+1
+    if '$f=$pdo->prepare' not in s[start:start+100]:raise RuntimeError('PIX SQL block begins at wrong boundary')
     endMarker="$payment['created_at']]);"
     end=s.find(endMarker,start)
     if end<0:raise RuntimeError("Legacy PIX params changed")
