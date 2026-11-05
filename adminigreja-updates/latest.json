@@ -1,36 +1,37 @@
 {
-  "version": "3.7.23",
+  "version": "3.7.24",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.23.01.b64.txt",
-    "releases/v3.7.23.02.b64.txt",
-    "releases/v3.7.23.03.b64.txt",
-    "releases/v3.7.23.04.b64.txt",
-    "releases/v3.7.23.05.b64.txt",
-    "releases/v3.7.23.06.b64.txt",
-    "releases/v3.7.23.07.b64.txt"
+    "releases/v3.7.24.01.b64.txt",
+    "releases/v3.7.24.02.b64.txt",
+    "releases/v3.7.24.03.b64.txt",
+    "releases/v3.7.24.04.b64.txt",
+    "releases/v3.7.24.05.b64.txt",
+    "releases/v3.7.24.06.b64.txt",
+    "releases/v3.7.24.07.b64.txt"
   ],
-  "sha256": "123a7152280c834106c763ea995a3fcda18ee84711ffe904077b75b9ee44f6a8",
-  "published_at": "2026-11-05T00:45:39.716234+00:00",
-  "cache_buster": "3.7.23-pix-workflow-full-audit",
+  "sha256": "df40436fbeb2909740a41d5b149f46b4a7a121d04db7857d61895546de942426",
+  "published_at": "2026-11-05T23:42:01.061291+00:00",
+  "cache_buster": "3.7.24-tesouraria-inteligente",
   "notes": [
-    "Auditoria geral dos módulos com dados fictícios e testes cumulativos das versões anteriores.",
-    "Pagamentos PIX: corrigidos valores dos indicadores Registrado, Confirmado e Pendente.",
-    "Indicadores PIX agora incluem todos os registros filtrados, não apenas as primeiras 1.000 linhas.",
-    "Reconfirmação de pagamento PIX não cria lançamentos duplicados no caixa geral.",
-    "Somente pagamentos da própria igreja podem ser editados; reforçada validação de valores e tipos.",
-    "Regressões de membros, líderes, caixas, relatórios, notas, recibos PDF, contador, portais e cursos.",
-    "WhatsApp, e-mail, navegador real e instalação cPanel requerem testes separados de homologação."
+    "Contas gerais: edição de nome/tipo e saldo inicial protegido após movimentações.",
+    "Categorias pesquisáveis em listas para Entrada/Saída e teclado numérico para valores em reais.",
+    "Dízimos/Ofertas com descrição automática, dízimos exigem membro contribuinte.",
+    "Formulários simplificados por tipo, contato rápido, centro de custos, anexo e recibo assinado.",
+    "Mesmas melhorias na tesouraria de cada departamento, sem duplicação no caixa geral.",
+    "Foto de nota/cupom: OCR opcional sugere data, categoria, fornecedor, valor e produtos.",
+    "Produtos conferidos vinculados ao documento original, consulta e exportação para o contador.",
+    "Permissões por igreja e testes cumulativos antes da publicação."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "32d3373b57e0dca011fde9eafb042fb84e64e4553b5a432611d70b2c46e712db"
+      "sha256": "b4afb5145aa461b8e35ee259f35d0e3c4bade59b80ef288fb4ae31008fc7e513"
     },
     {
       "path": "public/VERSION",
-      "sha256": "b72ff9a7b359ed72f1d5725dc9fd4c70f078e451485b5153425413d10829d16e"
+      "sha256": "a5b2fa5603b2f6433afe6ac35b048634664c349ad7e578b1feacf030343f818a"
     },
     {
       "path": "public/accounting-file.php",
@@ -46,7 +47,7 @@
     },
     {
       "path": "public/accounting.php",
-      "sha256": "323394d8b01d0f7a6fe54da0fe6f18aa085e509f6765563574216f9347f1df6e"
+      "sha256": "fd71b46ecf8566562139b495d1559f61dd41894a48a2c0a6bdba6ada935f111d"
     },
     {
       "path": "public/albums.php",
@@ -58,7 +59,7 @@
     },
     {
       "path": "public/assets/accounting-ocr.js",
-      "sha256": "be73648cb72aa8747a7a9262e9bf9d0b6ba30cf55dc6516c4b5688b5860a49dc"
+      "sha256": "2f0c027387a0ac7f61a2d6dad91c605da8a5d5982edc755e2898ac4c3729246a"
     },
     {
       "path": "public/assets/expense-receipt.css",
@@ -91,6 +92,18 @@
     {
       "path": "public/assets/password-visibility.js",
       "sha256": "ff0e11b6c351cf488acc22bf3a763dcf8756f1b6857422efa63a9517a2cfacf1"
+    },
+    {
+      "path": "public/assets/treasury-ocr.js",
+      "sha256": "ba9798e97b798ac9477523cff18b18c9d21dd30d287a93a787f14392afdba991"
+    },
+    {
+      "path": "public/assets/treasury-smart.css",
+      "sha256": "7e5a19804f974a3a7c6fc0ba69660a3797d983bf1d0c24081026a742af6e9489"
+    },
+    {
+      "path": "public/assets/treasury-smart.js",
+      "sha256": "104da0d202999bfb4c3689417fad486663b65ba7f32a77e8f96263012aa18ca6"
     },
     {
       "path": "public/assets/users-member-autofill.js",
@@ -201,6 +214,10 @@
       "sha256": "e09cc106b58211aab8b6d71c8958d8ca8b3404a478969e13536332a2150f0de1"
     },
     {
+      "path": "public/database/047_finance_entry_items.sql",
+      "sha256": "315182bffddaa3112e9ba33543ab317a0ce8965d5f7691429b684756a13ef680"
+    },
+    {
       "path": "public/department-people.php",
       "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
     },
@@ -214,7 +231,7 @@
     },
     {
       "path": "public/department-treasury.php",
-      "sha256": "32723ea2570a0418c95661ea7a33c706008b66eab7a4bf6858cfa94d6254ca94"
+      "sha256": "1a857f45b1d217489b4e26e1b2580279cde9c2fce9f1a66d2612e8b0f60cff8b"
     },
     {
       "path": "public/donate.php",
@@ -241,6 +258,10 @@
       "sha256": "3d345d7cfba637bfd37613c322ce3a95ae2698adb6837fb7248eba5b5f54091e"
     },
     {
+      "path": "public/finance-contact-create.php",
+      "sha256": "bc063ca575cd36241fb4a2085d5b85d86b2f793072bebdbf3563d5f02b4ec938"
+    },
+    {
       "path": "public/finance-control.php",
       "sha256": "226a9ee4227df794585bd74fb1a1f57b37dcdcdf840ec4be8142d16290ebeafb"
     },
@@ -249,8 +270,16 @@
       "sha256": "8c9365df01fb2a83ee0cca48b759bb1eb9c69370c63d5339f85d1fe1ce22c085"
     },
     {
+      "path": "public/finance-ocr-items-csv.php",
+      "sha256": "229d2ca2012eebc8be79cfc149aaf74a9bd8096b767e74622a98081a95ea5f52"
+    },
+    {
+      "path": "public/finance-parse.php",
+      "sha256": "f82e1c9c5d574e990322524bc7904fd3593e7908e2278d821847d3142b042def"
+    },
+    {
       "path": "public/finance.php",
-      "sha256": "bb1a703e815dcdbc79bd0b37cc8a79a7fa85c8464fe2902a8e657470653d0149"
+      "sha256": "50a5defce99863b98fa92a231a835de0a41c0195fe58ac67496a58d26d5d74a9"
     },
     {
       "path": "public/kids-checkin.php",
@@ -322,7 +351,7 @@
     },
     {
       "path": "public/lib/DepartmentTreasuryService.php",
-      "sha256": "16ee60ee60826c80a22534a635bfb1d62c3129cd882572785fab29ae293e3922"
+      "sha256": "d19319b5f7c2382e26afb49c940bb8dec0314e1a6db5ce26f48e2e27a015dd6e"
     },
     {
       "path": "public/lib/EnuvesImportMap.php",
@@ -459,6 +488,10 @@
     {
       "path": "public/lib/SystemCourseService.php",
       "sha256": "40ff5407144657145cb9febef9b90c0d1c5edb06652f6a36c3dcf64c8f0b82db"
+    },
+    {
+      "path": "public/lib/TreasurySmartEntry.php",
+      "sha256": "a30817ab3a2a990fa0db9baf424234f73233ffb97b7922c92f2a1450a4cb56fd"
     },
     {
       "path": "public/lib/Ui.php",
