@@ -1,34 +1,34 @@
 {
-  "version": "3.7.24",
+  "version": "3.7.25",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.24-full.01.b64.txt",
-    "releases/v3.7.24-full.02.b64.txt",
-    "releases/v3.7.24-full.03.b64.txt",
-    "releases/v3.7.24-full.04.b64.txt",
-    "releases/v3.7.24-full.05.b64.txt",
-    "releases/v3.7.24-full.06.b64.txt",
-    "releases/v3.7.24-full.07.b64.txt",
-    "releases/v3.7.24-full.08.b64.txt"
+    "releases/v3.7.25-full.01.b64.txt",
+    "releases/v3.7.25-full.02.b64.txt",
+    "releases/v3.7.25-full.03.b64.txt",
+    "releases/v3.7.25-full.04.b64.txt",
+    "releases/v3.7.25-full.05.b64.txt",
+    "releases/v3.7.25-full.06.b64.txt",
+    "releases/v3.7.25-full.07.b64.txt",
+    "releases/v3.7.25-full.08.b64.txt"
   ],
-  "sha256": "891ea9ff91da7ad6a8b7621a688e1fd3a2d842f4f8780acb632558027c87e0d6",
-  "cache_buster": "3.7.24-finance-cumulative",
+  "sha256": "8585ba6a7626f89e15607486eabe995e0cf25d892ce87a66a3f381bf5c715663",
+  "cache_buster": "3.7.25-finance-account-department-routing",
   "notes": [
-    "Atualização cumulativa 3.7.24: mantém todas as correções e funções da versão 3.7.23.",
-    "Seleção rápida de categorias e preenchimento de valores em reais na Tesouraria Geral e nos departamentos.",
-    "Proteção visual contra cliques repetidos, preservando as regras do servidor.",
-    "Validação de integridade por SHA-256 dos arquivos e do arquivo de distribuição.",
-    "Pacote cumulativo validado no CI: 141 arquivos, sintaxe PHP/JavaScript e integridade GZIP/TAR/SHA-256 aprovadas."
+    "Tesouraria: seleção de contas bancárias e caixas dos departamentos autorizados no formulário de entrada/saída.",
+    "Lançamentos departamentais vinculados à conta escolhida, com consolidação única na igreja, respeitando permissões e comprovantes.",
+    "Preservados membro contribuinte, contato, centro de custos e observações.",
+    "Pacote cumulativo mantém todos os arquivos anteriores da versão 3.7.24.",
+    "Homologação automática aprovada com banco MariaDB e rotas HTTP: caixa AÇÃO SOCIAL, conta bancária, registro único, membro e isolamento entre igrejas."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "6163659382f7daf3c57a5bf4945313abe71bca4c638af6cca00e9a5ec65c0b46"
+      "sha256": "621deb3fd0c48852044b3ca12ef48d16c95febdafdcb29c48243b3c9dc828270"
     },
     {
       "path": "public/VERSION",
-      "sha256": "a5b2fa5603b2f6433afe6ac35b048634664c349ad7e578b1feacf030343f818a"
+      "sha256": "0326a880a1970f22c0d3943d08d8ad99f40edb33bab2f142080f3a4cf8c2f4b3"
     },
     {
       "path": "public/accounting-file.php",
@@ -248,7 +248,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "3769ede970f7b0327d5b1586551e66d75ed86478b13c93bd64a95337dae4b148"
+      "sha256": "c88e8681c4ee2e7571aa7e4f0982d85b950aea965742985125bf67ade071b615"
     },
     {
       "path": "public/kids-checkin.php",
@@ -320,7 +320,7 @@
     },
     {
       "path": "public/lib/DepartmentTreasuryService.php",
-      "sha256": "16ee60ee60826c80a22534a635bfb1d62c3129cd882572785fab29ae293e3922"
+      "sha256": "668cf2d0688a0042e3661fcf934b1116a50763cdc25a88e33c6536a0320bbde1"
     },
     {
       "path": "public/lib/EnuvesImportMap.php",
@@ -587,5 +587,5 @@
       "sha256": "8b9e5957abbd8c09e419820be9407f2ffc74be3b6c678f80a4adf2c8c1a08735"
     }
   ],
-  "published_at": "2026-11-06T00:04:48.837Z"
+  "published_at": "2026-11-06T00:57:06.571Z"
 }
