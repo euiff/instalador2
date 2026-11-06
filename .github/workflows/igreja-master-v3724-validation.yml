@@ -1,0 +1,61 @@
+name: Validate Igreja Master 3.7.24 cumulative
+on:
+  push:
+    paths:
+      - ".github/workflows/igreja-master-v3724-validation.yml"
+      - "adminigreja-updates/candidates/v3.7.24-full.json"
+  workflow_dispatch:
+jobs:
+  verify-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Verify complete GZIP/TAR package, hashes and PHP syntax
+        run: |
+          python3 - <<'PY'
+          import base64, gzip, hashlib, io, json, os, pathlib, subprocess, tarfile, tempfile
+          root=pathlib.Path('adminigreja-updates')
+          live=json.loads((root/'latest.json').read_text(encoding='utf-8'))
+          manifest=json.loads((root/'candidates/v3.7.24-full.json').read_text(encoding='utf-8'))
+          assert manifest['version']=='3.7.24'
+          assert len(manifest['files']) >= 130
+          assert len(manifest['parts']) >= 2
+          data=''.join((root/part).read_text(encoding='utf-8').strip() for part in manifest['parts'])
+          raw=base64.b64decode(data, validate=True)
+          assert hashlib.sha256(raw).hexdigest() == manifest['sha256'], 'GZIP sha256 mismatch'
+          tar_bytes=gzip.decompress(raw)
+          expected={x['path']:x['sha256'] for x in manifest['files']}
+          with tarfile.open(fileobj=io.BytesIO(tar_bytes), mode='r:') as tar:
+              members=[x for x in tar.getmembers() if x.isfile()]
+              assert len(members)==len(expected), 'File count mismatch'
+              names=set()
+              with tempfile.TemporaryDirectory() as work:
+                  for member in members:
+                      path=member.name
+                      assert path in expected and path.startswith('public/') and '..' not in pathlib.PurePosixPath(path).parts
+                      assert path not in names
+                      names.add(path)
+                      content=tar.extractfile(member).read()
+                      assert hashlib.sha256(content).hexdigest()==expected[path], f'Corrupted file: {path}'
+                      target=pathlib.Path(work)/path
+                      target.parent.mkdir(parents=True,exist_ok=True)
+                      target.write_bytes(content)
+                  assert names==set(expected)
+                  assert (pathlib.Path(work)/'public/VERSION').read_text().strip()=='3.7.24'
+                  php_files=sorted((pathlib.Path(work)/'public').rglob('*.php'))
+                  assert php_files
+                  for script in php_files:
+                      result=subprocess.run(['php','-l',str(script)],capture_output=True,text=True)
+                      assert result.returncode==0, f'{script}: {result.stdout} {result.stderr}'
+                  for f in ['public/lib/GeneralTreasuryAccountScope.php',
+                            'public/lib/ExpenseReceiptService.php',
+                            'public/lib/DepartmentTreasuryService.php',
+                            'public/assets/finance-assistant-3724.js']:
+                      assert (pathlib.Path(work)/f).is_file(), f'Missing required file {f}'
+                  js=pathlib.Path(work)/'public/assets/finance-assistant-3724.js'
+                  subprocess.run(['node','--check',str(js)],check=True)
+                  print(f'PASS: {len(members)} release files with SHA-256, {len(php_files)} PHP syntax tests, JS syntax and required dependencies')
+          PY
