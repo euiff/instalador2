@@ -1,34 +1,37 @@
 {
-  "version": "3.7.25",
+  "version": "3.7.26",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.25-full.01.b64.txt",
-    "releases/v3.7.25-full.02.b64.txt",
-    "releases/v3.7.25-full.03.b64.txt",
-    "releases/v3.7.25-full.04.b64.txt",
-    "releases/v3.7.25-full.05.b64.txt",
-    "releases/v3.7.25-full.06.b64.txt",
-    "releases/v3.7.25-full.07.b64.txt",
-    "releases/v3.7.25-full.08.b64.txt"
+    "releases/v3.7.26-full.01.b64.txt",
+    "releases/v3.7.26-full.02.b64.txt",
+    "releases/v3.7.26-full.03.b64.txt",
+    "releases/v3.7.26-full.04.b64.txt",
+    "releases/v3.7.26-full.05.b64.txt",
+    "releases/v3.7.26-full.06.b64.txt",
+    "releases/v3.7.26-full.07.b64.txt",
+    "releases/v3.7.26-full.08.b64.txt",
+    "releases/v3.7.26-full.09.b64.txt"
   ],
-  "sha256": "8585ba6a7626f89e15607486eabe995e0cf25d892ce87a66a3f381bf5c715663",
-  "cache_buster": "3.7.25-finance-account-department-routing",
+  "sha256": "070a28fee3a567a398b42f1205bb3cfc63e4e5ec652d49ed180e6a7c247e8bc9",
+  "cache_buster": "3.7.26-white-label-contribution-finance-list",
   "notes": [
-    "Tesouraria: seleção de contas bancárias e caixas dos departamentos autorizados no formulário de entrada/saída.",
-    "Lançamentos departamentais vinculados à conta escolhida, com consolidação única na igreja, respeitando permissões e comprovantes.",
-    "Preservados membro contribuinte, contato, centro de custos e observações.",
-    "Pacote cumulativo mantém todos os arquivos anteriores da versão 3.7.24.",
-    "Homologação automática aprovada com banco MariaDB e rotas HTTP: caixa AÇÃO SOCIAL, conta bancária, registro único, membro e isolamento entre igrejas."
+    "Identidade visual responsiva e personalizada por igreja: logo, cores e slogan.",
+    "Registro rápido do membro por link e QR Code; comprovantes privados, validação de Pix e fila de conferência.",
+    "Movimentação contabilizada somente após confirmação da Tesouraria, com seleção de conta/caixa e auditoria.",
+    "Entradas e saídas com botões separados, máscara em reais, categoria pesquisável, histórico sugerido e dízimo identificado com membro.",
+    "Leitura de cupom e nota acessível na Contabilidade com conferência antes de salvar, preservando os recibos atuais.",
+    "Pacote completo e cumulativo com todos os arquivos da 3.7.25 preservados.",
+    "Pacote completo 3.7.26 validado por testes PHP/JS e MariaDB, incluindo roteiro de contribuições, contas e comprovantes."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "621deb3fd0c48852044b3ca12ef48d16c95febdafdcb29c48243b3c9dc828270"
+      "sha256": "bc50decf590dc47c2ab9622dd432633ef96af8dea801f41dec6c4e327503b228"
     },
     {
       "path": "public/VERSION",
-      "sha256": "0326a880a1970f22c0d3943d08d8ad99f40edb33bab2f142080f3a4cf8c2f4b3"
+      "sha256": "f4b402ebc9abda351db5936d4be8143a85c0e8ed8a025eb21b1719ca5a6d5cc7"
     },
     {
       "path": "public/accounting-file.php",
@@ -248,7 +251,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "c88e8681c4ee2e7571aa7e4f0982d85b950aea965742985125bf67ade071b615"
+      "sha256": "095315c31d95602232588e0b895e143db5635819fc63383f9f86ad2e86b4cf53"
     },
     {
       "path": "public/kids-checkin.php",
@@ -468,7 +471,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "4456dcb6344b4cab3ca1b27ffab401217931622f9a274ce102edc7be99610a93"
+      "sha256": "e8683a350e62e8c77cb4e79b9decd33f08c195b494bd8bcf1b5fa8953aca5813"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -585,7 +588,63 @@
     {
       "path": "public/assets/finance-assistant-3724.js",
       "sha256": "8b9e5957abbd8c09e419820be9407f2ffc74be3b6c678f80a4adf2c8c1a08735"
+    },
+    {
+      "path": "public/lib/TenantBranding.php",
+      "sha256": "5fdfba7d96d482e954d7f0224228204d7ecedd21329bc5154c68935125286d4f"
+    },
+    {
+      "path": "public/lib/ContributionWorkflow.php",
+      "sha256": "5c3a87d53e61dba57f63adc6035d8b4c069ec3058bd60f0a80f0a7aa226771b9"
+    },
+    {
+      "path": "public/database/047_church_white_label.sql",
+      "sha256": "566cf5148255d00c7dee45eb5dcb60347663fd4a7b706cff0e8ac3268c4be98a"
+    },
+    {
+      "path": "public/database/048_contribution_quick_review.sql",
+      "sha256": "37e51a164b0b18906557f459f04eba2ae94c2690103a3e1ee2bc7dcc326cd8de"
+    },
+    {
+      "path": "public/church-branding.php",
+      "sha256": "5fdec36590acbcc876c13348a585abdd104bd9e11f18936b33726cea94812349"
+    },
+    {
+      "path": "public/contribution-settings.php",
+      "sha256": "c19fad0e90e5d0aafb41f7f6a5f8b4d8abe5b75cc00689ba7d38a340fd7ada4a"
+    },
+    {
+      "path": "public/contribute.php",
+      "sha256": "3b44455b894684d47957bf0d2d84531cc2904e91d120c9a9637e83a7e4f8cb1e"
+    },
+    {
+      "path": "public/contribution-review.php",
+      "sha256": "7ff018c04cab68e8beda1f1689a3209c15ac01bd13046f1d4e32bc9579ec5370"
+    },
+    {
+      "path": "public/contribution-proof.php",
+      "sha256": "c23fbe64eeb8f456e17036e28ee6483ab001cecff79ff12f6092583ef1265be9"
+    },
+    {
+      "path": "public/assets/visual-3726.css",
+      "sha256": "f433df4c17048df31c85bca45b480f8e909f597f393ab741d69559d0bf475ce9"
+    },
+    {
+      "path": "public/assets/branding-preview-3726.js",
+      "sha256": "7f2f369b5f712b00b22265c5393d8fe7fe4ed4123cfa9ff70f80bba176b6251e"
+    },
+    {
+      "path": "public/assets/contribution-3726.css",
+      "sha256": "a19f36ad7d6b6444d0414a01e8a211e08de93d6c853053b87ccce06e0a7bb028"
+    },
+    {
+      "path": "public/assets/contribution-form-3726.js",
+      "sha256": "cf0c47905498a2198276c04321f4d0bddd3447fd778c42052eca8c8f7a9e0170"
+    },
+    {
+      "path": "public/assets/finance-assistant-3726.js",
+      "sha256": "a60cbf9a42b9b30a3408e30ec648d08c85a3ed693376c2d56652ad4872f0406c"
     }
   ],
-  "published_at": "2026-11-06T00:57:06.571Z"
+  "published_at": "2026-11-07T23:54:24.014Z"
 }
