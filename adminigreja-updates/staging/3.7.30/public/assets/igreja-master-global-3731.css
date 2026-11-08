@@ -1,0 +1,101 @@
+/* Igreja Master 3.7.31 | Identidade visual global Campo Belo
+ * Referência enviada: fundo branco, azul profundo, azul claro nos títulos,
+ * tipografia legível, campos retos arredondados, navegação de alto contraste.
+ * Aplica-se a todas as páginas com View::header, incluindo o WebView Android.
+ * Não altera tabelas, rotas, permissões ou regras financeiras.
+ */
+:root{
+ --im-ink:#0b2e5b;--im-muted:#526780;--im-line:#cddce9;
+ --im-bg:#f7fafe;--im-card:#fff;--im-primary:#0755aa;
+ --im-soft:#e8f3fb;--im-shadow:0 3px 12px rgba(8,49,97,.055);
+ --cb-brand:#0b4f9d;--cb-brand-dark:#063b7b;
+ --cb-soft:#e7f2fb;--cb-soft2:#dfeffa;
+ --cb-ink:#0d2c52;--cb-line:#cbd8e5;--cb-muted:#54667e;
+ --gold:#0755aa;--gold2:#0c67c6;--nav:#fff;--nav2:#eaf3fb;
+ --text:var(--cb-ink);--muted:var(--cb-muted);--line:var(--cb-line);
+ --card:#fff;--bg:#f7fafe;
+ color-scheme:light;
+}
+body:not(.login-page):not(.im-login-page){background:#f7fafe!important;color:var(--cb-ink)!important}
+body:not(.login-page) .content{color:var(--cb-ink)}
+.content h1,.content h2,.content h3,.content h4{color:#082f61!important;letter-spacing:-.014em}
+.content h1{font-weight:830}.content h2{font-weight:780}
+.content .module-toolbar,.content .page-head{gap:12px}
+.content .module-title>p,.content .page-head p{line-height:1.55;color:#516b87!important}
+.content .card,.content .stat,.content .form-card,.content .module-card,.content .dashboard-action,
+.content .im-chart,.content .im-action-panel{background:#fff!important;border:1px solid #dae6f1!important;border-radius:12px!important;box-shadow:0 4px 14px #0b437509!important}
+.content .card-pad{padding:clamp(14px,2vw,22px)!important}
+.content .card>h2:first-child,.content .card-pad>h2:first-child{margin-top:0}
+.content .card h2,.content .card h3{line-height:1.3}
+.content .card .badge{background:#e4effa;color:#15528c}
+.content .btn,.app-dialog .btn,.content button[type=submit]{font-weight:750;letter-spacing:0}
+.content .btn-primary,.content button.btn-primary,.app-dialog .btn-primary,
+.content .btn.primary{background:#0957ab!important;color:#fff!important;border:1px solid #0957ab!important;box-shadow:0 2px 6px #0750a71c!important}
+.content .btn-primary:hover,.app-dialog .btn-primary:hover{background:#064888!important}
+.content .btn-light,.content .btn-outline,.app-dialog .btn-light{background:#f5faff!important;color:#0b4684!important;border:1px solid #b9d2e9!important}
+.content .btn-light:hover,.app-dialog .btn-light:hover{background:#e6f2fd!important}
+.content .btn-danger{background:#fff1f1!important;color:#a32929!important}
+.content .btn,.content .form-actions button{border-radius:8px!important;min-height:43px}
+.content label,.app-dialog label{color:#173f6b!important;font-weight:730}
+.content .field label,.content .form-grid label{font-size:12px!important}
+.content input:not([type=hidden]):not([type=checkbox]):not([type=radio]),
+.content select,.content textarea,.app-dialog input:not([type=hidden]):not([type=checkbox]):not([type=radio]),
+.app-dialog select,.app-dialog textarea{background:#fff!important;color:#153758!important;border:1px solid #c5d3e1!important;border-radius:7px!important;min-height:43px;box-shadow:none!important}
+.content input:focus,.content select:focus,.content textarea:focus,.app-dialog input:focus,
+.app-dialog select:focus,.app-dialog textarea:focus{border-color:#0961b9!important;outline:2px solid #c9e3fc!important;outline-offset:0}
+.content input::placeholder,.content textarea::placeholder{color:#74869a!important;opacity:1}
+.content input[disabled],.content select[disabled],.content textarea[disabled]{background:#f0f4f8!important;color:#60758b!important}
+.content :is(.field,.form-grid)>small,.content .help-text,.content .muted{color:#61758a!important}
+.content .table-wrap,.content .table-responsive{border:1px solid #d6e3ee!important;border-radius:10px!important;box-shadow:none!important}
+.content table{width:100%;border-collapse:collapse}
+.content table th{background:#e3eff9!important;color:#0c3b71!important;text-transform:none!important;font-size:12px!important;font-weight:780!important;border-bottom:1px solid #cbdbeb!important}
+.content table td{background:#fff;color:#1d4269!important;font-size:12px;line-height:1.45}
+.content table tr:nth-child(even) td{background:#fbfdff}
+.content table tr:hover td{background:#edf6ff!important}
+.content :is(.module-tabs,.portal-tabs){background:#edf5fc!important;border:1px solid #dbe6f1!important;border-radius:9px;min-height:44px}
+.content :is(.module-tab,.portal-tabs a){color:#225480!important;font-weight:700}
+.content .module-tab[aria-selected=true],.content .portal-tabs a[aria-current=page]{background:#fff!important;color:#0757aa!important;border-bottom:3px solid #0757aa!important}
+.content .badge{border-radius:7px!important;font-size:11px}
+.content .badge.ok,.content .badge.success{background:#e5f6ee!important;color:#11754b!important}
+.content .badge.off,.content .badge.pending{background:#fff1bb!important;color:#775507!important}
+.content :is(.alert-success,.notice-success){background:#e8f7ef!important;color:#176443!important}
+.content :is(.alert-error,.notice-error){background:#fff1f0!important;color:#9d3030!important}
+.content .finance-gov-form h3,.content .finance-gov-section h3,
+.content .form-section>h3,.content .section-title{border:0!important;border-radius:7px!important;background:#e4f1fb!important;color:#0a3d77!important;padding:10px 12px!important;font-size:14px!important;font-weight:800!important}
+.content .im-kpi{border:1px solid #d6e4ef!important;border-radius:10px!important;box-shadow:none!important}
+.content .im-kpi-head{color:#1e4771!important}
+.content .im-kpi-value{color:#0b3b75!important}
+.content .im-actions-list a,.content .im-catalog-item{background:#fff!important;border-radius:9px!important}
+.content .finance-gov-status{border-radius:7px!important}
+.content .finance-gov-money>div{border-radius:9px!important}
+.content .finance-gov-queue .finance-gov-link{background:#fff;border:1px solid #d6e5f3;border-radius:8px}
+.content .finance-gov-queue .finance-gov-link.selected{background:#eaf4ff;border-color:#0b60b5}
+.content .contribution-queue-item{border-radius:8px}
+.content .branding-section-heading{background:#f2f8fd;border:1px solid #e0ebf5;border-radius:9px;padding:13px}
+.sidebar,.sidebar .nav-list,.sidebar .brand{background:#fff!important;color:#123b68!important}
+.sidebar{border-right:1px solid #d5e3f0!important;box-shadow:none!important}
+.sidebar .brand{border-bottom:1px solid #dce8f3!important}
+.sidebar .brand strong{color:#082e5e!important}
+.sidebar .brand small{color:#5e7794!important}
+.sidebar .nav-group>summary{color:#23537e!important}
+.sidebar .nav-list .nav-group-links .nav-item{color:#17456f!important;background:transparent!important}
+.sidebar .nav-list .nav-group-links .nav-item:hover{background:#eaf3fb!important;color:#0a437f!important}
+.sidebar .nav-list .nav-group-links .nav-item.active{background:#0755a8!important;color:#fff!important}
+.sidebar .nav-list .nav-group-links .nav-item.active :is(svg,span){color:#fff!important}
+.sidebar .sidebar-user{border-top:1px solid #d7e5f0!important}
+.sidebar .sidebar-user :is(strong,small,a){color:#164574!important}
+.sidebar .brand-logo{border:1px solid #cedfeb!important;background:#fff!important;color:#0956a5!important}
+.sidebar .brand-logo img{object-fit:contain!important}
+.app-topbar{background:#fff!important;border-bottom:1px solid #d5e5f0!important;box-shadow:none!important}
+.app-topbar .breadcrumb strong{color:#0c376d!important}
+.app-topbar :is(.icon-button,.menu-button){color:#174d80!important}
+.app-footer{color:#58748f!important}
+.im-mobile-nav{background:#fff!important;border-top:1px solid #cfdfef!important}
+.im-mobile-nav a{color:#345d83!important}
+.im-mobile-nav a[aria-current=page]{color:#0954a4!important;background:#e8f3fe!important}
+.app-dialog{border:1px solid #ccddeb!important;border-radius:13px!important}
+.app-dialog :is(.dialog-heading,.dialog-footer){background:#edf6fe!important;color:#0a3e77!important}
+@media(min-width:1100px){.sidebar{width:246px!important}}
+@media(max-width:1099px){.sidebar{box-shadow:8px 0 30px #08396f20!important}.content .module-toolbar-actions{display:flex;flex-wrap:wrap;gap:8px}}
+@media(max-width:640px){.content{padding:14px 12px 26px!important}.content .card-pad{padding:14px!important}.content .module-title h1{font-size:20px!important}.content .btn{min-height:44px}.content .table-wrap{max-width:calc(100vw - 24px)!important}.content .form-grid{grid-template-columns:1fr!important}}
+@media print{.sidebar,.im-mobile-nav,.app-topbar .menu-button{display:none!important}.content .card{box-shadow:none!important}}
