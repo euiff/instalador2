@@ -1,0 +1,21 @@
+/* Igreja Master 3.7.32 — mobile exit button, readable tithes, input hints */
+.sidebar .sidebar-user{flex-wrap:wrap!important;gap:9px!important}
+.sidebar .sidebar-user-text{flex:1;min-width:100px}
+.sidebar .im-logout-action{display:flex!important;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:5px;border:1px solid #d2e1ef;border-radius:9px;background:#edf5fc;color:#114979!important;font-size:13px;font-weight:800;min-height:44px;text-decoration:none!important}
+.sidebar .im-logout-action:hover{background:#dceefa!important;color:#063f7a!important}
+.app-topbar .im-topbar-logout{display:flex;align-items:center;justify-content:center;min-height:39px;padding:6px 13px;border-radius:8px;border:1px solid #b9d5ea;background:#f0f8ff;color:#124b88;font-size:13px;font-weight:750;text-decoration:none}
+.app-topbar .im-topbar-logout:focus-visible,.sidebar .im-logout-action:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+@media(max-width:640px){.app-topbar .im-topbar-logout{padding:7px 9px;font-size:12px}.app-topbar .topbar-actions{gap:5px}}
+.im-tithe-mobile{display:none}
+@media(max-width:700px){
+.im-tithe-mobile{display:grid;gap:10px;margin:12px 0 16px}
+.im-tithe-item{background:#fff;border:1px solid #d3e3f2;border-radius:11px;padding:14px;box-shadow:0 3px 10px #07407308}
+.im-tithe-item-head{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:#5d7590}
+.im-tithe-item-head strong{font-size:17px;color:#0a4180}
+.im-tithe-item h3{font-size:15px!important;color:#143e6d!important;margin:9px 0 2px!important;line-height:1.35}
+.im-tithe-item p{font-size:12px;color:#657d92;margin:4px 0}
+.im-tithe-item .im-tithe-member{margin-top:8px;padding:9px 11px;background:#e8f4ff;border-radius:8px;color:#073d76;font-weight:800;font-size:14px}
+.im-tithe-item .im-tithe-anonymous{background:#fff4d8;color:#79511d}
+.im-tithe-item-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;color:#526a84}
+}
+input.im-currency-masked{text-align:left;font-variant-numeric:tabular-nums}
