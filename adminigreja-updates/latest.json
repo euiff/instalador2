@@ -1,24 +1,24 @@
 {
-  "version": "3.7.31",
+  "version": "3.7.32",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.31.01.b64.txt",
-    "releases/v3.7.31.02.b64.txt",
-    "releases/v3.7.31.03.b64.txt",
-    "releases/v3.7.31.04.b64.txt",
-    "releases/v3.7.31.05.b64.txt",
-    "releases/v3.7.31.06.b64.txt",
-    "releases/v3.7.31.07.b64.txt",
-    "releases/v3.7.31.08.b64.txt",
-    "releases/v3.7.31.09.b64.txt"
+    "releases/v3.7.32.01.b64.txt",
+    "releases/v3.7.32.02.b64.txt",
+    "releases/v3.7.32.03.b64.txt",
+    "releases/v3.7.32.04.b64.txt",
+    "releases/v3.7.32.05.b64.txt",
+    "releases/v3.7.32.06.b64.txt",
+    "releases/v3.7.32.07.b64.txt",
+    "releases/v3.7.32.08.b64.txt",
+    "releases/v3.7.32.09.b64.txt"
   ],
-  "sha256": "88eb24d574dcf4adb6add7f214c655ed62b7f33b921026fa945a9114335f6bf9",
+  "sha256": "e036710105f90cd0b0f1684c68842b8b14256c73f8c15067395b02ac9717f5a9",
   "notes": [
-    "Os nomes dos membros aparecem na tabela da Tesouraria e nos PDFs financeiros.",
-    "Relatório mensal de dizimistas agrupado por membro com totais e lançamentos.",
-    "Dízimos sem membro vinculado aparecem separadamente para conferência.",
-    "Atualização cumulativa com os 168 arquivos da versão anterior, sem remover módulos.",
+    "Botão Sair visível no cabeçalho e no menu lateral, inclusive em celulares.",
+    "Valores em reais com vírgula durante a digitação; máscaras automáticas para CPF/CNPJ e telefone.",
+    "Movimentações visíveis em cartões no celular, com contribuinte e valor sem abrir PDF.",
+    "Atualização cumulativa com os 171 arquivos da versão anterior, sem remover módulos.",
     "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
   "files": [
@@ -28,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "e06f468be25c4e607a2f55828646ac3f7b9ca08ee287c66938dce23fd4201ab5"
+      "sha256": "0375fe04701c1d198d3210be47fed697e8a377399cf5a4b7f4a5e820733bc820"
     },
     {
       "path": "public/accounting-file.php",
@@ -97,6 +97,14 @@
     {
       "path": "public/assets/finance-governance-3727.js",
       "sha256": "b87a191dccb736de23c5e0a2f6764ed99e6a3f8ec96c8f3304c067b1361a9a02"
+    },
+    {
+      "path": "public/assets/finance-inputs-3732.css",
+      "sha256": "2e46eb0e1afbabe6c8df0149da6d47a8885fe00cd5be55d46f747aa86a322e39"
+    },
+    {
+      "path": "public/assets/finance-inputs-3732.js",
+      "sha256": "c521afb348b9205407332ca721e7e49fe606242892ddb09972b32351c9ccb40a"
     },
     {
       "path": "public/assets/igreja-master-global-3731.css",
@@ -344,7 +352,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "74d37aaacfcafbc3a03226495e4a4f9341bb18bda62e04faf3064c16bb184218"
+      "sha256": "32b8a7643b2a3d18e4a2d77fe5123e697c7d18af029ee4eaac58b6772203ee2c"
     },
     {
       "path": "public/kids-checkin.php",
@@ -580,7 +588,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "99c36842733ad2980380ccbbad6c2fec7fc9fe2bb6073bb8c7d5221e514df92c"
+      "sha256": "ec72b3c0f917e3d0d52cb6bab2c6cb2679305fc3122a542510680b38cd200bce"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
