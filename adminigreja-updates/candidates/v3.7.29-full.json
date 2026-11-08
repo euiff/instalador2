@@ -1,0 +1,694 @@
+{
+  "version": "3.7.29",
+  "min_php": "8.1",
+  "encoding": "base64",
+  "parts": [
+    "releases/v3.7.29-full.01.b64.txt",
+    "releases/v3.7.29-full.02.b64.txt",
+    "releases/v3.7.29-full.03.b64.txt",
+    "releases/v3.7.29-full.04.b64.txt",
+    "releases/v3.7.29-full.05.b64.txt",
+    "releases/v3.7.29-full.06.b64.txt",
+    "releases/v3.7.29-full.07.b64.txt",
+    "releases/v3.7.29-full.08.b64.txt",
+    "releases/v3.7.29-full.09.b64.txt",
+    "releases/v3.7.29-full.10.b64.txt"
+  ],
+  "sha256": "132a80712dfca2c12a030e3a805b22d789a646debeef42e12d9cb4e9bd5939b4",
+  "cache_buster": "3.7.29-real-web-system-ui",
+  "notes": [
+    "Redesign aplicado diretamente ao sistema web e, consequentemente, às mesmas páginas dentro do APK, sem tela falsa.",
+    "Menu lateral profissional no desktop, menu responsivo no celular, logo por igreja e alto contraste.",
+    "Dashboard com valores reais e gráfico financeiro do banco e acesso direto aos processos da igreja.",
+    "Cadastros e tabelas financeiras com dados reais e atalhos para funções que já existem.",
+    "Login redesenhado e controle funcional de exibição de senha.",
+    "Preservadas as funções, arquivos, cadastros e dados anteriores da 3.7.27.",
+    "Importante: instalar esta atualização WEB juntamente com o APK 3.7.29."
+  ],
+  "files": [
+    {
+      "path": "public/CHANGELOG.md",
+      "sha256": "027f553058fa2637d725a8aa7d0c83f07b6f210b634881116dc0e69b19023e0a"
+    },
+    {
+      "path": "public/VERSION",
+      "sha256": "6a7bd8ae513b64ce45aec210905f16939d9bd0c33acbb7c07619b3a56a2621de"
+    },
+    {
+      "path": "public/accounting-file.php",
+      "sha256": "fa6829b9d1becbcae226800e64c07b665d21efb8ca7fd36b294dee2ada4c6127"
+    },
+    {
+      "path": "public/accounting-package.php",
+      "sha256": "e20a1a325951fa85ab9e05ec4e8472ba300eb96abd4d14c48b9f3895a67e7b93"
+    },
+    {
+      "path": "public/accounting-parse.php",
+      "sha256": "5bb8d86d6e08bebfbdaa066ecea90c93442ca97a995e634d92278d828bec048c"
+    },
+    {
+      "path": "public/accounting.php",
+      "sha256": "323394d8b01d0f7a6fe54da0fe6f18aa085e509f6765563574216f9347f1df6e"
+    },
+    {
+      "path": "public/albums.php",
+      "sha256": "0a4e92157d702b99d43c8a93db237856ddb22d041fe5630379dbd02556cc7dbc"
+    },
+    {
+      "path": "public/announcements.php",
+      "sha256": "4650e1ed021e0aa9244d2353124afda8f32628889b0ac720b1f53cbfe90ee7bf"
+    },
+    {
+      "path": "public/assets/accounting-ocr.js",
+      "sha256": "be73648cb72aa8747a7a9262e9bf9d0b6ba30cf55dc6516c4b5688b5860a49dc"
+    },
+    {
+      "path": "public/assets/expense-receipt.css",
+      "sha256": "565c3d2499da2344b3ad95eec2427af513a03e073ec0c749d0c1198592bb8042"
+    },
+    {
+      "path": "public/assets/expense-receipt.js",
+      "sha256": "435340f2e80276727704110026f3bc656f69642dc1de48e2a7d73e66e2fda77d"
+    },
+    {
+      "path": "public/assets/management-3711.css",
+      "sha256": "5d9c6297bf9668b0a8147713fcf6151284649e0c07728883a9d58ae6e072d20e"
+    },
+    {
+      "path": "public/assets/management-3711.js",
+      "sha256": "7b2f0273645a16b2afa1e311130f4ed032966e3a42f5b499d225af7426670874"
+    },
+    {
+      "path": "public/assets/management.css",
+      "sha256": "eb31b67387ccbd0f755f9d06107253953503d127b1e60b47e2d611c550ab8f59"
+    },
+    {
+      "path": "public/assets/management.js",
+      "sha256": "dbe4fe4fbfe834490baf07d1e5fbdaf2b96d911e466c9ef8975e454a3fa94b4b"
+    },
+    {
+      "path": "public/assets/password-visibility.css",
+      "sha256": "bae64bab91d66cd9b900faf5a61558954fc414c586fa2caa725aa2e236eb3012"
+    },
+    {
+      "path": "public/assets/password-visibility.js",
+      "sha256": "ff0e11b6c351cf488acc22bf3a763dcf8756f1b6857422efa63a9517a2cfacf1"
+    },
+    {
+      "path": "public/assets/users-member-autofill.js",
+      "sha256": "34e1ed9bb1f3bc2f6237f26e78f211182adf51f9ec67ea0785dadccf82c3b3f8"
+    },
+    {
+      "path": "public/automations.php",
+      "sha256": "e3e89a7abd681da11ccc8cc139375c2267a177a34e2c5c66c6983e5a0e1ef71a"
+    },
+    {
+      "path": "public/board.php",
+      "sha256": "246e598f29c38e1b53894c0a151bbd87092a983314b18324e886e326a3db07fb"
+    },
+    {
+      "path": "public/campaigns.php",
+      "sha256": "e89b41a89455ae3be4161600ec07c03d0e5abdd962b216ec9355789fdf84fa9a"
+    },
+    {
+      "path": "public/cron.php",
+      "sha256": "b613661bce8767333a3f6a4341aeb3b26fe8d8147d0a7d9ada9d2c28e8a4f768"
+    },
+    {
+      "path": "public/dashboard.php",
+      "sha256": "90e0df3beceba07f7867ce8803cfa3a7fbd669be570d72b5d7746cb766246770"
+    },
+    {
+      "path": "public/data/system-course-images.json",
+      "sha256": "1b40508d7dd6b2b2000600e839796b7c19b1e1af0fdb598efd7811033ca11b9a"
+    },
+    {
+      "path": "public/data/system-course.json",
+      "sha256": "5c59263266bc032ff12c20f2d579d218a37f1fc16a0e11b49e66b595e7a64bec"
+    },
+    {
+      "path": "public/database/028_finance_registers_receivables.sql",
+      "sha256": "d49f031974a7b915f2a7233e419a2fc9efbfc8825a784f471908afbf293f5363"
+    },
+    {
+      "path": "public/database/029_finance_period_locks.sql",
+      "sha256": "422a1d884cf62e20bec11c398e87b759bbf8faed37d3f2b835f94c7f611bf154"
+    },
+    {
+      "path": "public/database/030_finance_import_batches.sql",
+      "sha256": "7a5138460663a8dd12c740b55dfa8c4bd4398797f7348c8c3bce8db0bb4a28a3"
+    },
+    {
+      "path": "public/database/031_small_groups_attendance.sql",
+      "sha256": "685a4b86935f59762985fd61133081cd5bbcc58d73e103bcb1912234ad1a6d6b"
+    },
+    {
+      "path": "public/database/032_announcements_board.sql",
+      "sha256": "bbeda11b7aded00914a9a549ca00410d8e2b7381d7fcdef60740788888096bff"
+    },
+    {
+      "path": "public/database/033_learning_courses_classes.sql",
+      "sha256": "8761499ded1de5a46850545f633c39ee6b9fe95a9c4a171c17d5b45923fa80b8"
+    },
+    {
+      "path": "public/database/034_media_library.sql",
+      "sha256": "335158db430db9f1d178f14ffd782672cf6eb2593e993b7c9723cf543e936f79"
+    },
+    {
+      "path": "public/database/035_campaign_media.sql",
+      "sha256": "97e48039e502ad28de52ceac1f563efd012073d508a48a37b7980d8a8a61e633"
+    },
+    {
+      "path": "public/database/036_studies_albums.sql",
+      "sha256": "74a1efa1211ff7b82dc2999c8493090e7eb9ac3291ffc5b9f1816523c1a6487d"
+    },
+    {
+      "path": "public/database/037_kids_module.sql",
+      "sha256": "9196396b77413c8ba593c23e6aa0418daca09dd7119e857a91360b504cdcd8d9"
+    },
+    {
+      "path": "public/database/038_events_donations_qr.sql",
+      "sha256": "43eebff4edaed75075034481bd18466790ce951b5c0dcd81acdf2cc3266ecba8"
+    },
+    {
+      "path": "public/database/039_visitor_followups.sql",
+      "sha256": "c493b1ce58c79cbcdacf6789ec6a94f607f5cfd7a9b79221e300df36bdf729b8"
+    },
+    {
+      "path": "public/database/040_pastoral_agenda.sql",
+      "sha256": "1ae8295da0246d3747158cd1f2eb94113f3a3d55b38bd3ed2954e7471ba7c6cd"
+    },
+    {
+      "path": "public/database/041_accounting_portal.sql",
+      "sha256": "cedcabcb7043fd8de05671b1de65f34f6e576880beda30abfef9a84e73d3a824"
+    },
+    {
+      "path": "public/database/042_enuves_migration.sql",
+      "sha256": "f6ab5a6c32989715cdbd849673882b58378c02a410518080b554aadfe1ae805e"
+    },
+    {
+      "path": "public/database/043_member_departments.sql",
+      "sha256": "e315fd777be4a06cf560c90610acee089d51a4bb1547d6ef3dc674cff407387f"
+    },
+    {
+      "path": "public/database/044_master_congregation_moves.sql",
+      "sha256": "f4acad9a724ff4ecca9f17c3a666f3ee58925ae8b63c0b1a4699cb504bac3b84"
+    },
+    {
+      "path": "public/database/045_expense_receipts.sql",
+      "sha256": "97c12877acdf24c52b043e344662f4ee41a3f6a71c441d4ecf2c3e0d335a65d8"
+    },
+    {
+      "path": "public/database/046_system_course_progress.sql",
+      "sha256": "e09cc106b58211aab8b6d71c8958d8ca8b3404a478969e13536332a2150f0de1"
+    },
+    {
+      "path": "public/department-people.php",
+      "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
+    },
+    {
+      "path": "public/department-report.php",
+      "sha256": "e376cc9794722e065ae7d09d7ffc2a3fba42d966613c0a4575a9f85b5705c5d1"
+    },
+    {
+      "path": "public/department-team.php",
+      "sha256": "53c59f9d427ddd4d0f57b776df2c268a193120d5459acd2dc7e6bb41b3b857a3"
+    },
+    {
+      "path": "public/department-treasury.php",
+      "sha256": "2c7923b76a22992726ade02d40486af0a24bff451af8c2b67b66216a7f3279a7"
+    },
+    {
+      "path": "public/donate.php",
+      "sha256": "a2ba9d2ae44fc35b91832858097b1f24eb7efbf76b2512362b8dad3d9421b98d"
+    },
+    {
+      "path": "public/event-register.php",
+      "sha256": "6f9910c51dfe76e7d3120e68d0271331e8fa363d184bf7fda1ab462fbff68699"
+    },
+    {
+      "path": "public/event-registrations.php",
+      "sha256": "a5f217f275ab40af3fe1841fe386984e68bf1418ec1875a0ed33196a7bd04e91"
+    },
+    {
+      "path": "public/events.php",
+      "sha256": "8ceb97a762b8ebd75900f22e10fa38644db1dd7fc47952df6f0ba2cd8075cfae"
+    },
+    {
+      "path": "public/expense-receipt.php",
+      "sha256": "e305e096c108aece5934b5e8a8a9727c089a4b1c25b9a13c69a12ebfc91814fe"
+    },
+    {
+      "path": "public/finance-budget.php",
+      "sha256": "3d345d7cfba637bfd37613c322ce3a95ae2698adb6837fb7248eba5b5f54091e"
+    },
+    {
+      "path": "public/finance-control.php",
+      "sha256": "226a9ee4227df794585bd74fb1a1f57b37dcdcdf840ec4be8142d16290ebeafb"
+    },
+    {
+      "path": "public/finance-import.php",
+      "sha256": "8c9365df01fb2a83ee0cca48b759bb1eb9c69370c63d5339f85d1fe1ce22c085"
+    },
+    {
+      "path": "public/finance.php",
+      "sha256": "095315c31d95602232588e0b895e143db5635819fc63383f9f86ad2e86b4cf53"
+    },
+    {
+      "path": "public/kids-checkin.php",
+      "sha256": "50fffd7aa723bf99ca16bd8b4dab3080e3e14178079a086a628898a78e4e23b2"
+    },
+    {
+      "path": "public/kids.php",
+      "sha256": "998907d55e629fc27a0aa7e6194ad760c4fdc2b7d301832f69b5a649a658573d"
+    },
+    {
+      "path": "public/learning.php",
+      "sha256": "39a7cb00e0bcf97ea8b02d326c013e14af56889bfad4450ae89f8d954a39ea10"
+    },
+    {
+      "path": "public/lib/AccountingService.php",
+      "sha256": "bb6248b797e45f7f56fc1b0b75994e85f784876f209ee6eb6225997c55c2fd8a"
+    },
+    {
+      "path": "public/lib/AnnouncementService.php",
+      "sha256": "a369fdad150597b522f365e485d47694d7b46324f31ada3be52dc354cc7367b1"
+    },
+    {
+      "path": "public/lib/Auth.php",
+      "sha256": "b8fbfe5a0fe04f44cf02c5982e9487a2675976667354767b8b62a5408cdb23ff"
+    },
+    {
+      "path": "public/lib/AutomationMonitor.php",
+      "sha256": "a5362a553f746521c9f652ca68728fae48f8130df55f73f119a08057ef78f75e"
+    },
+    {
+      "path": "public/lib/AutomationRunner.php",
+      "sha256": "f12472001ba637388f9299972c80d76cd5e8ea59846a0a9468fe6fac660f8a0f"
+    },
+    {
+      "path": "public/lib/BotEventFlow.php",
+      "sha256": "12474e23e52a560e6bd3e553e699cba8faa213b4596aebda043f24c487702160"
+    },
+    {
+      "path": "public/lib/BudgetService.php",
+      "sha256": "9c8dd59010e36d2b81058967713dcc767af7d2da4d0306e0d8523b3d074b9e7b"
+    },
+    {
+      "path": "public/lib/CareView.php",
+      "sha256": "cfc09e3f77f8e7096fee44d02cd646659e44262b47646b1780a5a131976b037b"
+    },
+    {
+      "path": "public/lib/ChurchCare.php",
+      "sha256": "263bc6315fada6f9d337f932066419af13e3a0dd9064c32f8f1438e03da34d8c"
+    },
+    {
+      "path": "public/lib/ChurchMemberLeadershipService.php",
+      "sha256": "33c8704709c4d7649926fe7fd8d00acd69d7b32b6b5178be3ed20e3035cc1bb6"
+    },
+    {
+      "path": "public/lib/CronTasks.php",
+      "sha256": "ae67f5d5fcc1df9e7ed043980f1bec1a8c5b01b8fe44bfa9f22a9de60b020bdf"
+    },
+    {
+      "path": "public/lib/DepartmentDelegationService.php",
+      "sha256": "c912885b07df9aee1473999690970d18fb9f630373a4fda5a1de24c3faf31d30"
+    },
+    {
+      "path": "public/lib/DepartmentReportService.php",
+      "sha256": "988ab9b594e9bf6b19d8a582f0b0950bc29b4d50030cf057dcf8465ab6ea947e"
+    },
+    {
+      "path": "public/lib/DepartmentRoleAccess.php",
+      "sha256": "46cd8dff14530321d15b8c178ad5e5355df7234e30b8aacab3b1703a5367d123"
+    },
+    {
+      "path": "public/lib/DepartmentTreasuryService.php",
+      "sha256": "caef629272b137b537ed7d5ea8f70df6f27202cead0b06544ed1f12b37c995c4"
+    },
+    {
+      "path": "public/lib/EnuvesImportMap.php",
+      "sha256": "4a7276af8383852ada00e22359a4514468102a47c797245ad922d93b9cd2ee6e"
+    },
+    {
+      "path": "public/lib/EnuvesImportService.php",
+      "sha256": "36b380806fd77cf88f83a950e555ccdd61bf26ae6831d77c728591a87ee243ad"
+    },
+    {
+      "path": "public/lib/EnuvesLeadershipService.php",
+      "sha256": "ce6b314aa925f091d1d55877674f79372f639da1d1eaf1b3e9023bd013fb9ee5"
+    },
+    {
+      "path": "public/lib/EnuvesXlsxReader.php",
+      "sha256": "ba43034b19db9d8290b20b10d963b76ebff701065fb913ea31c543fb0717465d"
+    },
+    {
+      "path": "public/lib/EventRegistrationService.php",
+      "sha256": "0c1e96e9b370885ec4bc75f79900188be4b0f89859b659c33301a1ae18c1569a"
+    },
+    {
+      "path": "public/lib/EvolutionClient.php",
+      "sha256": "73fbe32c3f328b3fd051fe7dfcaec93c9ba68c664da929af4d2a6e1af1f6eaa2"
+    },
+    {
+      "path": "public/lib/ExpenseReceiptPdf.php",
+      "sha256": "6c01b1d40f956800a352f283faf8c0f7cea4ed40307288bbecb3ff81cfe3592a"
+    },
+    {
+      "path": "public/lib/ExpenseReceiptService.php",
+      "sha256": "82f2de4b69c69b2c837d6366ef0ee959b45b66692144312a59be5c5902fb05a8"
+    },
+    {
+      "path": "public/lib/FinanceCsvImport.php",
+      "sha256": "010a562b383b82e72f7df4e8db01a34d2e7062b103bb3efd491ef3b6bd6fc0c6"
+    },
+    {
+      "path": "public/lib/FinanceOperations.php",
+      "sha256": "7d3fa8b35d72f5f6aa3c3aaf861cae0dd8188c8ca6fb36c55dbaa029cd757a82"
+    },
+    {
+      "path": "public/lib/FinancePeriodGuard.php",
+      "sha256": "9df2240fc5825a53e9c4005f1d3436de8eea12658ebca4099e5eebd810d86687"
+    },
+    {
+      "path": "public/lib/GeneralTreasuryAccountScope.php",
+      "sha256": "e8e835575b0dc05ba48ada8d051f8ff30bc454840c8711c0183078521bdf6fe0"
+    },
+    {
+      "path": "public/lib/GroupBroadcastService.php",
+      "sha256": "7ba174c1068a0c918f2f0bc6117114e36b1b48cdfaeea9b24f3ec659ac959fc2"
+    },
+    {
+      "path": "public/lib/KidsService.php",
+      "sha256": "7c9954d48a9dd9ecec67c9dfd1f74f736ff35b83407fa4cf3cb9699e9f43b08c"
+    },
+    {
+      "path": "public/lib/LearningService.php",
+      "sha256": "d32e20cf782a150c392332895175a75925b55e9cd55986481c7ab017db15fd56"
+    },
+    {
+      "path": "public/lib/ManagementOverviewService.php",
+      "sha256": "43a6cf6c984b57678c3f67f23272cfbf47138d8e8ab5018f29dad88c0654c6b2"
+    },
+    {
+      "path": "public/lib/MasterCongregationService.php",
+      "sha256": "5f07bc5425e5a1d02e4f83547e73ed911efd7cee25734533dd88ee983887cb36"
+    },
+    {
+      "path": "public/lib/MasterMemberService.php",
+      "sha256": "a5f18fd77af0c5e27deb5be5ee16a910a8e6e4d7b62d524d60b018dc722a4706"
+    },
+    {
+      "path": "public/lib/MediaLibraryService.php",
+      "sha256": "7c43aa41edb3490b192bbfb0a9bed6bc1f2a0eff717c9018684d61c2ac3d60a0"
+    },
+    {
+      "path": "public/lib/MemberDepartmentService.php",
+      "sha256": "1911667faaf559b84085fd222f9837828876254e0152ab8b67c1960dc66e0243"
+    },
+    {
+      "path": "public/lib/MemberDirectoryService.php",
+      "sha256": "7fe9bc4be88db99cdf988d7e339bf7cfaf637eff007e5891b8fe199317243455"
+    },
+    {
+      "path": "public/lib/MemberPortalAccessService.php",
+      "sha256": "d868be379f950b424b78e67d53bea8741b6e5d6549467db39c3f42fc590edc94"
+    },
+    {
+      "path": "public/lib/MemberSelfService.php",
+      "sha256": "f762d4dd370f6226b53640562bae08f7cc94d99099a4e31e29b8bab58244e47d"
+    },
+    {
+      "path": "public/lib/PastoralAgendaService.php",
+      "sha256": "d87224a845b9ec40271ddeff55fd937f7b23f4d8b107d26c2642498154b6304c"
+    },
+    {
+      "path": "public/lib/PixPayloadService.php",
+      "sha256": "0e4519825f37cc4f3a0ff9dbc49e088750e26ced4cd60794dd642b36f5da0f39"
+    },
+    {
+      "path": "public/lib/PixPaymentSummary.php",
+      "sha256": "c757e4f9fa3e4d96275e97f81f756c74c14d7a6ef87f2578e7ebfa6a98a3220e"
+    },
+    {
+      "path": "public/lib/PortalService.php",
+      "sha256": "d02eaaa9d4932a695ead1ab3ca6dc2bad74799759cf2db188e46a778e8f6da4e"
+    },
+    {
+      "path": "public/lib/ReceiptParser.php",
+      "sha256": "322b8c4b6216107e165fdbaab016f31f6d57c7bd6490388b2fdc77052033c678"
+    },
+    {
+      "path": "public/lib/RegistryService.php",
+      "sha256": "cd767e03bdaa9351645a5d815290bfae209008903178cfdd290f0d28c49d95a9"
+    },
+    {
+      "path": "public/lib/SmallGroupService.php",
+      "sha256": "6dcf1ac15d27444fac3171d08f6ea9e1c15e3171f47ceeac0cb4a196cd903487"
+    },
+    {
+      "path": "public/lib/StudyService.php",
+      "sha256": "7a8f4f8e5a0d9b92e402b4f04505ae5281f53562f9e058d875b112c2edff415d"
+    },
+    {
+      "path": "public/lib/SystemCourseIllustration.php",
+      "sha256": "5a33fb3bc54e41dfb88a811443d249a00f485da4feff967cfe35672d0f4a74d0"
+    },
+    {
+      "path": "public/lib/SystemCourseImageService.php",
+      "sha256": "413f7999202372ddf7ff7d8aa710eca3f65681df2b541a8a1823681ca0369364"
+    },
+    {
+      "path": "public/lib/SystemCourseService.php",
+      "sha256": "40ff5407144657145cb9febef9b90c0d1c5edb06652f6a36c3dcf64c8f0b82db"
+    },
+    {
+      "path": "public/lib/Ui.php",
+      "sha256": "23f1382d48d7046e884d7733001c51b4e7dc26172362494c48b5adb15a2f9699"
+    },
+    {
+      "path": "public/lib/UploadService.php",
+      "sha256": "6919939938b61cdad9eb2620a50fd7bc083860490c9706423802ab7bf5443012"
+    },
+    {
+      "path": "public/lib/View.php",
+      "sha256": "6f8bb78eba550e24c96b5f5d0d95b17a327312d834ad5807b99584c38f484781"
+    },
+    {
+      "path": "public/lib/VisitorFollowupService.php",
+      "sha256": "d37f6443b668340e05fd02961c6446e8e4b46213c2378c436706fb9ee033203a"
+    },
+    {
+      "path": "public/lib/accounting-departments.php",
+      "sha256": "88c929b44b88d0d00dce2c7fee1272d9992faa3c858716ccdda04621faf3480d"
+    },
+    {
+      "path": "public/lib/dashboard-department-treasury.php",
+      "sha256": "c4c678b4b8fc34a5eb705d80de88c1b7b67c20563fdb3f706cc3cf7c41e73cd4"
+    },
+    {
+      "path": "public/management-center.php",
+      "sha256": "d3be1349275bb2b09e51f136b82f8090c15778a24282ee2e2c242fb5e954055b"
+    },
+    {
+      "path": "public/master-automations.php",
+      "sha256": "fd480ed6bb18668b11db52eb5211434f026e04b956ae84dfab96f58fcf5066a6"
+    },
+    {
+      "path": "public/master-congregations.php",
+      "sha256": "a48c16678451e337cd50efb649a5414e751d8d1d0fe00e7704c152b068a29364"
+    },
+    {
+      "path": "public/master-enuves.php",
+      "sha256": "e9a7de983445ffd1da3f4f73d8543350b0cbbfd28e58833046e8cb1544dc8956"
+    },
+    {
+      "path": "public/master-members.php",
+      "sha256": "1f5157897918bf6db6dd48dd3793234fcf10423d5a4846655469e9a08bfb6019"
+    },
+    {
+      "path": "public/master-system-course-images.php",
+      "sha256": "89b91eebf6098a0b91de597513c7e16c3d507235cd31a9181296e368cee7f49c"
+    },
+    {
+      "path": "public/master.php",
+      "sha256": "0c170d0e76893f0f1225e6cbaa48d65be86078c6402588779692c43bfa45b890"
+    },
+    {
+      "path": "public/media-library.php",
+      "sha256": "db58508a350e87724237c171ded0bdcc7b631da066b862b3dd003aad7cabde04"
+    },
+    {
+      "path": "public/member-portal-access.php",
+      "sha256": "4a4d968be3d36b25255683da14334b8cfce19aeb3f90a8d18709d75eac545181"
+    },
+    {
+      "path": "public/member-profile.php",
+      "sha256": "7a3aaaf5669125c4f1129810346ff471688db51fc0781742421c4c0c140645b5"
+    },
+    {
+      "path": "public/members-print.php",
+      "sha256": "6395052045a72dcd5ed70d7eea617e1813f50567f1cf6297f9bfcd5b2a0b9699"
+    },
+    {
+      "path": "public/members.php",
+      "sha256": "73f1cf33da43b2e67612d92cc0adbb6da1965c861c52e800622a682a5320086d"
+    },
+    {
+      "path": "public/my-profile.php",
+      "sha256": "05ea2a644d7f17c7cb8984f32842516239f19cabedf7abf47b76b1efb8bc8a8d"
+    },
+    {
+      "path": "public/pastoral-agenda.php",
+      "sha256": "7b237d6e618b04805b4919ef6e56b876657169830444facb04608801b76fdcf4"
+    },
+    {
+      "path": "public/payments.php",
+      "sha256": "5e95f909d82401bb891d55511019531d7938a4fff29861bb381b3fe5db537c1c"
+    },
+    {
+      "path": "public/portal-home.php",
+      "sha256": "a8c56c5ebca618ce72df2cfa4d79d0598ce96777324a7d860161802322248b54"
+    },
+    {
+      "path": "public/portal.php",
+      "sha256": "59ef18135535f5dca30c194eedf6eb557cd45021332449848a5bbcee7960ba9b"
+    },
+    {
+      "path": "public/registers.php",
+      "sha256": "2e44b967b5b055a26101990a20d50a8bcee7e6e0164e44cc3abbd5feec4edb85"
+    },
+    {
+      "path": "public/settings.php",
+      "sha256": "b70c89ee94ad2e1d18697a61d6bc7a9fd4beace46a9f02ae8aeb2c64cfc4c97e"
+    },
+    {
+      "path": "public/small-groups.php",
+      "sha256": "a84fbe5fcd2143d8f15a45f1ded90aa352179fc9a114b247dda72fab1b019618"
+    },
+    {
+      "path": "public/studies.php",
+      "sha256": "54feb99a9002930405e29e8e7e8616fb39b604ba42b045704c87bd1add35ac8d"
+    },
+    {
+      "path": "public/system-course-image.php",
+      "sha256": "1fbf4f6e8447200148a8e5694d497375806bf5634032b36b85a97148705d3358"
+    },
+    {
+      "path": "public/system-course.php",
+      "sha256": "a1bb60196f144a2e3f7ec5426707d1aca0cf33a4606e36555a33536a5eee19a0"
+    },
+    {
+      "path": "public/users.php",
+      "sha256": "938addc6f899a69fe7678db85e41bfb9a771cc11df439503b29e0608fc68a8f1"
+    },
+    {
+      "path": "public/visitors.php",
+      "sha256": "0257be48a3ae7d75fe5833aaad00d7b8bb06dd7f00355da1be46d37230b98085"
+    },
+    {
+      "path": "public/assets/finance-assistant-3724.js",
+      "sha256": "8b9e5957abbd8c09e419820be9407f2ffc74be3b6c678f80a4adf2c8c1a08735"
+    },
+    {
+      "path": "public/lib/TenantBranding.php",
+      "sha256": "5fdfba7d96d482e954d7f0224228204d7ecedd21329bc5154c68935125286d4f"
+    },
+    {
+      "path": "public/lib/ContributionWorkflow.php",
+      "sha256": "824150ffb50bc81e264fb11983d7fe13a337e3d84ff2cd578cb71b671e8a32f5"
+    },
+    {
+      "path": "public/database/047_church_white_label.sql",
+      "sha256": "566cf5148255d00c7dee45eb5dcb60347663fd4a7b706cff0e8ac3268c4be98a"
+    },
+    {
+      "path": "public/database/048_contribution_quick_review.sql",
+      "sha256": "37e51a164b0b18906557f459f04eba2ae94c2690103a3e1ee2bc7dcc326cd8de"
+    },
+    {
+      "path": "public/church-branding.php",
+      "sha256": "5fdec36590acbcc876c13348a585abdd104bd9e11f18936b33726cea94812349"
+    },
+    {
+      "path": "public/contribution-settings.php",
+      "sha256": "ac579d03e14b3684ba18d6042536ac62c62ecc778c3fd3262a0a06060ec9c0f0"
+    },
+    {
+      "path": "public/contribute.php",
+      "sha256": "ff08b4afa82dd3cca8fc0b5ac84231fc5ec49ca351508f2149161f6e49958dbd"
+    },
+    {
+      "path": "public/contribution-review.php",
+      "sha256": "b4f8e71f9c96f112fad08c66a03770008fbd592f8829409a4332c527e6b41b45"
+    },
+    {
+      "path": "public/contribution-proof.php",
+      "sha256": "c23fbe64eeb8f456e17036e28ee6483ab001cecff79ff12f6092583ef1265be9"
+    },
+    {
+      "path": "public/assets/visual-3726.css",
+      "sha256": "f433df4c17048df31c85bca45b480f8e909f597f393ab741d69559d0bf475ce9"
+    },
+    {
+      "path": "public/assets/branding-preview-3726.js",
+      "sha256": "7f2f369b5f712b00b22265c5393d8fe7fe4ed4123cfa9ff70f80bba176b6251e"
+    },
+    {
+      "path": "public/assets/contribution-3726.css",
+      "sha256": "a19f36ad7d6b6444d0414a01e8a211e08de93d6c853053b87ccce06e0a7bb028"
+    },
+    {
+      "path": "public/assets/contribution-form-3726.js",
+      "sha256": "281bca5235397002f513120f4882bcf469dd08472558a5335dd983ec317336c9"
+    },
+    {
+      "path": "public/assets/finance-assistant-3726.js",
+      "sha256": "a60cbf9a42b9b30a3408e30ec648d08c85a3ed693376c2d56652ad4872f0406c"
+    },
+    {
+      "path": "public/lib/FinanceGovernanceService.php",
+      "sha256": "af724771ff16bf687b367aebf42520ebfae78d1ab6b4d39fec0b825e5ed0b5af"
+    },
+    {
+      "path": "public/database/049_finance_governance_pdf.sql",
+      "sha256": "3bff78f06faeaf73571362c2a32c6797e3b2af3845d2cffadb4ecd037361bcc9"
+    },
+    {
+      "path": "public/database/050_finance_pdf_catalogs.sql",
+      "sha256": "80fc0aec7031cccd8a7468845b7775ace24844f46dbb186af354f9c26b3a9e0c"
+    },
+    {
+      "path": "public/finance-process.php",
+      "sha256": "b3dcd4b756e11a590a136e3572b15f99e5b393f4969d1dafadf9f803df9088e9"
+    },
+    {
+      "path": "public/assets/menu-contrast-3727.css",
+      "sha256": "851a7212d385b9494f17182ab598d6c0f9f4a9badcaa6c06bd47711bab9e0b81"
+    },
+    {
+      "path": "public/assets/finance-governance-3727.css",
+      "sha256": "67f6bbf1ff85220856590ac632ded485fbb71ba9788cf643fd504005f797a4de"
+    },
+    {
+      "path": "public/assets/finance-governance-3727.js",
+      "sha256": "b87a191dccb736de23c5e0a2f6764ed99e6a3f8ec96c8f3304c067b1361a9a02"
+    },
+    {
+      "path": "public/login.php",
+      "sha256": "6094fce42ab355d5c333377a9a309fc6899873a97faad26645e7c04b4ba5e0e0"
+    },
+    {
+      "path": "public/finance-catalogs.php",
+      "sha256": "c1c98ae53cfb147d0330f7243dd7775531ea082509a08cfc061bdec6c7487d7a"
+    },
+    {
+      "path": "public/assets/igreja-real-ui-3729.css",
+      "sha256": "4de8898ffed2028f2a3170c81971b086a563d45aacdb9480003795522508745f"
+    },
+    {
+      "path": "public/assets/login-real-3729.css",
+      "sha256": "f0587b013223fd5a116bfcde6845c2197fd7134fb5e83b519088ce0a92d7e4b0"
+    }
+  ]
+}
