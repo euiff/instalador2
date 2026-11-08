@@ -1,36 +1,38 @@
 {
-  "version": "3.7.27",
+  "version": "3.7.29",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.27-full.01.b64.txt",
-    "releases/v3.7.27-full.02.b64.txt",
-    "releases/v3.7.27-full.03.b64.txt",
-    "releases/v3.7.27-full.04.b64.txt",
-    "releases/v3.7.27-full.05.b64.txt",
-    "releases/v3.7.27-full.06.b64.txt",
-    "releases/v3.7.27-full.07.b64.txt",
-    "releases/v3.7.27-full.08.b64.txt",
-    "releases/v3.7.27-full.09.b64.txt"
+    "releases/v3.7.29-full.01.b64.txt",
+    "releases/v3.7.29-full.02.b64.txt",
+    "releases/v3.7.29-full.03.b64.txt",
+    "releases/v3.7.29-full.04.b64.txt",
+    "releases/v3.7.29-full.05.b64.txt",
+    "releases/v3.7.29-full.06.b64.txt",
+    "releases/v3.7.29-full.07.b64.txt",
+    "releases/v3.7.29-full.08.b64.txt",
+    "releases/v3.7.29-full.09.b64.txt",
+    "releases/v3.7.29-full.10.b64.txt"
   ],
-  "sha256": "117f2eb54c3d447eb02134237a37119b11059caf49595986188a4a4406710d3b",
-  "cache_buster": "3.7.27-menu-contrast-finance-pdf-governance",
+  "sha256": "132a80712dfca2c12a030e3a805b22d789a646debeef42e12d9cb4e9bd5939b4",
+  "cache_buster": "3.7.29-real-web-system-ui",
   "notes": [
-    "Corrigido contraste de menus web: labels azul-escuro no menu branco e textos claros em menu móvel escuro.",
-    "Tesouraria completa conforme PDF: classificação, número anual, competência, bruto, taxas, valor líquido e documentos fiscais.",
-    "Conciliação com evidência, extrato, conta, data e valor; aprovações por usuários distintos, regras por valor e pendências justificadas.",
-    "Auditoria financeira e lotes contábeis com exportação CSV, permissão de contador somente consulta.",
-    "Campanhas filtradas por tipo, pagamentos com comprovante obrigatório quando configurado e anonimato controlado.",
-    "Atualização cumulativa preserva todos os arquivos e módulos da versão 3.7.26."
+    "Redesign aplicado diretamente ao sistema web e, consequentemente, às mesmas páginas dentro do APK, sem tela falsa.",
+    "Menu lateral profissional no desktop, menu responsivo no celular, logo por igreja e alto contraste.",
+    "Dashboard com valores reais e gráfico financeiro do banco e acesso direto aos processos da igreja.",
+    "Cadastros e tabelas financeiras com dados reais e atalhos para funções que já existem.",
+    "Login redesenhado e controle funcional de exibição de senha.",
+    "Preservadas as funções, arquivos, cadastros e dados anteriores da 3.7.27.",
+    "Importante: instalar esta atualização WEB juntamente com o APK 3.7.29."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "ca867bec6a00bf1e4c18b07de2db23b44faf496c444588fc315a565b5ad35175"
+      "sha256": "027f553058fa2637d725a8aa7d0c83f07b6f210b634881116dc0e69b19023e0a"
     },
     {
       "path": "public/VERSION",
-      "sha256": "ee2e3e7b7f5209c00cd3e0213af21844369d658e52ee05e053a40e5d53d12d00"
+      "sha256": "6a7bd8ae513b64ce45aec210905f16939d9bd0c33acbb7c07619b3a56a2621de"
     },
     {
       "path": "public/accounting-file.php",
@@ -114,7 +116,7 @@
     },
     {
       "path": "public/dashboard.php",
-      "sha256": "6ba9d9930f443eeab6e14d4db37b3556c18a6e35203586fe43c0a14cdeec64ab"
+      "sha256": "90e0df3beceba07f7867ce8803cfa3a7fbd669be570d72b5d7746cb766246770"
     },
     {
       "path": "public/data/system-course-images.json",
@@ -470,7 +472,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "2f5a58d546322ee56ac81144ed0750ac579128c0624d10168b4294271445b330"
+      "sha256": "6f8bb78eba550e24c96b5f5d0d95b17a327312d834ad5807b99584c38f484781"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -658,7 +660,7 @@
     },
     {
       "path": "public/finance-process.php",
-      "sha256": "98311528523265700315b9f6aad00fb86934126a43e6ecd03b3533232a01edc3"
+      "sha256": "b3dcd4b756e11a590a136e3572b15f99e5b393f4969d1dafadf9f803df9088e9"
     },
     {
       "path": "public/assets/menu-contrast-3727.css",
@@ -671,7 +673,23 @@
     {
       "path": "public/assets/finance-governance-3727.js",
       "sha256": "b87a191dccb736de23c5e0a2f6764ed99e6a3f8ec96c8f3304c067b1361a9a02"
+    },
+    {
+      "path": "public/login.php",
+      "sha256": "6094fce42ab355d5c333377a9a309fc6899873a97faad26645e7c04b4ba5e0e0"
+    },
+    {
+      "path": "public/finance-catalogs.php",
+      "sha256": "c1c98ae53cfb147d0330f7243dd7775531ea082509a08cfc061bdec6c7487d7a"
+    },
+    {
+      "path": "public/assets/igreja-real-ui-3729.css",
+      "sha256": "4de8898ffed2028f2a3170c81971b086a563d45aacdb9480003795522508745f"
+    },
+    {
+      "path": "public/assets/login-real-3729.css",
+      "sha256": "f0587b013223fd5a116bfcde6845c2197fd7134fb5e83b519088ce0a92d7e4b0"
     }
   ],
-  "published_at": "2026-11-08T00:30:38.544Z"
+  "published_at": "2026-11-08T01:31:58.972Z"
 }
