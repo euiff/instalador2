@@ -1,24 +1,24 @@
 {
-  "version": "3.7.32",
+  "version": "3.7.33",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.32.01.b64.txt",
-    "releases/v3.7.32.02.b64.txt",
-    "releases/v3.7.32.03.b64.txt",
-    "releases/v3.7.32.04.b64.txt",
-    "releases/v3.7.32.05.b64.txt",
-    "releases/v3.7.32.06.b64.txt",
-    "releases/v3.7.32.07.b64.txt",
-    "releases/v3.7.32.08.b64.txt",
-    "releases/v3.7.32.09.b64.txt"
+    "releases/v3.7.33.01.b64.txt",
+    "releases/v3.7.33.02.b64.txt",
+    "releases/v3.7.33.03.b64.txt",
+    "releases/v3.7.33.04.b64.txt",
+    "releases/v3.7.33.05.b64.txt",
+    "releases/v3.7.33.06.b64.txt",
+    "releases/v3.7.33.07.b64.txt",
+    "releases/v3.7.33.08.b64.txt",
+    "releases/v3.7.33.09.b64.txt"
   ],
-  "sha256": "e036710105f90cd0b0f1684c68842b8b14256c73f8c15067395b02ac9717f5a9",
+  "sha256": "1fd287f8b2028ea37f28eba75bed6d34cdc80047eb6efd28fc71bc594330a28d",
   "notes": [
-    "Botão Sair visível no cabeçalho e no menu lateral, inclusive em celulares.",
-    "Valores em reais com vírgula durante a digitação; máscaras automáticas para CPF/CNPJ e telefone.",
-    "Movimentações visíveis em cartões no celular, com contribuinte e valor sem abrir PDF.",
-    "Atualização cumulativa com os 171 arquivos da versão anterior, sem remover módulos.",
+    "Removido botão flutuante duplicado Nova igreja do painel Master.",
+    "O botão Nova igreja continua disponível no cabeçalho do Master.",
+    "Navegação inferior e demais módulos mantidos.",
+    "Atualização cumulativa com os 173 arquivos da versão anterior, sem remover módulos.",
     "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
   "files": [
@@ -28,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "0375fe04701c1d198d3210be47fed697e8a377399cf5a4b7f4a5e820733bc820"
+      "sha256": "9929acdfdd0813d71930c486aff2611cf71ca55bf5e47a30aa17801ee402ca2c"
     },
     {
       "path": "public/accounting-file.php",
@@ -632,7 +632,7 @@
     },
     {
       "path": "public/master.php",
-      "sha256": "0c170d0e76893f0f1225e6cbaa48d65be86078c6402588779692c43bfa45b890"
+      "sha256": "891fd1c2a757c9f94e9daf8f4a9c7f9e8e3d841430bcfedfff72eb141a44fcfd"
     },
     {
       "path": "public/media-library.php",
