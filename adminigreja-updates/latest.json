@@ -1,24 +1,24 @@
 {
-  "version": "3.7.30",
+  "version": "3.7.31",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.30.01.b64.txt",
-    "releases/v3.7.30.02.b64.txt",
-    "releases/v3.7.30.03.b64.txt",
-    "releases/v3.7.30.04.b64.txt",
-    "releases/v3.7.30.05.b64.txt",
-    "releases/v3.7.30.06.b64.txt",
-    "releases/v3.7.30.07.b64.txt",
-    "releases/v3.7.30.08.b64.txt",
-    "releases/v3.7.30.09.b64.txt"
+    "releases/v3.7.31.01.b64.txt",
+    "releases/v3.7.31.02.b64.txt",
+    "releases/v3.7.31.03.b64.txt",
+    "releases/v3.7.31.04.b64.txt",
+    "releases/v3.7.31.05.b64.txt",
+    "releases/v3.7.31.06.b64.txt",
+    "releases/v3.7.31.07.b64.txt",
+    "releases/v3.7.31.08.b64.txt",
+    "releases/v3.7.31.09.b64.txt"
   ],
-  "sha256": "507aaafc9a1c460d3a6d0ba7055b017c18c3655d990ec01edc6ad2c2bf93d14d",
+  "sha256": "88eb24d574dcf4adb6add7f214c655ed62b7f33b921026fa945a9114335f6bf9",
   "notes": [
-    "Identidade visual Campo Belo para as páginas reais de toda a plataforma e no WebView do APK.",
-    "Formulário de membros com layout fiel à referência e Tesouraria com abas funcionais.",
-    "Menus, campos, tabelas, botões, login e dispositivos móveis com padrão azul e branco.",
-    "Atualização cumulativa com os 166 arquivos aprovados da versão anterior, sem remover módulos.",
+    "Os nomes dos membros aparecem na tabela da Tesouraria e nos PDFs financeiros.",
+    "Relatório mensal de dizimistas agrupado por membro com totais e lançamentos.",
+    "Dízimos sem membro vinculado aparecem separadamente para conferência.",
+    "Atualização cumulativa com os 168 arquivos da versão anterior, sem remover módulos.",
     "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
   "files": [
@@ -28,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "5d5485a99e885470ffc8f10f119961621e1d2424a7d37f161b7d2ce92bc29f26"
+      "sha256": "e06f468be25c4e607a2f55828646ac3f7b9ca08ee287c66938dce23fd4201ab5"
     },
     {
       "path": "public/accounting-file.php",
@@ -344,7 +344,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "095315c31d95602232588e0b895e143db5635819fc63383f9f86ad2e86b4cf53"
+      "sha256": "74d37aaacfcafbc3a03226495e4a4f9341bb18bda62e04faf3064c16bb184218"
     },
     {
       "path": "public/kids-checkin.php",
@@ -543,6 +543,10 @@
       "sha256": "cd767e03bdaa9351645a5d815290bfae209008903178cfdd290f0d28c49d95a9"
     },
     {
+      "path": "public/lib/ReportService.php",
+      "sha256": "2e26f51cb67aa7e12edb5fa5ec4b8f1ff551bb9e7edd1c20f452e02c1eda1c37"
+    },
+    {
       "path": "public/lib/SmallGroupService.php",
       "sha256": "6dcf1ac15d27444fac3171d08f6ea9e1c15e3171f47ceeac0cb4a196cd903487"
     },
@@ -665,6 +669,14 @@
     {
       "path": "public/registers.php",
       "sha256": "2e44b967b5b055a26101990a20d50a8bcee7e6e0164e44cc3abbd5feec4edb85"
+    },
+    {
+      "path": "public/report.php",
+      "sha256": "ad8565ae5f5ce36c160aa95041f640df979eb32f991b200732a45945cc655789"
+    },
+    {
+      "path": "public/reports.php",
+      "sha256": "87332b534c0e47b3f646d34bc1fdb43134b2d9703865d6acdd23cff4ae5f6a69"
     },
     {
       "path": "public/settings.php",
