@@ -1,37 +1,36 @@
 {
-  "version": "3.7.26",
+  "version": "3.7.27",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.26-full.01.b64.txt",
-    "releases/v3.7.26-full.02.b64.txt",
-    "releases/v3.7.26-full.03.b64.txt",
-    "releases/v3.7.26-full.04.b64.txt",
-    "releases/v3.7.26-full.05.b64.txt",
-    "releases/v3.7.26-full.06.b64.txt",
-    "releases/v3.7.26-full.07.b64.txt",
-    "releases/v3.7.26-full.08.b64.txt",
-    "releases/v3.7.26-full.09.b64.txt"
+    "releases/v3.7.27-full.01.b64.txt",
+    "releases/v3.7.27-full.02.b64.txt",
+    "releases/v3.7.27-full.03.b64.txt",
+    "releases/v3.7.27-full.04.b64.txt",
+    "releases/v3.7.27-full.05.b64.txt",
+    "releases/v3.7.27-full.06.b64.txt",
+    "releases/v3.7.27-full.07.b64.txt",
+    "releases/v3.7.27-full.08.b64.txt",
+    "releases/v3.7.27-full.09.b64.txt"
   ],
-  "sha256": "070a28fee3a567a398b42f1205bb3cfc63e4e5ec652d49ed180e6a7c247e8bc9",
-  "cache_buster": "3.7.26-white-label-contribution-finance-list",
+  "sha256": "117f2eb54c3d447eb02134237a37119b11059caf49595986188a4a4406710d3b",
+  "cache_buster": "3.7.27-menu-contrast-finance-pdf-governance",
   "notes": [
-    "Identidade visual responsiva e personalizada por igreja: logo, cores e slogan.",
-    "Registro rápido do membro por link e QR Code; comprovantes privados, validação de Pix e fila de conferência.",
-    "Movimentação contabilizada somente após confirmação da Tesouraria, com seleção de conta/caixa e auditoria.",
-    "Entradas e saídas com botões separados, máscara em reais, categoria pesquisável, histórico sugerido e dízimo identificado com membro.",
-    "Leitura de cupom e nota acessível na Contabilidade com conferência antes de salvar, preservando os recibos atuais.",
-    "Pacote completo e cumulativo com todos os arquivos da 3.7.25 preservados.",
-    "Pacote completo 3.7.26 validado por testes PHP/JS e MariaDB, incluindo roteiro de contribuições, contas e comprovantes."
+    "Corrigido contraste de menus web: labels azul-escuro no menu branco e textos claros em menu móvel escuro.",
+    "Tesouraria completa conforme PDF: classificação, número anual, competência, bruto, taxas, valor líquido e documentos fiscais.",
+    "Conciliação com evidência, extrato, conta, data e valor; aprovações por usuários distintos, regras por valor e pendências justificadas.",
+    "Auditoria financeira e lotes contábeis com exportação CSV, permissão de contador somente consulta.",
+    "Campanhas filtradas por tipo, pagamentos com comprovante obrigatório quando configurado e anonimato controlado.",
+    "Atualização cumulativa preserva todos os arquivos e módulos da versão 3.7.26."
   ],
   "files": [
     {
       "path": "public/CHANGELOG.md",
-      "sha256": "bc50decf590dc47c2ab9622dd432633ef96af8dea801f41dec6c4e327503b228"
+      "sha256": "ca867bec6a00bf1e4c18b07de2db23b44faf496c444588fc315a565b5ad35175"
     },
     {
       "path": "public/VERSION",
-      "sha256": "f4b402ebc9abda351db5936d4be8143a85c0e8ed8a025eb21b1719ca5a6d5cc7"
+      "sha256": "ee2e3e7b7f5209c00cd3e0213af21844369d658e52ee05e053a40e5d53d12d00"
     },
     {
       "path": "public/accounting-file.php",
@@ -275,7 +274,7 @@
     },
     {
       "path": "public/lib/Auth.php",
-      "sha256": "8d3baa482ad3ce03b6cc8abe29f08a59473b0303d4f7b664213ea20197403126"
+      "sha256": "b8fbfe5a0fe04f44cf02c5982e9487a2675976667354767b8b62a5408cdb23ff"
     },
     {
       "path": "public/lib/AutomationMonitor.php",
@@ -323,7 +322,7 @@
     },
     {
       "path": "public/lib/DepartmentTreasuryService.php",
-      "sha256": "668cf2d0688a0042e3661fcf934b1116a50763cdc25a88e33c6536a0320bbde1"
+      "sha256": "caef629272b137b537ed7d5ea8f70df6f27202cead0b06544ed1f12b37c995c4"
     },
     {
       "path": "public/lib/EnuvesImportMap.php",
@@ -471,7 +470,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "e8683a350e62e8c77cb4e79b9decd33f08c195b494bd8bcf1b5fa8953aca5813"
+      "sha256": "2f5a58d546322ee56ac81144ed0750ac579128c0624d10168b4294271445b330"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -595,7 +594,7 @@
     },
     {
       "path": "public/lib/ContributionWorkflow.php",
-      "sha256": "5c3a87d53e61dba57f63adc6035d8b4c069ec3058bd60f0a80f0a7aa226771b9"
+      "sha256": "824150ffb50bc81e264fb11983d7fe13a337e3d84ff2cd578cb71b671e8a32f5"
     },
     {
       "path": "public/database/047_church_white_label.sql",
@@ -611,15 +610,15 @@
     },
     {
       "path": "public/contribution-settings.php",
-      "sha256": "c19fad0e90e5d0aafb41f7f6a5f8b4d8abe5b75cc00689ba7d38a340fd7ada4a"
+      "sha256": "ac579d03e14b3684ba18d6042536ac62c62ecc778c3fd3262a0a06060ec9c0f0"
     },
     {
       "path": "public/contribute.php",
-      "sha256": "3b44455b894684d47957bf0d2d84531cc2904e91d120c9a9637e83a7e4f8cb1e"
+      "sha256": "ff08b4afa82dd3cca8fc0b5ac84231fc5ec49ca351508f2149161f6e49958dbd"
     },
     {
       "path": "public/contribution-review.php",
-      "sha256": "7ff018c04cab68e8beda1f1689a3209c15ac01bd13046f1d4e32bc9579ec5370"
+      "sha256": "b4f8e71f9c96f112fad08c66a03770008fbd592f8829409a4332c527e6b41b45"
     },
     {
       "path": "public/contribution-proof.php",
@@ -639,12 +638,40 @@
     },
     {
       "path": "public/assets/contribution-form-3726.js",
-      "sha256": "cf0c47905498a2198276c04321f4d0bddd3447fd778c42052eca8c8f7a9e0170"
+      "sha256": "281bca5235397002f513120f4882bcf469dd08472558a5335dd983ec317336c9"
     },
     {
       "path": "public/assets/finance-assistant-3726.js",
       "sha256": "a60cbf9a42b9b30a3408e30ec648d08c85a3ed693376c2d56652ad4872f0406c"
+    },
+    {
+      "path": "public/lib/FinanceGovernanceService.php",
+      "sha256": "af724771ff16bf687b367aebf42520ebfae78d1ab6b4d39fec0b825e5ed0b5af"
+    },
+    {
+      "path": "public/database/049_finance_governance_pdf.sql",
+      "sha256": "3bff78f06faeaf73571362c2a32c6797e3b2af3845d2cffadb4ecd037361bcc9"
+    },
+    {
+      "path": "public/database/050_finance_pdf_catalogs.sql",
+      "sha256": "80fc0aec7031cccd8a7468845b7775ace24844f46dbb186af354f9c26b3a9e0c"
+    },
+    {
+      "path": "public/finance-process.php",
+      "sha256": "98311528523265700315b9f6aad00fb86934126a43e6ecd03b3533232a01edc3"
+    },
+    {
+      "path": "public/assets/menu-contrast-3727.css",
+      "sha256": "851a7212d385b9494f17182ab598d6c0f9f4a9badcaa6c06bd47711bab9e0b81"
+    },
+    {
+      "path": "public/assets/finance-governance-3727.css",
+      "sha256": "67f6bbf1ff85220856590ac632ded485fbb71ba9788cf643fd504005f797a4de"
+    },
+    {
+      "path": "public/assets/finance-governance-3727.js",
+      "sha256": "b87a191dccb736de23c5e0a2f6764ed99e6a3f8ec96c8f3304c067b1361a9a02"
     }
   ],
-  "published_at": "2026-11-07T23:54:24.014Z"
+  "published_at": "2026-11-08T00:30:38.544Z"
 }
