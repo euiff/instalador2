@@ -1,0 +1,58 @@
+/* Entrada real do Igreja Master — v3.7.29 */
+body.im-login-page{margin:0;min-height:100dvh;display:grid;place-items:center;
+  background:radial-gradient(circle at 88% 5%,#d6eaff 0,transparent 30%),#f2f7fd;
+  color:#163d6a;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;}
+.im-login-layout{width:min(950px,calc(100% - 32px));display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid #d4e4f6;border-radius:24px;overflow:hidden;
+  background:#fff;box-shadow:0 18px 60px rgba(8,47,102,.12);}
+.im-login-about{display:flex;flex-direction:column;justify-content:center;
+  color:white;background:linear-gradient(155deg,#092e6c,#125ba9 72%,#187ac7);
+  padding:clamp(24px,4vw,48px);min-height:475px;}
+.im-login-symbol{display:grid;place-items:center;width:72px;height:72px;border-radius:18px;
+  color:#0d4e9c;background:#fff;font-weight:900;font-size:42px;
+  box-shadow:0 8px 30px #061c3a38}
+.im-login-about h1{color:#fff;font-weight:820;font-size:clamp(27px,3vw,36px);line-height:1.18;
+  margin:30px 0 10px}
+.im-login-about p{color:#d9eaff;font-size:14px;line-height:1.7;max-width:290px}
+.im-login-feature{color:#e7f3ff;font-size:12px;line-height:1.55;margin-top:25px;
+  padding:13px 14px;background:#ffffff13;border:1px solid #ffffff26;border-radius:12px}
+.im-login-card{display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(24px,4vw,48px);background:#fff;}
+.im-login-card h2{font-size:24px;color:#11376c;margin:0 0 6px;letter-spacing:-.03em}
+.im-login-card>p{color:#647d9b;font-size:13px;line-height:1.6;margin:0 0 25px}
+.im-login-card .field{display:grid;gap:7px;margin-bottom:16px}
+.im-login-card .field label{font-weight:700;font-size:12px;color:#184271}
+.im-login-card .field input{min-height:48px;width:100%;border:1px solid #b9d3ec;
+  background:#fff;color:#14375b;font-size:15px;padding:12px;border-radius:10px}
+.im-login-card .field input:focus{outline:3px solid #d2eaff;border-color:#0d55a1}
+.im-login-card .im-password-wrap{display:flex;align-items:center;gap:7px}
+.im-login-card .im-password-wrap input{min-width:0;flex:1}
+.im-login-card .im-password-toggle{border:1px solid #c8dcf1;background:#edf6ff;color:#134577;
+  padding:10px;border-radius:9px;min-height:48px;min-width:65px;cursor:pointer;font-size:12px}
+.im-login-card button[type=submit]{width:100%;min-height:50px;
+  border-radius:10px;background:#0d47a1;color:white;font-size:14px;font-weight:750;
+  margin-top:4px;border:0;cursor:pointer}
+.im-login-card button[type=submit]:hover{background:#09377e}
+.im-login-note{font-size:11px;color:#7990ac;line-height:1.6;margin-top:22px}
+.im-login-card .alert-error{color:#9b2d3c;border:1px solid #f0c8cf;background:#fff2f4;
+  padding:12px;border-radius:9px;font-size:12px;margin-bottom:17px}
+@media(max-width:760px){
+ .im-login-layout{grid-template-columns:1fr;width:min(460px,calc(100% - 20px));margin:10px auto}
+ .im-login-about{min-height:auto;padding:23px;gap:4px}
+ .im-login-symbol{width:50px;height:50px;border-radius:13px;font-size:30px}
+ .im-login-about h1{font-size:23px;margin:12px 0 3px}
+ .im-login-about p{font-size:12px;margin:0}
+ .im-login-feature{display:none}
+ .im-login-card{padding:25px 22px}
+}
+
+/* 3.7.31 — Entrada harmonizada com a referência Campo Belo. */
+body.im-login-page{background:#f7fafe;color:#0d315d}
+.im-login-about{background:linear-gradient(165deg,#0b4c91,#07356e)!important;color:#fff!important}
+.im-login-about :is(h1,p){color:#fff!important}
+.im-login-card{background:#fff!important;border:1px solid #d9e6f1!important;box-shadow:0 6px 28px #0b3c7114!important}
+.im-login-card :is(h2,label){color:#0b3769!important}
+.im-login-card input{border:1px solid #c4d5e7!important;border-radius:8px!important;background:#fff!important;color:#0c3158!important}
+.im-login-card form button[type=submit]{background:#0956ac!important;border-radius:8px!important;color:#fff!important}
+.im-password-toggle{color:#0b519d!important}
+.im-login-note{color:#56738e!important}
