@@ -1,0 +1,60 @@
+/* Igreja Master — referência visual Campo Belo, aplicada ÀS TELAS REAIS.
+   Não substitui autenticação, fluxo financeiro nem cadastros existentes. */
+:root{--cb-navy:#063d7b;--cb-blue:#0756ae;--cb-ink:#09294e;--cb-pale:#eaf4fd;--cb-stroke:#cdd9e4}
+body:has(.contribute-shell){background:#fff!important;color:var(--cb-ink)!important}
+.contribute-shell{width:min(100%,530px);padding:20px 16px 34px;background:#fff}
+.contribute-header{padding:12px 4px 21px;gap:13px;align-items:center}
+.contribute-mark{box-shadow:none;background:#fff;border-radius:0;width:91px;height:88px;flex-basis:91px;color:#00468d}
+.contribute-mark img{padding:0;object-fit:contain}
+.contribute-header strong{font-size:clamp(16px,3.8vw,20px);font-weight:850;color:#052c63;line-height:1.17;text-transform:uppercase}
+.contribute-header small{font-size:12px;color:#606872;margin-top:5px}
+.contribute-card{padding:0;border:0;border-radius:0;box-shadow:none}
+.contribute-intro{background:linear-gradient(105deg,#ecf5fc,#e6f0f9);padding:21px 15px 18px;border-radius:14px;margin-bottom:19px}
+.contribute-eyebrow{display:none}
+.contribute-intro h1{margin:0 0 3px;color:#083970;font-size:clamp(21px,5vw,26px);font-weight:850}
+.contribute-intro p{color:#16365c;font-size:16px}
+.contribute-intro blockquote{font-size:14px;margin-top:15px;color:#2d4157;line-height:1.45}
+.contribute-form{gap:16px}
+.contribute-field{gap:6px}
+.contribute-field label{font-size:15px;color:#0b2d55;font-weight:750}
+.contribute-field select,.contribute-field input,.contribute-field textarea{min-height:55px;border:1px solid #c9d1da;border-radius:8px;background:#fff;color:#243e5a;font-size:15px;padding:13px 14px;box-shadow:0 1px 3px #00000009}
+.contribute-field textarea{min-height:68px}
+.contribute-field select{appearance:auto}
+.contribute-field input[type=file]{border:1px solid #b5cde2;background:#edf7ff;color:#0a4482;min-height:52px}
+.contribute-field small{color:#65778b}
+.contribute-optional-heading{font-size:14px;color:#093469;background:#e2effa;padding:10px 13px;border-radius:7px;margin-top:2px}
+.contribute-button{background:linear-gradient(100deg,#0754ac,#0062be);border-radius:8px;font-size:17px;min-height:56px;box-shadow:0 3px 8px #003e8a20}
+.contribute-button:hover{filter:brightness(.96)}
+.contribute-notice{font-size:12px;color:#4e647e;text-align:center}
+.contribute-footer{padding:19px 0 0;color:#607b98}
+.contribute-success{padding:22px 8px;text-align:center}
+body[data-app-page="finance-process.php"]{--im-primary:#0756ae}
+body[data-app-page="finance-process.php"] .module-title h1{color:#0b376c!important;font-weight:850}
+body[data-app-page="finance-process.php"] .finance-gov-layout{grid-template-columns:minmax(220px,.65fr) minmax(0,1.35fr);gap:16px}
+body[data-app-page="finance-process.php"] .finance-gov-layout>.card{background:#fff!important;border:1px solid #dce6f0!important;padding:18px!important}
+body[data-app-page="finance-process.php"] .finance-gov-layout>.card:nth-child(2){border-top:4px solid #0757ad!important}
+body[data-app-page="finance-process.php"] .finance-gov-heading{background:#f6fbff;padding:13px;border-radius:9px;border:1px solid #dbe9f7}
+body[data-app-page="finance-process.php"] .finance-gov-heading h2{color:#093468;font-size:18px}
+body[data-app-page="finance-process.php"] .finance-gov-status{background:#ffe8a0!important;color:#664d06!important;border-radius:8px}
+body[data-app-page="finance-process.php"] .finance-gov-form h3{background:linear-gradient(90deg,#deedf9,#edf6fd)!important;border-radius:6px!important;color:#07376d!important;padding:10px 12px!important;font-size:14px!important;font-weight:850!important;border:0!important}
+body[data-app-page="finance-process.php"] .finance-gov-form .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body[data-app-page="finance-process.php"] .finance-gov-form .field{min-width:0}
+body[data-app-page="finance-process.php"] .finance-gov-form label{font-size:12px!important;color:#17365b!important;font-weight:700!important}
+body[data-app-page="finance-process.php"] .finance-gov-form input:not([type=checkbox]),body[data-app-page="finance-process.php"] .finance-gov-form select,body[data-app-page="finance-process.php"] .finance-gov-form textarea{width:100%;max-width:100%;min-height:43px;background:#fff!important;border:1px solid #cbd7e3!important;border-radius:6px!important;color:#1c3658!important}
+body[data-app-page="finance-process.php"] .finance-gov-form output{border-radius:6px;background:#e8f4ee;color:#11643b}
+body[data-app-page="finance-process.php"] .finance-gov-form .btn-primary{background:#0755ab!important;color:white!important;border-radius:7px!important}
+body[data-app-page="finance-process.php"] .finance-gov-money>div{background:#eaf4fd;border:1px solid #d4e6f4}
+body[data-app-page="finance-process.php"] .finance-gov-checks{display:flex;gap:14px;flex-wrap:wrap}
+body[data-app-page="finance-process.php"] .finance-gov-checks label{padding:10px 12px;border:1px solid #d4e2ef;border-radius:7px;background:#f8fbff}
+body[data-app-page="finance-process.php"] .finance-gov-section{border-top:4px solid #0757ad!important}
+@media(max-width:1050px){body[data-app-page="finance-process.php"] .finance-gov-layout{grid-template-columns:1fr}}
+@media(max-width:640px){.contribute-shell{padding:12px 17px 26px}.contribute-header{gap:9px}.contribute-mark{width:72px;height:74px;flex-basis:72px}.contribute-header strong{font-size:16px}.contribute-intro{padding:18px 9px}.contribute-intro h1{font-size:22px}body[data-app-page="finance-process.php"] .finance-gov-form .form-grid{grid-template-columns:1fr}body[data-app-page="finance-process.php"] .finance-gov-money{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}body[data-app-page="finance-process.php"] .finance-gov-money>div{padding:8px 6px}body[data-app-page="finance-process.php"] .finance-gov-money strong{font-size:13px}}
+
+/* Referência: quatro abas funcionais no topo da Tesouraria */
+.cb-finance-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#f2f6fa;border:1px solid #dce6f0;border-radius:9px 9px 0 0;overflow:hidden;margin-bottom:16px}
+.cb-finance-tabs a{min-height:67px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;text-align:center;font-size:12px;color:#153a60;text-decoration:none;border-right:1px solid #e0eaf3;padding:8px 4px}
+.cb-finance-tabs a:last-child{border-right:0}
+.cb-finance-tabs a span{font-size:22px;line-height:1.1;color:#063a79}
+.cb-finance-tabs a[aria-current=page]{background:#fff;color:#003e83;font-weight:750;box-shadow:inset 0 -3px #0860b7}
+.cb-finance-tabs a:hover{background:#e7f2fd}
+@media(max-width:420px){.cb-finance-tabs a{font-size:10px;min-height:60px}}
