@@ -1,29 +1,25 @@
 {
-  "version": "3.7.29",
+  "version": "3.7.30",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.29-full.01.b64.txt",
-    "releases/v3.7.29-full.02.b64.txt",
-    "releases/v3.7.29-full.03.b64.txt",
-    "releases/v3.7.29-full.04.b64.txt",
-    "releases/v3.7.29-full.05.b64.txt",
-    "releases/v3.7.29-full.06.b64.txt",
-    "releases/v3.7.29-full.07.b64.txt",
-    "releases/v3.7.29-full.08.b64.txt",
-    "releases/v3.7.29-full.09.b64.txt",
-    "releases/v3.7.29-full.10.b64.txt"
+    "releases/v3.7.30.01.b64.txt",
+    "releases/v3.7.30.02.b64.txt",
+    "releases/v3.7.30.03.b64.txt",
+    "releases/v3.7.30.04.b64.txt",
+    "releases/v3.7.30.05.b64.txt",
+    "releases/v3.7.30.06.b64.txt",
+    "releases/v3.7.30.07.b64.txt",
+    "releases/v3.7.30.08.b64.txt",
+    "releases/v3.7.30.09.b64.txt"
   ],
-  "sha256": "132a80712dfca2c12a030e3a805b22d789a646debeef42e12d9cb4e9bd5939b4",
-  "cache_buster": "3.7.29-real-web-system-ui",
+  "sha256": "507aaafc9a1c460d3a6d0ba7055b017c18c3655d990ec01edc6ad2c2bf93d14d",
   "notes": [
-    "Redesign aplicado diretamente ao sistema web e, consequentemente, às mesmas páginas dentro do APK, sem tela falsa.",
-    "Menu lateral profissional no desktop, menu responsivo no celular, logo por igreja e alto contraste.",
-    "Dashboard com valores reais e gráfico financeiro do banco e acesso direto aos processos da igreja.",
-    "Cadastros e tabelas financeiras com dados reais e atalhos para funções que já existem.",
-    "Login redesenhado e controle funcional de exibição de senha.",
-    "Preservadas as funções, arquivos, cadastros e dados anteriores da 3.7.27.",
-    "Importante: instalar esta atualização WEB juntamente com o APK 3.7.29."
+    "Identidade visual Campo Belo para as páginas reais de toda a plataforma e no WebView do APK.",
+    "Formulário de membros com layout fiel à referência e Tesouraria com abas funcionais.",
+    "Menus, campos, tabelas, botões, login e dispositivos móveis com padrão azul e branco.",
+    "Atualização cumulativa com os 166 arquivos aprovados da versão anterior, sem remover módulos.",
+    "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
   "files": [
     {
@@ -32,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "6a7bd8ae513b64ce45aec210905f16939d9bd0c33acbb7c07619b3a56a2621de"
+      "sha256": "5d5485a99e885470ffc8f10f119961621e1d2424a7d37f161b7d2ce92bc29f26"
     },
     {
       "path": "public/accounting-file.php",
@@ -63,12 +59,56 @@
       "sha256": "be73648cb72aa8747a7a9262e9bf9d0b6ba30cf55dc6516c4b5688b5860a49dc"
     },
     {
+      "path": "public/assets/branding-preview-3726.js",
+      "sha256": "7f2f369b5f712b00b22265c5393d8fe7fe4ed4123cfa9ff70f80bba176b6251e"
+    },
+    {
+      "path": "public/assets/campo-belo-real-3730.css",
+      "sha256": "7f6e7cafcd2d7cd9634c9a14df89a3a274bf748d7572aa39f2afb54307a1779e"
+    },
+    {
+      "path": "public/assets/contribution-3726.css",
+      "sha256": "a19f36ad7d6b6444d0414a01e8a211e08de93d6c853053b87ccce06e0a7bb028"
+    },
+    {
+      "path": "public/assets/contribution-form-3726.js",
+      "sha256": "281bca5235397002f513120f4882bcf469dd08472558a5335dd983ec317336c9"
+    },
+    {
       "path": "public/assets/expense-receipt.css",
       "sha256": "565c3d2499da2344b3ad95eec2427af513a03e073ec0c749d0c1198592bb8042"
     },
     {
       "path": "public/assets/expense-receipt.js",
       "sha256": "435340f2e80276727704110026f3bc656f69642dc1de48e2a7d73e66e2fda77d"
+    },
+    {
+      "path": "public/assets/finance-assistant-3724.js",
+      "sha256": "8b9e5957abbd8c09e419820be9407f2ffc74be3b6c678f80a4adf2c8c1a08735"
+    },
+    {
+      "path": "public/assets/finance-assistant-3726.js",
+      "sha256": "a60cbf9a42b9b30a3408e30ec648d08c85a3ed693376c2d56652ad4872f0406c"
+    },
+    {
+      "path": "public/assets/finance-governance-3727.css",
+      "sha256": "67f6bbf1ff85220856590ac632ded485fbb71ba9788cf643fd504005f797a4de"
+    },
+    {
+      "path": "public/assets/finance-governance-3727.js",
+      "sha256": "b87a191dccb736de23c5e0a2f6764ed99e6a3f8ec96c8f3304c067b1361a9a02"
+    },
+    {
+      "path": "public/assets/igreja-master-global-3731.css",
+      "sha256": "893273283e08740250adf77b31c60c058babd7fc00448e0803c34ce2fe12301d"
+    },
+    {
+      "path": "public/assets/igreja-real-ui-3729.css",
+      "sha256": "4de8898ffed2028f2a3170c81971b086a563d45aacdb9480003795522508745f"
+    },
+    {
+      "path": "public/assets/login-real-3729.css",
+      "sha256": "f6123cd764c478aa0deff4c0d787f3be6affd3fc8ff4ab20739df3dddaed2e0a"
     },
     {
       "path": "public/assets/management-3711.css",
@@ -87,6 +127,10 @@
       "sha256": "dbe4fe4fbfe834490baf07d1e5fbdaf2b96d911e466c9ef8975e454a3fa94b4b"
     },
     {
+      "path": "public/assets/menu-contrast-3727.css",
+      "sha256": "851a7212d385b9494f17182ab598d6c0f9f4a9badcaa6c06bd47711bab9e0b81"
+    },
+    {
       "path": "public/assets/password-visibility.css",
       "sha256": "bae64bab91d66cd9b900faf5a61558954fc414c586fa2caa725aa2e236eb3012"
     },
@@ -99,6 +143,10 @@
       "sha256": "34e1ed9bb1f3bc2f6237f26e78f211182adf51f9ec67ea0785dadccf82c3b3f8"
     },
     {
+      "path": "public/assets/visual-3726.css",
+      "sha256": "f433df4c17048df31c85bca45b480f8e909f597f393ab741d69559d0bf475ce9"
+    },
+    {
       "path": "public/automations.php",
       "sha256": "e3e89a7abd681da11ccc8cc139375c2267a177a34e2c5c66c6983e5a0e1ef71a"
     },
@@ -109,6 +157,26 @@
     {
       "path": "public/campaigns.php",
       "sha256": "e89b41a89455ae3be4161600ec07c03d0e5abdd962b216ec9355789fdf84fa9a"
+    },
+    {
+      "path": "public/church-branding.php",
+      "sha256": "5fdec36590acbcc876c13348a585abdd104bd9e11f18936b33726cea94812349"
+    },
+    {
+      "path": "public/contribute.php",
+      "sha256": "0ce0f25e6e93b74d7fdeda62644d8cbc8bf810b53881e3043953d40f1c688c87"
+    },
+    {
+      "path": "public/contribution-proof.php",
+      "sha256": "c23fbe64eeb8f456e17036e28ee6483ab001cecff79ff12f6092583ef1265be9"
+    },
+    {
+      "path": "public/contribution-review.php",
+      "sha256": "b4f8e71f9c96f112fad08c66a03770008fbd592f8829409a4332c527e6b41b45"
+    },
+    {
+      "path": "public/contribution-settings.php",
+      "sha256": "ac579d03e14b3684ba18d6042536ac62c62ecc778c3fd3262a0a06060ec9c0f0"
     },
     {
       "path": "public/cron.php",
@@ -203,6 +271,22 @@
       "sha256": "e09cc106b58211aab8b6d71c8958d8ca8b3404a478969e13536332a2150f0de1"
     },
     {
+      "path": "public/database/047_church_white_label.sql",
+      "sha256": "566cf5148255d00c7dee45eb5dcb60347663fd4a7b706cff0e8ac3268c4be98a"
+    },
+    {
+      "path": "public/database/048_contribution_quick_review.sql",
+      "sha256": "37e51a164b0b18906557f459f04eba2ae94c2690103a3e1ee2bc7dcc326cd8de"
+    },
+    {
+      "path": "public/database/049_finance_governance_pdf.sql",
+      "sha256": "3bff78f06faeaf73571362c2a32c6797e3b2af3845d2cffadb4ecd037361bcc9"
+    },
+    {
+      "path": "public/database/050_finance_pdf_catalogs.sql",
+      "sha256": "80fc0aec7031cccd8a7468845b7775ace24844f46dbb186af354f9c26b3a9e0c"
+    },
+    {
       "path": "public/department-people.php",
       "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
     },
@@ -243,12 +327,20 @@
       "sha256": "3d345d7cfba637bfd37613c322ce3a95ae2698adb6837fb7248eba5b5f54091e"
     },
     {
+      "path": "public/finance-catalogs.php",
+      "sha256": "c1c98ae53cfb147d0330f7243dd7775531ea082509a08cfc061bdec6c7487d7a"
+    },
+    {
       "path": "public/finance-control.php",
       "sha256": "226a9ee4227df794585bd74fb1a1f57b37dcdcdf840ec4be8142d16290ebeafb"
     },
     {
       "path": "public/finance-import.php",
       "sha256": "8c9365df01fb2a83ee0cca48b759bb1eb9c69370c63d5339f85d1fe1ce22c085"
+    },
+    {
+      "path": "public/finance-process.php",
+      "sha256": "1088e9a329e4798392c5df1cb1b8ffb0e95b41f11bb5adabf4e45897e88e6cfc"
     },
     {
       "path": "public/finance.php",
@@ -307,6 +399,10 @@
       "sha256": "33c8704709c4d7649926fe7fd8d00acd69d7b32b6b5178be3ed20e3035cc1bb6"
     },
     {
+      "path": "public/lib/ContributionWorkflow.php",
+      "sha256": "824150ffb50bc81e264fb11983d7fe13a337e3d84ff2cd578cb71b671e8a32f5"
+    },
+    {
       "path": "public/lib/CronTasks.php",
       "sha256": "ae67f5d5fcc1df9e7ed043980f1bec1a8c5b01b8fe44bfa9f22a9de60b020bdf"
     },
@@ -361,6 +457,10 @@
     {
       "path": "public/lib/FinanceCsvImport.php",
       "sha256": "010a562b383b82e72f7df4e8db01a34d2e7062b103bb3efd491ef3b6bd6fc0c6"
+    },
+    {
+      "path": "public/lib/FinanceGovernanceService.php",
+      "sha256": "af724771ff16bf687b367aebf42520ebfae78d1ab6b4d39fec0b825e5ed0b5af"
     },
     {
       "path": "public/lib/FinanceOperations.php",
@@ -463,6 +563,10 @@
       "sha256": "40ff5407144657145cb9febef9b90c0d1c5edb06652f6a36c3dcf64c8f0b82db"
     },
     {
+      "path": "public/lib/TenantBranding.php",
+      "sha256": "5fdfba7d96d482e954d7f0224228204d7ecedd21329bc5154c68935125286d4f"
+    },
+    {
       "path": "public/lib/Ui.php",
       "sha256": "23f1382d48d7046e884d7733001c51b4e7dc26172362494c48b5adb15a2f9699"
     },
@@ -472,7 +576,7 @@
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "6f8bb78eba550e24c96b5f5d0d95b17a327312d834ad5807b99584c38f484781"
+      "sha256": "99c36842733ad2980380ccbbad6c2fec7fc9fe2bb6073bb8c7d5221e514df92c"
     },
     {
       "path": "public/lib/VisitorFollowupService.php",
@@ -485,6 +589,10 @@
     {
       "path": "public/lib/dashboard-department-treasury.php",
       "sha256": "c4c678b4b8fc34a5eb705d80de88c1b7b67c20563fdb3f706cc3cf7c41e73cd4"
+    },
+    {
+      "path": "public/login.php",
+      "sha256": "6094fce42ab355d5c333377a9a309fc6899873a97faad26645e7c04b4ba5e0e0"
     },
     {
       "path": "public/management-center.php",
@@ -585,111 +693,6 @@
     {
       "path": "public/visitors.php",
       "sha256": "0257be48a3ae7d75fe5833aaad00d7b8bb06dd7f00355da1be46d37230b98085"
-    },
-    {
-      "path": "public/assets/finance-assistant-3724.js",
-      "sha256": "8b9e5957abbd8c09e419820be9407f2ffc74be3b6c678f80a4adf2c8c1a08735"
-    },
-    {
-      "path": "public/lib/TenantBranding.php",
-      "sha256": "5fdfba7d96d482e954d7f0224228204d7ecedd21329bc5154c68935125286d4f"
-    },
-    {
-      "path": "public/lib/ContributionWorkflow.php",
-      "sha256": "824150ffb50bc81e264fb11983d7fe13a337e3d84ff2cd578cb71b671e8a32f5"
-    },
-    {
-      "path": "public/database/047_church_white_label.sql",
-      "sha256": "566cf5148255d00c7dee45eb5dcb60347663fd4a7b706cff0e8ac3268c4be98a"
-    },
-    {
-      "path": "public/database/048_contribution_quick_review.sql",
-      "sha256": "37e51a164b0b18906557f459f04eba2ae94c2690103a3e1ee2bc7dcc326cd8de"
-    },
-    {
-      "path": "public/church-branding.php",
-      "sha256": "5fdec36590acbcc876c13348a585abdd104bd9e11f18936b33726cea94812349"
-    },
-    {
-      "path": "public/contribution-settings.php",
-      "sha256": "ac579d03e14b3684ba18d6042536ac62c62ecc778c3fd3262a0a06060ec9c0f0"
-    },
-    {
-      "path": "public/contribute.php",
-      "sha256": "ff08b4afa82dd3cca8fc0b5ac84231fc5ec49ca351508f2149161f6e49958dbd"
-    },
-    {
-      "path": "public/contribution-review.php",
-      "sha256": "b4f8e71f9c96f112fad08c66a03770008fbd592f8829409a4332c527e6b41b45"
-    },
-    {
-      "path": "public/contribution-proof.php",
-      "sha256": "c23fbe64eeb8f456e17036e28ee6483ab001cecff79ff12f6092583ef1265be9"
-    },
-    {
-      "path": "public/assets/visual-3726.css",
-      "sha256": "f433df4c17048df31c85bca45b480f8e909f597f393ab741d69559d0bf475ce9"
-    },
-    {
-      "path": "public/assets/branding-preview-3726.js",
-      "sha256": "7f2f369b5f712b00b22265c5393d8fe7fe4ed4123cfa9ff70f80bba176b6251e"
-    },
-    {
-      "path": "public/assets/contribution-3726.css",
-      "sha256": "a19f36ad7d6b6444d0414a01e8a211e08de93d6c853053b87ccce06e0a7bb028"
-    },
-    {
-      "path": "public/assets/contribution-form-3726.js",
-      "sha256": "281bca5235397002f513120f4882bcf469dd08472558a5335dd983ec317336c9"
-    },
-    {
-      "path": "public/assets/finance-assistant-3726.js",
-      "sha256": "a60cbf9a42b9b30a3408e30ec648d08c85a3ed693376c2d56652ad4872f0406c"
-    },
-    {
-      "path": "public/lib/FinanceGovernanceService.php",
-      "sha256": "af724771ff16bf687b367aebf42520ebfae78d1ab6b4d39fec0b825e5ed0b5af"
-    },
-    {
-      "path": "public/database/049_finance_governance_pdf.sql",
-      "sha256": "3bff78f06faeaf73571362c2a32c6797e3b2af3845d2cffadb4ecd037361bcc9"
-    },
-    {
-      "path": "public/database/050_finance_pdf_catalogs.sql",
-      "sha256": "80fc0aec7031cccd8a7468845b7775ace24844f46dbb186af354f9c26b3a9e0c"
-    },
-    {
-      "path": "public/finance-process.php",
-      "sha256": "b3dcd4b756e11a590a136e3572b15f99e5b393f4969d1dafadf9f803df9088e9"
-    },
-    {
-      "path": "public/assets/menu-contrast-3727.css",
-      "sha256": "851a7212d385b9494f17182ab598d6c0f9f4a9badcaa6c06bd47711bab9e0b81"
-    },
-    {
-      "path": "public/assets/finance-governance-3727.css",
-      "sha256": "67f6bbf1ff85220856590ac632ded485fbb71ba9788cf643fd504005f797a4de"
-    },
-    {
-      "path": "public/assets/finance-governance-3727.js",
-      "sha256": "b87a191dccb736de23c5e0a2f6764ed99e6a3f8ec96c8f3304c067b1361a9a02"
-    },
-    {
-      "path": "public/login.php",
-      "sha256": "6094fce42ab355d5c333377a9a309fc6899873a97faad26645e7c04b4ba5e0e0"
-    },
-    {
-      "path": "public/finance-catalogs.php",
-      "sha256": "c1c98ae53cfb147d0330f7243dd7775531ea082509a08cfc061bdec6c7487d7a"
-    },
-    {
-      "path": "public/assets/igreja-real-ui-3729.css",
-      "sha256": "4de8898ffed2028f2a3170c81971b086a563d45aacdb9480003795522508745f"
-    },
-    {
-      "path": "public/assets/login-real-3729.css",
-      "sha256": "f0587b013223fd5a116bfcde6845c2197fd7134fb5e83b519088ce0a92d7e4b0"
     }
-  ],
-  "published_at": "2026-11-08T01:31:58.972Z"
+  ]
 }
