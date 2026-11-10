@@ -1,23 +1,23 @@
 {
-  "version": "3.7.38",
+  "version": "3.7.39",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.38.01.b64.txt",
-    "releases/v3.7.38.02.b64.txt",
-    "releases/v3.7.38.03.b64.txt",
-    "releases/v3.7.38.04.b64.txt",
-    "releases/v3.7.38.05.b64.txt",
-    "releases/v3.7.38.06.b64.txt",
-    "releases/v3.7.38.07.b64.txt",
-    "releases/v3.7.38.08.b64.txt",
-    "releases/v3.7.38.09.b64.txt"
+    "releases/v3.7.39.01.b64.txt",
+    "releases/v3.7.39.02.b64.txt",
+    "releases/v3.7.39.03.b64.txt",
+    "releases/v3.7.39.04.b64.txt",
+    "releases/v3.7.39.05.b64.txt",
+    "releases/v3.7.39.06.b64.txt",
+    "releases/v3.7.39.07.b64.txt",
+    "releases/v3.7.39.08.b64.txt",
+    "releases/v3.7.39.09.b64.txt"
   ],
-  "sha256": "d91a7877dc0afdd16df8d967ff4d994f4f6468889042a38d34cfd318934abe2d",
+  "sha256": "83e052366fde140e5eaa5216e45c89e6d30bf61a542cc186c377bd51867aa099",
   "notes": [
-    "Unificado campo Categoria na Tesouraria, sem segunda caixa duplicada.",
-    "Sugestões de categorias são normalizadas para evitar nomes repetidos.",
-    "Categoria pode ser digitada ou escolhida em um único campo.",
+    "Diagnóstico de upload disponível na Tesouraria com teste sem lançamento financeiro.",
+    "Erros de upload explicam limites do PHP, falha de gravação e pasta temporária.",
+    "Armazenamento privado de notas e recibos com verificação de pasta por igreja.",
     "Preservação dos saldos, recibos, movimentações e cadastros existentes.",
     "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
@@ -28,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "a1863b1a1abaa0694136012e5a56a421d6e572cd7d6ae377fc57b18419f7a584"
+      "sha256": "0bda7f92d44af1d87c6abb8b98c14345f86f9ada1306a415a51c2aeeec74ee1a"
     },
     {
       "path": "public/accounting-file.php",
@@ -359,8 +359,12 @@
       "sha256": "1088e9a329e4798392c5df1cb1b8ffb0e95b41f11bb5adabf4e45897e88e6cfc"
     },
     {
+      "path": "public/finance-upload-check.php",
+      "sha256": "1907f201165a234bd4d7c7481115fa044aec55c5672b1a46cde978fdc2f12c02"
+    },
+    {
       "path": "public/finance.php",
-      "sha256": "30a73d7eeec16f03a698e7a150bac93bc6ed11bb4f852557780ae891766e6383"
+      "sha256": "11330902c00b3b4207094533ef8f5073ba98d9e004f0daf3f3bb1149b67f4970"
     },
     {
       "path": "public/kids-checkin.php",
@@ -596,7 +600,7 @@
     },
     {
       "path": "public/lib/UploadService.php",
-      "sha256": "6919939938b61cdad9eb2620a50fd7bc083860490c9706423802ab7bf5443012"
+      "sha256": "90ba8c925075ce26a0e76b0c962449e209627270850541da321ed3c4f0919998"
     },
     {
       "path": "public/lib/View.php",
