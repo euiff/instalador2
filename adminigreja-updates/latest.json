@@ -1,24 +1,24 @@
 {
-  "version": "3.7.36",
+  "version": "3.7.37",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.36.01.b64.txt",
-    "releases/v3.7.36.02.b64.txt",
-    "releases/v3.7.36.03.b64.txt",
-    "releases/v3.7.36.04.b64.txt",
-    "releases/v3.7.36.05.b64.txt",
-    "releases/v3.7.36.06.b64.txt",
-    "releases/v3.7.36.07.b64.txt",
-    "releases/v3.7.36.08.b64.txt",
-    "releases/v3.7.36.09.b64.txt"
+    "releases/v3.7.37.01.b64.txt",
+    "releases/v3.7.37.02.b64.txt",
+    "releases/v3.7.37.03.b64.txt",
+    "releases/v3.7.37.04.b64.txt",
+    "releases/v3.7.37.05.b64.txt",
+    "releases/v3.7.37.06.b64.txt",
+    "releases/v3.7.37.07.b64.txt",
+    "releases/v3.7.37.08.b64.txt",
+    "releases/v3.7.37.09.b64.txt"
   ],
-  "sha256": "13a5f5e1b37021e21ae94184b9087a58958e8a28b71c01b10c77704a1ac5024d",
+  "sha256": "ee2c6e76a671424c4caade586755cc6c043ccb2759d55589cebb5596c1eeacc9",
   "notes": [
-    "Contas e caixas financeiros podem ser excluídos/arquivados sem apagar histórico.",
-    "Recibos são criados pendentes e não registram dinheiro imediatamente.",
-    "Assinatura na tela ou por upload de recibo impresso e assinado.",
-    "Somente após conferir assinatura e clicar em Lançar é criado o valor no caixa uma vez.",
+    "Evita que a criação de tabela de recibos pendentes bloqueie lançamentos comuns.",
+    "Provisão da tabela de recibos na migração 051, não em cada salvamento.",
+    "Se recibos pendentes estiverem indisponíveis, operações financeiras normais continuam acessíveis.",
+    "Preservação dos saldos, movimentações e anexos existentes.",
     "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
   "files": [
@@ -28,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "4bd57b551dccbe2f1d8d3895884fb508d92099f5851fa1642af71989aae6371c"
+      "sha256": "a5529e1ef161b2fa8a986ffc40c021836c4b8b48361742ed3a5035b39b1bb5d4"
     },
     {
       "path": "public/accounting-file.php",
@@ -299,6 +299,10 @@
       "sha256": "80fc0aec7031cccd8a7468845b7775ace24844f46dbb186af354f9c26b3a9e0c"
     },
     {
+      "path": "public/database/051_pending_receipts.sql",
+      "sha256": "fe0dd786d0dca5b94db59895a66b74081c7843ad580412b431c08d1479b20784"
+    },
+    {
       "path": "public/department-people.php",
       "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
     },
@@ -356,7 +360,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "77d639ae698e7750280adb153ddb3919c2aea7b6d950ebc80730ddd80b977aca"
+      "sha256": "11d6a752326f3dec011c5cd4a57a86be8ce437481871e5af39734a58b81415ab"
     },
     {
       "path": "public/kids-checkin.php",
@@ -676,11 +680,11 @@
     },
     {
       "path": "public/pending-receipt-file.php",
-      "sha256": "d81906ac5b8ef4894e357f2f173b36954ba5cd3445ef47feebd1bddc97c5e127"
+      "sha256": "99a6dc407877eeb7439f1292f6a1cbd7144ba3fbf3f7b9704ed621f32aa97a4c"
     },
     {
       "path": "public/pending-receipt-print.php",
-      "sha256": "3afa1b539cb08d6e322bb8561cd0fde75b74deb6d5c51cf5416de2e1976766ea"
+      "sha256": "cc3a8b593af82ae0983e0a54d8ec89331a9b00a8ae551f1c8657be40eb17ac08"
     },
     {
       "path": "public/portal-home.php",
