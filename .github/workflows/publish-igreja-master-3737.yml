@@ -23,7 +23,7 @@ jobs:
         with:
           php-version: '8.2'
           extensions: mbstring,pdo_mysql,fileinfo,zip,intl,gd
-      - name: Rebuild cumulative 3.7.37 from verified 3.7.33 plus exact UI source patches
+      - name: Rebuild cumulative 3.7.37 from verified 3.7.36 plus exact UI source patches
         shell: bash
         run: |
           set -euo pipefail
@@ -31,7 +31,7 @@ jobs:
           import base64, gzip, hashlib, io, json, pathlib, tarfile, tempfile, shutil
           channel=pathlib.Path('adminigreja-updates')
           old=json.loads((channel/'latest.json').read_text(encoding='utf-8'))
-          assert old['version']=='3.7.33',f"Expected approved 3.7.33 base, got {old['version']}"
+          assert old['version']=='3.7.36',f"Expected approved 3.7.36 base, got {old['version']}"
           b64=b''.join((channel/path).read_bytes().strip() for path in old['parts'])
           gz=base64.b64decode(b64,validate=True)
           assert hashlib.sha256(gz).hexdigest()==old['sha256'],'Base GZIP checksum mismatch'
