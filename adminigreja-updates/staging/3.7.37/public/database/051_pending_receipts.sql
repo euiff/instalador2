@@ -1,0 +1,35 @@
+-- Igreja Master 3.7.37
+-- Recibos provisórios ficam fora do livro-caixa até a assinatura e conferência.
+-- Instalação automática via Schema::migrate() durante atualização normal.
+CREATE TABLE IF NOT EXISTS finance_receipt_drafts (
+ id CHAR(36) NOT NULL PRIMARY KEY,
+ church_id CHAR(36) NOT NULL,
+ member_id CHAR(36) NULL,
+ account_id CHAR(36) NULL,
+ cost_center_id CHAR(36) NULL,
+ contact_id CHAR(36) NULL,
+ payer_name VARCHAR(190) NOT NULL,
+ payer_document VARCHAR(60) NULL,
+ amount DECIMAL(14,2) NOT NULL,
+ category VARCHAR(160) NOT NULL,
+ description VARCHAR(255) NOT NULL,
+ payment_method VARCHAR(60) NULL,
+ received_at DATE NOT NULL,
+ notes TEXT NULL,
+ status VARCHAR(30) NOT NULL DEFAULT 'awaiting_signature',
+ signed_path VARCHAR(255) NULL,
+ signed_name VARCHAR(255) NULL,
+ signed_mime VARCHAR(120) NULL,
+ signed_size INT UNSIGNED NULL,
+ signature_method VARCHAR(20) NULL,
+ signed_at DATETIME NULL,
+ finance_entry_id CHAR(36) NULL,
+ finance_receipt_id CHAR(36) NULL,
+ created_by_user_id CHAR(36) NULL,
+ approved_by_user_id CHAR(36) NULL,
+ approved_at DATETIME NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ KEY idx_receipt_draft_church(church_id,status,created_at),
+ UNIQUE KEY uq_receipt_draft_entry(finance_entry_id),
+ UNIQUE KEY uq_receipt_draft_receipt(finance_receipt_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
