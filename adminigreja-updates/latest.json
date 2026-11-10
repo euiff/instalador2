@@ -1,24 +1,24 @@
 {
-  "version": "3.7.37",
+  "version": "3.7.38",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.37.01.b64.txt",
-    "releases/v3.7.37.02.b64.txt",
-    "releases/v3.7.37.03.b64.txt",
-    "releases/v3.7.37.04.b64.txt",
-    "releases/v3.7.37.05.b64.txt",
-    "releases/v3.7.37.06.b64.txt",
-    "releases/v3.7.37.07.b64.txt",
-    "releases/v3.7.37.08.b64.txt",
-    "releases/v3.7.37.09.b64.txt"
+    "releases/v3.7.38.01.b64.txt",
+    "releases/v3.7.38.02.b64.txt",
+    "releases/v3.7.38.03.b64.txt",
+    "releases/v3.7.38.04.b64.txt",
+    "releases/v3.7.38.05.b64.txt",
+    "releases/v3.7.38.06.b64.txt",
+    "releases/v3.7.38.07.b64.txt",
+    "releases/v3.7.38.08.b64.txt",
+    "releases/v3.7.38.09.b64.txt"
   ],
-  "sha256": "ee2c6e76a671424c4caade586755cc6c043ccb2759d55589cebb5596c1eeacc9",
+  "sha256": "d91a7877dc0afdd16df8d967ff4d994f4f6468889042a38d34cfd318934abe2d",
   "notes": [
-    "Evita que a criação de tabela de recibos pendentes bloqueie lançamentos comuns.",
-    "Provisão da tabela de recibos na migração 051, não em cada salvamento.",
-    "Se recibos pendentes estiverem indisponíveis, operações financeiras normais continuam acessíveis.",
-    "Preservação dos saldos, movimentações e anexos existentes.",
+    "Unificado campo Categoria na Tesouraria, sem segunda caixa duplicada.",
+    "Sugestões de categorias são normalizadas para evitar nomes repetidos.",
+    "Categoria pode ser digitada ou escolhida em um único campo.",
+    "Preservação dos saldos, recibos, movimentações e cadastros existentes.",
     "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
   "files": [
@@ -28,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "a5529e1ef161b2fa8a986ffc40c021836c4b8b48361742ed3a5035b39b1bb5d4"
+      "sha256": "a1863b1a1abaa0694136012e5a56a421d6e572cd7d6ae377fc57b18419f7a584"
     },
     {
       "path": "public/accounting-file.php",
@@ -88,7 +88,7 @@
     },
     {
       "path": "public/assets/finance-assistant-3726.js",
-      "sha256": "a60cbf9a42b9b30a3408e30ec648d08c85a3ed693376c2d56652ad4872f0406c"
+      "sha256": "7ea9d4493a816074d38198277774e2d3cbace1cb896f7531f76bc67578958021"
     },
     {
       "path": "public/assets/finance-governance-3727.css",
@@ -360,7 +360,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "11d6a752326f3dec011c5cd4a57a86be8ce437481871e5af39734a58b81415ab"
+      "sha256": "30a73d7eeec16f03a698e7a150bac93bc6ed11bb4f852557780ae891766e6383"
     },
     {
       "path": "public/kids-checkin.php",
