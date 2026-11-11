@@ -1,24 +1,24 @@
 {
-  "version": "3.7.39",
+  "version": "3.7.40",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.39.01.b64.txt",
-    "releases/v3.7.39.02.b64.txt",
-    "releases/v3.7.39.03.b64.txt",
-    "releases/v3.7.39.04.b64.txt",
-    "releases/v3.7.39.05.b64.txt",
-    "releases/v3.7.39.06.b64.txt",
-    "releases/v3.7.39.07.b64.txt",
-    "releases/v3.7.39.08.b64.txt",
-    "releases/v3.7.39.09.b64.txt"
+    "releases/v3.7.40.01.b64.txt",
+    "releases/v3.7.40.02.b64.txt",
+    "releases/v3.7.40.03.b64.txt",
+    "releases/v3.7.40.04.b64.txt",
+    "releases/v3.7.40.05.b64.txt",
+    "releases/v3.7.40.06.b64.txt",
+    "releases/v3.7.40.07.b64.txt",
+    "releases/v3.7.40.08.b64.txt",
+    "releases/v3.7.40.09.b64.txt"
   ],
-  "sha256": "83e052366fde140e5eaa5216e45c89e6d30bf61a542cc186c377bd51867aa099",
+  "sha256": "4e4f93318c854680bf81de997baeec126b4fc8b0dea846d7d17f10ed4cff7c8a",
   "notes": [
-    "Diagnóstico de upload disponível na Tesouraria com teste sem lançamento financeiro.",
-    "Erros de upload explicam limites do PHP, falha de gravação e pasta temporária.",
-    "Armazenamento privado de notas e recibos com verificação de pasta por igreja.",
-    "Preservação dos saldos, recibos, movimentações e cadastros existentes.",
+    "Transferência de responsável entre departamentos com remoção de vínculo anterior.",
+    "Edição de descrição e categoria, com log de auditoria, sem alterar saldo.",
+    "Anexar nota, cupom ou recibo depois, direto na movimentação, sem lançar novamente.",
+    "Descrição do lançamento por último e cadastro departamental mais explicativo.",
     "Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote."
   ],
   "files": [
@@ -28,7 +28,7 @@
     },
     {
       "path": "public/VERSION",
-      "sha256": "0bda7f92d44af1d87c6abb8b98c14345f86f9ada1306a415a51c2aeeec74ee1a"
+      "sha256": "ab6cfffe8cf90d8e6277e2486914bac925ceb850e639d2b286cc26780107f1bd"
     },
     {
       "path": "public/accounting-file.php",
@@ -303,6 +303,10 @@
       "sha256": "fe0dd786d0dca5b94db59895a66b74081c7843ad580412b431c08d1479b20784"
     },
     {
+      "path": "public/department-finance-team.php",
+      "sha256": "989d2449139f84e330df69039d871cbe6e69103957edf32d8c4f447dbcc9aaa4"
+    },
+    {
       "path": "public/department-people.php",
       "sha256": "e6bd9759a3a266dd2dd1d8d5be22befc4880cebb0be0d7e5828772c7a07a1caa"
     },
@@ -316,7 +320,7 @@
     },
     {
       "path": "public/department-treasury.php",
-      "sha256": "2c7923b76a22992726ade02d40486af0a24bff451af8c2b67b66216a7f3279a7"
+      "sha256": "078e07b98c51c2804ecb26cb424bdba005f041ffcb2794e9889a4eae494e95f9"
     },
     {
       "path": "public/donate.php",
@@ -351,6 +355,10 @@
       "sha256": "226a9ee4227df794585bd74fb1a1f57b37dcdcdf840ec4be8142d16290ebeafb"
     },
     {
+      "path": "public/finance-entry-edit.php",
+      "sha256": "4285f58ffaabac75ee7083f44950476ee54c47b6892612b074202441e34af636"
+    },
+    {
       "path": "public/finance-import.php",
       "sha256": "8c9365df01fb2a83ee0cca48b759bb1eb9c69370c63d5339f85d1fe1ce22c085"
     },
@@ -364,7 +372,7 @@
     },
     {
       "path": "public/finance.php",
-      "sha256": "11330902c00b3b4207094533ef8f5073ba98d9e004f0daf3f3bb1149b67f4970"
+      "sha256": "f1c313d023bd6d469faf8665f8d84542cf0e714bca50f48369e5bc8696f6fc59"
     },
     {
       "path": "public/kids-checkin.php",
