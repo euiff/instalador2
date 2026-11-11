@@ -1,31 +1,34 @@
 {
-  "version": "3.7.44",
+  "version": "3.7.45",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.44.01.b64.txt"
+    "releases/v3.7.45.01.b64.txt"
   ],
-  "sha256": "99d8e52596e90da3b19f18b813a192f5dbf848ea0f8394ca3ffcdc173298f1e9",
+  "sha256": "d2951ccca58170c08dcd330cc2f05b78764f3d60139cf90f40d3bce61cafe728",
   "notes": [
-    "Novo comando no Master para ZERAR SOMENTE LANÇAMENTOS da igreja selecionada.",
-    "Preserva contas, caixas, saldos iniciais, membros, departamentos, usuários e igrejas diferentes.",
-    "Recibos e anexos ligados às movimentações removidas são incluídos no backup; arquivos físicos permanecem arquivados.",
-    "Gera e valida backup privado; registra auditoria e exige dupla confirmação.",
-    "Bloqueia exclusão se houver fechamento ou conciliação financeira, ou dependência externa desconhecida.",
-    "A função não é executada automaticamente pela atualização."
+    "Carrega classe FinancePeriodGuard ausente na edição financeira; evita erro 'Class not found'.",
+    "Upload em Android usa arquivo preparado em memória e não reabre arquivo original (ERR_UPLOAD_FILE_CHANGED).",
+    "Retorno do upload agora confirma sucesso no banco antes de atualizar lista de documentos.",
+    "Mensagem do servidor identifica falhas de gravação/permissões em vez de erro genérico de conexão.",
+    "Atualização incremental, sem criar ou excluir lançamentos existentes."
   ],
   "files": [
     {
-      "path": "public/master.php",
-      "sha256": "11d9d80e01aed82a95dc6f7d824c9c5a8b0d8313a46398740771a9e3da67c7e3"
+      "path": "public/finance-entry-edit.php",
+      "sha256": "33dd75c443be325b5621781976226cc347b4200306e7e73b73ff101f64a88a15"
     },
     {
-      "path": "public/lib/MasterFinanceReset.php",
-      "sha256": "dbb5639f8a54dbf88e867f9a9e6eccec029328c9516abcc1137e1e4bcf6b6374"
+      "path": "public/assets/finance-upload-snapshot-3741.js",
+      "sha256": "305c45463f3e39417da44d4522a77de085483e3d19f12816a8aeec95e99ace61"
+    },
+    {
+      "path": "public/lib/View.php",
+      "sha256": "d6c40136c07ada99c7bce51391a41e9d61f875ec03a749b0abc5bcc12336cfae"
     },
     {
       "path": "public/VERSION",
-      "sha256": "952de7cd1f0f24e35b57220c107967479f67a5972bb16eda2a9faa49e2c3701a"
+      "sha256": "102ffd3a09634b5df4f93e3e6ff10128ea7503600a273aac6223f399cc38dd82"
     }
   ]
 }
