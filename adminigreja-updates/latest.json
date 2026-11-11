@@ -1,26 +1,31 @@
 {
-  "version": "3.7.43",
+  "version": "3.7.44",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.43.01.b64.txt"
+    "releases/v3.7.44.01.b64.txt"
   ],
-  "sha256": "70df1512cfb90f58664a74934ddeb8378b7fdd73069522685ed4a5a7d18a1cd9",
+  "sha256": "99d8e52596e90da3b19f18b813a192f5dbf848ea0f8394ca3ffcdc173298f1e9",
   "notes": [
-    "Edição do lançamento: Conta/Caixa da Tesouraria Geral e número do documento fiscal/Pix.",
-    "Também permite corrigir favorecido, forma de pagamento, observações, lançamento contábil e descrição.",
-    "Mudanças de conta bloqueadas em períodos fechados ou conciliados; auditoria registra valores anteriores e novos.",
-    "Valor, data, vínculo com departamento e lançamentos anteriores permanecem protegidos.",
-    "Pacote incremental: preserva todos os módulos e alterações anteriores."
+    "Novo comando no Master para ZERAR SOMENTE LANÇAMENTOS da igreja selecionada.",
+    "Preserva contas, caixas, saldos iniciais, membros, departamentos, usuários e igrejas diferentes.",
+    "Recibos e anexos ligados às movimentações removidas são incluídos no backup; arquivos físicos permanecem arquivados.",
+    "Gera e valida backup privado; registra auditoria e exige dupla confirmação.",
+    "Bloqueia exclusão se houver fechamento ou conciliação financeira, ou dependência externa desconhecida.",
+    "A função não é executada automaticamente pela atualização."
   ],
   "files": [
     {
-      "path": "public/finance-entry-edit.php",
-      "sha256": "19b4e3227cafb843a426c5c802383edb9751e4197b0383c78a008ff098874e43"
+      "path": "public/master.php",
+      "sha256": "11d9d80e01aed82a95dc6f7d824c9c5a8b0d8313a46398740771a9e3da67c7e3"
+    },
+    {
+      "path": "public/lib/MasterFinanceReset.php",
+      "sha256": "dbb5639f8a54dbf88e867f9a9e6eccec029328c9516abcc1137e1e4bcf6b6374"
     },
     {
       "path": "public/VERSION",
-      "sha256": "20dc8d6fb06eaab806cd8d52a4c2409827f6b7c22c97a638e46ed91eee235249"
+      "sha256": "952de7cd1f0f24e35b57220c107967479f67a5972bb16eda2a9faa49e2c3701a"
     }
   ]
 }
