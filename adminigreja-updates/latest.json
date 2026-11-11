@@ -1,50 +1,26 @@
 {
-  "version": "3.7.42",
+  "version": "3.7.43",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.42.01.b64.txt",
-    "releases/v3.7.42.02.b64.txt",
-    "releases/v3.7.42.03.b64.txt",
-    "releases/v3.7.42.04.b64.txt"
+    "releases/v3.7.43.01.b64.txt"
   ],
-  "sha256": "05f4be28c66a4aad3c08a585c5fd3f48fa15bcb62bbfb1471221bb87eff24871",
+  "sha256": "70df1512cfb90f58664a74934ddeb8378b7fdd73069522685ed4a5a7d18a1cd9",
   "notes": [
-    "Corrigido lançamento de saída: descrição automática, sem sobrescrever texto editado.",
-    "Categoria renomeada para Lançamento Contábil no novo lançamento.",
-    "Campo Centro de custos removido do formulário simplificado; conta/caixa de destino mantida.",
-    "Notas e recibos usam cópia estável do arquivo e FormData em memória para evitar ERR_UPLOAD_FILE_CHANGED.",
-    "Painel Master: reinício do financeiro por igreja, com backup validado e confirmação reforçada.",
-    "Pacote incremental: altera apenas os arquivos listados e preserva demais módulos e dados."
+    "Edição do lançamento: Conta/Caixa da Tesouraria Geral e número do documento fiscal/Pix.",
+    "Também permite corrigir favorecido, forma de pagamento, observações, lançamento contábil e descrição.",
+    "Mudanças de conta bloqueadas em períodos fechados ou conciliados; auditoria registra valores anteriores e novos.",
+    "Valor, data, vínculo com departamento e lançamentos anteriores permanecem protegidos.",
+    "Pacote incremental: preserva todos os módulos e alterações anteriores."
   ],
   "files": [
     {
-      "path": "public/master.php",
-      "sha256": "5a5ac9a0a508099b36b52ccd4828f93ac454fb35f197bffb9ba1857a65b48a40"
-    },
-    {
-      "path": "public/lib/MasterFinanceReset.php",
-      "sha256": "01c86af5bc34e7230979f05c8d668651c62d6c5163548068ed85f58c84f6022c"
-    },
-    {
-      "path": "public/lib/View.php",
-      "sha256": "831456b69cf2a39dade501ab29cf24cb386753900e08e185f5ad6b334ed79ea5"
-    },
-    {
-      "path": "public/assets/finance-upload-snapshot-3741.js",
-      "sha256": "182ca4168b0f6db79afa580a41f9ffb425773579f5f7846d57b16c57d11cd4ec"
-    },
-    {
-      "path": "public/finance.php",
-      "sha256": "d8605810cc3e1c9d56258d3448ea8eafe60e6488a123bc39ff4d06c97d959d39"
-    },
-    {
-      "path": "public/assets/finance-assistant-3726.js",
-      "sha256": "3b8b8426b43358d84484b495288eb19e3b9c724d431bf00d9857bed3d984a834"
+      "path": "public/finance-entry-edit.php",
+      "sha256": "19b4e3227cafb843a426c5c802383edb9751e4197b0383c78a008ff098874e43"
     },
     {
       "path": "public/VERSION",
-      "sha256": "6bc636ff2e64b1af03e1f45d1fb9d418fdbc37568beece5af3f54416a2885f1d"
+      "sha256": "20dc8d6fb06eaab806cd8d52a4c2409827f6b7c22c97a638e46ed91eee235249"
     }
   ]
 }
