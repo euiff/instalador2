@@ -1,34 +1,32 @@
 {
-  "version": "3.7.45",
+  "version": "3.7.46",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.45.01.b64.txt"
+    "releases/v3.7.46.01.b64.txt",
+    "releases/v3.7.46.02.b64.txt"
   ],
-  "sha256": "d2951ccca58170c08dcd330cc2f05b78764f3d60139cf90f40d3bce61cafe728",
+  "sha256": "4dc82c311b6f4a57a721e3204a4fbf7a2562e40dc45c6211c931a53f1cd98f87",
   "notes": [
-    "Carrega classe FinancePeriodGuard ausente na edição financeira; evita erro 'Class not found'.",
-    "Upload em Android usa arquivo preparado em memória e não reabre arquivo original (ERR_UPLOAD_FILE_CHANGED).",
-    "Retorno do upload agora confirma sucesso no banco antes de atualizar lista de documentos.",
-    "Mensagem do servidor identifica falhas de gravação/permissões em vez de erro genérico de conexão.",
-    "Atualização incremental, sem criar ou excluir lançamentos existentes."
+    "Lançamento Contábil mostra exclusivamente opções cadastradas pela igreja atual.",
+    "Removidas categorias padrão automáticas que duplicavam cadastros personalizados.",
+    "Seleção obrigatória de categoria ativa da igreja, validada no servidor.",
+    "Categorias cadastradas como Entrada, Saída ou Ambas respeitam a direção do lançamento.",
+    "Lançamentos e dados antigos preservados; categorias inativas não são exibidas.",
+    "Se ainda não houver categoria, o tesoureiro poderá criá-la em Cadastros financeiros."
   ],
   "files": [
     {
-      "path": "public/finance-entry-edit.php",
-      "sha256": "33dd75c443be325b5621781976226cc347b4200306e7e73b73ff101f64a88a15"
+      "path": "public/finance.php",
+      "sha256": "219fdf7e832bd758b383d345448dc73740ee92456c7012876fd56933be8ef4d3"
     },
     {
-      "path": "public/assets/finance-upload-snapshot-3741.js",
-      "sha256": "305c45463f3e39417da44d4522a77de085483e3d19f12816a8aeec95e99ace61"
-    },
-    {
-      "path": "public/lib/View.php",
-      "sha256": "d6c40136c07ada99c7bce51391a41e9d61f875ec03a749b0abc5bcc12336cfae"
+      "path": "public/assets/finance-assistant-3726.js",
+      "sha256": "2da95153ca31ae71b240a357e9fccec310d1648cf8a13e2eef7f4895d597809f"
     },
     {
       "path": "public/VERSION",
-      "sha256": "102ffd3a09634b5df4f93e3e6ff10128ea7503600a273aac6223f399cc38dd82"
+      "sha256": "df16ba0f3648d84931a504cd31e7916992de76eebadecb1fa5441da96d346e5b"
     }
   ]
 }
