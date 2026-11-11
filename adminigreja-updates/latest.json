@@ -1,26 +1,27 @@
 {
-  "version": "3.7.49",
+  "version": "3.7.50",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.49.01.b64.txt"
+    "releases/v3.7.50.01.b64.txt"
   ],
-  "sha256": "7672b9f32f66b9d4d282b0ac16c0abbf7867551d53619060ccad9fa74a31309b",
+  "sha256": "1f86293912b4045855cc124b2b3e331e1c36dcc0dba7e53e2af0a3c43e10349b",
   "files": [
     {
       "path": "public/lib/MasterFinanceReset.php",
-      "sha256": "97a59245d52516dc819550a51b7f5d046a767ddebfba09184b8904dfc860ed4e"
+      "sha256": "df9e457baf099a7af297c2ad8f7d168645cb2aa5503f8e43369c3a86696d2583"
     },
     {
       "path": "public/VERSION",
-      "sha256": "12eb010cfaab9e347240badb123ec1f9e193e57b989b3ef72ba3f82b011d75d8"
+      "sha256": "4acf156a13f09b7e79574ea0478f7627fab2b95963858765f406c3191d60698c"
     }
   ],
   "notes": [
-    "Corrigido MySQL 1052: TABLE_NAME ambígua na verificação de dependências financeiras.",
-    "Consulta agora identifica explicitamente kcu.TABLE_NAME e rc.DELETE_RULE.",
-    "Mantida rotina Zerar somente lançamentos por igreja, com backup e confirmação.",
-    "Contas, caixas, membros, outros cadastros e dados de outras igrejas preservados.",
-    "Nenhum registro financeiro é excluído ao instalar a atualização."
+    "Corrigido bloqueio por vínculo finance_governance_history ao zerar somente lançamentos.",
+    "Inclui no backup histórico, aprovações, correspondências e itens de lotes vinculados às movimentações.",
+    "Remove registros vinculados na ordem exigida pelas chaves estrangeiras, somente da igreja escolhida.",
+    "Mantém contas, caixas, saldos iniciais, lotes, catálogos, membros e outras igrejas.",
+    "Backup, confirmação e bloqueio por dependências desconhecidas continuam obrigatórios.",
+    "A instalação não apaga registros automaticamente."
   ]
 }
