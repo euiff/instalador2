@@ -1,0 +1,76 @@
+name: Publish Igreja Master 3.7.50 governance reset
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3750.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Verify and package governance-linked reset
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,json,hashlib,base64,tarfile,io
+          root=pathlib.Path('adminigreja-updates')
+          old=json.loads((root/'latest.json').read_text())
+          assert old['version']=='3.7.49', 'Update channel changed: '+old['version']
+          path='public/lib/MasterFinanceReset.php'
+          stage=root/'staging/3.7.50'
+          names=[path,'public/VERSION']
+          source={n:(stage/n).read_bytes() for n in names}
+          code=source[path].decode()
+          for t in ['finance_governance_history','finance_governance_approvals','finance_governance_matches','finance_governance_batch_items','finance_governance_entries']:
+            assert f"'{t}'=>'church_id=? AND entry_id IN" in code, t
+            assert f"'{t}'=>[$cid,$cid]" in code,t
+          assert 'private-finance-backups' in code and 'rollBack()' in code
+          assert 'clearEntriesOnly' in code
+          assert source['public/VERSION']==b'3.7.50\n'
+          packed=pathlib.Path('/tmp/igreja-master-3750.tar.gz')
+          with tarfile.open(packed,'w:gz') as archive:
+            for n in names: archive.add(stage/n,arcname=n,recursive=False)
+          data=packed.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as archive:
+            for n in names: assert archive.extractfile(n).read()==source[n]
+          parts=[]
+          enc=base64.b64encode(data)
+          for i in range(0,len(enc),60000):
+            rel=f'releases/v3.7.50.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(enc[i:i+60000])
+            parts.append(rel)
+          meta={
+            'version':'3.7.50','min_php':'8.1','encoding':'base64','parts':parts,
+            'sha256':hashlib.sha256(data).hexdigest(),
+            'files':[{'path':n,'sha256':hashlib.sha256(source[n]).hexdigest()} for n in names],
+            'notes':[
+              'Corrigido bloqueio por vínculo finance_governance_history ao zerar somente lançamentos.',
+              'Inclui no backup histórico, aprovações, correspondências e itens de lotes vinculados às movimentações.',
+              'Remove registros vinculados na ordem exigida pelas chaves estrangeiras, somente da igreja escolhida.',
+              'Mantém contas, caixas, saldos iniciais, lotes, catálogos, membros e outras igrejas.',
+              'Backup, confirmação e bloqueio por dependências desconhecidas continuam obrigatórios.',
+              'A instalação não apaga registros automaticamente.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n')
+          PY
+          php -l adminigreja-updates/staging/3.7.50/public/lib/MasterFinanceReset.php
+      - name: Publish release
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.50.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.50 governance reset fix"
+          git pull --rebase origin main
+          git push origin HEAD:main
