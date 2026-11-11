@@ -1,0 +1,82 @@
+name: Publish Igreja Master 3.7.48 safe reset
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3748.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Build and verify safe incremental update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, tarfile, hashlib, base64, json, io
+          root=pathlib.Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          assert current['version']=='3.7.47', 'Update channel changed: '+current['version']
+          stage=root/'staging/3.7.48'
+          paths=['public/master.php','public/lib/MasterFinanceReset.php','public/VERSION']
+          source={p:(stage/p).read_bytes() for p in paths}
+          master=source['public/master.php'].decode()
+          reset=source['public/lib/MasterFinanceReset.php'].decode()
+          assert "Rotina segura 3.7.48" in master
+          assert "reset_church_finance_entries" in master
+          assert "clearEntriesOnly" in master and "clearEntriesOnly" in reset
+          assert "O formulário antigo de reinício completo está desativado" in reset
+          assert "contribution_requests" in reset and "contribution_events" in reset
+          assert "private-finance-backups" in reset and "rollBack()" in reset
+          assert source['public/VERSION']==b'3.7.48\n'
+          with tarfile.open('/tmp/igreja-master-3748.tar.gz','w:gz') as tar:
+            for p in paths:
+              tar.add(stage/p,arcname=p,recursive=False)
+          raw=pathlib.Path('/tmp/igreja-master-3748.tar.gz').read_bytes()
+          assert len(raw)>1000
+          parts=[]
+          enc=base64.b64encode(raw)
+          for i in range(0,len(enc),60000):
+            n=len(parts)+1
+            rel=f'releases/v3.7.48.{n:02d}.b64.txt'
+            (root/rel).write_bytes(enc[i:i+60000])
+            parts.append(rel)
+          meta={
+            'version':'3.7.48','min_php':'8.1','encoding':'base64','parts':parts,
+            'sha256':hashlib.sha256(raw).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(source[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Master inclui novo formulário Zerar somente lançamentos financeiros, identificado como Rotina segura 3.7.48.',
+              'Formulário antigo de exclusão completa desativado para preservar contas e caixas.',
+              'Pedidos e eventos vinculados ao QR Code são tratados na exclusão segura, com backup e auditoria.',
+              'Outras igrejas, membros, contas e saldos iniciais permanecem preservados.',
+              'Nenhum lançamento é apagado automaticamente pela atualização.'
+            ]
+          }
+          # Readback verification of every packed member
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as packed:
+            for p in paths:
+              assert packed.extractfile(p).read()==source[p]
+          (root/'latest.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n')
+          PY
+          php -l adminigreja-updates/staging/3.7.48/public/master.php
+          php -l adminigreja-updates/staging/3.7.48/public/lib/MasterFinanceReset.php
+      - name: Publish checked version
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.48.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.48 safe finance reset"
+          git pull --rebase origin main
+          git push origin HEAD:main
