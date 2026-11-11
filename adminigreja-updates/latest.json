@@ -1,30 +1,26 @@
 {
-  "version": "3.7.48",
+  "version": "3.7.49",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.48.01.b64.txt"
+    "releases/v3.7.49.01.b64.txt"
   ],
-  "sha256": "37b0f083667c3fd836b3a4ec08e646ffecd50e58ae055b12e725a5a160ba618f",
+  "sha256": "7672b9f32f66b9d4d282b0ac16c0abbf7867551d53619060ccad9fa74a31309b",
   "files": [
     {
-      "path": "public/master.php",
-      "sha256": "f33bec19b7c5f86d63695052f080146192fd6b908423f78e14468c934a2c15cc"
-    },
-    {
       "path": "public/lib/MasterFinanceReset.php",
-      "sha256": "bef782107d7d62945b1269e9a3e43404ee5da7a58ac5ca65f0223a46117f4827"
+      "sha256": "97a59245d52516dc819550a51b7f5d046a767ddebfba09184b8904dfc860ed4e"
     },
     {
       "path": "public/VERSION",
-      "sha256": "015305c88832b0e7b1e0fcac43511883f4fc1410f4f1f81a91e073510647ac2d"
+      "sha256": "12eb010cfaab9e347240badb123ec1f9e193e57b989b3ef72ba3f82b011d75d8"
     }
   ],
   "notes": [
-    "Master inclui novo formulário Zerar somente lançamentos financeiros, identificado como Rotina segura 3.7.48.",
-    "Formulário antigo de exclusão completa desativado para preservar contas e caixas.",
-    "Pedidos e eventos vinculados ao QR Code são tratados na exclusão segura, com backup e auditoria.",
-    "Outras igrejas, membros, contas e saldos iniciais permanecem preservados.",
-    "Nenhum lançamento é apagado automaticamente pela atualização."
+    "Corrigido MySQL 1052: TABLE_NAME ambígua na verificação de dependências financeiras.",
+    "Consulta agora identifica explicitamente kcu.TABLE_NAME e rc.DELETE_RULE.",
+    "Mantida rotina Zerar somente lançamentos por igreja, com backup e confirmação.",
+    "Contas, caixas, membros, outros cadastros e dados de outras igrejas preservados.",
+    "Nenhum registro financeiro é excluído ao instalar a atualização."
   ]
 }
