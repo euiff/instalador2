@@ -1,0 +1,73 @@
+name: Publish Igreja Master 3.7.49 SQL correction
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3749.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Build and verify finance reset SQL fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,tarfile,hashlib,base64,json,io
+          root=pathlib.Path('adminigreja-updates')
+          old=json.loads((root/'latest.json').read_text())
+          assert old['version']=='3.7.48', 'Unexpected channel version: '+old['version']
+          staged=root/'staging/3.7.49'
+          paths=['public/lib/MasterFinanceReset.php','public/VERSION']
+          source={p:(staged/p).read_bytes() for p in paths}
+          php=source[paths[0]].decode('utf-8')
+          assert 'kcu.TABLE_NAME AS TABLE_NAME' in php
+          assert 'kcu.COLUMN_NAME AS COLUMN_NAME' in php
+          assert 'rc.DELETE_RULE AS DELETE_RULE' in php
+          assert 'clearEntriesOnly' in php
+          assert 'private-finance-backups' in php
+          assert source['public/VERSION']==b'3.7.49\n'
+          packed=pathlib.Path('/tmp/igreja-master-3749.tar.gz')
+          with tarfile.open(packed,'w:gz') as archive:
+            for p in paths: archive.add(staged/p,arcname=p,recursive=False)
+          raw=packed.read_bytes()
+          enc=base64.b64encode(raw)
+          parts=[]
+          for i in range(0,len(enc),60000):
+            rel=f'releases/v3.7.49.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(enc[i:i+60000])
+            parts.append(rel)
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as check:
+            for p in paths: assert check.extractfile(p).read()==source[p]
+          meta={'version':'3.7.49','min_php':'8.1','encoding':'base64',
+                'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+                'files':[{'path':p,'sha256':hashlib.sha256(source[p]).hexdigest()} for p in paths],
+                'notes':[
+                  'Corrigido MySQL 1052: TABLE_NAME ambígua na verificação de dependências financeiras.',
+                  'Consulta agora identifica explicitamente kcu.TABLE_NAME e rc.DELETE_RULE.',
+                  'Mantida rotina Zerar somente lançamentos por igreja, com backup e confirmação.',
+                  'Contas, caixas, membros, outros cadastros e dados de outras igrejas preservados.',
+                  'Nenhum registro financeiro é excluído ao instalar a atualização.'
+                ]}
+          (root/'latest.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n')
+          PY
+          php -l adminigreja-updates/staging/3.7.49/public/lib/MasterFinanceReset.php
+      - name: Publish verified update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.49.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.49 MySQL 1052 fix"
+          git pull --rebase origin main
+          git push origin HEAD:main
