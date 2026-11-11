@@ -1,0 +1,147 @@
+name: Publish Igreja Master 3.7.41 finance reset and upload fix
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3741.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-igreja-master-3741
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring,pdo_mysql,fileinfo,zip,intl,gd
+      - name: Rebuild cumulative 3.7.41 from verified 3.7.40 plus exact UI source patches
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, gzip, hashlib, io, json, pathlib, tarfile, tempfile, shutil
+          channel=pathlib.Path('adminigreja-updates')
+          old=json.loads((channel/'latest.json').read_text(encoding='utf-8'))
+          assert old['version']=='3.7.40',f"Expected approved 3.7.40 base, got {old['version']}"
+          b64=b''.join((channel/path).read_bytes().strip() for path in old['parts'])
+          gz=base64.b64decode(b64,validate=True)
+          assert hashlib.sha256(gz).hexdigest()==old['sha256'],'Base GZIP checksum mismatch'
+          old_hashes={x['path']:x['sha256'] for x in old['files']}
+          assert len(old_hashes)==181,'Unexpected base file set'
+          dest=pathlib.Path('/tmp/igreja-3741')
+          if dest.exists():shutil.rmtree(dest)
+          dest.mkdir()
+          observed=set()
+          with tarfile.open(fileobj=io.BytesIO(gzip.decompress(gz)),mode='r:') as t:
+              for item in t:
+                  p=pathlib.PurePosixPath(item.name)
+                  assert item.isfile() and item.name in old_hashes and '..' not in p.parts and p.parts[0]=='public','Unsafe base member'
+                  assert item.name not in observed,'Duplicate base member'
+                  observed.add(item.name)
+                  data=t.extractfile(item).read()
+                  assert hashlib.sha256(data).hexdigest()==old_hashes[item.name],f'Bad base SHA: {item.name}'
+                  output=dest/item.name
+                  output.parent.mkdir(parents=True,exist_ok=True)
+                  output.write_bytes(data)
+          assert observed==set(old_hashes),'Missing base files'
+          staged=channel/'staging/3.7.41'
+          patch_names=[
+            'public/master.php','public/lib/MasterFinanceReset.php',
+            'public/lib/View.php','public/assets/finance-upload-snapshot-3741.js',
+            'public/VERSION'
+          ]
+          for name in patch_names:
+              path=staged/name
+              assert path.is_file(),f'Missing staged source: {name}'
+              (dest/name).parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(path,dest/name)
+          assert (dest/'public/VERSION').read_text().strip()=='3.7.41'
+          master=(dest/'public/master.php').read_text()
+          reset=(dest/'public/lib/MasterFinanceReset.php').read_text()
+          view=(dest/'public/lib/View.php').read_text()
+          script=(dest/'public/assets/finance-upload-snapshot-3741.js').read_text()
+          assert 'reset_church_finance' in master and 'confirm_church' in master
+          assert 'acknowledge_backup' in master and 'acknowledge_permanent' in master
+          assert 'private-finance-backups' in reset and 'hash_file' in reset
+          assert 'SELECT GET_LOCK' in reset and 'beginTransaction()' in reset and 'rollBack()' in reset
+          assert "WHERE church_id=?" in reset and 'information_schema.KEY_COLUMN_USAGE' in reset
+          assert 'finance-upload-snapshot-3741.js' in view
+          assert 'arrayBuffer' in script and 'DataTransfer' in script
+          # Retain all 181 approved base paths, including migrations, services and updater.
+          assert set(old_hashes).issubset({f.as_posix().replace('/tmp/igreja-3741/','') for f in dest.rglob('*') if f.is_file()}),'Base files were lost'
+          file_paths=sorted(f.relative_to(dest).as_posix() for f in dest.rglob('*') if f.is_file())
+          assert len(file_paths)==183,f'Unexpected file count {len(file_paths)}'
+          tar_path=pathlib.Path('/tmp/igreja-3741.tar.gz')
+          with tarfile.open(tar_path,mode='w:gz') as tar:
+              for name in file_paths:tar.add(dest/name,arcname=name,recursive=False)
+          raw=tar_path.read_bytes()
+          encoded=base64.b64encode(raw)
+          release_dir=channel/'releases'
+          release_dir.mkdir(parents=True,exist_ok=True)
+          chunks=[encoded[i:i+60000] for i in range(0,len(encoded),60000)]
+          parts=[]
+          for idx,part in enumerate(chunks,1):
+              rel=f'releases/v3.7.41.{idx:02d}.b64.txt'
+              (channel/rel).write_bytes(part)
+              parts.append(rel)
+          meta={
+            'version':'3.7.41','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+            'notes':[
+              'Master pode reiniciar somente o financeiro de uma igreja, após confirmação dupla.',
+              'Cópia privada e verificada dos registros antes da exclusão, com auditoria.',
+              'Cópia estável de fotos e PDFs antes do envio para reduzir ERR_UPLOAD_FILE_CHANGED.',
+              'Membros, departamentos e arquivos físicos dos recibos preservados.',
+              'Nenhuma credencial local, upload ou cadastro de igreja é incluído no pacote.'
+            ],
+            'files':[{'path':name,'sha256':hashlib.sha256((dest/name).read_bytes()).hexdigest()} for name in file_paths]
+          }
+          (channel/'latest.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('Prepared',meta['version'],'files',len(file_paths),'parts',len(parts),'sha',meta['sha256'])
+          PY
+      - name: Verify complete package and PHP UI syntax before publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in public/master.php public/lib/MasterFinanceReset.php public/lib/View.php; do
+            php -l "/tmp/igreja-3741/$f"
+          done
+          node --check /tmp/igreja-3741/public/assets/finance-upload-snapshot-3741.js
+          python3 - <<'PY'
+          import base64,gzip,hashlib,io,json,pathlib,tarfile
+          ch=pathlib.Path('adminigreja-updates')
+          m=json.loads((ch/'latest.json').read_text())
+          gz=base64.b64decode(b''.join((ch/p).read_bytes() for p in m['parts']),validate=True)
+          assert hashlib.sha256(gz).hexdigest()==m['sha256']
+          expected={r['path']:r['sha256'] for r in m['files']}
+          seen=set()
+          with tarfile.open(fileobj=io.BytesIO(gzip.decompress(gz)),mode='r:') as tar:
+            for member in tar:
+              assert member.name in expected and member.name not in seen and member.isfile()
+              seen.add(member.name)
+              assert hashlib.sha256(tar.extractfile(member).read()).hexdigest()==expected[member.name]
+          assert seen==set(expected)
+          for p in ['public/master.php','public/lib/MasterFinanceReset.php','public/lib/View.php','public/assets/finance-upload-snapshot-3741.js']:
+            assert (pathlib.Path('/tmp/igreja-3741')/p).is_file()
+          print('VALIDATED',m['version'],len(expected),'files')
+          PY
+      - name: Publish only fully checked release to Master updater channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.41.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish validated Igreja Master 3.7.41 receipt review before posting"
+          git pull --rebase origin main
+          git push origin HEAD:main
