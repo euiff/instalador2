@@ -1,0 +1,275 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__.'/Ui.php';
+require_once __DIR__.'/TenantBranding.php';
+
+final class View
+{
+    /**
+     * Aceita as duas formas usadas durante a migração:
+     * View::header('Dashboard', $auth, 'dashboard.php')
+     * View::header('Dashboard', 'dashboard', $auth, $church)
+     */
+    public static function header(string $title, mixed $arg2, mixed $arg3 = '', mixed $arg4 = null): void
+    {
+        if ($arg2 instanceof Auth) {
+            $auth = $arg2;
+            $active = is_string($arg3) ? $arg3 : '';
+        } elseif ($arg3 instanceof Auth) {
+            $active = is_string($arg2) ? $arg2 : '';
+            $auth = $arg3;
+        } else {
+            throw new InvalidArgumentException('Auth inválido no layout.');
+        }
+
+        $user = $auth->requireLogin();
+        $church = is_array($arg4) ? $arg4 : $auth->currentChurch();
+        $churches = $auth->churches();
+        $brandTheme = TenantBranding::normalize($church);
+        $isSuperAdmin = $auth->isSuperAdmin((string)$user['id']);
+        $isMasterSupport = $auth->isMasterSupportMode();
+        $items = [
+            'management-center.php' => ['management-center','Central de Gestão 360','◈','dashboard'],
+            'dashboard.php' => ['dashboard','Início','⌂','dashboard'],
+            'portal-home.php' => ['portal-home','Meu acesso','⌂','member_board'],
+            'portal.php' => ['portal','Contribuições / Caixa','◈','member_portal'],
+            'my-profile.php' => ['my-profile','Meu Cadastro','♙','member_portal'],
+            'board.php' => ['board','Mural','✉','member_board'],
+            'media-library.php' => ['media-library','Biblioteca de Mídia','▣','media_portal'],
+            'studies.php' => ['studies','Estudos','▤','study_portal'],
+            'albums.php' => ['albums','Fotos e Vídeos','▧','media_portal'],
+            'kids.php' => ['kids','Kids','♟','kids_portal'],
+            'department-treasury.php' => ['department-treasury','Tesourarias dos Departamentos','◈','department_treasury'],
+            'department-people.php' => ['department-people','Pessoas e Lideranças','♙','secretary'],
+            'department-team.php' => ['department-team','Equipe e Tesoureiro do Departamento','♙','department_team_manage'],
+            'department-cash.php' => ['department-cash','Caixas dos departamentos','◈','department_portal'],
+            'accounting.php' => ['accounting','Portal do Contador','▥','accounting_portal'],
+            'finance.php' => ['finance','Tesouraria','◈','finance'],
+            'contribution-review.php' => ['contribution-review','Contribuições para conferir','✓','finance'],
+            'finance-process.php' => ['finance-process','Conferência e fechamento (PDF)','▤','finance_governance'],
+            'finance-catalogs.php' => ['finance-catalogs','Cadastros e tabelas financeiras','▦','finance'],
+            'finance-control.php' => ['finance-control','Resumo financeiro','▥','finance'],
+            'department-report.php' => ['department-report','Prestação de contas dos departamentos','▥','finance'],
+            'finance-budget.php' => ['finance-budget','Orçamento e realizado','▥','finance'],
+            'finance-import.php' => ['finance-import','Importar movimentações','▤','finance'],
+            'finance-control.php?view=receivables' => ['receivables','Valores a receber','◈','finance'],
+            'finance-control.php?view=report' => ['finance-report','Relatório por centro de custos','▥','finance'],
+            'finance-control.php?view=periods' => ['finance-periods','Bloqueio de períodos','◈','finance'],
+            'finance-control.php?view=history' => ['finance-history','Histórico financeiro','≡','finance'],
+            'registers.php?kind=finance_category' => ['finance-category','Categorias financeiras','◈','finance'],
+            'registers.php?kind=cost_center' => ['cost-center','Centros de custos','◈','finance'],
+            'registers.php?kind=contact' => ['contacts','Contatos e fornecedores','♙','finance'],
+            'registers.php?kind=person_category' => ['person-category','Categorias de pessoas','♙','secretary'],
+            'registers.php?kind=family' => ['families','Famílias','♙','secretary'],
+            'registers.php?kind=position' => ['positions','Cargos e funções','♙','secretary'],
+            'registers.php?kind=custom_field' => ['custom-fields','Campos personalizados','▤','secretary'],
+            'reports.php' => ['reports','Relatórios','▥','reports'],
+            'needs.php' => ['needs','Necessidades','!','needs'],
+            'members.php' => ['members','Membros','♙','secretary'],
+            'visitors.php' => ['visitors','Visitantes e acolhimento','♡','secretary'],
+            'pastoral-agenda.php' => ['pastoral-agenda','Agenda pastoral','♡','pastoral'],
+            'pastoral-care.php' => ['pastoral-care','Cuidado pastoral','♡','pastoral'],
+            'departments.php' => ['departments','Departamentos','♙','secretary'],
+            'small-groups.php' => ['small-groups','Grupos e Células','♙','group_portal'],
+            'learning.php' => ['learning','Ensino e Turmas','▤','learning_portal'],
+            'system-course.php' => ['system-course','Curso Oficial do Sistema','▤','system_course'],
+            'church-insights.php' => ['church-insights','Pessoas e crescimento','▥','secretary'],
+            'assets.php' => ['assets','Patrimônio','▣','finance'],
+            'documents.php' => ['documents','Documentos','▤','secretary'],
+            'congregations.php' => ['congregations','Congregações','▣','secretary'],
+            'events.php' => ['events','Eventos','□','secretary'],
+            'event-registrations.php' => ['event-registrations','Inscrições de Eventos','☑','secretary'],
+            'service-types.php' => ['service-types','Cultos e reuniões','♢','secretary'],
+            'prayers.php' => ['prayers','Pedidos de Oração','♡','secretary'],
+            'groups.php' => ['groups','Grupos do WhatsApp','☏','communications'],
+            'announcements.php' => ['announcements','Mural de Avisos','✉','communications'],
+            'campaigns.php' => ['campaigns','Comunicados','✉','communications'],
+            'automations.php' => ['automations','Agendamentos da igreja','↻','settings'],
+            'messages.php' => ['messages','Histórico WhatsApp','≡','communications'],
+            'group-moderation.php' => ['group-moderation','Moderação de Grupos','◇','communications'],
+            'polls.php' => ['polls','Enquetes','✓','communications'],
+            'bible.php' => ['bible','Bíblia e Leitura','☷','communications'],
+            'prayer-clock.php' => ['prayer-clock','Relógio de Oração','◷','communications'],
+            'raffles.php' => ['raffles','Rifas','◇','communications'],
+             'member-portal-access.php' => ['member-portal-access','Ativar Portal do Membro','♙','manage_users'],
+            'users.php' => ['users','Usuários e permissões','♧','manage_users'],
+            'bot-settings.php' => ['bot-settings','Configuração do Bot','⌘','settings'],
+            'logs.php' => ['logs','Logs','≡','settings'],
+            'settings.php' => ['settings','Configurações','⚙','settings'],
+            'church-branding.php' => ['church-branding','Logo e identidade visual','◈','settings'],
+            'contribution-settings.php' => ['contribution-settings','Contribuições por QR Code','◈','settings'],
+        ];
+        $nav=[];
+        foreach($items as $href=>$item){
+            if($auth->can($item[3]))$nav[$href]=[$item[0],$item[1],$item[2]];
+        }
+        if ($isSuperAdmin) {
+            $nav['master.php'] = ['master','Painel Master','★'];
+            $nav['master-automations.php'] = ['master-automations','Central de automações','↻'];
+            $nav['updates.php'] = ['updates','Atualizações','↻'];
+            $nav['master-enuves.php'] = ['master-enuves','Importar Enuves','⇪'];
+            $nav['master-members.php'] = ['master-members','Gerenciar membros','♙'];
+            $nav['master-congregations.php'] = ['master-congregations','Congregações em massa','▦'];
+            if(!$isMasterSupport){
+                $nav=[
+                    'master.php'=>['master','Painel Master','★'],
+                    'master-automations.php'=>['master-automations','Central de automações','↻'],
+                    'updates.php'=>['updates','Atualizações','↻'],
+                    'master-enuves.php'=>['master-enuves','Importar Enuves','⇪'],
+                    'master-members.php'=>['master-members','Gerenciar membros','♙'],
+                    'master-congregations.php'=>['master-congregations','Congregações em massa','▦'],
+                ];
+            }
+        }
+        $groups = [
+            'Visão geral'=>['home',['management-center.php','dashboard.php','portal-home.php','portal.php','my-profile.php','board.php','church-insights.php','reports.php']],
+            'Pessoas e cadastros'=>['people',['members.php','registers.php?kind=person_category','registers.php?kind=family','registers.php?kind=position','registers.php?kind=custom_field','visitors.php','pastoral-care.php','pastoral-agenda.php','departments.php','small-groups.php','congregations.php','documents.php','prayers.php']],
+            'Agenda da igreja'=>['calendar',['events.php','service-types.php','event-registrations.php']],
+            'Ensino'=>['file',['system-course.php','learning.php','studies.php']],
+            'Ministério Infantil'=>['people',['kids.php']],
+            'Financeiro'=>['wallet',['finance-control.php','accounting.php','finance.php','contribution-review.php','finance-process.php','finance-catalogs.php','finance-budget.php','department-report.php','finance-control.php?view=receivables','department-people.php','department-team.php','department-treasury.php','department-cash.php','registers.php?kind=finance_category','registers.php?kind=cost_center','registers.php?kind=contact','finance-control.php?view=report','finance-import.php','finance-control.php?view=history','finance-control.php?view=periods','assets.php','needs.php']],
+            'Comunicação'=>['message',['announcements.php','media-library.php','albums.php','groups.php','campaigns.php','messages.php','polls.php','prayer-clock.php','raffles.php','bible.php','group-moderation.php']],
+            'Administração'=>['settings',['member-portal-access.php','users.php','settings.php','church-branding.php','contribution-settings.php','bot-settings.php','automations.php','logs.php','master.php','master-automations.php','updates.php','master-enuves.php','master-members.php','master-congregations.php']],
+        ];
+        $pageFile=str_ends_with($active,'.php')?$active:$active.'.php';
+        $currentLink=$pageFile;
+        if($pageFile==='registers.php')$currentLink.='?kind='.rawurlencode((string)($_GET['kind']??'person_category'));
+        if($pageFile==='finance-control.php'&&!empty($_GET['view'])&&$_GET['view']!=='overview')$currentLink.='?view='.rawurlencode((string)$_GET['view']);
+        $groupTitle='Igreja Master';
+        foreach($groups as $group=>[$icon,$links]) if(in_array($currentLink,$links,true)) $groupTitle=$group;
+        $quickCreates=[
+            ['members.php','Membro','Nome, contato e dados da igreja','people','secretary'],
+            ['visitors.php','Visitante','Acolhimento e próximo contato','heart','secretary'],
+            ['congregations.php','Congregação','Unidades e responsáveis','building','secretary'],
+            ['departments.php','Departamento','Ministérios e participantes','people','secretary'],
+            ['small-groups.php','Grupo ou célula','Líderes, participantes e frequência','people','secretary'],
+            ['learning.php','Curso ou turma','Ensino, alunos e frequência','file','secretary'],
+            ['kids.php','Turma Kids','Crianças, salas, equipe e check-in','people','secretary'],
+            ['events.php','Evento','Programação e inscrições','calendar','secretary'],
+            ['service-types.php','Culto ou reunião','Agenda recorrente da igreja','calendar','secretary'],
+            ['event-registrations.php','Inscrição em evento','Registrar um participante','calendar','secretary'],
+            ['finance.php','Lançamento financeiro','Entrada ou saída no caixa','wallet','finance'],
+            ['assets.php','Bem patrimonial','Inventário e manutenção','building','finance'],
+            ['pastoral-care.php','Acompanhamento pastoral','Visitas e retornos','heart','pastoral'],
+            ['groups.php','Grupo de WhatsApp','Destinos dos comunicados','message','communications'],
+            ['announcements.php','Aviso no Mural','Mensagem para membros e líderes','message','communications'],
+            ['media-library.php','Arquivo ou mídia','Biblioteca central da igreja','file','communications'],
+            ['studies.php','Estudo','Conteúdo, capa e material por categoria','file','communications'],
+            ['campaigns.php','Comunicado','Mensagem para os grupos','message','communications'],
+        ];
+        $canCreate=(bool)array_filter($quickCreates,fn($c)=>$auth->can($c[4]));
+        // Navegação MÓVEL REAL: cada aba abre uma rota existente, com permissão do usuário.
+        $mobileLinks = [];
+        if ($isSuperAdmin && !$isMasterSupport) {
+            $mobileLinks[] = ['/master.php','Painel','home'];
+            $mobileLinks[] = ['/updates.php','Atualizações','file'];
+        } else {
+            $mobileLinks[] = [$auth->can('dashboard')?'/dashboard.php':'/portal.php','Início','home'];
+            if ($auth->can('secretary')) {
+                $mobileLinks[] = ['/members.php','Pessoas','people'];
+                $mobileLinks[] = ['/events.php','Agenda','calendar'];
+            }
+            if ($auth->can('finance')) $mobileLinks[] = ['/finance.php','Financeiro','wallet'];
+            elseif ($auth->can('accounting_portal')) $mobileLinks[] = ['/finance-process.php','Contabilidade','wallet'];
+            if ($auth->can('settings')) $mobileLinks[] = ['/church-branding.php','Config.','settings'];
+        }
+        ?><!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title><?=e($title)?> · <?=e($church['name'] ?? 'Igreja Master')?></title>
+<link rel="stylesheet" href="/assets/app.css?v=9">
+<link rel="stylesheet" href="/assets/admin-ui.css?v=340">
+<script src="/assets/admin-ui.js?v=340" defer></script>
+<link rel="stylesheet" href="/assets/management.css?v=360">
+<link rel="stylesheet" href="/assets/visual-3726.css?v=1">
+<link rel="stylesheet" href="/assets/management-3711.css?v=3711">
+<script src="/assets/management.js?v=360" defer></script>
+<script src="/assets/management-3711.js?v=3711" defer></script>
+<link rel="stylesheet" href="/assets/password-visibility.css?v=3715">
+<script src="/assets/password-visibility.js?v=3715" defer></script>
+<link rel="stylesheet" href="/assets/expense-receipt.css?v=3716">
+<script src="/assets/expense-receipt.js?v=3716" defer></script>
+<link rel="stylesheet" href="/assets/menu-contrast-3727.css?v=3.7.27">
+<link rel="stylesheet" href="/assets/finance-governance-3727.css?v=3.7.27">
+<link rel="stylesheet" href="/assets/igreja-real-ui-3729.css?v=3.7.29">
+<link rel="stylesheet" href="/assets/campo-belo-real-3730.css?v=1">
+<link rel="stylesheet" href="/assets/igreja-master-global-3731.css?v=3.7.31">
+<link rel="stylesheet" href="/assets/finance-inputs-3732.css?v=3.7.32">
+<script src="/assets/finance-inputs-3732.js?v=3.7.32" defer></script>
+<script src="/assets/finance-upload-snapshot-3741.js?v=3.7.51" defer></script>
+</head>
+<body data-app-page="<?=e($pageFile)?>" style="<?=e(TenantBranding::style($church))?>">
+<a class="skip-link" href="#main-content">Ir para o conteúdo</a>
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Menu principal">
+        <a class="brand" href="<?=$isSuperAdmin&&!$isMasterSupport?'/master.php':'/dashboard.php'?>"><div class="brand-logo"><?php if(!$isSuperAdmin&& !empty($church['logo_url'])):?><img src="<?=e($church['logo_url'])?>" alt=""><?php elseif($isMasterSupport&& !empty($church['logo_url'])):?><img src="<?=e($church['logo_url'])?>" alt=""><?php else:?>✦<?php endif?></div><div><strong><?=e($isSuperAdmin&&!$isMasterSupport?'Igreja Master':$brandTheme['name'])?></strong><small><?=$isSuperAdmin?($isMasterSupport?'Suporte à igreja-cliente':'Plataforma SaaS'):'Gestão da sua igreja'?></small></div></a>
+        <button class="sidebar-close icon-button" type="button" data-sidebar-close aria-label="Fechar menu"><?=Ui::icon('close')?></button>
+        <?php if($isSuperAdmin&&!$isMasterSupport):?>
+        <div class="current-church"><?=Ui::icon('building')?><span>Plataforma Master</span></div>
+        <?php elseif($isSuperAdmin&&$isMasterSupport):?>
+        <div class="current-church" style="display:block"><div style="font-size:10px;text-transform:uppercase;opacity:.7;margin-bottom:3px">Modo suporte</div><span><?=e($church['name']??'Igreja selecionada')?></span></div>
+        <form method="post" action="/switch-church.php" style="margin:8px 12px 12px"><?=csrf_field()?><input type="hidden" name="action" value="leave_master_support"><button class="btn btn-light" type="submit" style="width:100%">Voltar ao Master</button></form>
+        <?php elseif(count($churches)>1):?>
+        <form class="church-switch" method="post" action="/switch-church.php"><?=csrf_field()?><label for="church_id">Igreja em uso</label><select id="church_id" name="church_id" onchange="this.form.submit()"><?php foreach($churches as $c):?><option value="<?=e($c['id'])?>" <?=$church&&$church['id']===$c['id']?'selected':''?>><?=e($c['name'])?></option><?php endforeach?></select></form>
+        <?php else:?><div class="current-church"><?=Ui::icon('building')?><span><?=e($church['name']??'Sua igreja')?></span></div><?php endif?>
+        <button class="nav-search" type="button" data-open-dialog="menu-search"><?=Ui::icon('search')?><span>Encontrar uma função</span><kbd>/</kbd></button>
+        <nav class="nav-list" aria-label="Áreas do sistema">
+        <?php foreach($groups as $group=>[$icon,$links]):
+            $available=array_filter($links,fn($href)=>isset($nav[$href])); if(!$available)continue;
+            $isGroupActive=in_array($currentLink,$links,true);?>
+            <details class="nav-group" <?=$isGroupActive||$group==='Visão geral'?'open':''?>>
+                <summary><?=Ui::icon($icon)?><span><?=e($group)?></span><span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+                <div class="nav-group-links"><?php foreach($available as $href):[$key,$label]=$nav[$href];$isActive=$currentLink===$href;?>
+                <a class="nav-item <?=$isActive?'active':''?>" href="/<?=e($href)?>" <?=$isActive?'aria-current="page"':''?>><?=e($label)?></a>
+                <?php endforeach?></div>
+            </details>
+        <?php endforeach?>
+        </nav>
+        <div class="sidebar-user"><div class="avatar"><?=e(mb_strtoupper(mb_substr($user['full_name']?:$user['email'],0,1)))?></div><div class="sidebar-user-text"><strong><?=e($user['full_name']?:'Minha conta')?></strong><small><?=e($user['email'])?></small></div><a class="logout icon-button" href="/logout.php" aria-label="Sair da conta" title="Sair da conta">↪</a><a class="im-logout-action" href="/logout.php" aria-label="Encerrar sessão"><span aria-hidden="true">⎋</span> Sair da conta</a></div>
+    </aside>
+    <div class="page-wrap">
+        <header class="app-topbar"><button type="button" class="menu-button icon-button" data-sidebar-open aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false"><?=Ui::icon('menu')?></button><a class="mobile-top-brand" href="<?=$isSuperAdmin&&!$isMasterSupport?'/master.php':($auth->can('dashboard')?'/dashboard.php':'/portal.php')?>"><span class="brand-logo"><?php if(!empty($brandTheme['logo'])):?><img src="<?=e($brandTheme['logo'])?>" alt=""><?php else:?><?=Ui::icon('home')?><?php endif?></span><strong><?=e($brandTheme['name'])?></strong></a><div class="breadcrumb"><span><?=e($groupTitle)?></span><strong><?=e($title==='Dashboard'?'Início':$title)?></strong></div><div class="topbar-actions"><a class="im-topbar-logout" href="/logout.php" aria-label="Sair da conta" title="Sair da conta">Sair</a><button class="topbar-search icon-button" type="button" data-open-dialog="menu-search" aria-label="Buscar no menu"><?=Ui::icon('search')?></button><?php if($canCreate&&!($isSuperAdmin&&!$isMasterSupport)):?><?=Ui::newButton('quick-create','Novo cadastro')?><?php endif?></div></header>
+        <div class="sidebar-overlay" data-sidebar-close></div>
+        <main class="content" id="main-content" tabindex="-1">
+<?php
+        self::$menu=$nav;
+        self::$quickCreates=$isSuperAdmin&&!$isMasterSupport?[]:array_values(array_filter($quickCreates,fn($c)=>$auth->can($c[4])));
+        self::$mobileLinks=$mobileLinks;
+        self::$currentPage=$pageFile;
+    }
+
+    private static array $menu=[];
+    private static array $quickCreates=[];
+    private static array $mobileLinks=[];
+    private static string $currentPage='';
+
+    public static function flash(): void
+    {
+        foreach (['success','error','warning','info'] as $type) {
+            $msg = flash($type);
+            if ($msg) echo '<div class="alert alert-'.e($type).'">'.e($msg).'</div>';
+        }
+    }
+
+    public static function footer(): void
+    {
+        ?>
+        </main>
+        <footer class="app-footer"><span>Igreja Master · <?=e(trim((string)file_get_contents(__DIR__.'/../VERSION')))?></span><span>Organização para cuidar melhor das pessoas.</span></footer>
+    </div>
+</div>
+<nav class="im-mobile-nav" aria-label="Navegação principal do aplicativo">
+<?php foreach(self::$mobileLinks as [$url,$label,$icon]):?>
+<a href="<?=e($url)?>" <?=(parse_url($url,PHP_URL_PATH)==='/'.self::$currentPage)?'aria-current="page"':''?>><?=Ui::icon($icon)?><span><?=e($label)?></span></a>
+<?php endforeach?>
+</nav>
+<dialog class="app-dialog quick-dialog" id="quick-create" aria-labelledby="quick-create-title"><div class="dialog-shell"><header class="dialog-heading"><div><span class="eyebrow">Por onde começar</span><h2 id="quick-create-title">O que você quer cadastrar?</h2><p>Escolha uma opção para abrir o formulário.</p></div><button class="icon-button" type="button" data-close-dialog aria-label="Fechar"><?=Ui::icon('close')?></button></header><div class="dialog-body"><div class="quick-create-grid"><?php foreach(self::$quickCreates as [$href,$name,$description,$icon]):?><a class="quick-create-option" href="/<?=e($href)?>?new=1"><span class="quick-icon"><?=Ui::icon($icon)?></span><span><strong><?=e($name)?></strong><small><?=e($description)?></small></span><?=Ui::icon('arrow')?></a><?php endforeach?></div></div></div></dialog>
+<dialog class="app-dialog search-dialog" id="menu-search" aria-labelledby="menu-search-title"><div class="dialog-shell"><header class="dialog-heading"><div><h2 id="menu-search-title">Encontrar uma função</h2><p>Busque pelo nome da área que deseja abrir.</p></div><button class="icon-button" type="button" data-close-dialog aria-label="Fechar"><?=Ui::icon('close')?></button></header><div class="dialog-body"><label class="search-field" for="global-menu-query"><?=Ui::icon('search')?><input type="search" id="global-menu-query" placeholder="Ex.: membros, tesouraria, eventos" autocomplete="off"></label><div class="menu-results"><?php foreach(self::$menu as $href=>[$key,$label]):?><a href="/<?=e($href)?>" data-menu-result><?=e($label)?><?=Ui::icon('arrow')?></a><?php endforeach?></div><p id="menu-no-results" hidden>Nenhuma área encontrada. Tente outra palavra.</p></div></div></dialog>
+<script id="app-ui-state" type="application/json"><?=json_encode(Ui::state(),JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE|JSON_INVALID_UTF8_SUBSTITUTE)?></script>
+</body></html><?php
+    }
+}
