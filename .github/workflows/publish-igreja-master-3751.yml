@@ -1,0 +1,98 @@
+name: Publish Igreja Master 3.7.51 confirmed uploads
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3751.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Verify backend and browser, build update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,json,hashlib,base64,tarfile,io
+          root=pathlib.Path('adminigreja-updates')
+          old=json.loads((root/'latest.json').read_text())
+          assert old['version']=='3.7.50', 'Update channel changed: '+old['version']
+          staged=root/'staging/3.7.51'
+          files=[
+            'public/finance.php',
+            'public/lib/DepartmentTreasuryService.php',
+            'public/assets/finance-upload-snapshot-3741.js',
+            'public/lib/View.php',
+            'public/VERSION'
+          ]
+          data={p:(staged/p).read_bytes() for p in files}
+          finance=data['public/finance.php'].decode()
+          department=data['public/lib/DepartmentTreasuryService.php'].decode()
+          js=data['public/assets/finance-upload-snapshot-3741.js'].decode()
+          view=data['public/lib/View.php'].decode()
+          assert "action=\"/finance.php\"" in finance
+          assert "'entry','attach_document'" in finance
+          assert 'finance_ajax_confirm' in finance
+          assert 'finance_ajax_confirm([' in finance
+          assert "'request_key'" in finance
+          assert 'name="request_key"' in finance
+          assert 'document_expected' in finance and 'document_expected' in js
+          assert "document_attached" in finance
+          assert "FinancePeriodGuard.php" in finance
+          assert 'request_key' in department
+          assert 'new FormData(form)' in js
+          assert 'el.disabled=true' in js
+          assert 'response.json()' in js and 'window.location.assign(path)' in js
+          assert 'finance-upload-snapshot-3741.js?v=3.7.51' in view
+          assert data['public/VERSION']==b'3.7.51\n'
+          packed=pathlib.Path('/tmp/igreja-master-3751.tar.gz')
+          with tarfile.open(packed,'w:gz') as arc:
+            for p in files: arc.add(staged/p,arcname=p,recursive=False)
+          raw=packed.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as arc:
+            for p in files: assert arc.extractfile(p).read()==data[p]
+          enc=base64.b64encode(raw)
+          parts=[]
+          for i in range(0,len(enc),60000):
+            rel=f'releases/v3.7.51.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(enc[i:i+60000])
+            parts.append(rel)
+          manifest={
+            'version':'3.7.51','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in files],
+            'notes':[
+              'Corrigido erro HTTP 404 no envio de comprovantes ao criar lançamento financeiro.',
+              'Formulário agora envia para /finance.php e recebe confirmação JSON do registro e documento.',
+              'Redireciona aos detalhes somente após o servidor confirmar o salvamento.',
+              'Chave de idempotência evita lançamento financeiro duplicado ao repetir a mesma tentativa.',
+              'Documento selecionado deve chegar ao servidor; sem anexo esperado a operação não é contabilizada.',
+              'Compatibilidade com caixa departamental e atualizações dos arquivos JavaScript do celular.',
+              'Nenhuma movimentação existente é excluída pela atualização.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
+          php -l adminigreja-updates/staging/3.7.51/public/finance.php
+          php -l adminigreja-updates/staging/3.7.51/public/lib/DepartmentTreasuryService.php
+          php -l adminigreja-updates/staging/3.7.51/public/lib/View.php
+          node --check adminigreja-updates/staging/3.7.51/public/assets/finance-upload-snapshot-3741.js
+      - name: Publish verified update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.51.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.51 confirmed financial upload"
+          git pull --rebase origin main
+          git push origin HEAD:main
