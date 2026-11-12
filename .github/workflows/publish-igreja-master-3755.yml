@@ -38,7 +38,7 @@ jobs:
           assert '^[A-Za-z0-9_' not in config
           assert 'preg_match' in config and "'://'" in config
           assert 'minlength="12" maxlength="4096"' in form
-          assert 'GEMINI_API_KEY' in config and 'source()' not in form
+          assert 'GEMINI_API_KEY' in config and 'FinanceVisionConfig::save' in form
           assert data['public/VERSION']==b'3.7.55\n'
           packed=pathlib.Path('/tmp/igreja-master-3755.tar.gz')
           with tarfile.open(packed,'w:gz') as tar:
