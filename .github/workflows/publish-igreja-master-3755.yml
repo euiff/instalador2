@@ -1,0 +1,81 @@
+name: Publish Igreja Master 3.7.55 Gemini API Key Fix
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3755.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Validate key acceptance and build update
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.55
+          php -l "$root/public/lib/FinanceVisionConfig.php"
+          php -l "$root/public/master-ai.php"
+          php "$root/tests/finance_vision_key_3755.php"
+          python3 - <<'PY'
+          import pathlib, json, hashlib, base64, tarfile, io
+          root=pathlib.Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          assert current['version']=='3.7.54',f"Concurrent release: {current['version']}"
+          stage=root/'staging/3.7.55'
+          files=['public/lib/FinanceVisionConfig.php','public/master-ai.php','public/VERSION']
+          data={p:(stage/p).read_bytes() for p in files}
+          config=data['public/lib/FinanceVisionConfig.php'].decode()
+          form=data['public/master-ai.php'].decode()
+          assert 'function normalizeKey' in config
+          assert '^[A-Za-z0-9_' not in config
+          assert 'preg_match' in config and "'://'" in config
+          assert 'minlength="12" maxlength="4096"' in form
+          assert 'GEMINI_API_KEY' in config and 'source()' not in form
+          assert data['public/VERSION']==b'3.7.55\n'
+          packed=pathlib.Path('/tmp/igreja-master-3755.tar.gz')
+          with tarfile.open(packed,'w:gz') as tar:
+            for p in files: tar.add(stage/p,arcname=p,recursive=False)
+          raw=packed.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tar:
+            for p in files: assert tar.extractfile(p).read()==data[p]
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for offset in range(0,len(encoded),60000):
+            rel=f'releases/v3.7.55.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(encoded[offset:offset+60000])
+            parts.append(rel)
+          manifest={
+            'version':'3.7.55','min_php':'8.1','encoding':'base64','parts':parts,
+            'sha256':hashlib.sha256(raw).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in files],
+            'notes':[
+              'Corrige erro falso Chave Gemini não tem formato válido no Master.',
+              'Aceita novas chaves de autorização Gemini com caracteres e tamanhos diferentes dos padrões antigos.',
+              'Permite colar a chave normalmente ou formato GEMINI_API_KEY=, sem armazenar aspas externas.',
+              'Mantém proteção contra URLs, espaços, quebras de linha e valores não seguros.',
+              'Chave continua salva somente no servidor e não é exposta ao navegador.',
+              'Não altera dados, contas, comprovantes ou lançamentos financeiros.',
+              'A instalação só corrige o cadastro da chave; a conectividade com o Gemini deve ser testada separadamente.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Publish validated update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.55.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.55 Gemini auth key validation fix"
+          git pull --rebase origin main
+          git push origin HEAD:main
