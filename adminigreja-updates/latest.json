@@ -1,32 +1,37 @@
 {
-  "version": "3.7.55",
+  "version": "3.7.56",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.55.01.b64.txt"
+    "releases/v3.7.56.01.b64.txt"
   ],
-  "sha256": "e37ebd2c0be711971b61ba17d069eeef14a0304d37bca6378153df85f3770a4d",
+  "sha256": "f99e6d20882919879e7f7ac25b82218074908450a15018e6ea271caa54bdc7df",
   "files": [
     {
-      "path": "public/lib/FinanceVisionConfig.php",
-      "sha256": "632948d51a64074145e01bd4d6064b8d2650533c9907ea22eee5b0dfd23a5460"
+      "path": "public/finance-batch.php",
+      "sha256": "c20884f578ae8feaf11a45913a7a2b4ff6bd87e59ef34c7f36de5e4425efb15a"
     },
     {
-      "path": "public/master-ai.php",
-      "sha256": "a0cf3d0d5d19d4d57852f8436143ac4a1d47a823d455de29a5644a9c5b8f6b7b"
+      "path": "public/assets/finance-batch-3756.js",
+      "sha256": "5e80b0c38709d6b945a57b7430da3b9f47bb7eb4c7d4bfac195e16c9467ad98f"
+    },
+    {
+      "path": "public/finance.php",
+      "sha256": "b004b68a091bbed13daa0d53a116d3c2fc37b85df59759e7b2da3d6908d1cd40"
     },
     {
       "path": "public/VERSION",
-      "sha256": "b796dbb00abeceb09a14427535f093adfcb1cc192ad04b379266defe186b0fb2"
+      "sha256": "1e5f1c362193c57bc6efdb45bfc501fbecc81eccfb7ac2d41a81e4cde10d6121"
     }
   ],
   "notes": [
-    "Corrige erro falso Chave Gemini não tem formato válido no Master.",
-    "Aceita novas chaves de autorização Gemini com caracteres e tamanhos diferentes dos padrões antigos.",
-    "Permite colar a chave normalmente ou formato GEMINI_API_KEY=, sem armazenar aspas externas.",
-    "Mantém proteção contra URLs, espaços, quebras de linha e valores não seguros.",
-    "Chave continua salva somente no servidor e não é exposta ao navegador.",
-    "Não altera dados, contas, comprovantes ou lançamentos financeiros.",
-    "A instalação só corrige o cadastro da chave; a conectividade com o Gemini deve ser testada separadamente."
+    "Financeiro: nova opção Lançar vários cupons, com até 8 fotos/PDFs e opção de tirar várias fotos pelo celular.",
+    "IA fiscal analisa até duas imagens por vez e apresenta os campos separados por comprovante.",
+    "Cada cupom permite ajustar data, valor, fornecedor, categoria da igreja, conta/caixa, forma, número e descrição.",
+    "Um botão registra os cupons conferidos: cada arquivo vira UM lançamento financeiro com o seu próprio anexo.",
+    "Postagens são confirmadas uma por vez; falhas não repetem os lançamentos já registrados.",
+    "Chaves individuais de idempotência, confronto de duplicatas no banco e SHA-256 da foto original evitam repetições.",
+    "Limite de arquivo segue o PHP da hospedagem; cupons ilegíveis permanecem para edição manual.",
+    "Nenhum lançamento antigo é alterado e o upload continua sujeito à revisão do tesoureiro."
   ]
 }
