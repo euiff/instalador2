@@ -100,17 +100,38 @@
    const res=await r.json().catch(()=>null);
    if(r.ok&&res?.ok)displayDuplicates(res);
  }
+ async function optimizeForVision(file){
+   // Compress only the copy sent to AI. Keep the original for the financial attachment.
+   if(file.size<2*1024*1024||!/^image\/(jpeg|png|webp)$/i.test(file.type)||!window.createImageBitmap)
+     return file;
+   try{
+     const bitmap=await createImageBitmap(file);
+     const ratio=Math.min(1,3000/Math.max(bitmap.width,bitmap.height));
+     if(ratio===1&&file.size<4*1024*1024){bitmap.close();return file;}
+     const canvas=document.createElement('canvas');
+     canvas.width=Math.max(1,Math.round(bitmap.width*ratio));
+     canvas.height=Math.max(1,Math.round(bitmap.height*ratio));
+     canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
+     bitmap.close();
+     const optimized=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.9));
+     canvas.width=0;canvas.height=0;
+     if(optimized&&optimized.size<file.size)
+       return new File([optimized],file.name.replace(/\.[^.]+$/,'.jpg'),{type:'image/jpeg',lastModified:Date.now()});
+   }catch(_e){/* Keep original on older Android browsers. */}
+   return file;
+ }
  async function read(file,mode,sequence){
    blocked=false;duplicateBox.hidden=true;
    review.hidden=true;
    precise?.setAttribute('disabled','');
    say(mode==='precise'?'Analisando o documento com maior precisão...':'Lendo foto/PDF com inteligência artificial...');
    list.innerHTML='<li><strong>'+escape(file.name)+'</strong> — analisando…</li>';
-   if(file.size>10*1024*1024)throw new Error('A leitura por IA aceita até 10 MB. Compacte a foto ou use um PDF menor.');
-   // Snapshot to avoid Android WebView ERR_UPLOAD_FILE_CHANGED.
-   const bytes=await file.arrayBuffer();
+   const aiFile=await optimizeForVision(file);
+   if(aiFile.size>10*1024*1024)throw new Error('A leitura por IA aceita até 10 MB. Compacte a foto ou escolha um PDF menor.');
+   // Snapshot only the optimized AI copy. The upload code keeps the original file.
+   const bytes=await aiFile.arrayBuffer();
    if(sequence!==scanCounter)return;
-   const snapshot=new File([bytes],file.name,{type:file.type||'application/octet-stream',lastModified:Date.now()});
+   const snapshot=new File([bytes],aiFile.name,{type:aiFile.type||'application/octet-stream',lastModified:Date.now()});
    const data=new FormData();token(data);
    data.append('action','scan_file');data.append('mode',mode);
    data.append('document_file',snapshot,snapshot.name);
