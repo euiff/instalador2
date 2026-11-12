@@ -1,49 +1,53 @@
 {
-  "version": "3.7.53",
+  "version": "3.7.54",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.53.01.b64.txt"
+    "releases/v3.7.54.01.b64.txt"
   ],
-  "sha256": "d7d4c5225957823d08c08a87ff23d186907f25ea32164345b6b8407017ee9725",
+  "sha256": "df826e1eba82e34380b306d74e75079f33509160b8a07a2e7a763cd045a821bb",
   "files": [
     {
-      "path": "public/finance.php",
-      "sha256": "aa71c544e258838992309a8853027ec706ea9de93d3ef386f3cf0fad3538717b"
+      "path": "public/lib/FinanceVisionConfig.php",
+      "sha256": "db7acee3781b91b19703a748e2b97d7296ef562459ba2871822a15400dc7da98"
     },
     {
-      "path": "public/lib/FinanceFiscalScan.php",
-      "sha256": "561ce0bcacf3e28be67ff9d96d71a39aefc73a380f496abac3ea4240a5073044"
+      "path": "public/lib/FinanceVisionReader.php",
+      "sha256": "07180b03d7e229f8161be7686470343660c602c55fc533011a0a081fb0a185f5"
+    },
+    {
+      "path": "public/master-ai.php",
+      "sha256": "e929dde44394ebe2aa5bd45bda92520f56ceeafe2c152fd913221876320a3d19"
+    },
+    {
+      "path": "public/master.php",
+      "sha256": "ffc720e76914f62e83313df7dd5e3808156e592b944a6c14fea0bb1f1c8f0bd8"
     },
     {
       "path": "public/finance-scan.php",
-      "sha256": "61528299f6ab21d06d7c5bc2308e1e8afbd95bc2d9e10a56b06e6e05dc140a4f"
+      "sha256": "2eda948fdb803a6b3368c41e2dbc112e22d6b843257aafc5872062db523901c2"
+    },
+    {
+      "path": "public/finance.php",
+      "sha256": "04188c139a461e4fe03a8038a85d52e2ec037d8f7a56b8584205bbfcfca1c841"
     },
     {
       "path": "public/assets/finance-ocr-3752.js",
-      "sha256": "4761631a8d8c21fd815a32a94bda1292f6ae32aa82ecbba0627d72fc1eee10f4"
-    },
-    {
-      "path": "public/lib/DepartmentTreasuryService.php",
-      "sha256": "d64cf8668596f98da22643046fcb4c94fcbfd4503718769e4683d8e75eb713ec"
-    },
-    {
-      "path": "public/database/052_finance_fiscal_scan.sql",
-      "sha256": "ebf945f13041c876a5e47befd6f61301df864c0d88641fa253c7fc45d55fc9fd"
+      "sha256": "03e9d374e131aaf905b49e1a9c0a35bdc75508b84a09a759c67a22507bde19f8"
     },
     {
       "path": "public/VERSION",
-      "sha256": "e49dcf709109cd0b6b203df8a01193e12144218a873b1b186b599734b1b29d69"
+      "sha256": "f6a2e882a80603761d5a20647707ba43985665702831281db40bb89422c3f5e3"
     }
   ],
   "notes": [
-    "Novo lançamento começa pelo upload de foto ou PDF de cupom ou nota fiscal.",
-    "Leitura OCR no navegador sugere valor, data, fornecedor, CNPJ, número/chave, forma e descrição.",
-    "O preenchimento automático é revisado antes do registro; categorias seguem os cadastros de cada igreja.",
-    "Confere duplicidade pelo hash do arquivo, chave fiscal de 44 dígitos e combinação do número, data, valor e fornecedor.",
-    "A mesma chave fiscal não pode ser anexada duas vezes à mesma igreja; bloqueio também ocorre ao salvar.",
-    "Prévia do arquivo aparece antes do lançamento; documento salvo integra a lista de anexos.",
-    "OCR depende de bibliotecas no navegador e da legibilidade da foto; mantém preenchimento manual como alternativa.",
-    "Atualização incremental não cria lançamentos nem apaga documentos existentes."
+    "Leitura fiscal com IA: substitui o Tesseract lento por Gemini multimodal para fotos/PDFs.",
+    "O Master configura a chave na nova página Leitura fiscal com inteligência artificial (segredo protegido no servidor).",
+    "Leitor identifica e valida data, valor total, fornecedor, CNPJ, chave/numero fiscal, forma de pagamento, descrição e categoria da própria igreja.",
+    "Preenche automaticamente os campos encontrados e mantém revisão do tesoureiro antes de lançar.",
+    "Permite reanalisar com maior precisão e compacta uma cópia da foto para agilizar a análise.",
+    "Mantém bloqueio de notas duplicadas, vínculo do anexo, correções de upload e prevenção de lançamentos duplicados.",
+    "O uso da IA requer chave Gemini configurada pelo Master e acesso do servidor ao Google. Sem chave, preenchimento manual permanece disponível.",
+    "A instalação não altera valores nem exclui documentos financeiros existentes."
   ]
 }
