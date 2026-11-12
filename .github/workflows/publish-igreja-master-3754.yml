@@ -1,0 +1,110 @@
+name: Publish Igreja Master 3.7.54 Gemini fiscal vision
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3754.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Validate Gemini reader, data protection and update package
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.54
+          php -l "$stage/public/lib/FinanceVisionReader.php"
+          php -l "$stage/public/lib/FinanceVisionConfig.php"
+          php -l "$stage/public/master-ai.php"
+          php -l "$stage/public/master.php"
+          php -l "$stage/public/finance-scan.php"
+          php -l "$stage/public/finance.php"
+          php "$stage/tests/finance_vision_3754.php"
+          node --check "$stage/public/assets/finance-ocr-3752.js"
+          python3 - <<'PY'
+          import pathlib,hashlib,base64,tarfile,io,json
+          root=pathlib.Path('adminigreja-updates')
+          manifest=json.loads((root/'latest.json').read_text())
+          assert manifest['version']=='3.7.53',f"Another release published: {manifest['version']}"
+          stage=root/'staging/3.7.54'
+          paths=[
+            'public/lib/FinanceVisionConfig.php',
+            'public/lib/FinanceVisionReader.php',
+            'public/master-ai.php',
+            'public/master.php',
+            'public/finance-scan.php',
+            'public/finance.php',
+            'public/assets/finance-ocr-3752.js',
+            'public/VERSION'
+          ]
+          data={p:(stage/p).read_bytes() for p in paths}
+          config=data['public/lib/FinanceVisionConfig.php'].decode()
+          reader=data['public/lib/FinanceVisionReader.php'].decode()
+          backend=data['public/finance-scan.php'].decode()
+          frontend=data['public/assets/finance-ocr-3752.js'].decode()
+          finance=data['public/finance.php'].decode()
+          assert data['public/VERSION']==b'3.7.54\n'
+          assert 'GEMINI_API_KEY' in config and '.htaccess' in config and 'Require all denied' in config
+          assert 'requireRole(\'super_admin\')' in data['public/master-ai.php'].decode()
+          assert 'https://generativelanguage.googleapis.com/v1beta/models/' in reader
+          assert 'responseJsonSchema' in reader and 'responseMimeType' in reader
+          assert 'curl_init' in reader and 'CURLOPT_SSL_VERIFYPEER' in reader
+          assert 'FinanceVisionReader::extract' in backend
+          assert "action==='scan_file'" in backend
+          assert 'GEMINI_API_KEY' not in frontend
+          assert 'Tesseract' not in frontend
+          assert 'optimizeForVision' in frontend and 'data-fiscal-precise' in frontend
+          assert '/finance-scan.php' in frontend
+          assert "v=3.7.54" in finance and 'data-fiscal-precise' in finance
+          assert 'Configurar leitura fiscal com IA' in data['public/master.php'].decode()
+          assert 'FinanceFiscalScan::duplicates' in backend
+          # Existing upload fix and idempotence are preserved:
+          assert 'finance_ajax_confirm' in finance and 'name="request_key"' in finance
+          tarpath=pathlib.Path('/tmp/igreja-master-3754.tar.gz')
+          with tarfile.open(tarpath,'w:gz') as tar:
+            for p in paths: tar.add(stage/p,arcname=p,recursive=False)
+          raw=tarpath.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tar:
+            for p in paths: assert tar.extractfile(p).read()==data[p]
+          packed=base64.b64encode(raw)
+          parts=[]
+          for start in range(0,len(packed),60000):
+            rel=f'releases/v3.7.54.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(packed[start:start+60000])
+            parts.append(rel)
+          latest={
+            'version':'3.7.54','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Leitura fiscal com IA: substitui o Tesseract lento por Gemini multimodal para fotos/PDFs.',
+              'O Master configura a chave na nova página Leitura fiscal com inteligência artificial (segredo protegido no servidor).',
+              'Leitor identifica e valida data, valor total, fornecedor, CNPJ, chave/numero fiscal, forma de pagamento, descrição e categoria da própria igreja.',
+              'Preenche automaticamente os campos encontrados e mantém revisão do tesoureiro antes de lançar.',
+              'Permite reanalisar com maior precisão e compacta uma cópia da foto para agilizar a análise.',
+              'Mantém bloqueio de notas duplicadas, vínculo do anexo, correções de upload e prevenção de lançamentos duplicados.',
+              'O uso da IA requer chave Gemini configurada pelo Master e acesso do servidor ao Google. Sem chave, preenchimento manual permanece disponível.',
+              'A instalação não altera valores nem exclui documentos financeiros existentes.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(latest,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Publish validated update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.54.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.54 Gemini fiscal vision"
+          git pull --rebase origin main
+          git push origin HEAD:main
