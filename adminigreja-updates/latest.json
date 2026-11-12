@@ -1,40 +1,40 @@
 {
-  "version": "3.7.51",
+  "version": "3.7.52",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.51.01.b64.txt"
+    "releases/v3.7.52.01.b64.txt"
   ],
-  "sha256": "19e465f739849d39d9273a70b4e4f9ac4b5a611b4eab77472a0df25b87503ecf",
+  "sha256": "c30a9c90549cd553a3c8aa70cc0abe6763485b7382450b4e2546d5585d1da58e",
   "files": [
     {
+      "path": "public/VERSION",
+      "sha256": "810c2bbdaccae370bb9ef11276f057dfbe3f7d881090064794e05ccb0beb2e0e"
+    },
+    {
+      "path": "public/assets/finance-upload-snapshot-3741.js",
+      "sha256": "0ecd79ba04ad9c444e92220c290be7ac03c8e79d6e5f5650a3a715b8154ceaca"
+    },
+    {
+      "path": "public/finance-upload-check.php",
+      "sha256": "8e8412894905863107b3127e1dd25e946207b8fc28bba64ae7c9e6059be59410"
+    },
+    {
       "path": "public/finance.php",
-      "sha256": "89e6add8c95746ae80311256bd3c8306775c2797c10d8ec7c66fe465c4994c2e"
+      "sha256": "8c8f266138b3c62687016707f23c59d7f0b1a514b3981497aeb7286e7117e42b"
     },
     {
       "path": "public/lib/DepartmentTreasuryService.php",
       "sha256": "9eb8b2a63a51196ce93e846e30c3fd0be75ec4ff69c3e3c8fcd5a916cdc2bc2f"
     },
     {
-      "path": "public/assets/finance-upload-snapshot-3741.js",
-      "sha256": "eccb694c1703883f6d80a546dc644ed18b31573557124bfe815b2cf93a118fce"
-    },
-    {
       "path": "public/lib/View.php",
-      "sha256": "20caabd974def363efe4c64a6fb38463ecd159f17056ec6492fef3960bbf1e68"
-    },
-    {
-      "path": "public/VERSION",
-      "sha256": "aa0d0e6d88f6833284d03d92903e62386aea548e747416ecc393b8f67a60868d"
+      "sha256": "9e65002af02d455876d947b83c266f138df30e95176c956b8647a50721953dcf"
     }
   ],
   "notes": [
-    "Corrigido erro HTTP 404 no envio de comprovantes ao criar lançamento financeiro.",
-    "Formulário agora envia para /finance.php e recebe confirmação JSON do registro e documento.",
-    "Redireciona aos detalhes somente após o servidor confirmar o salvamento.",
-    "Chave de idempotência evita lançamento financeiro duplicado ao repetir a mesma tentativa.",
-    "Documento selecionado deve chegar ao servidor; sem anexo esperado a operação não é contabilizada.",
-    "Compatibilidade com caixa departamental e atualizações dos arquivos JavaScript do celular.",
-    "Nenhuma movimentação existente é excluída pela atualização."
+    "Corrige o endereço de envio do comprovante no novo lançamento financeiro e preserva o ID ao anexar em um lançamento existente.",
+    "O diagnóstico retorna a confirmação do servidor na própria página.",
+    "Contas a pagar com anexo e recibos assinados retornam confirmação ao navegador."
   ]
 }
