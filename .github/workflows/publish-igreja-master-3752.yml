@@ -1,0 +1,103 @@
+name: Publish Igreja Master 3.7.52 fiscal OCR and duplicate checks
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3752.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Validate scan parser, database, JS and build incremental update
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.52
+          php -l "$root/public/finance.php"
+          php -l "$root/public/lib/FinanceFiscalScan.php"
+          php -l "$root/public/finance-scan.php"
+          php -l "$root/public/lib/DepartmentTreasuryService.php"
+          php "$root/tests/finance_fiscal_scan_3752.php"
+          node --check "$root/public/assets/finance-ocr-3752.js"
+          python3 - <<'PY'
+          import pathlib, json, hashlib, base64, tarfile, io
+          root=pathlib.Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          assert current['version']=='3.7.51', f"Unexpected version {current['version']}"
+          stage=root/'staging/3.7.52'
+          paths=[
+             'public/finance.php',
+             'public/lib/FinanceFiscalScan.php',
+             'public/finance-scan.php',
+             'public/assets/finance-ocr-3752.js',
+             'public/lib/DepartmentTreasuryService.php',
+             'public/database/052_finance_fiscal_scan.sql',
+             'public/VERSION'
+          ]
+          data={p:(stage/p).read_bytes() for p in paths}
+          finance=data['public/finance.php'].decode()
+          parser=data['public/lib/FinanceFiscalScan.php'].decode()
+          js=data['public/assets/finance-ocr-3752.js'].decode()
+          schema=data['public/database/052_finance_fiscal_scan.sql'].decode()
+          assert 'data-fiscal-autofill' in finance
+          assert finance.index('1. Envie a foto do cupom') < finance.index('2. Confira os dados do lançamento')
+          assert 'finance_ajax_confirm' in finance
+          assert 'FinanceFiscalScan::duplicates' in finance
+          assert 'file_sha256,fiscal_access_key' in finance
+          assert 'uq_finance_document_fiscal' in schema
+          assert 'file_sha256' in schema
+          assert 'MERCADO' not in parser or 'parse(' in parser
+          assert "action',text?'scan':'duplicates'" in js
+          assert 'window.Tesseract.createWorker' in js
+          assert 'getTextContent()' in js
+          assert "finance-scan.php" in js
+          assert 'document_number' in js and 'blocked' in js
+          assert data['public/VERSION']==b'3.7.52\n'
+          pack=pathlib.Path('/tmp/igreja-master-3752.tar.gz')
+          with tarfile.open(pack,'w:gz') as tar:
+            for p in paths: tar.add(stage/p,arcname=p,recursive=False)
+          payload=pack.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as tar:
+            for p in paths: assert tar.extractfile(p).read()==data[p]
+          encoded=base64.b64encode(payload)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+            rel=f'releases/v3.7.52.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(encoded[i:i+60000])
+            parts.append(rel)
+          manifest={
+            'version':'3.7.52','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(payload).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Novo lançamento começa pelo upload de foto ou PDF de cupom ou nota fiscal.',
+              'Leitura OCR no navegador sugere valor, data, fornecedor, CNPJ, número/chave, forma e descrição.',
+              'O preenchimento automático é revisado antes do registro; categorias seguem os cadastros de cada igreja.',
+              'Confere duplicidade pelo hash do arquivo, chave fiscal de 44 dígitos e combinação do número, data, valor e fornecedor.',
+              'A mesma chave fiscal não pode ser anexada duas vezes à mesma igreja; bloqueio também ocorre ao salvar.',
+              'Prévia do arquivo aparece antes do lançamento; documento salvo integra a lista de anexos.',
+              'OCR depende de bibliotecas no navegador e da legibilidade da foto; mantém preenchimento manual como alternativa.',
+              'Atualização incremental não cria lançamentos nem apaga documentos existentes.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Publish validated OCR update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.52.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.52 OCR fiscal intake"
+          git pull --rebase origin main
+          git push origin HEAD:main
