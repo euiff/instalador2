@@ -1,0 +1,93 @@
+name: Publish Igreja Master 3.7.56 batch fiscal receipts
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3756.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Verify separate receipt posting and build incremental release
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.56
+          php -l "$stage/public/finance-batch.php"
+          php -l "$stage/public/finance.php"
+          node --check "$stage/public/assets/finance-batch-3756.js"
+          python3 - <<'PY'
+          import pathlib,hashlib,base64,tarfile,io,json
+          root=pathlib.Path('adminigreja-updates')
+          old=json.loads((root/'latest.json').read_text())
+          assert old['version']=='3.7.55', 'Concurrent release: '+old['version']
+          stage=root/'staging/3.7.56'
+          paths=['public/finance-batch.php','public/assets/finance-batch-3756.js',
+                 'public/finance.php','public/VERSION']
+          sources={p:(stage/p).read_bytes() for p in paths}
+          page=sources['public/finance-batch.php'].decode()
+          client=sources['public/assets/finance-batch-3756.js'].decode()
+          entry=sources['public/finance.php'].decode()
+          assert sources['public/VERSION']==b'3.7.56\n'
+          for expected in ['data-batch-gallery','data-batch-camera','capture="environment"',
+               'data-max-receipts="8"','data-batch-category-template','data-batch-account-template',
+               'data-batch-submit','data-max-file-bytes','data-finance-batch']:
+            assert expected in page, 'Missing batch control '+expected
+          assert "/finance-batch.php" in entry
+          for expected in ['finance-scan.php','scan_file','request_key','document_expected',
+               "data.append('action','entry')","data.append('document_file',r.file,r.file.name)",
+               "fetch('/finance.php'","r.state==='saved'","submit.addEventListener('click'",
+               'file_hash','originalHash','dedupe','serverDedupe','scanPools',
+               'checkDuplicates' if False else 'serverDedupe']:
+            assert expected in client, 'Missing batch save safeguard '+expected
+          assert 'finance_ajax_confirm' in entry and 'name="request_key"' in entry
+          assert 'FinanceFiscalScan::duplicates' in entry
+          assert "document_attached" in entry
+          packed=pathlib.Path('/tmp/igreja-master-3756.tar.gz')
+          with tarfile.open(packed,'w:gz') as archive:
+            for p in paths: archive.add(stage/p,arcname=p,recursive=False)
+          raw=packed.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as archive:
+            for p in paths: assert archive.extractfile(p).read()==sources[p]
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+            rel=f'releases/v3.7.56.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(encoded[i:i+60000])
+            parts.append(rel)
+          manifest={
+            'version':'3.7.56','min_php':'8.1','encoding':'base64','parts':parts,
+            'sha256':hashlib.sha256(raw).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(sources[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Financeiro: nova opção Lançar vários cupons, com até 8 fotos/PDFs e opção de tirar várias fotos pelo celular.',
+              'IA fiscal analisa até duas imagens por vez e apresenta os campos separados por comprovante.',
+              'Cada cupom permite ajustar data, valor, fornecedor, categoria da igreja, conta/caixa, forma, número e descrição.',
+              'Um botão registra os cupons conferidos: cada arquivo vira UM lançamento financeiro com o seu próprio anexo.',
+              'Postagens são confirmadas uma por vez; falhas não repetem os lançamentos já registrados.',
+              'Chaves individuais de idempotência, confronto de duplicatas no banco e SHA-256 da foto original evitam repetições.',
+              'Limite de arquivo segue o PHP da hospedagem; cupons ilegíveis permanecem para edição manual.',
+              'Nenhum lançamento antigo é alterado e o upload continua sujeito à revisão do tesoureiro.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Publish verified update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.56.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.56 batch finance receipts"
+          git pull --rebase origin main
+          git push origin HEAD:main
