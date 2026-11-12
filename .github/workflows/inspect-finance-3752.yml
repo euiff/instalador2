@@ -1,0 +1,32 @@
+name: Inspect current finance release against OCR changes
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-finance-3752.yml']
+  workflow_dispatch:
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare release and staged OCR code
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, json, base64, gzip, tarfile, io, difflib
+          root=pathlib.Path('adminigreja-updates')
+          manifest=json.loads((root/'latest.json').read_text())
+          print('CHANNEL VERSION:',manifest['version'],flush=True)
+          raw=base64.b64decode(b''.join((root/'adminigreja-updates'/p).read_bytes() for p in []) or b'') if False else base64.b64decode(b''.join((root/p).read_bytes() for p in manifest['parts']))
+          package=tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz')
+          for name in ['public/finance.php','public/lib/DepartmentTreasuryService.php','public/lib/View.php']:
+            try: current=package.extractfile(name).read().decode()
+            except KeyError: continue
+            staged=(root/'staging/3.7.52'/name).read_text()
+            a=current.splitlines()
+            b=staged.splitlines()
+            diff=list(difflib.unified_diff(a,b,fromfile='published '+name,tofile='new OCR '+name,n=2))
+            print('DIFF',name,'lines',len(diff),flush=True)
+            print('\n'.join(diff[:230]),flush=True)
+          PY
