@@ -1,40 +1,49 @@
 {
-  "version": "3.7.52",
+  "version": "3.7.53",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.52.01.b64.txt"
+    "releases/v3.7.53.01.b64.txt"
   ],
-  "sha256": "c30a9c90549cd553a3c8aa70cc0abe6763485b7382450b4e2546d5585d1da58e",
+  "sha256": "d7d4c5225957823d08c08a87ff23d186907f25ea32164345b6b8407017ee9725",
   "files": [
     {
-      "path": "public/VERSION",
-      "sha256": "810c2bbdaccae370bb9ef11276f057dfbe3f7d881090064794e05ccb0beb2e0e"
-    },
-    {
-      "path": "public/assets/finance-upload-snapshot-3741.js",
-      "sha256": "0ecd79ba04ad9c444e92220c290be7ac03c8e79d6e5f5650a3a715b8154ceaca"
-    },
-    {
-      "path": "public/finance-upload-check.php",
-      "sha256": "8e8412894905863107b3127e1dd25e946207b8fc28bba64ae7c9e6059be59410"
-    },
-    {
       "path": "public/finance.php",
-      "sha256": "8c8f266138b3c62687016707f23c59d7f0b1a514b3981497aeb7286e7117e42b"
+      "sha256": "aa71c544e258838992309a8853027ec706ea9de93d3ef386f3cf0fad3538717b"
+    },
+    {
+      "path": "public/lib/FinanceFiscalScan.php",
+      "sha256": "561ce0bcacf3e28be67ff9d96d71a39aefc73a380f496abac3ea4240a5073044"
+    },
+    {
+      "path": "public/finance-scan.php",
+      "sha256": "61528299f6ab21d06d7c5bc2308e1e8afbd95bc2d9e10a56b06e6e05dc140a4f"
+    },
+    {
+      "path": "public/assets/finance-ocr-3752.js",
+      "sha256": "4761631a8d8c21fd815a32a94bda1292f6ae32aa82ecbba0627d72fc1eee10f4"
     },
     {
       "path": "public/lib/DepartmentTreasuryService.php",
-      "sha256": "9eb8b2a63a51196ce93e846e30c3fd0be75ec4ff69c3e3c8fcd5a916cdc2bc2f"
+      "sha256": "d64cf8668596f98da22643046fcb4c94fcbfd4503718769e4683d8e75eb713ec"
     },
     {
-      "path": "public/lib/View.php",
-      "sha256": "9e65002af02d455876d947b83c266f138df30e95176c956b8647a50721953dcf"
+      "path": "public/database/052_finance_fiscal_scan.sql",
+      "sha256": "ebf945f13041c876a5e47befd6f61301df864c0d88641fa253c7fc45d55fc9fd"
+    },
+    {
+      "path": "public/VERSION",
+      "sha256": "e49dcf709109cd0b6b203df8a01193e12144218a873b1b186b599734b1b29d69"
     }
   ],
   "notes": [
-    "Corrige o endereço de envio do comprovante no novo lançamento financeiro e preserva o ID ao anexar em um lançamento existente.",
-    "O diagnóstico retorna a confirmação do servidor na própria página.",
-    "Contas a pagar com anexo e recibos assinados retornam confirmação ao navegador."
+    "Novo lançamento começa pelo upload de foto ou PDF de cupom ou nota fiscal.",
+    "Leitura OCR no navegador sugere valor, data, fornecedor, CNPJ, número/chave, forma e descrição.",
+    "O preenchimento automático é revisado antes do registro; categorias seguem os cadastros de cada igreja.",
+    "Confere duplicidade pelo hash do arquivo, chave fiscal de 44 dígitos e combinação do número, data, valor e fornecedor.",
+    "A mesma chave fiscal não pode ser anexada duas vezes à mesma igreja; bloqueio também ocorre ao salvar.",
+    "Prévia do arquivo aparece antes do lançamento; documento salvo integra a lista de anexos.",
+    "OCR depende de bibliotecas no navegador e da legibilidade da foto; mantém preenchimento manual como alternativa.",
+    "Atualização incremental não cria lançamentos nem apaga documentos existentes."
   ]
 }
