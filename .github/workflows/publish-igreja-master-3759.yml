@@ -1,0 +1,116 @@
+name: Publish Igreja Master 3.7.59 Master support exclusion
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3759.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_sqlite
+      - name: Validate role isolation, snapshot and finance UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.59
+          for p in public/lib/MasterSingleFinanceEntry.php public/lib/MasterSupportFinanceUi.php public/lib/FinancePeriodGuard.php public/finance.php public/finance-entry-edit.php public/master.php public/lib/View.php; do
+            php -l "$stage/$p"
+          done
+          php "$stage/tests/master_support_entry_3759.php"
+          python3 - <<'PY'
+          import pathlib,hashlib,base64,tarfile,io,json
+          root=pathlib.Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          assert current['version']=='3.7.58','Another release published: '+current['version']
+          stage=root/'staging/3.7.59'
+          paths=[
+            'public/lib/MasterSingleFinanceEntry.php',
+            'public/lib/MasterSupportFinanceUi.php',
+            'public/finance.php',
+            'public/finance-entry-edit.php',
+            'public/master.php',
+            'public/lib/View.php',
+            'public/VERSION'
+          ]
+          data={p:(stage/p).read_bytes() for p in paths}
+          service=data['public/lib/MasterSingleFinanceEntry.php'].decode()
+          ui=data['public/lib/MasterSupportFinanceUi.php'].decode()
+          finance=data['public/finance.php'].decode()
+          detail=data['public/finance-entry-edit.php'].decode()
+          master=data['public/master.php'].decode()
+          view=data['public/lib/View.php'].decode()
+          assert data['public/VERSION']==b'3.7.59\n'
+          assert 'function exclude(Auth $auth,' in service
+          assert 'isSuperAdmin()' in service
+          assert 'requireLogin()' in service
+          assert 'SELECT TABLE_NAME,COLUMN_NAME FROM information_schema.COLUMNS' in service
+          assert 'private-finance-backups' in service
+          assert "status='reversed'" in service
+          assert "FinancePeriodGuard::assertOpen" in service
+          assert "'balance_changed'=>$wasPosted" in service
+          assert 'finance_reconciliations' in service and 'finance_closings' in service
+          assert 'platform_audit_logs' in service
+          assert 'isMasterSupportMode()' in ui and 'isSuperAdmin()' in ui
+          assert 'acknowledge_exclusion' in ui and 'name="reason"' in ui
+          assert 'Ocultar estornado (Master)' in ui
+          assert "if($action==='master_exclude_entry')" in finance
+          assert 'if(!$masterFinanceSupport || !$auth->isSuperAdmin() || !$auth->isMasterSupportMode())' in finance
+          assert "MasterSupportFinanceUi::exclusionForm($r);" in finance
+          assert 'MasterSupportFinanceUi::exclusionForm($entry)' in detail
+          assert "->exclude(\n                $auth,$cid,$entryId" in master
+          assert 'Suporte Master ativo' in view and '/master.php' in view
+          assert 'Lançar vários cupons' in finance and '3. Documentos adicionais' in finance
+          # Never permit privileged deletion by role and UI controls alone:
+          assert "requireAbility('finance')" in finance
+          assert 'verify_csrf()' in finance and "isMasterSupportMode()" in finance
+          tarpath=pathlib.Path('/tmp/igreja-master-3759.tar.gz')
+          with tarfile.open(tarpath,'w:gz') as tar:
+            for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          payload=tarpath.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as tar:
+            for p in paths:assert tar.extractfile(p).read()==data[p]
+          enc=base64.b64encode(payload)
+          parts=[]
+          for i in range(0,len(enc),60000):
+            rel=f'releases/v3.7.59.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(enc[i:i+60000])
+            parts.append(rel)
+          manifest={
+            'version':'3.7.59','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(payload).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Ao entrar numa igreja como suporte Master, cada movimentação financeira mostra Excluir lançamento (Master).',
+              'Botão Master aparece no cartão do celular, dentro das ações da tabela e nos detalhes do lançamento.',
+              'Exclusão exige motivo, confirmação, sessão super_admin válida e igreja correta.',
+              'Lançamento ativo é estornado administrativamente; saldo e relatórios se ajustam sem perder comprovantes.',
+              'Lançamento já estornado pode ser ocultado da lista sem descontar novamente do saldo.',
+              'Backup privado do lançamento e dados relacionados, com hash e trilha de auditoria.',
+              'Proteção de período fechado/conciliado e de lançamento vinculado a conta a pagar.',
+              'Tarja de Suporte Master ativo visível nas demais telas da igreja e atalho para voltar ao Master.',
+              'Pastores, tesoureiros, membros e outros usuários não recebem a permissão exclusiva do Master.',
+              'Mantidas as funções de OCR por IA, anexos manuais e múltiplos lançamentos sem alteração.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Publish verified update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.59.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.59 Master support per-entry exclusion"
+          git pull --rebase origin main
+          git push origin HEAD:main
