@@ -616,7 +616,7 @@ if($auth->can('department_treasury')){
 }
 
 $q=$pdo->prepare('SELECT e.*,a.name account_name,m.name member_name,er.id expense_receipt_id,er.status expense_receipt_status,(SELECT COUNT(*) FROM finance_documents d WHERE d.church_id=e.church_id AND d.entry_id=e.id) document_count FROM finance_entries e LEFT JOIN finance_accounts a ON a.id=e.account_id AND a.church_id=e.church_id LEFT JOIN members m ON m.id=e.member_id AND m.church_id=e.church_id LEFT JOIN expense_receipts er ON er.church_id=e.church_id AND er.entry_id=e.id WHERE e.church_id=? AND e.transaction_date BETWEEN ? AND ?
-  AND NOT (e.status='reversed' AND COALESCE(e.reversal_reason,'') LIKE '[EXCLUSAO MASTER]%')
+  AND NOT (e.status=\'reversed\' AND COALESCE(e.reversal_reason,\'\') LIKE \'[EXCLUSAO MASTER]%\')
   ORDER BY e.transaction_date DESC,e.created_at DESC LIMIT 500');
 $q->execute([$cid,$from,$to]);$entries=$q->fetchAll();
 
