@@ -1,37 +1,68 @@
 {
-  "version": "3.7.56",
+  "version": "3.7.57",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.56.01.b64.txt"
+    "releases/v3.7.57.01.b64.txt",
+    "releases/v3.7.57.02.b64.txt"
   ],
-  "sha256": "f99e6d20882919879e7f7ac25b82218074908450a15018e6ea271caa54bdc7df",
+  "sha256": "59fd1de358bea46b570346d0a9acebb4c8a128b26c6fe0414d8a5af633dd5648",
   "files": [
     {
-      "path": "public/finance-batch.php",
-      "sha256": "c20884f578ae8feaf11a45913a7a2b4ff6bd87e59ef34c7f36de5e4425efb15a"
+      "path": "public/database/053_finance_grouped_entries.sql",
+      "sha256": "ee0a587218abbbbdc1a9018fc5277b280ff231c94f59f382a81ef8d829faa922"
     },
     {
-      "path": "public/assets/finance-batch-3756.js",
-      "sha256": "5e80b0c38709d6b945a57b7430da3b9f47bb7eb4c7d4bfac195e16c9467ad98f"
+      "path": "public/lib/GroupedFinanceService.php",
+      "sha256": "31a608b9f93eeb817499b956ce8c3b900382d27997af7ca8b1a0626da93de775"
+    },
+    {
+      "path": "public/lib/GroupedFinanceStage.php",
+      "sha256": "604ad319e69a3027241e43d1379ecb114907c33a5901000b4dc88b65691323df"
+    },
+    {
+      "path": "public/lib/MasterSingleFinanceEntry.php",
+      "sha256": "87207458b320c067713106fdd197ad9d5a195a2117cc5f70de781abe8aaef4d0"
+    },
+    {
+      "path": "public/finance-group.php",
+      "sha256": "611cc186834fc56806a3b3cbe45366a487cd92649c95b141d40b0899c45bb07f"
+    },
+    {
+      "path": "public/assets/finance-group-3757.js",
+      "sha256": "a42ce54ecefca075b8502ec7a8165930ad11bb98f2538efe89ee22ab2ef55947"
     },
     {
       "path": "public/finance.php",
-      "sha256": "b004b68a091bbed13daa0d53a116d3c2fc37b85df59759e7b2da3d6908d1cd40"
+      "sha256": "6af788022044afaaac2fda305ffe954e177858ad72bf2170c3b8a5a2a411a186"
+    },
+    {
+      "path": "public/finance-entry-edit.php",
+      "sha256": "4b8763e5a8308e9f1630e55a5720898e49f3d5d40cfb46ca4ce4aa1416b88ede"
+    },
+    {
+      "path": "public/master.php",
+      "sha256": "e76be4e73a00129d23c94e46e17cbb3b62f6f231fd5f75c06c1fcccb4038f879"
+    },
+    {
+      "path": "public/lib/MasterFinanceReset.php",
+      "sha256": "48b1992d5d9ca1fde40f8e1365c9f38813f7ccc92f08d6e997fc511d0918307f"
     },
     {
       "path": "public/VERSION",
-      "sha256": "1e5f1c362193c57bc6efdb45bfc501fbecc81eccfb7ac2d41a81e4cde10d6121"
+      "sha256": "563d8bfc16ed17bc21ac94654c00c61ea2b47da3479bfe1e39336b1ffee19b08"
     }
   ],
   "notes": [
-    "Financeiro: nova opção Lançar vários cupons, com até 8 fotos/PDFs e opção de tirar várias fotos pelo celular.",
-    "IA fiscal analisa até duas imagens por vez e apresenta os campos separados por comprovante.",
-    "Cada cupom permite ajustar data, valor, fornecedor, categoria da igreja, conta/caixa, forma, número e descrição.",
-    "Um botão registra os cupons conferidos: cada arquivo vira UM lançamento financeiro com o seu próprio anexo.",
-    "Postagens são confirmadas uma por vez; falhas não repetem os lançamentos já registrados.",
-    "Chaves individuais de idempotência, confronto de duplicatas no banco e SHA-256 da foto original evitam repetições.",
-    "Limite de arquivo segue o PHP da hospedagem; cupons ilegíveis permanecem para edição manual.",
-    "Nenhum lançamento antigo é alterado e o upload continua sujeito à revisão do tesoureiro."
+    "Novo lançamento agrupado: uma entrada ou saída com vários itens detalhados e soma automática, sem dupla contabilização.",
+    "Permite adicionar de 2 a 12 ofertas, despesas ou cupons com dados, categoria, contribuinte e comprovante por item.",
+    "Fotos são enviadas individualmente a área protegida antes do registro, respeitando limite PHP/cPanel.",
+    "IA já configurada lê cada comprovante e sugere seus campos sem criar lançamentos antes da confirmação.",
+    "Os itens e seus comprovantes aparecem nos detalhes do lançamento e no relatório por categoria.",
+    "Mantida opção antiga de lançar vários cupons em lançamentos separados.",
+    "Master pode escolher um único lançamento por igreja e excluí-lo dos saldos ativos mediante justificativa, backup e auditoria.",
+    "Exclusão individual é estorno administrativo seguro; comprovantes e histórico são preservados, sem zerar a igreja.",
+    "Períodos fechados, bloqueados e conciliados permanecem protegidos.",
+    "A atualização não apaga nem altera movimentações existentes automaticamente."
   ]
 }
