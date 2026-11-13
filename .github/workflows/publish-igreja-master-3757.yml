@@ -61,7 +61,7 @@ jobs:
           for phrase in ['CREATE TABLE IF NOT EXISTS finance_entry_items','ADD COLUMN IF NOT EXISTS is_grouped','ADD COLUMN IF NOT EXISTS entry_item_id']:
             assert phrase in db,phrase
           for phrase in ['FinanceOperations::cents','FinancePeriodGuard::assertOpen','GroupedFinanceStage','beginTransaction()','rollBack()',
-                          'INSERT INTO finance_entry_items','INSERT INTO finance_documents','SUM','finance_entries','request_key']:
+                          'INSERT INTO finance_entry_items','INSERT INTO finance_documents','totalCents','finance_entries','request_key']:
             assert phrase in service,phrase
           assert 'staged_token' in service and 'file_sha256' in service
           assert 'stage_item_file' in group and 'create_group' in group
