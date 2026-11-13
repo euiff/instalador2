@@ -1,0 +1,122 @@
+name: Publish Igreja Master 3.7.57 grouped entries and single exclusion
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3757.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Lint, verify safeguards and package
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.57
+          php -l "$stage/public/lib/GroupedFinanceService.php"
+          php -l "$stage/public/lib/GroupedFinanceStage.php"
+          php -l "$stage/public/lib/MasterSingleFinanceEntry.php"
+          php -l "$stage/public/finance-group.php"
+          php -l "$stage/public/finance.php"
+          php -l "$stage/public/finance-entry-edit.php"
+          php -l "$stage/public/master.php"
+          php -l "$stage/public/lib/MasterFinanceReset.php"
+          node --check "$stage/public/assets/finance-group-3757.js"
+          python3 - <<'PY'
+          import pathlib,hashlib,tarfile,base64,io,json
+          root=pathlib.Path('adminigreja-updates')
+          manifest=json.loads((root/'latest.json').read_text())
+          assert manifest['version']=='3.7.56',f"Concurrent release {manifest['version']}"
+          stage=root/'staging/3.7.57'
+          paths=[
+            'public/database/053_finance_grouped_entries.sql',
+            'public/lib/GroupedFinanceService.php',
+            'public/lib/GroupedFinanceStage.php',
+            'public/lib/MasterSingleFinanceEntry.php',
+            'public/finance-group.php','public/assets/finance-group-3757.js',
+            'public/finance.php','public/finance-entry-edit.php',
+            'public/master.php','public/lib/MasterFinanceReset.php',
+            'public/VERSION'
+          ]
+          data={p:(stage/p).read_bytes() for p in paths}
+          assert data['public/VERSION']==b'3.7.57\n'
+          db=data['public/database/053_finance_grouped_entries.sql'].decode()
+          service=data['public/lib/GroupedFinanceService.php'].decode()
+          staging=data['public/lib/GroupedFinanceStage.php'].decode()
+          front=data['public/assets/finance-group-3757.js'].decode()
+          group=data['public/finance-group.php'].decode()
+          master=data['public/master.php'].decode()
+          exclusion=data['public/lib/MasterSingleFinanceEntry.php'].decode()
+          reset=data['public/lib/MasterFinanceReset.php'].decode()
+          ledger=data['public/finance.php'].decode()
+          edit=data['public/finance-entry-edit.php'].decode()
+          for phrase in ['CREATE TABLE IF NOT EXISTS finance_entry_items','ADD COLUMN IF NOT EXISTS is_grouped','ADD COLUMN IF NOT EXISTS entry_item_id']:
+            assert phrase in db,phrase
+          for phrase in ['FinanceOperations::cents','FinancePeriodGuard::assertOpen','GroupedFinanceStage','beginTransaction()','rollBack()',
+                          'INSERT INTO finance_entry_items','INSERT INTO finance_documents','SUM','finance_entries','request_key']:
+            assert phrase in service,phrase
+          assert 'staged_token' in service and 'file_sha256' in service
+          assert 'stage_item_file' in group and 'create_group' in group
+          assert 'storage/private/finance-stage/' in staging
+          assert 'user_id' in staging and 'church_id' in staging and 'hash_equals' in staging
+          assert 'staged_token' in front and 'stageFile' in front
+          assert 'finance-scan.php' in front and 'data-group-total' in group
+          assert 'finance-group.php' in ledger
+          assert "is_grouped=1" in ledger and "COALESCE(e.is_grouped,0)=0" in ledger
+          assert 'finance_entry_items' in edit
+          assert 'exclude_single_finance_entry' in master
+          assert 'confirm_entry_id' in master and 'acknowledge_exclusion' in master
+          assert 'master_single_finance_entry_excluded' in exclusion
+          assert "status='reversed'" in exclusion and 'FinancePeriodGuard::assertOpen' in exclusion
+          assert 'private-finance-backups' in exclusion and 'rollBack()' in exclusion
+          assert 'finance_entry_items' in reset
+          path=pathlib.Path('/tmp/igreja-master-3757.tar.gz')
+          with tarfile.open(path,'w:gz') as bundle:
+            for p in paths:bundle.add(stage/p,arcname=p,recursive=False)
+          payload=path.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as packed:
+            for p in paths: assert packed.extractfile(p).read()==data[p],p
+          enc=base64.b64encode(payload)
+          parts=[]
+          for i in range(0,len(enc),60000):
+            rel=f'releases/v3.7.57.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(enc[i:i+60000])
+            parts.append(rel)
+          out={
+            'version':'3.7.57','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(payload).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Novo lançamento agrupado: uma entrada ou saída com vários itens detalhados e soma automática, sem dupla contabilização.',
+              'Permite adicionar de 2 a 12 ofertas, despesas ou cupons com dados, categoria, contribuinte e comprovante por item.',
+              'Fotos são enviadas individualmente a área protegida antes do registro, respeitando limite PHP/cPanel.',
+              'IA já configurada lê cada comprovante e sugere seus campos sem criar lançamentos antes da confirmação.',
+              'Os itens e seus comprovantes aparecem nos detalhes do lançamento e no relatório por categoria.',
+              'Mantida opção antiga de lançar vários cupons em lançamentos separados.',
+              'Master pode escolher um único lançamento por igreja e excluí-lo dos saldos ativos mediante justificativa, backup e auditoria.',
+              'Exclusão individual é estorno administrativo seguro; comprovantes e histórico são preservados, sem zerar a igreja.',
+              'Períodos fechados, bloqueados e conciliados permanecem protegidos.',
+              'A atualização não apaga nem altera movimentações existentes automaticamente.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Publish validated update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.57.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.57 grouped finance and Master single exclusion"
+          git pull --rebase origin main
+          git push origin HEAD:main
