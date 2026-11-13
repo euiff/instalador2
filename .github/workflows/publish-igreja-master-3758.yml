@@ -1,0 +1,110 @@
+name: Publish Igreja Master 3.7.58 manual supporting documents
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3758.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_sqlite, fileinfo
+      - name: Lint, test financial isolation and package incremental update
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.58
+          for f in public/finance.php public/lib/DepartmentTreasuryService.php public/lib/FinanceManualAttachments.php public/lib/GroupedFinanceStage.php public/lib/UploadService.php public/lib/FinanceFiscalScan.php; do
+            php -l "$stage/$f"
+          done
+          node --check "$stage/public/assets/finance-manual-extras-3758.js"
+          php "$stage/tests/finance_manual_3758.php"
+          python3 - <<'PY'
+          import pathlib,hashlib,base64,tarfile,io,json
+          root=pathlib.Path('adminigreja-updates')
+          old=json.loads((root/'latest.json').read_text())
+          assert old['version']=='3.7.57',f"Concurrent release: {old['version']}"
+          stage=root/'staging/3.7.58'
+          paths=[
+            'public/finance.php',
+            'public/lib/DepartmentTreasuryService.php',
+            'public/lib/FinanceManualAttachments.php',
+            'public/assets/finance-manual-extras-3758.js',
+            'public/VERSION'
+          ]
+          data={p:(stage/p).read_bytes() for p in paths}
+          finance=data['public/finance.php'].decode()
+          dept=data['public/lib/DepartmentTreasuryService.php'].decode()
+          extra=data['public/lib/FinanceManualAttachments.php'].decode()
+          js=data['public/assets/finance-manual-extras-3758.js'].decode()
+          assert data['public/VERSION']==b'3.7.58\n'
+          assert finance.index('1. Envie a foto do cupom') < finance.index('3. Documentos adicionais (anexo manual, sem IA)')
+          assert 'finance-ocr-3752.js?v=3.7.54' in finance
+          assert 'finance-manual-extras-3758.js?v=3.7.58' in finance
+          assert 'name="extra_document_tokens"' in finance
+          assert 'data-extra-attachment-picker multiple' in finance
+          assert 'FinanceManualAttachments' in finance
+          assert '$manualAttachmentService->prepare(' in finance
+          assert '$manualAttachmentService->insert(' in finance
+          assert '$manualAttachmentService->consume(' in finance
+          assert 'createEntry($departmentId,$_POST,$_FILES[\'document_file\']??[],$extraPrepared)' in finance
+          assert '$manualService->insert(' in dept and '$manualService->consume(' in dept
+          assert 'finance_documents' in extra and 'finance_entries' in extra
+          assert 'INSERT INTO finance_documents' in extra
+          assert 'INSERT INTO finance_entries' not in extra
+          assert 'FinanceFiscalScan::duplicates' not in js
+          assert 'Tesseract' not in js and 'finance-scan.php' not in js
+          assert "data.append('action','stage_item_file')" in js
+          assert 'stopImmediatePropagation' in js and "extra_document_tokens" in js
+          assert '/finance-group.php' in js
+          assert 'count($tokens)>8' in extra
+          assert 'file_sha256' in extra and "token_path" in extra
+          assert 'requireAbility(\'finance\')' in (stage/'public/finance.php').read_text()
+          out=pathlib.Path('/tmp/igreja-master-3758.tar.gz')
+          with tarfile.open(out,'w:gz') as tar:
+            for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          raw=out.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tar:
+            for p in paths:assert tar.extractfile(p).read()==data[p],p
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+            rel=f'releases/v3.7.58.{len(parts)+1:02d}.b64.txt'
+            (root/rel).write_bytes(encoded[i:i+60000]);parts.append(rel)
+          manifest={
+            'version':'3.7.58','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Lançamento normal mantém em cima a leitura fiscal por IA, sem alterar preenchimento automático.',
+              'Novo bloco inferior Documentos adicionais permite enviar até 8 notas, cupons e PDFs manualmente, sem OCR.',
+              'Cada documento adicional é preparado individualmente, evitando exceder post_max_size no celular/cPanel.',
+              'Documentos manuais pertencem ao MESMO lançamento e não acrescentam movimentações nem valores ao caixa.',
+              'Os anexos extras são gravados na mesma transação financeira, inclusive em caixas departamentais.',
+              'Arquivos repetidos são detectados por SHA-256 dentro do lançamento e contra os da própria igreja.',
+              'Ao falhar um envio, o registro fica bloqueado até reenviar ou remover o anexo com erro.',
+              'A tela de detalhes existente já lista os documentos anexados ao lançamento.',
+              'Nenhum documento ou movimentação anterior é removido ou alterado pela atualização.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Publish validated release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.58.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.58 manual multi-document attachments"
+          git pull --rebase origin main
+          git push origin HEAD:main
