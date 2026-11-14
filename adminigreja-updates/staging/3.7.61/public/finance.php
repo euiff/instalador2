@@ -1241,7 +1241,7 @@ window.addEventListener('load',()=>{const id=<?=json_encode((string)$_GET['recei
 <?php endif?>
 
 <script defer src="/assets/finance-assistant-3726.js?v=3.7.60"></script>
-<script defer src="/assets/finance-entry-wizard-3760.js?v=3.7.60"></script>
+<script defer src="/assets/finance-entry-wizard-3760.js?v=3.7.61"></script>
 <script defer src="/assets/finance-ocr-3752.js?v=3.7.54"></script>
 <script defer src="/assets/finance-manual-extras-3758.js?v=3.7.58"></script>
 <?php View::footer();?>
