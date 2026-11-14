@@ -1,55 +1,32 @@
 {
-  "version": "3.7.60",
+  "version": "3.7.61",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.60.01.b64.txt"
+    "releases/v3.7.61.01.b64.txt"
   ],
-  "sha256": "b30172e9f78a6f8f8b06581ec0e96ea5c2d224638eed1f10180c9002e6ef1a3a",
+  "sha256": "8b663a4d76584b4c1b8a44599a5427b50980c3d5d3d41cd63d086967765d9c7d",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "b03489d09f17a112da36aac7f85cc585576cd9a612ad0da129fc864ee07b5a79"
-    },
-    {
-      "path": "public/finance-batch.php",
-      "sha256": "e90abd8c7199a1203a79b460e523fc0cb3aa655c90cc4961aa133e203a1932ad"
-    },
-    {
-      "path": "public/finance-group.php",
-      "sha256": "bafdec2ede492e08c1bc1e116174c6b219936419fcf4a7d9ba1f726b2b9f6aa2"
-    },
-    {
-      "path": "public/assets/finance-assistant-3726.js",
-      "sha256": "4e530df7305528f62b020f3a9f58d6cc2531a281adbc19a1954bf3bb8765bfa9"
-    },
-    {
-      "path": "public/assets/finance-batch-3756.js",
-      "sha256": "b70b729a15f464eec68c0199320348aea7f528cfd0e128b2f0cee2d95191abe1"
+      "sha256": "37ca72c712af2ff82dabdf0af1c70b0300c0e0d25906c62079088fb13f8e89f2"
     },
     {
       "path": "public/assets/finance-entry-wizard-3760.js",
-      "sha256": "2223e56b649d6c1bca0b8d97759dcaa5e93982595f8125499b5a80b4290e5a4a"
-    },
-    {
-      "path": "public/assets/finance-ocr-3752.js",
-      "sha256": "9ab75b1837c31141df197b4f378040a069388288549d04185493b8278eccedce"
+      "sha256": "e170c7fd467575914e65f5f84dcc54bb6936dcd4f5913d2671741cdd15d2a73d"
     },
     {
       "path": "public/VERSION",
-      "sha256": "5e6555f7fccacbc0795f24570c67e91666e6f2138753c6777ed30617087362f4"
+      "sha256": "5d12cd2b7b54a2b326c645f7f2dcddea59aafd7c6ccedbf8a2d964e6ea51eab0"
     }
   ],
   "notes": [
-    "Novo menu de lançamento: simples, múltiplos com leitura por IA ou agrupado.",
-    "Formulário simples da Tesouraria reorganizado conforme Sugestões de Melhorias V2.",
-    "Campos na ordem: tipo, data, lançamento contábil, centro de custo/conta, valor, contribuinte/fornecedor, pagamento, descrição e observações.",
-    "PIX manual selecionado por padrão; referência bancária exigida apenas para transferência.",
-    "Descrição preenchida automaticamente, editável e sem sobrescrever informações inseridas pela IA.",
-    "Nome de contribuinte pode ser escrito manualmente; seleção exata de membro cadastrado faz vínculo, sem atribuir nomes ambíguos.",
-    "Fornecedor cadastrado pode ser selecionado e vinculado a seu contato da igreja.",
-    "Ajuda em ícones de interrogação e opções avançadas recolhidas para reduzir poluição visual.",
-    "Mantida a leitura fiscal por IA na parte de cima e até 8 anexos adicionais sem IA no mesmo lançamento.",
-    "Mantidos caixa geral/departamental, agrupamento, múltiplas notas, suporte Master e regras de auditoria."
+    "Correção de visibilidade: formulário simples da Tesouraria fica aberto logo abaixo das três modalidades.",
+    "Campo 1 destacado para anexar cupom, foto ou PDF e iniciar leitura fiscal por IA.",
+    "Campo 2 destacado para selecionar até oito documentos adicionais vinculados ao mesmo lançamento, sem IA.",
+    "Arquivos adicionais permanecem separados do valor e não geram transações duplicadas.",
+    "Orientações visíveis e rótulos claros para navegação no navegador e no APK Android.",
+    "A leitura por IA continua opcional; lançamento pode ser preenchido manualmente.",
+    "Preservadas as funções e proteções do suporte Master, Tesouraria Geral e caixas departamentais."
   ]
 }
