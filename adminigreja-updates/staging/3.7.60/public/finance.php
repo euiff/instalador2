@@ -943,8 +943,8 @@ View::header('Tesouraria',$auth,'finance.php');
       <div class="field"><label data-finance-person-label>Contribuinte / fornecedor</label>
         <input class="input" name="counterparty" list="finance-counterparty-options" maxlength="190" autocomplete="off" placeholder="Digite um nome ou escolha uma sugestão">
         <datalist id="finance-counterparty-options">
-          <?php foreach($contributionMembers as $member):?><option value="<?=e($member['name'])?>"></option><?php endforeach?>
-          <?php foreach($financeContacts as $option):?><option value="<?=e($option['name'])?>"></option><?php endforeach?>
+          <?php foreach($contributionMembers as $member):?><option value="<?=e($member['name'])?>" data-member-id="<?=e($member['id'])?>"></option><?php endforeach?>
+          <?php foreach($financeContacts as $option):?><option value="<?=e($option['name'])?>" data-contact-id="<?=e($option['id'])?>"></option><?php endforeach?>
         </datalist>
       </div>
       <div class="field"><label>Forma de pagamento</label><select class="select" name="payment_method"><option value="">Não informar</option><?php foreach($methods as $m):?><option value="<?=e($m)?>" <?=$m==='PIX manual'?'selected':''?>><?=e($m==='PIX manual'?'PIX MANUAL':$m)?></option><?php endforeach?></select></div>
