@@ -32,6 +32,24 @@
    const reference=form.querySelector('input[name="document_number"]');
    const referenceHint=form.querySelector('[data-finance-bank-reference-hint]');
    const submit=form.querySelector('button[type="submit"]');
+   const personInput=form.querySelector('input[name="counterparty"]');
+   const contactField=form.querySelector('input[name="contact_id"]');
+   const personOptions=[...form.querySelectorAll('#finance-counterparty-options option')];
+   const normalName=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim();
+   const syncPersonLinks=()=>{
+     const name=normalName(personInput?.value);
+     if(contactField)contactField.value='';
+     if(direction.value==='expense'){
+       if(member)member.value='';
+       const matches=personOptions.filter(o=>o.dataset.contactId&&normalName(o.value)===name);
+       if(contactField && name && matches.length===1)contactField.value=matches[0].dataset.contactId;
+     }else if(member){
+       const current=member.selectedOptions?.[0]?.textContent;
+       if(member.value && name && normalName(current)===name)return;
+       const matches=personOptions.filter(o=>o.dataset.memberId&&normalName(o.value)===name);
+       member.value=name&&matches.length===1?matches[0].dataset.memberId:'';
+     }
+   };
    if(!amount||!category||!direction)return;
 
    amount.addEventListener('input',()=>{amount.setCustomValidity('');amount.removeAttribute('aria-invalid');});
@@ -128,6 +146,15 @@
      }
      if(needsReference())form.querySelector('[data-finance-advanced]')?.setAttribute('open','');
    };
+   personInput?.addEventListener('input',syncPersonLinks);
+   personInput?.addEventListener('change',syncPersonLinks);
+   direction.addEventListener('change',syncPersonLinks);
+   member?.addEventListener('change',()=>{
+     if(direction.value==='income' && member.value && personInput){
+       personInput.value=member.selectedOptions?.[0]?.textContent?.trim()||'';
+       personInput.dispatchEvent(new Event('input',{bubbles:true}));
+     }
+   });
    [direction,category,payment,date,member,tithe,
      form.querySelector('input[name="counterparty"]'),
      form.querySelector('select[name="account_id"]')].filter(Boolean).forEach(el=>el.addEventListener('change',update));
@@ -135,6 +162,7 @@
    form.querySelector('input[name="counterparty"]')?.addEventListener('input',update);
    if(!(category instanceof HTMLSelectElement))category.addEventListener('input',update);
    form.querySelector('input[name="counterparty"]')?.addEventListener('blur',update);
+   syncPersonLinks();
    update();
 
    form.addEventListener('submit',event=>{
