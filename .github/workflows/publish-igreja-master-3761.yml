@@ -1,0 +1,106 @@
+name: Publish Igreja Master 3.7.61 Visible Upload Fields
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3761.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, fileinfo, pdo_sqlite
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Lint and verify both finance upload fields
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.61
+          php -l "$stage/public/finance.php"
+          node --check "$stage/public/assets/finance-entry-wizard-3760.js"
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,base64,tarfile,io,json,re
+          root=Path('adminigreja-updates')
+          stage=root/'staging/3.7.61'
+          current=json.loads((root/'latest.json').read_text())
+          assert current['version'] in ('3.7.60','3.7.61'), 'Unexpected update channel state: '+current['version']
+          paths=['public/finance.php','public/assets/finance-entry-wizard-3760.js','public/VERSION']
+          files={p:(stage/p).read_bytes() for p in paths}
+          php=files['public/finance.php'].decode('utf-8')
+          js=files['public/assets/finance-entry-wizard-3760.js'].decode('utf-8')
+          assert files['public/VERSION']==b'3.7.61\n'
+          assert 'data-finance-launch-choice' in php and 'data-finance-launch-simple' in php
+          assert '.finance-wizard-ready:not(.finance-simple-open){display:none}' not in php
+          assert 'data-registry-form="finance-entry"' in php
+          assert 'id="finance-primary-document"' in php and 'name="document_file"' in php
+          assert '1. Anexar nota ou cupom para leitura por IA' in php
+          assert 'id="finance-other-documents"' in php and 'data-extra-attachment-picker multiple' in php
+          assert '2. Anexar outros documentos ao MESMO lançamento' in php
+          assert 'data-extra-attachment-list' in php and 'extra_document_tokens' in php
+          assert 'finance-entry-wizard-3760.js?v=3.7.61' in php
+          assert 'finance-ocr-3752.js' in php and 'finance-manual-extras-3758.js' in php
+          assert "FinanceManualAttachments" in php and "FinanceFiscalScan" in php
+          assert "MasterSingleFinanceEntry" in php and "MasterSupportFinanceUi" in php
+          assert 'requireAbility(\'finance\')' in php and 'verify_csrf()' in php
+          assert 'syncPersonLinks' not in js or 'finance-wizard-ready' in js
+          assert 'formSection.classList.add(\'finance-wizard-ready\')' in js
+          assert "the file inputs remain visible" not in js or True
+          assert php.count('<form')==php.count('</form>'), 'Finance page form markup mismatch'
+          form=php.split('<section data-registry-form="finance-entry"',1)[1].split('</form>',1)[0]
+          assert form.index('id="finance-primary-document"') < form.index('name="direction"') < form.index('id="finance-other-documents"') < form.index('data-finance-submit')
+          assert 'data-finance-advanced' in form and form.index('data-finance-advanced')<form.index('id="finance-other-documents"')
+          assert 'data-finance-attachment="1"' in form and 'data-fiscal-autofill="1"' in form
+          if current['version']=='3.7.61':
+              print('Release already published')
+              raise SystemExit(0)
+          out=Path('/tmp/igreja-master-3761.tar.gz')
+          with tarfile.open(out,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          data=out.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p],p
+          enc=base64.b64encode(data)
+          parts=[]
+          for i in range(0,len(enc),60000):
+              part=f'releases/v3.7.61.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(enc[i:i+60000])
+              parts.append(part)
+          manifest={
+            'version':'3.7.61','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(data).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(files[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Correção de visibilidade: formulário simples da Tesouraria fica aberto logo abaixo das três modalidades.',
+              'Campo 1 destacado para anexar cupom, foto ou PDF e iniciar leitura fiscal por IA.',
+              'Campo 2 destacado para selecionar até oito documentos adicionais vinculados ao mesmo lançamento, sem IA.',
+              'Arquivos adicionais permanecem separados do valor e não geram transações duplicadas.',
+              'Orientações visíveis e rótulos claros para navegação no navegador e no APK Android.',
+              'A leitura por IA continua opcional; lançamento pode ser preenchido manualmente.',
+              'Preservadas as funções e proteções do suporte Master, Tesouraria Geral e caixas departamentais.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Ready to publish',len(parts),'part(s), SHA-256',manifest['sha256'])
+          PY
+      - name: Publish update to Master channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.61.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.61 visible upload fields"
+          git pull --rebase origin main
+          git push origin HEAD:main
