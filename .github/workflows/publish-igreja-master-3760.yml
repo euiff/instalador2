@@ -1,0 +1,128 @@
+name: Publish Igreja Master 3.7.60 Finance V2 Improvements
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-igreja-master-3760.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_sqlite, fileinfo
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Lint, test and package finance V2 release
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.60
+          for f in public/finance.php public/finance-batch.php public/finance-group.php; do
+            php -l "$stage/$f"
+          done
+          for f in public/assets/finance-assistant-3726.js public/assets/finance-batch-3756.js public/assets/finance-entry-wizard-3760.js public/assets/finance-ocr-3752.js; do
+            node --check "$stage/$f"
+          done
+          python3 - <<'PY'
+          import pathlib,hashlib,base64,tarfile,io,json,re
+          root=pathlib.Path('adminigreja-updates')
+          manifest_file=root/'latest.json'
+          current=json.loads(manifest_file.read_text())
+          if current['version']=='3.7.60':
+              print('Igreja Master 3.7.60 already published; no repackaging required')
+              raise SystemExit(0)
+          assert current['version']=='3.7.59',f"Unexpected update channel version: {current['version']}"
+          stage=root/'staging/3.7.60'
+          paths=[
+            'public/finance.php',
+            'public/finance-batch.php',
+            'public/finance-group.php',
+            'public/assets/finance-assistant-3726.js',
+            'public/assets/finance-batch-3756.js',
+            'public/assets/finance-entry-wizard-3760.js',
+            'public/assets/finance-ocr-3752.js',
+            'public/VERSION'
+          ]
+          data={p:(stage/p).read_bytes() for p in paths}
+          assert data['public/VERSION']==b'3.7.60\n'
+          finance=data['public/finance.php'].decode('utf-8')
+          assistant=data['public/assets/finance-assistant-3726.js'].decode('utf-8')
+          wizard=data['public/assets/finance-entry-wizard-3760.js'].decode('utf-8')
+          ocr=data['public/assets/finance-ocr-3752.js'].decode('utf-8')
+          assert "requireAbility('finance')" in finance
+          assert "MasterSingleFinanceEntry" in finance and "MasterSupportFinanceUi" in finance
+          assert "FinanceManualAttachments" in finance and "extra_document_tokens" in finance
+          assert "finance-manual-extras-3758.js?v=3.7.58" in finance
+          assert "finance-ocr-3752.js?v=3.7.54" in finance
+          assert "finance-assistant-3726.js?v=3.7.60" in finance
+          assert "finance-entry-wizard-3760.js?v=3.7.60" in finance
+          assert "data-finance-launch-simple" in finance
+          assert '/finance-batch.php' in finance and '/finance-group.php' in finance
+          assert finance.count('<form')==finance.count('</form>'), 'Form markup count mismatch'
+          form=finance.split('<section data-registry-form="finance-entry"',1)[1].split('</form>',1)[0]
+          ordered=['name="direction"','name="transaction_date"','name="category"','name="account_id"','name="amount"','name="counterparty"','name="payment_method"','name="description"','name="notes"','data-extra-attachments']
+          offsets=[form.index(key) for key in ordered]
+          assert offsets==sorted(offsets), 'Finance V2 inputs are not in specified order'
+          assert 'data-member-id' in form and 'data-contact-id' in form
+          assert 'selected' in form.split('name="payment_method"',1)[1].split('</select>',1)[0]
+          assert 'PIX MANUAL' in form
+          assert 'name="contact_id"' in form and 'type="hidden" name="contact_id"' in form
+          assert 'data-finance-help' in form or 'im-finance-help' in form
+          assert 'name="document_file"' in form and 'data-extra-attachment-picker multiple' in form
+          assert 'syncPersonLinks' in assistant and 'member.value' in assistant
+          assert 'lastAuto' in assistant and 'userEdited' in assistant
+          assert "data-fiscal-autofill" in form and 'scan_file' in ocr
+          assert 'finance-simple-open' in wizard and 'finance-wizard-ready' in wizard
+          assert 'finance-group' in data['public/finance-group.php'].decode('utf-8')
+          assert 'data-finance-batch' in data['public/finance-batch.php'].decode('utf-8')
+          target=pathlib.Path('/tmp/igreja-master-3760.tar.gz')
+          with tarfile.open(target,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          payload=target.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==data[p]
+          encoded=base64.b64encode(payload)
+          parts=[]
+          for pos in range(0,len(encoded),60000):
+              rel=f'releases/v3.7.60.{len(parts)+1:02d}.b64.txt'
+              (root/rel).write_bytes(encoded[pos:pos+60000])
+              parts.append(rel)
+          manifest={
+            'version':'3.7.60','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(payload).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Novo menu de lançamento: simples, múltiplos com leitura por IA ou agrupado.',
+              'Formulário simples da Tesouraria reorganizado conforme Sugestões de Melhorias V2.',
+              'Campos na ordem: tipo, data, lançamento contábil, centro de custo/conta, valor, contribuinte/fornecedor, pagamento, descrição e observações.',
+              'PIX manual selecionado por padrão; referência bancária exigida apenas para transferência.',
+              'Descrição preenchida automaticamente, editável e sem sobrescrever informações inseridas pela IA.',
+              'Nome de contribuinte pode ser escrito manualmente; seleção exata de membro cadastrado faz vínculo, sem atribuir nomes ambíguos.',
+              'Fornecedor cadastrado pode ser selecionado e vinculado a seu contato da igreja.',
+              'Ajuda em ícones de interrogação e opções avançadas recolhidas para reduzir poluição visual.',
+              'Mantida a leitura fiscal por IA na parte de cima e até 8 anexos adicionais sem IA no mesmo lançamento.',
+              'Mantidos caixa geral/departamental, agrupamento, múltiplas notas, suporte Master e regras de auditoria.'
+            ]
+          }
+          manifest_file.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Verified finance V2 release with',len(paths),'files,',len(parts),'payload part(s)')
+          PY
+      - name: Publish validated update to Master channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.60.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.60 finance V2 workflow"
+          git pull --rebase origin main
+          git push origin HEAD:main
