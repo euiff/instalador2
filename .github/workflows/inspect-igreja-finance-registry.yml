@@ -26,6 +26,8 @@ jobs:
             'public/database/042_enuves_migration.sql',
             'public/database/043_member_departments.sql',
             'public/lib/EnuvesImportService.php',
+          # scan all bundled text for unique departmental account key
+
           ]
           for target in targets:
             print('====== BEGIN '+target+' ======')
@@ -38,4 +40,14 @@ jobs:
             else:
               print(data[:24000])
             print('====== END '+target+' ======')
+          for member in archive.getmembers():
+            if not member.isfile() or not member.name.endswith(('.php','.sql','.md')):
+              continue
+            content=archive.extractfile(member).read().decode('utf-8','replace')
+            for marker in ('uq_department_account','finance_accounts','CREATE TABLE IF NOT EXISTS ministry_departments'):
+              if marker not in content:continue
+              if marker=='finance_accounts' and 'uq_department_account' not in content:continue
+              for n,line in enumerate(content.splitlines()):
+                if marker in line:
+                  print('MIGRATION_SCAN',member.name,'line',n+1,repr('\n'.join(content.splitlines()[max(0,n-4):n+5])))
           PY
