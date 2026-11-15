@@ -1,0 +1,182 @@
+name: Publish Igreja Master 3.7.62 Finance Migration
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3762.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mastertest
+          MYSQL_DATABASE: master_finance_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, iconv, zip, xml, simplexml, pdo_mysql
+          coverage: none
+      - name: PHP syntax and secure imports check
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.62
+          php -l "$stage/public/master.php"
+          php -l "$stage/public/master-finance-import.php"
+          php -l "$stage/public/lib/MasterFinanceImport.php"
+          php -l "$stage/tests/master-import-smoke.php"
+          test "$(cat "$stage/public/VERSION")" = "3.7.62"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.62/public')
+          master=(root/'master.php').read_text()
+          view=(root/'master-finance-import.php').read_text()
+          engine=(root/'lib/MasterFinanceImport.php').read_text()
+          assert master.count('href="/master-finance-import.php?church=')>=2
+          assert "requireRole('super_admin')" in view
+          assert "verify_csrf()" in view
+          assert 'enctype="multipart/form-data"' in view
+          assert 'name="finance_backup"' in view
+          assert 'name="mapping[' in view
+          assert 'ack_import' in view and 'ack_unknown' in view and 'ack_zero' in view
+          assert 'transaction_date' in engine and 'member_id' in engine and 'department_id' in engine
+          assert 'SELECT id FROM finance_entries WHERE church_id=?' in engine
+          assert 'beginTransaction()' in engine and 'rollBack()' in engine
+          assert 'platform_audit_logs' in engine
+          assert 'WHERE church_id=?' in engine
+          assert 'DELETE FROM finance_entries' not in engine
+          print('Static security checks OK')
+          PY
+      - name: Create synthetic legacy XLSX with 7,589 rows and 22 source accounts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import zipfile
+          from xml.sax.saxutils import escape
+          from pathlib import Path
+          headers=[
+            'type','DESCRIÇÃO DO LANÇAMENTO','DATA','VALOR','CONTA/CAIXA DESTINO',
+            'MEMBRO CONTRIBUINTE','Nº documento / cupom / referência Pix',
+            'Forma de pagamento','Lançamento Contábil *'
+          ]
+          def addr(i):
+              s=''
+              while i:
+                  i,rem=divmod(i-1,26)
+                  s=chr(65+rem)+s
+              return s
+          def str_cell(i,row,value):
+              return '<c r="'+addr(i)+str(row)+'" t="inlineStr"><is><t>'+escape(str(value))+'</t></is></c>'
+          def numeric_cell(i,row,value):
+              return '<c r="'+addr(i)+str(row)+'"><v>'+str(value)+'</v></c>'
+          output=['<?xml version="1.0" encoding="UTF-8"?>',
+                  '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>']
+          output.append('<row r="1">'+''.join(str_cell(k+1,1,v) for k,v in enumerate(headers))+'</row>')
+          for i in range(7589):
+              row=i+2
+              incoming=i<5909
+              account='#N/A' if i<9 else 'Caixa legado '+str(1+(i-9)%21)
+              values=[
+                'Entrada' if incoming else 'Saída',
+                'Movimentação histórica '+str(i+1),
+                46332 if i==7588 else 44544,
+                0 if i<5 else 10.55,
+                account,'Pessoa de Teste' if i==100 else '',
+                'sistema-antigo','Outro','DÍZIMOS' if incoming else 'OUTRAS DESPESAS'
+              ]
+              chunks=[]
+              for col,v in enumerate(values,1):
+                  chunks.append(numeric_cell(col,row,v) if col in (3,4) else str_cell(col,row,v))
+              output.append('<row r="'+str(row)+'">'+''.join(chunks)+'</row>')
+          output.append('</sheetData></worksheet>')
+          path=Path('/tmp/master-finance-test.xlsx')
+          with zipfile.ZipFile(path,'w',zipfile.ZIP_DEFLATED) as z:
+              z.writestr('xl/worksheets/sheet1.xml',''.join(output))
+          print('Synthetic spreadsheet generated:',path.stat().st_size,'bytes')
+          PY
+      - name: Integration test with MySQL, isolation, rollback, duplicate prevention
+        shell: bash
+        run: |
+          set -euo pipefail
+          FINANCE_FIXTURE=/tmp/master-finance-test.xlsx php adminigreja-updates/staging/3.7.62/tests/master-import-smoke.php
+      - name: Package and verify release 3.7.62
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,io,json,tarfile
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.62':
+              print('Already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.61', 'Unexpected prior version: '+current['version']
+          stage=root/'staging/3.7.62'
+          paths=[
+              'public/master.php',
+              'public/master-finance-import.php',
+              'public/lib/MasterFinanceImport.php',
+              'public/VERSION',
+          ]
+          files={p:(stage/p).read_bytes() for p in paths}
+          archive=Path('/tmp/igreja-master-3762.tar.gz')
+          with tarfile.open(archive,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          payload=archive.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p],p
+          encoded=base64.b64encode(payload)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              part=f'releases/v3.7.62.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[i:i+60000])
+              parts.append(part)
+          manifest={
+            'version':'3.7.62','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(payload).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(files[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Master: novo botão Importar finanças em cada igreja e painel da igreja selecionada.',
+              'Importação de backup Excel XLSX ou CSV do sistema anterior com prévia antes de gravar.',
+              'Respeita os dados originais: Entrada/Saída, data, valor, histórico, lançamento contábil, contribuinte, referência e pagamento.',
+              'Mostra quantidade e somas por caixa; permite mapear caixas para existentes, criar caixa geral ou caixa de departamento.',
+              'Proteção: confirmação do nome da igreja, CSRF, somente Master, isolação entre igrejas, transação única e auditoria.',
+              'Prevenção contra duplicações: só importa se a igreja estiver sem lançamentos. A importação não apaga nada.',
+              'Membros são vinculados somente por nome único dentro da igreja. Nomes não encontrados continuam registrados.',
+              'Registros com valor zero são preservados sem efeito no saldo; caixas #N/A exigem mapeamento explícito.',
+              'Não transfere fotos/PDFs inexistentes no Excel; referências textuais são preservadas.',
+              'Validado com 7.589 registros sintéticos em banco MySQL, incluindo isolamento, reversão de erros e bloqueio de reimportação.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Ready',len(parts),'release part(s), SHA-256',manifest['sha256'])
+          PY
+      - name: Publish validated release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.62.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.62 Master finance Excel migration"
+          git pull --rebase origin main
+          git push origin HEAD:main
