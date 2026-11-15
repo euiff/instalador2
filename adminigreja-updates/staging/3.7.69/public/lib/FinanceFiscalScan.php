@@ -63,7 +63,11 @@ final class FinanceFiscalScan
         if(self::isPixE2E($value))return $value;
         if(!preg_match('/^[A-Z0-9][A-Z0-9._\/-]{5,119}$/D',$value))return null;
         if(!preg_match('/[0-9]/',$value))return null;
-        if(preg_match('/^\d{11}$|^\d{14}$|^\d{44}$/D',$value))return null;
+        // CPF/CNPJ and fiscal access keys are not bank authentication IDs,
+        // even when punctuated as 123.456.789-00 or 12.345.678/0001-00.
+        $justDigits=preg_replace('/\D/','',$value)??'';
+        if(preg_match('/^[0-9.\/-]+$/D',$value)
+            && in_array(strlen($justDigits),[11,14,44],true))return null;
         if(preg_match('/^(?:N\/A|SEMREFERENCIA|NAOINFORMADO|PENDENTE|000000+)$/D',$value))return null;
         return $value;
     }
