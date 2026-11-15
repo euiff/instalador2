@@ -323,7 +323,7 @@ final class MasterFinanceImport
             foreach ($deptQuery->fetchAll(PDO::FETCH_ASSOC) as $dept) $departments[(string)$dept['id']] = $dept;
             $mapped = [];
             $newAccounts = 0;
-            $insertAccount = $this->db->prepare('INSERT INTO finance_accounts(id,church_id,department_id,name,account_type,opening_balance,active) VALUES(?,?,?,?,"cash",0,1)');
+            $insertAccount = $this->db->prepare('INSERT INTO finance_accounts(id,church_id,department_id,name,account_type,opening_balance,active) VALUES(?,?,?,?,?,0,1)');
             foreach ($resolved as $key => $setting) {
                 $choice = $setting['choice'];
                 if (str_starts_with($choice, 'existing:')) {
@@ -346,7 +346,7 @@ final class MasterFinanceImport
                 }
                 if (!$found) {
                     $id = app_uuid();
-                    $insertAccount->execute([$id, $churchId, $deptId, $name]);
+                    $insertAccount->execute([$id, $churchId, $deptId, $name, 'cash']);
                     $found = ['id' => $id, 'name' => $name, 'department_id' => $deptId];
                     $accounts[$id] = $found;
                     $newAccounts++;
