@@ -1,33 +1,32 @@
 {
-  "version": "3.7.67",
+  "version": "3.7.68",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.67.01.b64.txt"
+    "releases/v3.7.68.01.b64.txt"
   ],
-  "sha256": "74902a12c5f3edb6f30ec7f34df3be8bf5279619dc8ceab9bfdf9851d171a30c",
+  "sha256": "aee8a73d714215fd057fd90206b3022055490a9390815a482f89ecfacfad4a87",
   "files": [
     {
-      "path": "public/lib/MasterFinanceImport.php",
-      "sha256": "a7743910d05e3bdfc76068c1b3e92056d5c8929538b0d7a3501f9e49a0ae0353"
+      "path": "public/finance.php",
+      "sha256": "ce7f97e2be1c62737ae84844c1e3eab0eff0878548e25ea6b316e3a98b331e73"
     },
     {
-      "path": "public/master-finance-import.php",
-      "sha256": "fbca4fc74c02745ada901b3d8c9a0cb58b10d545599955ab6f20fdefbe290596"
+      "path": "public/assets/finance-ocr-3752.js",
+      "sha256": "2673aa474d268a2d64b3ecce6c37f148b252204b6d02e9244cc8c4804b209e79"
     },
     {
       "path": "public/VERSION",
-      "sha256": "9af3597feab94201c04bc3336722430ac79a7316e97ca01ddb9a971cc656d776"
+      "sha256": "6b18a3f3a643b70f45831c2977a82220b2bd3465086cafe536915a74b86ea9c2"
     }
   ],
   "notes": [
-    "Corrige importação do Excel legado que utiliza Entradas e Saídas no plural; aceita também Entrada/Saída no singular.",
-    "Normaliza as saídas negativas do sistema antigo para despesas com valor positivo, preservando corretamente a redução do saldo.",
-    "Prévia informa quantidade de saídas negativas e exige conferência do Master antes de gravar.",
-    "Corrige a leitura do backup de 7.567 movimentos: 5.895 entradas e 1.672 saídas, sem alterar nenhuma célula do Excel de origem.",
-    "Teste de integração MySQL com 7.567 linhas sintéticas, R$ 1.393.016,57 em entradas e R$ 1.375.966,57 em saídas.",
-    "Saldos contábeis preservados: total líquido R$ 17.050,00; valores de saída continuam reduzindo o saldo.",
-    "Continua reproduzindo nomes e códigos de caixas, categorias e departamentos, com reversão de transações e auditoria.",
-    "Nenhum dado real da planilha foi publicado no GitHub e nenhuma transferência foi realizada na hospedagem do usuário."
+    "Tesouraria: corrige leitura de PDFs selecionados no Android e no WhatsApp quando o arquivo é temporário.",
+    "Faz cópia local de bytes assim que o documento é escolhido e mantém essa cópia para leitura por IA e para anexar ao lançamento.",
+    "Se Android não liberar o arquivo, orienta a salvá-lo em Downloads e selecionar novamente; não exibe erro interno em inglês.",
+    "Evita tentar enviar um arquivo sem conteúdo e bloqueia a gravação enquanto prepara a cópia do PDF.",
+    "Mantém preenchimento manual, leitura fiscal por IA, detecção de duplicidade e envio de até oito documentos adicionais.",
+    "Teste automatizado com PDF de memória e arquivo temporário simulado que retorna NotFoundError, sem envio de documento inválido.",
+    "A correção não altera os lançamentos, cadastros ou valores existentes; requer instalação pelo Painel Master."
   ]
 }
