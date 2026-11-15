@@ -1,32 +1,46 @@
 {
-  "version": "3.7.68",
+  "version": "3.7.69",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.68.01.b64.txt"
+    "releases/v3.7.69.01.b64.txt"
   ],
-  "sha256": "aee8a73d714215fd057fd90206b3022055490a9390815a482f89ecfacfad4a87",
+  "sha256": "876992bc11d6b5d1186189d2f2e546201152a2ea906f29ac3702d8f0c328b397",
   "files": [
     {
+      "path": "public/lib/FinanceFiscalScan.php",
+      "sha256": "e350228529acf66406b3dc7d9dd5dbcbf474e4c938eda3ae408e2cb7f6229574"
+    },
+    {
+      "path": "public/lib/FinanceVisionReader.php",
+      "sha256": "1068d39e9e17accd7431090a6052646e79efe6af44b9be191ea12d0a76e130fb"
+    },
+    {
+      "path": "public/finance-scan.php",
+      "sha256": "7f735f495ca9b709fbe756b50ff67b7bd388e030ad2b83677d1abb6e47a7cacf"
+    },
+    {
       "path": "public/finance.php",
-      "sha256": "ce7f97e2be1c62737ae84844c1e3eab0eff0878548e25ea6b316e3a98b331e73"
+      "sha256": "d51269f6a83483a7ce99d80a0a79396664857ac517ee550b484b814f07eda130"
     },
     {
       "path": "public/assets/finance-ocr-3752.js",
-      "sha256": "2673aa474d268a2d64b3ecce6c37f148b252204b6d02e9244cc8c4804b209e79"
+      "sha256": "235f15b0900c51682a415152f6dc8cc9b4efa89a0e0364f449e19e916fd8f581"
     },
     {
       "path": "public/VERSION",
-      "sha256": "6b18a3f3a643b70f45831c2977a82220b2bd3465086cafe536915a74b86ea9c2"
+      "sha256": "aa293309bef98da8b25b62bec08a1fff9d7b0e02cbca1abf3e302b02db5d76c2"
     }
   ],
   "notes": [
-    "Tesouraria: corrige leitura de PDFs selecionados no Android e no WhatsApp quando o arquivo é temporário.",
-    "Faz cópia local de bytes assim que o documento é escolhido e mantém essa cópia para leitura por IA e para anexar ao lançamento.",
-    "Se Android não liberar o arquivo, orienta a salvá-lo em Downloads e selecionar novamente; não exibe erro interno em inglês.",
-    "Evita tentar enviar um arquivo sem conteúdo e bloqueia a gravação enquanto prepara a cópia do PDF.",
-    "Mantém preenchimento manual, leitura fiscal por IA, detecção de duplicidade e envio de até oito documentos adicionais.",
-    "Teste automatizado com PDF de memória e arquivo temporário simulado que retorna NotFoundError, sem envio de documento inválido.",
-    "A correção não altera os lançamentos, cadastros ou valores existentes; requer instalação pelo Painel Master."
+    "Leitura fiscal com IA identifica e preenche referência bancária real: Pix EndToEnd ID, autenticação, ID de transação e referência do recibo.",
+    "Referência bancária e número de documento ficam em destaque no novo lançamento, com explicação da origem.",
+    "Bloqueia repetição de EndToEnd ID Pix ou do mesmo arquivo, mesmo que o arquivo tenha outro nome ou a leitura de valor seja diferente.",
+    "Códigos bancários não globalmente únicos só bloqueiam quando referência e dados de operação combinam; códigos curtos isolados geram aviso.",
+    "Sem código confiável, gera ID interno ARQ- a partir do hash do arquivo; este código não é falsamente apresentado como autenticação bancária.",
+    "Verifica duplicidade novamente no servidor antes de gravar, respeitando o isolamento entre igrejas e identificador de requisição.",
+    "Mantém leitura por IA, envio Android, até oito anexos manuais, recibos e Tesouraria Geral/departamentos.",
+    "Teste PHP com banco SQLite de colisões Pix E2E, autenticação bancária, contas distintas e CPF/CNPJ rejeitados como ID bancário.",
+    "Atualização publicada no canal Master, ainda não aplicada nem testada diretamente na hospedagem da igreja."
   ]
 }
