@@ -206,7 +206,7 @@ View::header('Master · Importar lançamentos',$auth,'master.php');
  <h2 style="font-size:18px">3. Correspondência dos caixas da igreja</h2>
  <p>Cada conta/caixa do sistema antigo precisa ter um destino. Selecione uma <strong>conta já existente</strong> ou crie automaticamente um <strong>novo caixa geral ou departamental</strong> com o nome da origem. Os valores permanecerão separados pelo caixa escolhido.</p>
  <p class="muted">Departamentos do backup exigem escolha manual quando não existe correspondência exata. Não atribua movimentos do departamento à Tesouraria Geral por engano.</p>
- <form method="post" onsubmit="return confirm('Confirma transferir os lançamentos desta planilha SOMENTE para <?=e(addslashes($church['name']))?>? A gravação será auditada e não poderá ser desfeita por este botão.');">
+ <form method="post" onsubmit="return confirm('Confirma transferir os lancamentos somente para a igreja selecionada? A gravacao sera auditada.');">
   <?=csrf_field()?>
   <input type="hidden" name="action" value="confirm">
   <input type="hidden" name="church_id" value="<?=e($cid)?>">
