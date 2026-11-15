@@ -64,6 +64,8 @@ jobs:
           assert 'ensureMultipleAccountsPerDepartment' in importer
           assert 'DROP INDEX uq_department_account' in importer
           assert 'ADD UNIQUE KEY uq_department_account (church_id,department_id,name)' in importer
+          assert 'sort($columnSet)' in importer
+          assert (root/'lib/FinancePeriodGuard.php').is_file()
           assert "SHOW INDEX FROM finance_accounts WHERE Key_name='uq_department_account'" in importer
           assert 'SELECT COUNT(*) FROM finance_entries WHERE church_id=?' in importer
           assert "choice==='auto'" in importer
