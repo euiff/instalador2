@@ -1,4 +1,4 @@
-/* 3.7.20 — use the selected church member instead of asking for the same
+/* 3.7.71 — appoint roles directly from the existing church member list instead of asking for the same
  * name and email twice. Server still validates every value and role. */
 (function(){
  'use strict';
@@ -14,6 +14,8 @@
    const hint=form.querySelector('[data-user-member-help]');
    const passHint=form.querySelector('[data-user-password-help]');
    const save=form.querySelector('button[type="submit"]');
+   const preview=form.querySelector('[data-user-role-preview]');
+   const departmentField=form.querySelector('[data-user-department-field]');
    if(!person||!name||!email||!role)return;
    function refresh(){
       const option=person.options[person.selectedIndex];
@@ -47,10 +49,23 @@
         if(passHint)passHint.textContent='Para uma conta nova, informe uma senha inicial de pelo menos 8 caracteres.';
       }
       const isLeader=role.value==='department_leader';
-      person.required=isLeader;
-      if(departments)departments.required=isLeader;
-      if(save)save.textContent=isLeader?'Salvar líder e vincular ao departamento':'Criar ou atualizar acesso desta igreja';
-      if(isLeader&&hint&&selected)hint.textContent+=' O vínculo de líder será salvo no(s) departamento(s) selecionado(s), sem liberar a tesouraria geral.';
+      const requiresMember=['member','department_leader','group_leader','teacher','kids_worker'].includes(role.value);
+      person.required=requiresMember;
+      if(departments){
+        departments.required=isLeader;
+        departments.disabled=!isLeader;
+      }
+      if(departmentField)departmentField.hidden=!isLeader;
+      if(save)save.textContent=isLeader?'Salvar líder e autorizar departamentos':
+        role.value?'Salvar cargo e liberar acesso':'Escolha um cargo para liberar o acesso';
+      if(preview){
+        const selectedRole=role.options[role.selectedIndex];
+        const roleDescription=selectedRole?.dataset?.roleDescription||'';
+        preview.textContent=roleDescription
+          ?'Permissões do cargo: '+roleDescription
+          :'Selecione o cargo para ver quais módulos ele poderá acessar.';
+      }
+      if(isLeader&&hint&&selected)hint.textContent+=' O vínculo de líder será salvo no(s) departamento(s) selecionado(s), sem liberar a Tesouraria Geral.';
    }
    person.addEventListener('change',refresh);
    role.addEventListener('change',refresh);
