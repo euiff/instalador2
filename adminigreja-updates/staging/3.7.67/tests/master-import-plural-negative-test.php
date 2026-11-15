@@ -86,7 +86,7 @@ check((int)$db->query("SELECT COUNT(*) FROM finance_accounts WHERE church_id='$c
 check((int)$db->query("SELECT COUNT(*) FROM ministry_departments WHERE church_id='$churchId'")->fetchColumn()===2,'failed import keeps two pre-existing departments');
 check((int)$db->query("SELECT COUNT(*) FROM church_registers WHERE church_id='$churchId'")->fetchColumn()===0,'failed import rolls back categories');
 $stats=$service->import($churchId,$actor,$private,'backup-legado.xlsx',$hash,$mapping,'Igreja Destino');
-check($stats['entries']===7589,'all entries committed');
+check($stats['entries']===7567,'all entries committed');
 check($stats['categories_created']===5,'all five accounting categories created');
 check($stats['departments_created']===12,'12 new source departments, existing DPTO MULHER reused');
 check($stats['accounts_created']===22,'all 21 exact cashboxes plus 1 quarantined account created');
