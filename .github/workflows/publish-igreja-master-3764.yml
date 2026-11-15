@@ -1,0 +1,187 @@
+name: Publish Igreja Master 3.7.64 Excel Import Compatibility
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3764.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mastertest
+          MYSQL_DATABASE: master_finance_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, iconv, zip, xml, simplexml, pdo_mysql
+          coverage: none
+      - name: Validate PHP and migration safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          s=adminigreja-updates/staging/3.7.64
+          php -l "$s/public/master-finance-import.php"
+          php -l "$s/public/lib/MasterFinanceImport.php"
+          php -l "$s/public/lib/FinancePeriodGuard.php"
+          php -l "$s/tests/master-import-regression.php"
+          test "$(cat "$s/public/VERSION")" = "3.7.64"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.64/public')
+          page=(root/'master-finance-import.php').read_text()
+          importer=(root/'lib/MasterFinanceImport.php').read_text()
+          assert "requireRole('super_admin')" in page and "verify_csrf()" in page
+          assert 'ack_missing_description' in page and 'ack_rounded' in page
+          assert 'ack_zero' in page and 'ack_unknown' in page
+          assert 'enctype="multipart/form-data"' in page and 'name="mapping[' in page
+          assert 'rounded_value_lines' in importer and 'missing_description_lines' in importer
+          assert 'SEM DESCRIÇÃO NO BACKUP' in importer
+          assert 'PHP_ROUND_HALF_UP' in importer and "is_finite($amount)" in importer
+          assert "'ç'=>'c'" in importer and "'ã'=>'a'" in importer
+          assert "SELECT id FROM finance_entries WHERE church_id=?" in importer
+          assert 'beginTransaction()' in importer and 'rollBack()' in importer
+          assert 'platform_audit_logs' in importer
+          assert 'DELETE FROM finance_entries' not in importer
+          print('PASS static security and accounting validation')
+          PY
+      - name: Generate source-compatible synthetic XLSX with 7,589 historic transactions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import zipfile
+          from decimal import Decimal
+          from pathlib import Path
+          from xml.sax.saxutils import escape
+          headers=[
+            'type','DESCRIÇÃO DO LANÇAMENTO','DATA','VALOR','CONTA/CAIXA DESTINO',
+            'MEMBRO CONTRIBUINTE','Nº documento / cupom / referência Pix',
+            'Forma de pagamento','Lançamento Contábil *'
+          ]
+          def addr(n):
+            result=''
+            while n:
+              n,mod=divmod(n-1,26)
+              result=chr(65+mod)+result
+            return result
+          def cell(n,row,x):
+            ref=addr(n)+str(row)
+            if isinstance(x,str):
+              return '<c r="'+ref+'" t="inlineStr"><is><t>'+escape(x)+'</t></is></c>'
+            return '<c r="'+ref+'"><v>'+str(x)+'</v></c>'
+          incoming=0
+          outgoing=0
+          empty=0
+          noise=0
+          chunks=['<?xml version="1.0" encoding="UTF-8"?>',
+            '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>']
+          chunks.append('<row r="1">'+''.join(cell(k+1,1,s) for k,s in enumerate(headers))+'</row>')
+          for i in range(7589):
+            is_income=i<5909
+            if i<5:amount='0'
+            elif 200<=i<383:amount='129.91999999999999'
+            elif i==5908:amount='1845533.66'
+            elif i==7588:amount='927120.71'
+            else:amount='10.55'
+            cent=int(Decimal(amount).quantize(Decimal('0.01'))*100)
+            if is_income:incoming+=cent
+            else:outgoing+=cent
+            if 200<=i<383:noise+=1
+            missing=4000<=i<4014
+            if missing:empty+=1
+            values=[
+              'Entrada' if is_income else 'Saída',
+              '' if missing else 'Movimentação histórica '+str(i+1),
+              46332 if i==7588 else 44544,
+              amount,
+              '#N/A' if i<9 else 'Caixa legado '+str(1+(i-9)%21),
+              'Pessoa de Teste' if i==100 else '',
+              'sistema-antigo','Outro','DÍZIMOS' if is_income else 'OUTRAS DESPESAS',
+            ]
+            row=i+2
+            xml=[]
+            for j,v in enumerate(values,1):
+              if j in (3,4):xml.append('<c r="'+addr(j)+str(row)+'"><v>'+str(v)+'</v></c>')
+              else:xml.append(cell(j,row,v))
+            chunks.append('<row r="'+str(row)+'">'+''.join(xml)+'</row>')
+          chunks.append('</sheetData></worksheet>')
+          assert incoming==192965502,(incoming,'income')
+          assert outgoing==94483416,(outgoing,'expense')
+          assert noise==183 and empty==14
+          output=Path('/tmp/master-finance-test.xlsx')
+          with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as z:
+            z.writestr('xl/worksheets/sheet1.xml',''.join(chunks))
+          print('PASS synthetic source fixture:',7589,'rows, 183 float artifacts, 14 blank descriptions; exact amounts:',incoming,outgoing)
+          PY
+      - name: Integration test PHP XLSX import with MySQL
+        shell: bash
+        run: |
+          set -euo pipefail
+          LANG=C LC_ALL=C FINANCE_FIXTURE=/tmp/master-finance-test.xlsx php adminigreja-updates/staging/3.7.64/tests/master-import-regression.php
+      - name: Package and publish incremental update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,io,json,tarfile
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.64':
+              print('Already published');raise SystemExit(0)
+          assert current['version']=='3.7.63', 'Unexpected previous version '+current['version']
+          stage=root/'staging/3.7.64'
+          paths=['public/lib/MasterFinanceImport.php','public/master-finance-import.php','public/VERSION']
+          files={p:(stage/p).read_bytes() for p in paths}
+          output=Path('/tmp/igreja-master-3764.tar.gz')
+          with tarfile.open(output,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          data=output.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p],p
+          encoded=base64.b64encode(data)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              part=f'releases/v3.7.64.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[i:i+60000]);parts.append(part)
+          manifest={
+            'version':'3.7.64','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(data).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(files[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Correção da importação Excel legado: reconhece valores monetários com artefatos de ponto flutuante e arredonda corretamente para centavos.',
+              'Preserva lançamentos que vieram sem descrição, marcados SEM DESCRIÇÃO NO BACKUP (LINHA ...), sem inventar finalidade.',
+              'Prévia mostra linhas e exige confirmação do Master para valores normalizados e descrições ausentes.',
+              'Arquivo histórico da Igreja De Deus - Campo Belo: análise local apontou 183 valores com precisão excessiva e 14 descrições vazias.',
+              'Validação automática com 7.589 lançamentos Excel sintéticos e totais R$ 1.929.655,02 em entradas e R$ 944.834,16 em saídas.',
+              'Mantidas proteção de isolamento entre igrejas, confirmação prévia, mapeamento de caixas, bloqueio de duplicações, transação única e auditoria.',
+              'A atualização não apaga nem importa movimentos automaticamente; importação somente por confirmação do Master.'
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Release prepared, SHA256',manifest['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.64.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.64: Excel money and blank-description repair"
+          git pull --rebase origin main
+          git push origin HEAD:main
