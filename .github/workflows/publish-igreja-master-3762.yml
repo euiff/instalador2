@@ -40,6 +40,7 @@ jobs:
           php -l "$stage/public/master.php"
           php -l "$stage/public/master-finance-import.php"
           php -l "$stage/public/lib/MasterFinanceImport.php"
+          php -l "$stage/public/lib/FinancePeriodGuard.php"
           php -l "$stage/tests/master-import-smoke.php"
           test "$(cat "$stage/public/VERSION")" = "3.7.62"
           python3 - <<'PY'
@@ -134,6 +135,7 @@ jobs:
               'public/master.php',
               'public/master-finance-import.php',
               'public/lib/MasterFinanceImport.php',
+              'public/lib/FinancePeriodGuard.php',
               'public/VERSION',
           ]
           files={p:(stage/p).read_bytes() for p in paths}
