@@ -23,6 +23,8 @@ jobs:
             'public/lib/RegistryService.php',
             'public/database/028_finance_registers_receivables.sql',
             'public/registers.php',
+            'public/database/042_enuves_migration.sql',
+            'public/database/043_member_departments.sql',
           ]
           for target in targets:
             print('====== BEGIN '+target+' ======')
