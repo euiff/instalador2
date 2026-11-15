@@ -1,0 +1,92 @@
+name: Publish Igreja Master 3.7.63 Legacy Header Repair
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3763.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, iconv, zip, xml, simplexml, pdo_mysql
+          coverage: none
+      - name: Verify syntax and reproduce user-provided Excel headers
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.63
+          php -l "$stage/public/lib/MasterFinanceImport.php"
+          php -l "$stage/tests/master-import-headers-3763.php"
+          test "$(cat "$stage/public/VERSION")" = "3.7.63"
+          LANG=C LC_ALL=C php "$stage/tests/master-import-headers-3763.php"
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path("adminigreja-updates/staging/3.7.63/public/lib/MasterFinanceImport.php").read_text()
+          assert "'ã'=>'a'" in s and "'ç'=>'c'" in s and "'í'=>'i'" in s
+          assert "require_once __DIR__.'/FinancePeriodGuard.php'" in s
+          assert 'SELECT id FROM finance_entries WHERE church_id=?' in s
+          assert 'beginTransaction()' in s and 'rollBack()' in s
+          assert "platform_audit_logs" in s
+          assert 'DELETE FROM finance_entries' not in s
+          print('Header parsing and import integrity guards are present')
+          PY
+      - name: Publish validated incremental fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,base64,io,json,tarfile
+          root=Path('adminigreja-updates')
+          manifest_path=root/'latest.json'
+          current=json.loads(manifest_path.read_text())
+          if current['version']=='3.7.63':
+              print('Already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.62', 'Unexpected current version '+current['version']
+          stage=root/'staging/3.7.63'
+          paths=['public/lib/MasterFinanceImport.php','public/VERSION']
+          payloads={p:(stage/p).read_bytes() for p in paths}
+          archive=Path('/tmp/igreja-master-3763.tar.gz')
+          with tarfile.open(archive,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          data=archive.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==payloads[p]
+          encoded=base64.b64encode(data)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              part=f'releases/v3.7.63.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[i:i+60000])
+              parts.append(part)
+          new={
+              'version':'3.7.63','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(data).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(payloads[p]).hexdigest()} for p in paths],
+              'notes':[
+                  'Correção: importação Master aceita o cabeçalho DESCRIÇÃO DO LANÇAMENTO da planilha original.',
+                  'Normalização segura de caracteres acentuados no Excel e CSV, inclusive quando a hospedagem utiliza locale C.',
+                  'Preservadas validação das 9 colunas, conferência dos 7.589 lançamentos, mapeamento dos caixas e confirmação antes de importar.',
+                  'Nenhum lançamento existente será apagado automaticamente; mantidas separação por igreja, bloqueio de duplicações e auditoria.',
+                  'Teste automático com cabeçalhos portugueses reais em CSV e XLSX.'
+              ]
+          }
+          manifest_path.write_text(json.dumps(new,ensure_ascii=False,indent=2)+'\n')
+          print('Prepared release',len(parts),'parts')
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.63.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.63: accept Portuguese legacy Excel headings"
+          git pull --rebase origin main
+          git push origin HEAD:main
