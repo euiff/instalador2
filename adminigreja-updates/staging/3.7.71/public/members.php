@@ -177,7 +177,7 @@ View::header('Membros', $auth, 'members.php');
     <div class="field"><label>Função / Cargo</label>
     <select class="select" name="role"><option value="">Selecione um cargo</option>
     <?php $roleOptions=array_values(array_unique(array_filter(array_merge(['Membro'],array_column($positions,'name'),[(string)($edit['role']??'')]))));
-    foreach($roleOptions as $positionName):?><option value="<?=e($positionName)?>" <?=($edit['role']??'')===$positionName?'selected':''?>><?=e($positionName)?></option><?php endforeach;?></select></div>
+    foreach($roleOptions as $positionName):?><option value="<?=e($positionName)?>" <?=($edit['role']??'')===$positionName?'selected':''?>><?=e($positionName)?></option><?php endforeach;?></select><small class="muted">Este é o cargo registrado no cadastro. Para liberar login e permissões de Tesoureiro Geral, Contador, Pastor ou Secretária, use <strong>Definir cargo / acesso</strong> na lista de membros.</small></div>
     <div class="field"><label>Departamento</label>
     <select class="select" name="department_id"><option value="">Nenhum departamento / selecionar depois</option>
     <?php foreach($directoryDepartments as $d):if(empty($d['active'])&&($edit['department']??'')!==$d['name'])continue;?>
