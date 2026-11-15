@@ -226,7 +226,10 @@ final class FinanceFiscalScan
                 $bankLike=(string)($fields['reference_type']??'')!==''
                     ||(strlen($number)>=10 && !ctype_digit($number));
                 $contextMatch=$sameIssuer&&$sameDate&&$sameAmount;
-                $bankContext=$bankLike&&strlen($number)>=10&&$sameAmount&&($sameIssuer||$sameDate);
+                $priorIssuer=trim((string)$r['counterparty']);
+                $bothIssuersKnown=$issuer!=='' && $priorIssuer!=='';
+                $bankContext=$bankLike && strlen($number)>=10 && $sameAmount
+                    && ($sameIssuer || (!$bothIssuersKnown && $sameDate));
                 $blocking=$strongId||$contextMatch||$bankContext;
                 $reason=match(true){
                     self::isPixE2E($number)=>'Mesmo EndToEnd ID Pix (transação já lançada)',
