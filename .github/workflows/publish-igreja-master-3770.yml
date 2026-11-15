@@ -1,0 +1,145 @@
+name: Publish Igreja Master 3.7.70 Church Entry Exclusion
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3770.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mastertest
+          MYSQL_DATABASE: im_finance_exclusion_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql,mbstring,zip,json
+          coverage: none
+      - name: PHP syntax and role authorization checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.70
+          php -l "$stage/public/finance.php"
+          php -l "$stage/public/lib/MasterSingleFinanceEntry.php"
+          php -l "$stage/public/lib/ChurchFinanceExclusionUi.php"
+          php -l "$stage/public/lib/FinancePeriodGuard.php"
+          php -l "$stage/tests/church-finance-exclusion-mysql.php"
+          test "$(cat "$stage/public/VERSION")" = "3.7.70"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.70/public')
+          page=(root/'finance.php').read_text()
+          service=(root/'lib/MasterSingleFinanceEntry.php').read_text()
+          churchUi=(root/'lib/ChurchFinanceExclusionUi.php').read_text()
+          assert "['owner','pastor','treasurer']" in service
+          assert "$auth->currentChurch()" in service
+          assert "$auth->can('finance')" in service
+          assert "$auth->isSuperAdmin()" in service
+          assert "excludeForChurch" in service
+          assert "master_single_finance_entry_excluded" in service
+          assert "church_finance_entry_excluded" in service
+          assert "SELECT * FROM finance_entries WHERE church_id=? AND id=? FOR UPDATE" in service
+          assert "FinancePeriodGuard::assertOpen" in service
+          assert "finance_closings" in service and "finance_reconciliations" in service
+          assert "private-finance-backups" in service
+          assert "platform_audit_logs" in service
+          assert "reversal_reason" in service and "reversed_by_user_id" in service
+          assert "DELETE FROM finance_entries" not in service
+          assert "churchUserCanExclude" in page
+          assert "if($action==='church_exclude_entry')" in page
+          assert "verify_csrf()" in page
+          assert "MasterSupportFinanceUi::exclusionForm" in page
+          assert page.count("ChurchFinanceExclusionUi::render($r)") == 2
+          assert "Estornar</summary>" not in page
+          assert "'[EXCLUSAO IGREJA]%" in page
+          assert "name=\"action\" value=\"church_exclude_entry\"" in churchUi
+          assert "acknowledge_exclusion" in churchUi and "name=\"reason\"" in churchUi
+          assert "Confirmar exclusão" in churchUi
+          assert "csrf_field()" in churchUi
+          assert "finance-ocr-3752.js?v=3.7.69" in page
+          assert "finance-manual-extras-3758.js" in page
+          assert 'data-extra-attachments' in page
+          print('PASS static privileges, financial guards, mobile/table button, UI and retained scanner')
+          PY
+      - name: Test church exclusion in MySQL (audit, treasury and cross-church isolation)
+        shell: bash
+        run: |
+          set -euo pipefail
+          php adminigreja-updates/staging/3.7.70/tests/church-finance-exclusion-mysql.php
+      - name: Package and publish tested 3.7.70 release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import tarfile,hashlib,io,base64,json
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.70':
+              print('Already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.69', 'Unexpected previous version: '+current['version']
+          stage=root/'staging/3.7.70'
+          paths=[
+              'public/finance.php',
+              'public/lib/MasterSingleFinanceEntry.php',
+              'public/lib/ChurchFinanceExclusionUi.php',
+              'public/VERSION',
+          ]
+          blobs={p:(stage/p).read_bytes() for p in paths}
+          archive=Path('/tmp/igreja-master-3770.tar.gz')
+          with tarfile.open(archive,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          data=archive.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==blobs[p],p
+          encoded=base64.b64encode(data)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              part=f'releases/v3.7.70.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[i:i+60000])
+              parts.append(part)
+          manifest={
+              'version':'3.7.70','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(data).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(blobs[p]).hexdigest()} for p in paths],
+              'notes':[
+                  'Tesouraria: botão Estornar substituído pelo botão Excluir lançamento, também na listagem para celular.',
+                  'Novo poder exclusivo para Pastor, Tesoureiro e Proprietário da mesma igreja; Master mantém exclusão de suporte já existente.',
+                  'Exclusão requer confirmação e motivo obrigatório, verificados na interface e novamente no servidor.',
+                  'O lançamento sai do saldo e dos relatórios ativos. Preserva comprovantes, recibos, histórico e backup privado verificado por SHA-256.',
+                  'Ação registra usuário responsável, justificativa, data e identificação do lançamento na auditoria.',
+                  'Proteção de períodos bloqueados, fechamentos, conciliações e contas a pagar: correção especial exigida antes de excluir.',
+                  'Líderes, secretários, contadores e membros não recebem permissão; a igreja de outro cliente nunca é afetada.',
+                  'Teste automático com banco MySQL para Pastor/Tesoureiro/Proprietário, recusas por perfil, duplicidade, isolamento, anexos e saldos.',
+                  'Nenhum lançamento existente foi excluído na publicação; instale a versão no Master para disponibilizar a função.'
+              ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Built release',manifest['version'],'SHA256',manifest['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.70.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.70 church pastor and treasurer exclusion controls"
+          git pull --rebase origin main
+          git push origin HEAD:main
