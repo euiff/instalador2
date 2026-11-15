@@ -1,0 +1,38 @@
+name: Inspect Auth and Finance Roles for Church Deletion
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-igreja-auth-finance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print finance-relevant role and permission functions
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,tarfile,io,base64
+          data=json.load(open('adminigreja-updates/staging/v3.7.24-full-bundle.json'))
+          ar=tarfile.open(fileobj=io.BytesIO(base64.b64decode(data['base64'])),mode='r:gz')
+          names=ar.getnames()
+          print('RELEVANT NAME CANDIDATES')
+          print([n for n in names if n.endswith('/Auth.php') or n.endswith('/DepartmentTreasuryService.php') or 'finance_governance' in n or 'roles' in n.lower()])
+          targets=[n for n in names if n.endswith('/Auth.php') or n.endswith('/DepartmentTreasuryService.php') or n.endswith('/GeneralTreasuryAccountScope.php') or n.endswith('/FinancePeriodGuard.php')]
+          for name in targets:
+            lines=ar.extractfile(name).read().decode('utf8').splitlines()
+            print('==========',name,'TOTAL',len(lines))
+            for i,line in enumerate(lines):
+              if name.endswith('/Auth.php'):
+                if any(z.lower() in line.lower() for z in ['function can(', 'function requireAbility','function requireLogin', 'function currentChurch', 'function isSuperAdmin', 'function isMasterSupportMode','church_role','treasurer','pastor','owner','function capabilities','function churchPermission']):
+                  print('AUTH',i+1,'\\n'.join(f'{j+1} {lines[j]}' for j in range(max(0,i-5),min(len(lines),i+14))))
+              elif name.endswith('/DepartmentTreasuryService.php'):
+                if any(z.lower() in line.lower() for z in ['permission','can(','require','role','treasurer','pastor','finance_entries']):
+                  print('DEPT',i+1,'\\n'.join(f'{j+1} {lines[j]}' for j in range(max(0,i-2),min(len(lines),i+6))))
+              else:
+                print('OTHER',i+1,'\\n'.join(f'{j+1} {lines[j]}' for j in range(min(len(lines),145))))
+          PY
