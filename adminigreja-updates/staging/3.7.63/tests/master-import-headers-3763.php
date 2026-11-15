@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require dirname(__DIR__).'/public/lib/MasterFinanceImport.php';
+setlocale(LC_CTYPE,'C'); // Reproduce the cPanel environment that rejected the accented header.
 /**
  * Real headings from basededados-idb-cb.xlsx — do not store confidential
  * transaction rows, only the public-style column names for regression tests.
@@ -54,5 +55,39 @@ try{
         throw new RuntimeException('Column data alignment, value or Excel date was lost');
     if($parsed['income_cents']!==20000 || $parsed['expense_cents']!==188)
         throw new RuntimeException('Monetary totals differ');
-    echo "PASS: Portuguese source headers, UTF-8 accents and two accounting rows parse with locale-independent normalization.\n";
+    // Test the real XLSX decoding route too, not only a CSV surrogate.
+    $xlsx=$tmp.'.xlsx';
+    $escape=static fn(string $s):string=>htmlspecialchars($s,ENT_XML1|ENT_COMPAT,'UTF-8');
+    $excel=[
+        $headers,
+        ['Saída','Compra histórica',44557,1.88,'1.1 - DPTO HOMEM','','sistema-antigo','Outro','OUTRAS DESPESAS'],
+        ['Entrada','Dízimo',44544,200,'3.2 - DÍZIMOS - CX IGREJA','Pessoa Exemplo','sistema-antigo','Outro','DÍZIMOS']
+    ];
+    $xml='<?xml version="1.0" encoding="UTF-8"?>';
+    $xml.='<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
+    foreach($excel as $ix=>$source){
+        $num=$ix+1;
+        $xml.='<row r="'.$num.'">';
+        foreach($source as $j=>$cell){
+            $col=chr(65+$j);
+            $id=$col.$num;
+            $xml.=is_numeric($cell)
+                ?'<c r="'.$id.'"><v>'.$cell.'</v></c>'
+                :'<c r="'.$id.'" t="inlineStr"><is><t>'.$escape((string)$cell).'</t></is></c>';
+        }
+        $xml.='</row>';
+    }
+    $xml.='</sheetData></worksheet>';
+    $zip=new ZipArchive();
+    if($zip->open($xlsx,ZipArchive::CREATE|ZipArchive::OVERWRITE)!==true)
+        throw new RuntimeException('Could not create XLSX regression sample');
+    $zip->addFromString('xl/worksheets/sheet1.xml',$xml);
+    $zip->close();
+    try{
+        $xlsxData=$r->parse($xlsx,'basededados-idb-cb.xlsx');
+        if($xlsxData['count']!==2 || $xlsxData['income_cents']!==20000
+            ||$xlsxData['expense_cents']!==188 || count($xlsxData['errors'])!==0)
+            throw new RuntimeException('Original-style XLSX regression fixture parsed incorrectly');
+    }finally{ @unlink($xlsx); }
+    echo "PASS: Actual Portuguese XLSX headings and CSV headings parse with LC_CTYPE=C.\n";
 }finally{ @unlink($csv); }
