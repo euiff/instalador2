@@ -61,6 +61,7 @@ final class FinanceFiscalScan
         $value=preg_replace('/\s+/u','',$raw)??'';
         $value=strtoupper($value);
         if(self::isPixE2E($value))return $value;
+        if($type==='pix_e2e')return null; // Refuse incomplete/malformed bank E2E.
         if(!preg_match('/^[A-Z0-9][A-Z0-9._\/-]{5,119}$/D',$value))return null;
         if(!preg_match('/[0-9]/',$value))return null;
         // CPF/CNPJ and fiscal access keys are not bank authentication IDs,
