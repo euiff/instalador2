@@ -1,0 +1,133 @@
+name: Publish Igreja Master 3.7.71 Member Role Assignment
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3771.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_mysql
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate new and existing member access assignment
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.71
+          php -l "$stage/public/users.php"
+          php -l "$stage/public/members.php"
+          node --check "$stage/public/assets/users-member-autofill.js"
+          node --check "$stage/tests/member-role-ui.cjs"
+          node "$stage/tests/member-role-ui.cjs"
+          test "$(cat "$stage/public/VERSION")" = "3.7.71"
+          python3 - <<'PY'
+          from pathlib import Path
+          stage=Path('adminigreja-updates/staging/3.7.71/public')
+          users=(stage/'users.php').read_text()
+          members=(stage/'members.php').read_text()
+          js=(stage/'assets/users-member-autofill.js').read_text()
+          assert "$auth->requireAbility('manage_users')" in users
+          assert "[$cid]" in users
+          assert "SELECT m.id,m.name,m.email,cm.user_id linked_user_id" in users
+          assert "m.church_id=? AND m.active=1" in users
+          assert "$selectedPerson" in users and "$memberFromList" in users
+          assert "if(!in_array($selectedRole,$allowed,true))$selectedRole='';" in users
+          assert "if(!in_array($role,$allowed,true))" in users
+          assert "$leadAccess->linkedLogin($personId)" in users
+          assert "if(!empty($membership['is_owner']))" in users
+          assert "UPDATE church_members SET church_role=?,permissions=NULL" in users
+          assert "INSERT INTO church_members(id,church_id,user_id,is_owner,church_role,permissions)" in users
+          assert "save_portal_scope($pdo,$cid,$targetUserId,$role,$scope)" in users
+          assert "'treasurer'=>'Tesoureiro Geral'" in users
+          assert "'accountant'=>'Contador (consulta e conferência)'" in users
+          assert "Somente para Líder de Departamento" in users
+          assert "name=\"church_role\" required" in users
+          assert '<option value="">Selecione o cargo…</option>' in users
+          assert "data-user-role-preview" in users
+          assert "data-user-create-from-member" in users
+          assert "/assets/users-member-autofill.js?v=3.7.71" in users
+          assert "$auth->can('manage_users')" in members
+          assert 'href="/users.php?member=' in members
+          assert 'Acesso: <?=e(' in members
+          assert "WHERE church_id=? AND person_id IN ($placeholders)" in members
+          assert "data-user-department-field" in js
+          assert "password.disabled=true" in js
+          assert "roleDescription" in js
+          assert "departmentField.hidden=!isLeader" in js
+          assert "person.required=requiresMember" in js
+          assert "$pdo->beginTransaction()" in users and "$pdo->rollBack()" in users
+          print('PASS: existing-member linkage, role whitelist, login reuse, per-church scope, permissions and accessibility')
+          PY
+      - name: Publish role-management update 3.7.71
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,base64,hashlib,tarfile,io
+          from pathlib import Path
+          root=Path('adminigreja-updates')
+          latest_path=root/'latest.json'
+          current=json.loads(latest_path.read_text())
+          if current['version']=='3.7.71':
+              print('Already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.70', 'Unexpected previous version '+current['version']
+          stage=root/'staging/3.7.71'
+          paths=[
+              'public/users.php',
+              'public/members.php',
+              'public/assets/users-member-autofill.js',
+              'public/VERSION'
+          ]
+          originals={p:(stage/p).read_bytes() for p in paths}
+          archive=Path('/tmp/igreja-master-3771.tar.gz')
+          with tarfile.open(archive,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          packed=archive.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(packed),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==originals[p],p
+          raw=base64.b64encode(packed)
+          parts=[]
+          for i in range(0,len(raw),60000):
+              path=f'releases/v3.7.71.{len(parts)+1:02d}.b64.txt'
+              (root/path).write_bytes(raw[i:i+60000])
+              parts.append(path)
+          manifest={
+              'version':'3.7.71','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(packed).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(originals[p]).hexdigest()} for p in paths],
+              'notes':[
+                  'Lista de membros: botão Definir cargo / acesso para selecionar qualquer membro ativo da própria igreja.',
+                  'Seleção abre Usuários e Permissões com o membro já escolhido, sem duplicar cadastro de pessoas.',
+                  'Cargos principais: Tesoureiro Geral, Contador, Pastor, Secretária, Administrador e lideranças. Mostra quais módulos cada perfil acessa.',
+                  'Login existente é reutilizado sem alterar a senha; novo login só exige e-mail pessoal e senha inicial quando necessário.',
+                  'Líder de departamento escolhe explicitamente os departamentos; a escolha não libera automaticamente a Tesouraria Geral.',
+                  'Lista mostra o perfil de login do membro separadamente do cargo registrado na ficha pessoal.',
+                  'Continua bloqueada concessão de perfis não autorizados, promoção do próprio usuário e transferência do proprietário.',
+                  'Testes PHP e JavaScript: membro preselecionado, contador consulta, tesoureiro financeiro, senha preservada e permissão de liderança.',
+                  'Atualização publicada no painel Master; nenhum acesso real foi atribuído automaticamente à igreja.'
+              ]
+          }
+          latest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Built verified release',manifest['version'],manifest['sha256'],'parts',parts)
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.71.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.71 existing-member appointments and access profiles"
+          git pull --rebase origin main
+          git push origin HEAD:main
