@@ -77,6 +77,9 @@ jobs:
           assert "negative_expense_rows_normalized" in importer
           assert "signed_expense_lines" in importer
           assert "ack_signed_expenses" in page
+          test=(Path('adminigreja-updates/staging/3.7.67/tests/master-import-plural-negative-test.php').read_text())
+          assert "check($stats['entries']===7567" in test
+          assert "signed_expense_lines" in test
           assert 'value="auto"' in page
           assert "preview['categories']" in page
           print('PASS static security and accounting validation')
