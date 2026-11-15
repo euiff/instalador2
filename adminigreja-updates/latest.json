@@ -1,32 +1,33 @@
 {
-  "version": "3.7.66",
+  "version": "3.7.67",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.66.01.b64.txt"
+    "releases/v3.7.67.01.b64.txt"
   ],
-  "sha256": "764d1e644dba80fe1764192ea253bc7934aee062d0cd49e92cbbcb44cafbcc4b",
+  "sha256": "74902a12c5f3edb6f30ec7f34df3be8bf5279619dc8ceab9bfdf9851d171a30c",
   "files": [
     {
       "path": "public/lib/MasterFinanceImport.php",
-      "sha256": "91aa819572499cb525d8e498c3d6102ce5df8fc3810b3d2345e4fc3d3ad89872"
+      "sha256": "a7743910d05e3bdfc76068c1b3e92056d5c8929538b0d7a3501f9e49a0ae0353"
     },
     {
       "path": "public/master-finance-import.php",
-      "sha256": "e9526b984064bd0aaf2eada1441910a54ca254424001394629ad66c31213f0d0"
+      "sha256": "fbca4fc74c02745ada901b3d8c9a0cb58b10d545599955ab6f20fdefbe290596"
     },
     {
       "path": "public/VERSION",
-      "sha256": "aa5254f3d0f759b74f671c2633aff8a27e1840ccca31c9f96a918b03e2e14ce7"
+      "sha256": "9af3597feab94201c04bc3336722430ac79a7316e97ca01ddb9a971cc656d776"
     }
   ],
   "notes": [
-    "Correção da importação Master: resolve erro SQLSTATE 23000 / Duplicate entry / uq_department_account ao criar caixas de departamentos.",
-    "Regra antiga que permitia somente um caixa por departamento é atualizada para aceitar múltiplos caixas com nomes distintos, mantendo unicidade por igreja+departamento+nome.",
-    "A correção altera somente o índice estrutural do banco; não apaga, renomeia nem modifica o saldo dos caixas e lançamentos de nenhuma igreja.",
-    "Os 21 caixas originais, as cinco categorias contábeis e os 13 ministérios do backup continuam preservados.",
-    "Restrições e total de lançamentos são conferidos antes da alteração; importação segue protegida por transação, confirmação Master, e auditoria.",
-    "Teste com 7.589 lançamentos sintéticos, banco MySQL com índice legado REAL e caixa preexistente no mesmo departamento, valida segurança e ausência de duplicações.",
-    "Mensagens de erro de banco deixam de mostrar UUIDs internos e chaves SQL na tela pública."
+    "Corrige importação do Excel legado que utiliza Entradas e Saídas no plural; aceita também Entrada/Saída no singular.",
+    "Normaliza as saídas negativas do sistema antigo para despesas com valor positivo, preservando corretamente a redução do saldo.",
+    "Prévia informa quantidade de saídas negativas e exige conferência do Master antes de gravar.",
+    "Corrige a leitura do backup de 7.567 movimentos: 5.895 entradas e 1.672 saídas, sem alterar nenhuma célula do Excel de origem.",
+    "Teste de integração MySQL com 7.567 linhas sintéticas, R$ 1.393.016,57 em entradas e R$ 1.375.966,57 em saídas.",
+    "Saldos contábeis preservados: total líquido R$ 17.050,00; valores de saída continuam reduzindo o saldo.",
+    "Continua reproduzindo nomes e códigos de caixas, categorias e departamentos, com reversão de transações e auditoria.",
+    "Nenhum dado real da planilha foi publicado no GitHub e nenhuma transferência foi realizada na hospedagem do usuário."
   ]
 }
