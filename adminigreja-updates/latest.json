@@ -1,26 +1,32 @@
 {
-  "version": "3.7.63",
+  "version": "3.7.64",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.63.01.b64.txt"
+    "releases/v3.7.64.01.b64.txt"
   ],
-  "sha256": "8c38dc27f1e8838ff34656a0829f02ce3e798386821d34d0604cac1297865b1d",
+  "sha256": "f28f4b2f505cd681b20382a21531e1e24eb0dc66be881cb6de24fff76330be3a",
   "files": [
     {
       "path": "public/lib/MasterFinanceImport.php",
-      "sha256": "a4d190c2572bad5131b60c410706e30f081e731b253018b3b84530112c183234"
+      "sha256": "66ef2697d8918464c7e235ffe82bdce34fb8e57de52e3b879c5af925adee1fce"
+    },
+    {
+      "path": "public/master-finance-import.php",
+      "sha256": "98d9641bfbbe4852876ca4ffcdceb2d2ce46533782aa5492c10b01d598129675"
     },
     {
       "path": "public/VERSION",
-      "sha256": "ca2939e4752c1d1139c6291bebf9ea25419f37a433decc4675c72f6d448e9960"
+      "sha256": "7bc1396e8c07ead127d1a6c2d99d8897beb096ea04c56b63d902725999e14252"
     }
   ],
   "notes": [
-    "Correção: importação Master aceita o cabeçalho DESCRIÇÃO DO LANÇAMENTO da planilha original.",
-    "Normalização segura de caracteres acentuados no Excel e CSV, inclusive quando a hospedagem utiliza locale C.",
-    "Preservadas validação das 9 colunas, conferência dos 7.589 lançamentos, mapeamento dos caixas e confirmação antes de importar.",
-    "Nenhum lançamento existente será apagado automaticamente; mantidas separação por igreja, bloqueio de duplicações e auditoria.",
-    "Teste automático com cabeçalhos portugueses reais em CSV e XLSX."
+    "Correção da importação Excel legado: reconhece valores monetários com artefatos de ponto flutuante e arredonda corretamente para centavos.",
+    "Preserva lançamentos que vieram sem descrição, marcados SEM DESCRIÇÃO NO BACKUP (LINHA ...), sem inventar finalidade.",
+    "Prévia mostra linhas e exige confirmação do Master para valores normalizados e descrições ausentes.",
+    "Arquivo histórico da Igreja De Deus - Campo Belo: análise local apontou 183 valores com precisão excessiva e 14 descrições vazias.",
+    "Validação automática com 7.589 lançamentos Excel sintéticos e totais R$ 1.929.655,02 em entradas e R$ 944.834,16 em saídas.",
+    "Mantidas proteção de isolamento entre igrejas, confirmação prévia, mapeamento de caixas, bloqueio de duplicações, transação única e auditoria.",
+    "A atualização não apaga nem importa movimentos automaticamente; importação somente por confirmação do Master."
   ]
 }
