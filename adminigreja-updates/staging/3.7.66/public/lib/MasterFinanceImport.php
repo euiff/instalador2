@@ -67,10 +67,14 @@ final class MasterFinanceImport
         if (!$rows) return; // Installations without this legacy index already allow multiple.
         usort($rows,static fn(array $a,array $b)=>(int)$a['Seq_in_index']<=>(int)$b['Seq_in_index']);
         $columns=array_map(static fn(array $r)=>(string)$r['Column_name'],$rows);
-        if ($columns===['church_id','department_id','name']) return;
-        if ($columns!==['church_id','department_id']) {
+        $columnSet=$columns;
+        sort($columnSet);
+        // Existing installations can have a different index-column order.
+        if ($columnSet===['church_id','department_id','name']) return;
+        if ($columnSet!==['church_id','department_id']) {
             throw new RuntimeException('Estrutura de caixas diferente do modelo esperado. O índice do banco precisa de conferência técnica antes de importar; nenhuma movimentação foi gravada.');
         }
+        if ((int)$rows[0]['Non_unique']===1) return; // Already non-unique.
         try {
             $this->db->exec(
                 'ALTER TABLE finance_accounts DROP INDEX uq_department_account, '.
