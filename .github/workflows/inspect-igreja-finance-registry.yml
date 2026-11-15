@@ -1,0 +1,38 @@
+name: Inspect Igreja Finance Registry Before Legacy Import
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-igreja-finance-registry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show original registry APIs and schema
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,base64,tarfile,io
+          bundle=json.load(open('adminigreja-updates/staging/v3.7.24-full-bundle.json'))
+          archive=tarfile.open(fileobj=io.BytesIO(base64.b64decode(bundle['base64'])),mode='r:gz')
+          targets=[
+            'public/lib/RegistryService.php',
+            'public/database/028_finance_registers_receivables.sql',
+            'public/registers.php',
+          ]
+          for target in targets:
+            print('====== BEGIN '+target+' ======')
+            data=archive.extractfile(target).read().decode('utf-8')
+            if target.endswith('registers.php'):
+              lines=data.splitlines()
+              for i,line in enumerate(lines):
+                if 'finance_category' in line or 'registry' in line.lower() or 'create(' in line or 'save(' in line:
+                  print('%d %s'%(i+1,line[:220]))
+            else:
+              print(data[:24000])
+            print('====== END '+target+' ======')
+          PY
