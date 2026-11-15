@@ -25,6 +25,7 @@ jobs:
             'public/registers.php',
             'public/database/042_enuves_migration.sql',
             'public/database/043_member_departments.sql',
+            'public/lib/EnuvesImportService.php',
           ]
           for target in targets:
             print('====== BEGIN '+target+' ======')
