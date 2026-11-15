@@ -1,0 +1,50 @@
+name: Stage Igreja Master 3.7.71 Existing Role Sources
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-igreja-roles-3771.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract only existing member and user role source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64,json,io,tarfile
+          from pathlib import Path
+          j=json.loads(Path('adminigreja-updates/staging/v3.7.29-full-bundle.json').read_text())
+          archive=tarfile.open(fileobj=io.BytesIO(base64.b64decode(j['base64'])),mode='r:gz')
+          names=[
+           'public/users.php',
+           'public/members.php',
+           'public/lib/Auth.php',
+           'public/lib/ChurchMemberLeadershipService.php',
+           'public/lib/MemberPortalAccessService.php',
+           'public/lib/MemberDepartmentService.php',
+           'public/assets/users-member-autofill.js',
+           'public/settings.php',
+           'public/database/043_member_departments.sql',
+          ]
+          target=Path('adminigreja-updates/staging/3.7.71/public')
+          for name in names:
+              content=archive.extractfile(name).read()
+              out=target/name.removeprefix('public/')
+              out.parent.mkdir(parents=True,exist_ok=True)
+              out.write_bytes(content)
+              print('STAGED',name,'bytes',len(content))
+          (target/'VERSION').write_text('3.7.71\n')
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/staging/3.7.71
+          git diff --cached --quiet && exit 0
+          git commit -m "Stage 3.7.71 existing church member and role management sources for improvements"
+          git pull --rebase origin main
+          git push origin HEAD:main
