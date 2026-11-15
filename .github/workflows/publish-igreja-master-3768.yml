@@ -1,0 +1,103 @@
+name: Publish Igreja Master 3.7.68 Android PDF Upload Repair
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3768.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  check-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Test Android PDF availability and final finance upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.68
+          node --check "$stage/public/assets/finance-ocr-3752.js"
+          node --check "$stage/tests/finance-android-file-smoke.cjs"
+          node "$stage/tests/finance-android-file-smoke.cjs"
+          php -l "$stage/public/finance.php"
+          test "$(cat "$stage/public/VERSION")" = "3.7.68"
+          python3 - <<'PY'
+          from pathlib import Path
+          stage=Path('adminigreja-updates/staging/3.7.68/public')
+          php=(stage/'finance.php').read_text()
+          script=(stage/'assets/finance-ocr-3752.js').read_text()
+          assert 'data-fiscal-file-help' in php
+          assert 'data-fiscal-reselect' in php
+          assert '/assets/finance-ocr-3752.js?v=3.7.68' in php
+          assert 'data-extra-attachment-picker' in php
+          assert 'finance-manual-extras-3758.js' in php
+          assert 'data-finance-attachment="1"' in php and 'data-fiscal-autofill="1"' in php
+          assert 'input.files=dt.files' in script
+          assert 'await source.arrayBuffer()' in script
+          assert 'lastFile=stable' in script
+          assert 'input.value=' in script
+          assert 'isUnavailable' in script
+          assert 'localFileAdvice' in script and 'Downloads' in script
+          assert "if(preparing||pending)" in script
+          print('PASS finance: AI scanner, original receipt attachment, extra attachments and manual entry retained')
+          PY
+      - name: Publish tested incremental 3.7.68 release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,io,json,tarfile
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.68':
+              print('Already published');raise SystemExit(0)
+          assert current['version']=='3.7.67', 'Unexpected previous version '+current['version']
+          stage=root/'staging/3.7.68'
+          fileset=['public/finance.php','public/assets/finance-ocr-3752.js','public/VERSION']
+          blobs={p:(stage/p).read_bytes() for p in fileset}
+          archive=Path('/tmp/igreja-master-3768.tar.gz')
+          with tarfile.open(archive,'w:gz') as tar:
+              for path in fileset:tar.add(stage/path,arcname=path,recursive=False)
+          data=archive.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
+              for p in fileset:assert tar.extractfile(p).read()==blobs[p]
+          encoded=base64.b64encode(data);parts=[]
+          for index in range(0,len(encoded),60000):
+              part=f'releases/v3.7.68.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[index:index+60000])
+              parts.append(part)
+          latest={
+              'version':'3.7.68','min_php':'8.1','encoding':'base64','parts':parts,
+              'sha256':hashlib.sha256(data).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(blobs[p]).hexdigest()} for p in fileset],
+              'notes':[
+                  'Tesouraria: corrige leitura de PDFs selecionados no Android e no WhatsApp quando o arquivo é temporário.',
+                  'Faz cópia local de bytes assim que o documento é escolhido e mantém essa cópia para leitura por IA e para anexar ao lançamento.',
+                  'Se Android não liberar o arquivo, orienta a salvá-lo em Downloads e selecionar novamente; não exibe erro interno em inglês.',
+                  'Evita tentar enviar um arquivo sem conteúdo e bloqueia a gravação enquanto prepara a cópia do PDF.',
+                  'Mantém preenchimento manual, leitura fiscal por IA, detecção de duplicidade e envio de até oito documentos adicionais.',
+                  'Teste automatizado com PDF de memória e arquivo temporário simulado que retorna NotFoundError, sem envio de documento inválido.',
+                  'A correção não altera os lançamentos, cadastros ou valores existentes; requer instalação pelo Painel Master.'
+              ]
+          }
+          (root/'latest.json').write_text(json.dumps(latest,ensure_ascii=False,indent=2)+'\n')
+          print('Built release SHA256:',latest['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.68.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.68: safe Android PDF attachments"
+          git pull --rebase origin main
+          git push origin HEAD:main
