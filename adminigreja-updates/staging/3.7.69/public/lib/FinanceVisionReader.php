@@ -187,7 +187,10 @@ PROMPT;
         if($bankRaw!==null&&!$bank)$warnings[]='O identificador do comprovante não estava legível ou não passou nas regras de validação.';
         // Bank-issued references take precedence for proofs and receipts;
         // 44-digit tax access keys still take precedence for fiscal invoices.
-        $number=$key?:($bank?:FinanceFiscalScan::cleanDocumentNumber($get('short_number')??''));
+        $number=$key?:($bank?:(
+            in_array($documentType,['invoice','fiscal_coupon'],true)
+                ?FinanceFiscalScan::cleanDocumentNumber($get('short_number')??''):null
+        ));
         $issuer=$get('issuer');
         if($issuer)$issuer=mb_substr(preg_replace('/\s+/u',' ',$issuer)??$issuer,0,190);
         $description=$get('description');
