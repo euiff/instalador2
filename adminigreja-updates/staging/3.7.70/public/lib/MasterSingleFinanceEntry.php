@@ -9,9 +9,8 @@ final class MasterSingleFinanceEntry
     public function exclude(Auth $auth,string $cid,string $entryId,string $confirmId,string $reason,string $actor): array
     {
         // Preserve original Master-only operation and mode support.
-        if(!$auth->isSuperAdmin()||!$auth->isMasterSupportMode()
-            ||(string)$auth->requireLogin()['id']!==$actor)
-            throw new RuntimeException('Somente o Master em modo suporte pode excluir administrativamente um lançamento.');
+        if(!$auth->isSuperAdmin()||(string)$auth->requireLogin()['id']!==$actor)
+            throw new RuntimeException('Somente o Master pode excluir administrativamente um lançamento.');
         return $this->performExclusion($cid,$entryId,$confirmId,$reason,$actor,'master');
     }
 
