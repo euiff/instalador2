@@ -1,38 +1,38 @@
 {
-  "version": "3.7.70",
+  "version": "3.7.71",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.70.01.b64.txt"
+    "releases/v3.7.71.01.b64.txt"
   ],
-  "sha256": "60762b5dc9ca69d3c45a29722d05485c8fcd5b339bf81c5c0f3ee86619aeb42e",
+  "sha256": "60ec36bfa5ef5c9cdd86e9529c6cbcfb5b92864b0feb1c4f301f5baaf325a3a2",
   "files": [
     {
-      "path": "public/finance.php",
-      "sha256": "d755919fe74e36eb9c4f83b263a29cb544ed0399180c33427ed1f56e25ec9cb0"
+      "path": "public/users.php",
+      "sha256": "764f3fce76b514c408dcc1d28ef34a1ab68b016bd290d6770486bcee10ef63c3"
     },
     {
-      "path": "public/lib/MasterSingleFinanceEntry.php",
-      "sha256": "4328b4a19678f5612e6401eababb9b98ecf805aa7f994b44221ebc6979afd7f4"
+      "path": "public/members.php",
+      "sha256": "353eea2c48bc1ae979da4f8d97f94187d6051175f664e02ff1b1541e5673ffc1"
     },
     {
-      "path": "public/lib/ChurchFinanceExclusionUi.php",
-      "sha256": "f9bdb2e08c81c73c28a5341522ed3c8ebf5d7de497e78225ffb5f301e1804499"
+      "path": "public/assets/users-member-autofill.js",
+      "sha256": "f54398db9fc25634ccd89380974bc05c59e6e477c0388e03322f8cabf28ccead"
     },
     {
       "path": "public/VERSION",
-      "sha256": "892463b63c198a531d11a3895c36c4b3fa54d6524690eb17fa95e0e27b64a7a7"
+      "sha256": "cedb22356def4c739887007dce597e592fa56cb6fffd68843b822f230e64de5f"
     }
   ],
   "notes": [
-    "Tesouraria: botão Estornar substituído pelo botão Excluir lançamento, também na listagem para celular.",
-    "Novo poder exclusivo para Pastor, Tesoureiro e Proprietário da mesma igreja; Master mantém exclusão de suporte já existente.",
-    "Exclusão requer confirmação e motivo obrigatório, verificados na interface e novamente no servidor.",
-    "O lançamento sai do saldo e dos relatórios ativos. Preserva comprovantes, recibos, histórico e backup privado verificado por SHA-256.",
-    "Ação registra usuário responsável, justificativa, data e identificação do lançamento na auditoria.",
-    "Proteção de períodos bloqueados, fechamentos, conciliações e contas a pagar: correção especial exigida antes de excluir.",
-    "Líderes, secretários, contadores e membros não recebem permissão; a igreja de outro cliente nunca é afetada.",
-    "Teste automático com banco MySQL para Pastor/Tesoureiro/Proprietário, recusas por perfil, duplicidade, isolamento, anexos e saldos.",
-    "Nenhum lançamento existente foi excluído na publicação; instale a versão no Master para disponibilizar a função."
+    "Lista de membros: botão Definir cargo / acesso para selecionar qualquer membro ativo da própria igreja.",
+    "Seleção abre Usuários e Permissões com o membro já escolhido, sem duplicar cadastro de pessoas.",
+    "Cargos principais: Tesoureiro Geral, Contador, Pastor, Secretária, Administrador e lideranças. Mostra quais módulos cada perfil acessa.",
+    "Login existente é reutilizado sem alterar a senha; novo login só exige e-mail pessoal e senha inicial quando necessário.",
+    "Líder de departamento escolhe explicitamente os departamentos; a escolha não libera automaticamente a Tesouraria Geral.",
+    "Lista mostra o perfil de login do membro separadamente do cargo registrado na ficha pessoal.",
+    "Continua bloqueada concessão de perfis não autorizados, promoção do próprio usuário e transferência do proprietário.",
+    "Testes PHP e JavaScript: membro preselecionado, contador consulta, tesoureiro financeiro, senha preservada e permissão de liderança.",
+    "Atualização publicada no painel Master; nenhum acesso real foi atribuído automaticamente à igreja."
   ]
 }
