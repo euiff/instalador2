@@ -29,6 +29,7 @@ jobs:
           stage=adminigreja-updates/staging/3.7.69
           php -l "$stage/public/lib/FinanceFiscalScan.php"
           php -l "$stage/public/lib/FinanceVisionReader.php"
+          php -l "$stage/public/lib/FinanceVisionConfig.php"
           php -l "$stage/public/finance-scan.php"
           php -l "$stage/public/finance.php"
           php -l "$stage/tests/financial-reference-smoke.php"
