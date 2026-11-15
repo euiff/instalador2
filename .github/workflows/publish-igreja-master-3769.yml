@@ -1,0 +1,124 @@
+name: Publish Igreja Master 3.7.69 Bank Receipt References
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3769.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_sqlite,mbstring,iconv
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Pix E2E, bank-auth, receipt and file fingerprint duplicates
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.69
+          php -l "$stage/public/lib/FinanceFiscalScan.php"
+          php -l "$stage/public/lib/FinanceVisionReader.php"
+          php -l "$stage/public/finance-scan.php"
+          php -l "$stage/public/finance.php"
+          php -l "$stage/tests/financial-reference-smoke.php"
+          node --check "$stage/public/assets/finance-ocr-3752.js"
+          php "$stage/tests/financial-reference-smoke.php"
+          test "$(cat "$stage/public/VERSION")" = "3.7.69"
+          python3 - <<'PY'
+          from pathlib import Path
+          stage=Path('adminigreja-updates/staging/3.7.69/public')
+          php=(stage/'finance.php').read_text()
+          scan=(stage/'finance-scan.php').read_text()
+          reader=(stage/'lib/FinanceVisionReader.php').read_text()
+          rules=(stage/'lib/FinanceFiscalScan.php').read_text()
+          js=(stage/'assets/finance-ocr-3752.js').read_text()
+          assert 'id="finance-entry-reference"' in php
+          assert 'name="document_number"' in php
+          assert 'name="bank_reference_type"' in php
+          assert 'FinanceFiscalScan::fileReference($fileHash)' in php
+          assert 'FinanceFiscalScan::duplicates($pdo,$cid' in php
+          assert 'FinanceFiscalScan::isPixE2E' in php
+          assert '/assets/finance-ocr-3752.js?v=3.7.69' in php
+          assert 'finance-manual-extras-3758.js' in php
+          assert 'data-extra-attachments' in php
+          assert 'data-finance-attachment="1"' in php
+          assert 'bank_reference_type' in reader and 'bank_name' in reader
+          assert 'NUNCA invente ID' in reader
+          assert "if($type==='pix_e2e')return null" in rules
+          assert 'isFileReference' in rules and 'isPixE2E' in rules
+          assert 'WHERE e.church_id=?' in rules and 'd.church_id=?' in rules
+          assert 'FinanceFiscalScan::fileReference($hash)' in scan
+          assert 'bank_reference_type' in js
+          assert 'data-fiscal-reselect' in php
+          print('PASS: financial identity, strong duplication, file fallback and existing uploads preserved')
+          PY
+      - name: Publish verified incremental update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,io,json,tarfile
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.69':
+              print('Already published');raise SystemExit(0)
+          assert current['version']=='3.7.68', 'Unexpected previous version '+current['version']
+          stage=root/'staging/3.7.69'
+          paths=[
+              'public/lib/FinanceFiscalScan.php',
+              'public/lib/FinanceVisionReader.php',
+              'public/finance-scan.php',
+              'public/finance.php',
+              'public/assets/finance-ocr-3752.js',
+              'public/VERSION',
+          ]
+          files={p:(stage/p).read_bytes() for p in paths}
+          tar=Path('/tmp/igreja-master-3769.tar.gz')
+          with tarfile.open(tar,'w:gz') as ar:
+              for p in paths:ar.add(stage/p,arcname=p,recursive=False)
+          payload=tar.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as ar:
+              for p in paths:assert ar.extractfile(p).read()==files[p],p
+          raw=base64.b64encode(payload)
+          parts=[]
+          for i in range(0,len(raw),60000):
+              name=f'releases/v3.7.69.{len(parts)+1:02d}.b64.txt'
+              (root/name).write_bytes(raw[i:i+60000]);parts.append(name)
+          meta={
+              'version':'3.7.69','min_php':'8.1','encoding':'base64','parts':parts,
+              'sha256':hashlib.sha256(payload).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(files[p]).hexdigest()} for p in paths],
+              'notes':[
+                  'Leitura fiscal com IA identifica e preenche referência bancária real: Pix EndToEnd ID, autenticação, ID de transação e referência do recibo.',
+                  'Referência bancária e número de documento ficam em destaque no novo lançamento, com explicação da origem.',
+                  'Bloqueia repetição de EndToEnd ID Pix ou do mesmo arquivo, mesmo que o arquivo tenha outro nome ou a leitura de valor seja diferente.',
+                  'Códigos bancários não globalmente únicos só bloqueiam quando referência e dados de operação combinam; códigos curtos isolados geram aviso.',
+                  'Sem código confiável, gera ID interno ARQ- a partir do hash do arquivo; este código não é falsamente apresentado como autenticação bancária.',
+                  'Verifica duplicidade novamente no servidor antes de gravar, respeitando o isolamento entre igrejas e identificador de requisição.',
+                  'Mantém leitura por IA, envio Android, até oito anexos manuais, recibos e Tesouraria Geral/departamentos.',
+                  'Teste PHP com banco SQLite de colisões Pix E2E, autenticação bancária, contas distintas e CPF/CNPJ rejeitados como ID bancário.',
+                  'Atualização publicada no canal Master, ainda não aplicada nem testada diretamente na hospedagem da igreja.'
+              ]
+          }
+          (root/'latest.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n')
+          print('Release verified:',meta['version'],meta['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.69.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.69 bank and receipt duplicate reference recognition"
+          git pull --rebase origin main
+          git push origin HEAD:main
