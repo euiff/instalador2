@@ -1,32 +1,43 @@
 {
-  "version": "3.7.61",
+  "version": "3.7.62",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.61.01.b64.txt"
+    "releases/v3.7.62.01.b64.txt"
   ],
-  "sha256": "8b663a4d76584b4c1b8a44599a5427b50980c3d5d3d41cd63d086967765d9c7d",
+  "sha256": "08572a36f7d6eba2171c23381ae8dd7904aa0960c6d08f55842815cfa86977ae",
   "files": [
     {
-      "path": "public/finance.php",
-      "sha256": "37ca72c712af2ff82dabdf0af1c70b0300c0e0d25906c62079088fb13f8e89f2"
+      "path": "public/master.php",
+      "sha256": "55a188f8761dd8f5f3d8e14747c44f09448c3faceaad33194c7cdaba3075f2b8"
     },
     {
-      "path": "public/assets/finance-entry-wizard-3760.js",
-      "sha256": "e170c7fd467575914e65f5f84dcc54bb6936dcd4f5913d2671741cdd15d2a73d"
+      "path": "public/master-finance-import.php",
+      "sha256": "7ba502d6fbc86ff295be6b5e86e3384135ce58d0b434bd323dae06b9cad07768"
+    },
+    {
+      "path": "public/lib/MasterFinanceImport.php",
+      "sha256": "dd0a316579b4593df65f95ed224b87b19639137774e25e2626e50f349997800d"
+    },
+    {
+      "path": "public/lib/FinancePeriodGuard.php",
+      "sha256": "9df2240fc5825a53e9c4005f1d3436de8eea12658ebca4099e5eebd810d86687"
     },
     {
       "path": "public/VERSION",
-      "sha256": "5d12cd2b7b54a2b326c645f7f2dcddea59aafd7c6ccedbf8a2d964e6ea51eab0"
+      "sha256": "bbcb745f592fbcb2d065afdb9332fbf74da12ba3149d4b367ba73fe1ebff9dae"
     }
   ],
   "notes": [
-    "Correção de visibilidade: formulário simples da Tesouraria fica aberto logo abaixo das três modalidades.",
-    "Campo 1 destacado para anexar cupom, foto ou PDF e iniciar leitura fiscal por IA.",
-    "Campo 2 destacado para selecionar até oito documentos adicionais vinculados ao mesmo lançamento, sem IA.",
-    "Arquivos adicionais permanecem separados do valor e não geram transações duplicadas.",
-    "Orientações visíveis e rótulos claros para navegação no navegador e no APK Android.",
-    "A leitura por IA continua opcional; lançamento pode ser preenchido manualmente.",
-    "Preservadas as funções e proteções do suporte Master, Tesouraria Geral e caixas departamentais."
+    "Master: novo botão Importar finanças em cada igreja e painel da igreja selecionada.",
+    "Importação de backup Excel XLSX ou CSV do sistema anterior com prévia antes de gravar.",
+    "Respeita os dados originais: Entrada/Saída, data, valor, histórico, lançamento contábil, contribuinte, referência e pagamento.",
+    "Mostra quantidade e somas por caixa; permite mapear caixas para existentes, criar caixa geral ou caixa de departamento.",
+    "Proteção: confirmação do nome da igreja, CSRF, somente Master, isolação entre igrejas, transação única e auditoria.",
+    "Prevenção contra duplicações: só importa se a igreja estiver sem lançamentos. A importação não apaga nada.",
+    "Membros são vinculados somente por nome único dentro da igreja. Nomes não encontrados continuam registrados.",
+    "Registros com valor zero são preservados sem efeito no saldo; caixas #N/A exigem mapeamento explícito.",
+    "Não transfere fotos/PDFs inexistentes no Excel; referências textuais são preservadas.",
+    "Validado com 7.589 registros sintéticos em banco MySQL, incluindo isolamento, reversão de erros e bloqueio de reimportação."
   ]
 }
