@@ -105,6 +105,34 @@ $directoryError=null;
 try{$listing=$directory->page($_GET,max(1,(int)($_GET['page']??1)));}
 catch(InvalidArgumentException $e){$directoryError=$e->getMessage();http_response_code(400);$listing=['rows'=>[],'total'=>0,'pages'=>1,'page'=>1,'filters'=>$directory->filters([])];}
 $members=$listing['rows'];$filters=$listing['filters'];
+$canAssignSystemRoles=$auth->can('manage_users');
+$memberAccessRoles=[];
+if($members){
+    $memberIds=array_values(array_unique(array_map(
+        static fn(array $member):string=>(string)$member['id'],$members
+    )));
+    $placeholders=implode(',',array_fill(0,count($memberIds),'?'));
+    $q=$pdo->prepare("SELECT person_id,church_role,is_owner FROM church_members
+        WHERE church_id=? AND person_id IN ($placeholders)");
+    $q->execute(array_merge([(string)$cid],$memberIds));
+    foreach($q->fetchAll(PDO::FETCH_ASSOC) as $linked){
+        $memberAccessRoles[(string)$linked['person_id']]=!empty($linked['is_owner'])
+            ?'owner':(string)$linked['church_role'];
+    }
+}
+$memberAccessNames=[
+    'owner'=>'Responsável pela igreja',
+    'admin'=>'Administrador',
+    'pastor'=>'Pastor',
+    'treasurer'=>'Tesoureiro Geral',
+    'accountant'=>'Contador',
+    'secretary'=>'Secretária',
+    'department_leader'=>'Líder de departamento',
+    'group_leader'=>'Líder de grupo/célula',
+    'teacher'=>'Professor',
+    'kids_worker'=>'Equipe Kids',
+    'member'=>'Membro (portal)',
+];
 $search=$filters['q'];$status=$filters['status'];$filterCongregation=$filters['congregation_id'];$filterCategory=$filters['category_id'];$filterFamily=$filters['family_id'];
 $filterDepartment=$filters['department_id'];$filterBirthMonth=$filters['birth_month'];$filterBaptism=$filters['baptism'];
 if(($_GET['export']??'')==='csv'&&!$directoryError){
@@ -123,11 +151,14 @@ View::header('Membros', $auth, 'members.php');
 <?php if ($success): ?><div class="alert alert-success"><?=e($success)?></div><?php endif; ?>
 <div class="grid two-col">
 <section class="card card-pad">
-  <div class="page-head" style="margin-bottom:14px"><div><h1 style="font-size:16px">Lista de membros</h1><p><?=$listing['total']?> resultado(s) · página <?=$listing['page']?> de <?=$listing['pages']?></p></div><a class="btn btn-primary" href="members.php#cadastro">+ Novo membro</a></div>
+  <div class="page-head" style="margin-bottom:14px"><div><h1 style="font-size:16px">Lista de membros</h1><p><?=$listing['total']?> resultado(s) · página <?=$listing['page']?> de <?=$listing['pages']?></p></div><div class="actions"><a class="btn btn-primary" href="members.php#cadastro">+ Novo membro</a><?php if($canAssignSystemRoles):?><a class="btn btn-light" href="/users.php#definir-cargo-acesso">Definir cargos e acessos</a><?php endif?></div></div>
+  <?php if($canAssignSystemRoles):?>
+  <p class="muted">Para tornar um membro Tesoureiro Geral, Contador, Pastor, Secretária ou líder, use <strong>Definir cargo / acesso</strong> na linha da pessoa. O cadastro do membro será reaproveitado, sem duplicação.</p>
+  <?php endif?>
   <form method="get" class="toolbar member-directory-filters"><input class="input search" name="q" value="<?=e($search)?>" placeholder="Buscar por nome, telefone, e-mail ou CPF"><select class="select" name="congregation_id" style="width:auto"><option value="">Todas as congregações</option><?php foreach($congregations as $cg):?><option value="<?=e($cg['id'])?>" <?=$filterCongregation===$cg['id']?'selected':''?>><?=e($cg['name'])?><?=$cg['active']?'':' (inativa)'?></option><?php endforeach?></select><select class="select" name="status" style="width:auto"><option value="active" <?=$status==='active'?'selected':''?>>Ativos</option><option value="inactive" <?=$status==='inactive'?'selected':''?>>Inativos</option><option value="all" <?=$status==='all'?'selected':''?>>Todos</option></select><select class="select" name="category_id"><option value="">Todas as categorias</option><?php foreach($personCategories as $c):?><option value="<?=e($c['id'])?>" <?=$filterCategory===$c['id']?'selected':''?>><?=e($c['name'])?></option><?php endforeach?></select><select class="select" name="family_id"><option value="">Todas as famílias</option><?php foreach($families as $f):?><option value="<?=e($f['id'])?>" <?=$filterFamily===$f['id']?'selected':''?>><?=e($f['name'])?></option><?php endforeach?></select><select class="select" name="department_id" aria-label="Departamento"><option value="">Todos os departamentos</option><?php foreach($directoryDepartments as $d):?><option value="<?=e($d['id'])?>" <?=$filterDepartment===$d['id']?'selected':''?>><?=e($d['name'])?><?=$d['active']?'':' (inativo)'?></option><?php endforeach?></select><select class="select" name="birth_month" aria-label="Mês de aniversário"><option value="">Aniversariantes: todos os meses</option><?php foreach([1=>'Janeiro',2=>'Fevereiro',3=>'Março',4=>'Abril',5=>'Maio',6=>'Junho',7=>'Julho',8=>'Agosto',9=>'Setembro',10=>'Outubro',11=>'Novembro',12=>'Dezembro'] as $n=>$label):?><option value="<?=$n?>" <?=$filterBirthMonth===(string)$n?'selected':''?>><?=e($label)?></option><?php endforeach?></select><select class="select" name="baptism" aria-label="Batismo"><?php foreach(['all'=>'Batismo: todos','yes'=>'Batizados','no'=>'Não informado / não batizados'] as $key=>$label):?><option value="<?=e($key)?>" <?=$filterBaptism===$key?'selected':''?>><?=e($label)?></option><?php endforeach?></select><button class="btn btn-primary">Buscar</button><button class="btn btn-light" name="export" value="csv">Exportar resultados CSV</button><a class="btn btn-light" href="<?=e($printUrl)?>" target="_blank" rel="noopener">Imprimir resultados / PDF</a><a class="btn btn-light" href="/members.php">Limpar filtros</a></form>
   <p class="muted">O filtro de departamento considera os participantes vinculados e o departamento informado no cadastro. CSV e impressão incluem todos os resultados dos filtros.</p><div class="table-wrap"><table class="table"><thead><tr><th>Membro</th><th>Telefone</th><th>Congregação</th><th>Função</th><th>Categoria / família</th><th>Status</th><th></th></tr></thead><tbody>
   <?php if (!$members): ?><tr><td colspan="7"><div class="empty">Nenhum membro encontrado.</div></td></tr><?php endif; ?>
-  <?php foreach($members as $m): ?><tr><td><a href="member-profile.php?id=<?=e($m['id'])?>"><strong><?=e($m['name'])?></strong></a><?php if($m['email']): ?><div class="muted" style="font-size:10px"><?=e($m['email'])?></div><?php endif; ?></td><td><?=e($m['phone'])?></td><td><?=e($m['congregation_name'] ?: 'Sede/Não informada')?></td><td><?=e($m['role'] ?: '—')?></td><td><?=e($m['person_category_name']?:'—')?><div class="muted"><?=e($m['family_name']?:'')?></div></td><td><span class="badge <?=$m['active']?'ok':'off'?>"><?=$m['active']?'Ativo':'Inativo'?></span></td><td><div class="actions"><a class="btn btn-light" style="padding:7px 9px" href="member-profile.php?id=<?=e($m['id'])?>">Perfil</a><a class="btn btn-light" style="padding:7px 9px" href="?edit=<?=e($m['id'])?>#cadastro">Editar</a></div></td></tr><?php endforeach; ?>
+  <?php foreach($members as $m): ?><tr><td><a href="member-profile.php?id=<?=e($m['id'])?>"><strong><?=e($m['name'])?></strong></a><?php if($m['email']): ?><div class="muted" style="font-size:10px"><?=e($m['email'])?></div><?php endif; ?></td><td><?=e($m['phone'])?></td><td><?=e($m['congregation_name'] ?: 'Sede/Não informada')?></td><td><?=e($m['role'] ?: '—')?><?php if(isset($memberAccessRoles[(string)$m['id']])):?><div style="font-size:10px;margin-top:4px"><span class="badge ok">Acesso: <?=e($memberAccessNames[$memberAccessRoles[(string)$m['id']]]??$memberAccessRoles[(string)$m['id']])?></span></div><?php endif?></td><td><?=e($m['person_category_name']?:'—')?><div class="muted"><?=e($m['family_name']?:'')?></div></td><td><span class="badge <?=$m['active']?'ok':'off'?>"><?=$m['active']?'Ativo':'Inativo'?></span></td><td><div class="actions"><a class="btn btn-light" style="padding:7px 9px" href="member-profile.php?id=<?=e($m['id'])?>">Perfil</a><a class="btn btn-light" style="padding:7px 9px" href="?edit=<?=e($m['id'])?>#cadastro">Editar</a><?php if($canAssignSystemRoles && !empty($m['active'])):?><a class="btn btn-primary" style="padding:7px 9px" href="/users.php?member=<?=e(rawurlencode((string)$m['id']))?>#definir-cargo-acesso">Definir cargo / acesso</a><?php endif?></div></td></tr><?php endforeach; ?>
   </tbody></table></div>
   <nav class="actions" aria-label="Páginas da lista de membros" style="margin-top:16px"><?php foreach(['Anterior'=>-1,'Próxima'=>1] as $label=>$offset):$next=$listing['page']+$offset;if($next<1||$next>$listing['pages'])continue;?><a class="btn btn-light" href="?<?=e(http_build_query([...$filters,'page'=>$next]))?>"><?=e($label)?></a><?php endforeach?><span>Página <?=$listing['page']?> de <?=$listing['pages']?> · <?=$listing['total']?> membros</span></nav>
 </section>
