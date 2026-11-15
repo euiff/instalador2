@@ -1,0 +1,237 @@
+name: Publish Igreja Master 3.7.67 Plural Types and Signed Expenses
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3767.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mastertest
+          MYSQL_DATABASE: master_finance_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, iconv, zip, xml, simplexml, pdo_mysql
+          coverage: none
+      - name: Validate PHP and migration safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          s=adminigreja-updates/staging/3.7.67
+          php -l "$s/public/master-finance-import.php"
+          php -l "$s/public/lib/MasterFinanceImport.php"
+          php -l "$s/public/lib/FinancePeriodGuard.php"
+          php -l "$s/tests/master-import-plural-negative-test.php"
+          test "$(cat "$s/public/VERSION")" = "3.7.67"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.67/public')
+          page=(root/'master-finance-import.php').read_text()
+          importer=(root/'lib/MasterFinanceImport.php').read_text()
+          assert "requireRole('super_admin')" in page and "verify_csrf()" in page
+          assert 'ack_missing_description' in page and 'ack_rounded' in page
+          assert 'ack_zero' in page and 'ack_unknown' in page
+          assert 'enctype="multipart/form-data"' in page and 'name="mapping[' in page
+          assert 'rounded_value_lines' in importer and 'missing_description_lines' in importer
+          assert 'SEM DESCRIÇÃO NO BACKUP' in importer
+          assert 'PHP_ROUND_HALF_UP' in importer and "is_finite($amount)" in importer
+          assert "'ç'=>'c'" in importer and "'ã'=>'a'" in importer
+          assert "SELECT id FROM finance_entries WHERE church_id=?" in importer
+          assert 'beginTransaction()' in importer and 'rollBack()' in importer
+          assert 'platform_audit_logs' in importer
+          assert 'DELETE FROM finance_entries' not in importer
+          assert "INSERT INTO church_registers" in importer
+          assert "INSERT INTO ministry_departments" in importer
+          assert 'ensureMultipleAccountsPerDepartment' in importer
+          assert 'DROP INDEX uq_department_account' in importer
+          assert 'ADD UNIQUE KEY uq_department_account (church_id,department_id,name)' in importer
+          assert 'sort($columnSet)' in importer
+          assert (root/'lib/FinancePeriodGuard.php').is_file()
+          assert "SHOW INDEX FROM finance_accounts WHERE Key_name='uq_department_account'" in importer
+          assert 'SELECT COUNT(*) FROM finance_entries WHERE church_id=?' in importer
+          assert "choice==='auto'" in importer
+          assert "'suggested_departments' =>" in importer
+          assert "'categories' =>" in importer
+          assert "['entrada','entradas']" in importer
+          assert "['saida','saidas']" in importer
+          assert "signed_expense_in_source" in importer
+          assert "negative_expense_rows_normalized" in importer
+          assert "signed_expense_lines" in importer
+          assert "ack_signed_expenses" in page
+          assert 'value="auto"' in page
+          assert "preview['categories']" in page
+          print('PASS static security and accounting validation')
+          PY
+      - name: Generate anonymized XLSX with actual export conventions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from decimal import Decimal,ROUND_HALF_UP
+          from pathlib import Path
+          from xml.sax.saxutils import escape
+          import zipfile
+          headers=[
+              'type','DESCRIÇÃO DO LANÇAMENTO','DATA','VALOR','CONTA/CAIXA DESTINO',
+              'MEMBRO CONTRIBUINTE','Nº documento / cupom / referência Pix',
+              'Forma de pagamento','Lançamento Contábil *'
+          ]
+          boxes=[
+              '3.2 - DÍZIMOS - CX IGREJA','3.1 - OFERTAS CX. IGREJA',
+              '4.2 - CONTRUÇÃO IDB CB','1.2 - DPTO MULHER','1.3 - DPTO JOVEM',
+              '2.4 - AÇÃO SOCIAL','4.3 - INVESTIMENTO NO RÁDIO',
+              '2.6 - MIN. ENSINO','1.5 - DPTO INFANTIL',
+              '2.0 - MIN. CASAIS','4.4 - RETIRO GERAL - 2023',
+              '2.3 - MIN. LOUVOR','4.1 - JANTAR 23/24','2.2 - MIN. DANÇA',
+              '1.4 - DPTO PRÉ ADOLESCENTES','5.0 - CANTINA',
+              '2.2.1 - MIN. LIVE & PROJEÇÃO','6.0 - PROJ. CASA DO LEVITA',
+              '2.5 - MISSÕES & EVANGELISMO','1.1 - DPTO HOMEM',
+              '2.1 - MIN. MARKETING'
+          ]
+          def addr(n):
+              out=''
+              while n:
+                  n,mod=divmod(n-1,26)
+                  out=chr(65+mod)+out
+              return out
+          def cell(n,row,val):
+              ref=addr(n)+str(row)
+              if isinstance(val,str):
+                  return '<c r="'+ref+'" t="inlineStr"><is><t>'+escape(val)+'</t></is></c>'
+              return '<c r="'+ref+'"><v>'+str(val)+'</v></c>'
+          def cents(val):
+              return int((Decimal(val).quantize(Decimal('0.01'),rounding=ROUND_HALF_UP))*100)
+          xml=['<?xml version="1.0" encoding="UTF-8"?>',
+               '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>']
+          xml.append('<row r="1">'+''.join(cell(k+1,1,s) for k,s in enumerate(headers))+'</row>')
+          in_sum=out_sum=0
+          income_types=expense_types=rounding=0
+          for i in range(7567):
+              income=i<5895
+              if i<5:
+                  value='0'
+              elif 100<=i<282:
+                  value='129.91999999999999'
+                  rounding+=1
+              elif i==5894:
+                  value=str(Decimal(139301657-in_sum)/100)
+              elif i==7566:
+                  value='-'+str(Decimal(137596657-out_sum)/100)
+              else:
+                  value='10.55' if income else '-10.55'
+              absolute=abs(cents(value))
+              if income:
+                  income_types+=1
+                  in_sum+=absolute
+              else:
+                  assert value.startswith('-')
+                  expense_types+=1
+                  out_sum+=absolute
+              # This is entirely synthetic: never commit member or transaction
+              # records from the original uploaded spreadsheet.
+              if income:
+                  category=['DÍZIMOS','OFERTAS GERAIS','ÁGUA','ENERGIA ELÉTRICA','OUTRAS DESPESAS'][i%5]
+              else:
+                  category=['DÍZIMOS','OFERTAS GERAIS','OUTRAS DESPESAS','ENERGIA ELÉTRICA'][i%4]
+              data=[
+                  'Entradas' if income else 'Saídas',
+                  'Movimentação de teste anônima '+str(i+1),
+                  46324 if i==7566 else 44544,
+                  value,
+                  '#N/A' if i==6962 else boxes[i%21],
+                  'Pessoa de Teste' if i==100 else '',
+                  'simulado','Outro',category,
+              ]
+              r=i+2
+              cells=[]
+              for col,val in enumerate(data,1):
+                  if col in (3,4):
+                      cells.append('<c r="'+addr(col)+str(r)+'"><v>'+str(val)+'</v></c>')
+                  else:
+                      cells.append(cell(col,r,str(val)))
+              xml.append('<row r="'+str(r)+'">'+''.join(cells)+'</row>')
+          xml.append('</sheetData></worksheet>')
+          assert income_types==5895 and expense_types==1672
+          assert rounding==182
+          assert in_sum==139301657 and out_sum==137596657
+          out=Path('/tmp/master-finance-test.xlsx')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
+              z.writestr('xl/worksheets/sheet1.xml',''.join(xml))
+          print('PASS synthetic 7567 rows, plural types, 1672 negatives, 182 precision artifacts, R$17050 net')
+          PY
+      - name: Integration test PHP XLSX import with MySQL
+        shell: bash
+        run: |
+          set -euo pipefail
+          LANG=C LC_ALL=C FINANCE_FIXTURE=/tmp/master-finance-test.xlsx php adminigreja-updates/staging/3.7.67/tests/master-import-plural-negative-test.php
+      - name: Package and publish incremental update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,io,json,tarfile
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.67':
+              print('Already published');raise SystemExit(0)
+          assert current['version']=='3.7.66', 'Unexpected previous version '+current['version']
+          stage=root/'staging/3.7.67'
+          paths=['public/lib/MasterFinanceImport.php','public/master-finance-import.php','public/VERSION']
+          files={p:(stage/p).read_bytes() for p in paths}
+          output=Path('/tmp/igreja-master-3767.tar.gz')
+          with tarfile.open(output,'w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          data=output.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p],p
+          encoded=base64.b64encode(data)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              part=f'releases/v3.7.67.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[i:i+60000]);parts.append(part)
+          manifest={
+            'version':'3.7.67','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(data).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(files[p]).hexdigest()} for p in paths],
+            'notes':[
+              'Corrige importação do Excel legado que utiliza Entradas e Saídas no plural; aceita também Entrada/Saída no singular.',
+              'Normaliza as saídas negativas do sistema antigo para despesas com valor positivo, preservando corretamente a redução do saldo.',
+              'Prévia informa quantidade de saídas negativas e exige conferência do Master antes de gravar.',
+              'Corrige a leitura do backup de 7.567 movimentos: 5.895 entradas e 1.672 saídas, sem alterar nenhuma célula do Excel de origem.',
+              'Teste de integração MySQL com 7.567 linhas sintéticas, R$ 1.393.016,57 em entradas e R$ 1.375.966,57 em saídas.',
+              'Saldos contábeis preservados: total líquido R$ 17.050,00; valores de saída continuam reduzindo o saldo.',
+              'Continua reproduzindo nomes e códigos de caixas, categorias e departamentos, com reversão de transações e auditoria.',
+              'Nenhum dado real da planilha foi publicado no GitHub e nenhuma transferência foi realizada na hospedagem do usuário.'
+
+            ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Release prepared, SHA256',manifest['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.67.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.67: support plural types and signed expense spreadsheets"
+          git pull --rebase origin main
+          git push origin HEAD:main
