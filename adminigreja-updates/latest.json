@@ -1,43 +1,26 @@
 {
-  "version": "3.7.62",
+  "version": "3.7.63",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.62.01.b64.txt"
+    "releases/v3.7.63.01.b64.txt"
   ],
-  "sha256": "08572a36f7d6eba2171c23381ae8dd7904aa0960c6d08f55842815cfa86977ae",
+  "sha256": "8c38dc27f1e8838ff34656a0829f02ce3e798386821d34d0604cac1297865b1d",
   "files": [
     {
-      "path": "public/master.php",
-      "sha256": "55a188f8761dd8f5f3d8e14747c44f09448c3faceaad33194c7cdaba3075f2b8"
-    },
-    {
-      "path": "public/master-finance-import.php",
-      "sha256": "7ba502d6fbc86ff295be6b5e86e3384135ce58d0b434bd323dae06b9cad07768"
-    },
-    {
       "path": "public/lib/MasterFinanceImport.php",
-      "sha256": "dd0a316579b4593df65f95ed224b87b19639137774e25e2626e50f349997800d"
-    },
-    {
-      "path": "public/lib/FinancePeriodGuard.php",
-      "sha256": "9df2240fc5825a53e9c4005f1d3436de8eea12658ebca4099e5eebd810d86687"
+      "sha256": "a4d190c2572bad5131b60c410706e30f081e731b253018b3b84530112c183234"
     },
     {
       "path": "public/VERSION",
-      "sha256": "bbcb745f592fbcb2d065afdb9332fbf74da12ba3149d4b367ba73fe1ebff9dae"
+      "sha256": "ca2939e4752c1d1139c6291bebf9ea25419f37a433decc4675c72f6d448e9960"
     }
   ],
   "notes": [
-    "Master: novo botão Importar finanças em cada igreja e painel da igreja selecionada.",
-    "Importação de backup Excel XLSX ou CSV do sistema anterior com prévia antes de gravar.",
-    "Respeita os dados originais: Entrada/Saída, data, valor, histórico, lançamento contábil, contribuinte, referência e pagamento.",
-    "Mostra quantidade e somas por caixa; permite mapear caixas para existentes, criar caixa geral ou caixa de departamento.",
-    "Proteção: confirmação do nome da igreja, CSRF, somente Master, isolação entre igrejas, transação única e auditoria.",
-    "Prevenção contra duplicações: só importa se a igreja estiver sem lançamentos. A importação não apaga nada.",
-    "Membros são vinculados somente por nome único dentro da igreja. Nomes não encontrados continuam registrados.",
-    "Registros com valor zero são preservados sem efeito no saldo; caixas #N/A exigem mapeamento explícito.",
-    "Não transfere fotos/PDFs inexistentes no Excel; referências textuais são preservadas.",
-    "Validado com 7.589 registros sintéticos em banco MySQL, incluindo isolamento, reversão de erros e bloqueio de reimportação."
+    "Correção: importação Master aceita o cabeçalho DESCRIÇÃO DO LANÇAMENTO da planilha original.",
+    "Normalização segura de caracteres acentuados no Excel e CSV, inclusive quando a hospedagem utiliza locale C.",
+    "Preservadas validação das 9 colunas, conferência dos 7.589 lançamentos, mapeamento dos caixas e confirmação antes de importar.",
+    "Nenhum lançamento existente será apagado automaticamente; mantidas separação por igreja, bloqueio de duplicações e auditoria.",
+    "Teste automático com cabeçalhos portugueses reais em CSV e XLSX."
   ]
 }
