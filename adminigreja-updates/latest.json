@@ -1,38 +1,37 @@
 {
-  "version": "3.7.71",
+  "version": "3.7.72",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.71.01.b64.txt"
+    "releases/v3.7.72.01.b64.txt"
   ],
-  "sha256": "60ec36bfa5ef5c9cdd86e9529c6cbcfb5b92864b0feb1c4f301f5baaf325a3a2",
+  "sha256": "71a8f4f7af7b6c30e6563d6301d1844a879b6288cfda7defff4c665db459786f",
   "files": [
     {
       "path": "public/users.php",
-      "sha256": "764f3fce76b514c408dcc1d28ef34a1ab68b016bd290d6770486bcee10ef63c3"
+      "sha256": "ea635300399a3712b04a1e497649b31d33a1def0655c167d0ebe57a02b4605eb"
     },
     {
-      "path": "public/members.php",
-      "sha256": "353eea2c48bc1ae979da4f8d97f94187d6051175f664e02ff1b1541e5673ffc1"
+      "path": "public/login.php",
+      "sha256": "becde589ca05714adb31863ddbfaa58db8f23cf22b0afc73023b0ba267ec6746"
     },
     {
-      "path": "public/assets/users-member-autofill.js",
-      "sha256": "f54398db9fc25634ccd89380974bc05c59e6e477c0388e03322f8cabf28ccead"
+      "path": "public/lib/ChurchStaffCredentialService.php",
+      "sha256": "6298dc84facd0f7d30f0016dc137a4a7e87e49d2a45a3eb470fd1e22ec40b935"
     },
     {
       "path": "public/VERSION",
-      "sha256": "cedb22356def4c739887007dce597e592fa56cb6fffd68843b822f230e64de5f"
+      "sha256": "50472b7c6d3f67ce2c46206f2fbd4204f9c1708e51137f53162c488939b5e657"
     }
   ],
   "notes": [
-    "Lista de membros: botão Definir cargo / acesso para selecionar qualquer membro ativo da própria igreja.",
-    "Seleção abre Usuários e Permissões com o membro já escolhido, sem duplicar cadastro de pessoas.",
-    "Cargos principais: Tesoureiro Geral, Contador, Pastor, Secretária, Administrador e lideranças. Mostra quais módulos cada perfil acessa.",
-    "Login existente é reutilizado sem alterar a senha; novo login só exige e-mail pessoal e senha inicial quando necessário.",
-    "Líder de departamento escolhe explicitamente os departamentos; a escolha não libera automaticamente a Tesouraria Geral.",
-    "Lista mostra o perfil de login do membro separadamente do cargo registrado na ficha pessoal.",
-    "Continua bloqueada concessão de perfis não autorizados, promoção do próprio usuário e transferência do proprietário.",
-    "Testes PHP e JavaScript: membro preselecionado, contador consulta, tesoureiro financeiro, senha preservada e permissão de liderança.",
-    "Atualização publicada no painel Master; nenhum acesso real foi atribuído automaticamente à igreja."
+    "Corrige criação de acesso de Tesoureiro Geral, Contador, Secretária e demais cargos quando o e-mail já tinha login existente: senha inicial nunca mais é ignorada silenciosamente.",
+    "Se o e-mail já existe e for informada uma nova senha na vinculação, o cadastro avisa claramente que é preciso reutilizar o login e redefinir a senha autorizadamente.",
+    "Novo botão Redefinir senha de acesso em Usuários e permissões, restrito ao responsável, pastor, administrador autorizado ou Master em modo suporte.",
+    "A redefinição exige senha e confirmação, verifica perfil, membro, igreja, proprietário protegido e bloqueia alteração de contas compartilhadas com outras igrejas.",
+    "A função altera somente o hash seguro da senha e mantém o e-mail, cadastro do membro, cargo e todas as permissões existentes.",
+    "Tela de login orienta quem não consegue entrar sobre como solicitar redefinição ao responsável pela igreja.",
+    "Testes MySQL cobrem login real com Auth para Tesoureiro Geral, Contador e Secretaria; alteração, senha antiga inválida, senha nova válida, isolamento e auditoria sem senhas.",
+    "A atualização não redefine senhas de ninguém automaticamente. Responsável deve abrir o login vinculado à igreja e definir nova senha quando necessário."
   ]
 }
