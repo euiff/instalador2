@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/bootstrap.php';
 require_once __DIR__.'/lib/ChurchMemberLeadershipService.php';
+require_once __DIR__.'/lib/ChurchStaffCredentialService.php';
 $user=$auth->requireAbility('manage_users');
 $church=$auth->currentChurch();
 if(!$church)redirect('/logout.php');
@@ -17,7 +18,7 @@ $roleLabels=[
     'admin'=>'Administrador',
     'pastor'=>'Pastor',
     'secretary'=>'Secretaria',
-    'treasurer'=>'Tesouraria',
+    'treasurer'=>'Tesoureiro Geral',
     'accountant'=>'Contador (consulta e conferência)',
     'department_leader'=>'Líder de departamento',
     'group_leader'=>'Líder de grupo/célula',
@@ -38,6 +39,21 @@ function church_user_audit(PDO $pdo,string $userId,string $churchId,string $acti
 }
 
 $allowed=allowed_church_roles($currentRole,$isMaster);
+$roleDescriptions=[
+    'admin'=>'Administração da igreja, pessoas, usuários, tesouraria e configurações; não dá acesso ao painel Master.',
+    'pastor'=>'Acompanha e administra a igreja: membros, secretária, tesouraria geral, departamentos, relatórios e usuários.',
+    'secretary'=>'Secretaria, cadastro de membros, documentos e comunicações; não pode excluir lançamentos da tesouraria.',
+    'treasurer'=>'Tesouraria Geral: entradas, saídas, caixas e departamentos, comprovantes, relatórios e exclusão auditada de lançamentos incorretos.',
+    'accountant'=>'Contabilidade: portal contábil, conferência e relatórios. Não pode realizar ou excluir lançamentos financeiros.',
+    'department_leader'=>'Liderança e tesouraria dos departamentos escolhidos; não recebe o caixa geral.',
+    'group_leader'=>'Gestão dos grupos/células associados ao seu cadastro, sem acesso à tesouraria geral.',
+    'teacher'=>'Acesso às turmas e atividades de ensino sob sua responsabilidade.',
+    'kids_worker'=>'Acesso às atividades infantis autorizadas.',
+    'member'=>'Portal pessoal, avisos e consulta das próprias contribuições; sem acesso administrativo.',
+];
+$roleDetailsForUser=static function(string $role)use($roleDescriptions):string{
+    return $roleDescriptions[$role]??'Acesso configurado para a função selecionada.';
+};
 
 function save_portal_scope(PDO $pdo,string $cid,string $uid,string $role,array $input): void {
     $personId=trim((string)($input['person_id']??''))?:null;
@@ -68,6 +84,20 @@ $q=$pdo->prepare('SELECT m.id,m.name,m.email,cm.user_id linked_user_id,u.email l
     LEFT JOIN users u ON u.id=cm.user_id
     WHERE m.church_id=? AND m.active=1 ORDER BY m.name');
 $q->execute([$cid]);$portalPeople=$q->fetchAll();
+// Only members explicitly registered AND active in this church may be
+// selected by the shortcut from "Lista de membros". GET does not grant roles.
+$memberFromList=(string)($_GET['member']??'');
+if(!preg_match('/^[0-9a-f-]{36}$/iD',$memberFromList))$memberFromList='';
+$selectedPerson=null;
+foreach($portalPeople as $p){
+    if($memberFromList!=='' && (string)$p['id']===$memberFromList){
+        $selectedPerson=$p;break;
+    }
+}
+$selectedRole=(string)($_GET['role']??'');
+if(!in_array($selectedRole,$allowed,true))$selectedRole='';
+$selectedName=$selectedPerson?(string)$selectedPerson['name']:'';
+$selectedEmail=$selectedPerson?(string)(($selectedPerson['login_email']??'')?:($selectedPerson['email']??'')):'';
 $q=$pdo->prepare('SELECT id,name FROM ministry_departments WHERE church_id=? AND active=1 ORDER BY name');$q->execute([$cid]);$portalDepartments=$q->fetchAll();
 $q=$pdo->prepare("SELECT user_id,department_id FROM department_access WHERE church_id=?
         UNION
@@ -77,14 +107,37 @@ $q=$pdo->prepare("SELECT user_id,department_id FROM department_access WHERE chur
 $q->execute([$cid,$cid]);$portalScopes=[];
 foreach($q->fetchAll() as $scope)$portalScopes[$scope['user_id']][]=$scope['department_id'];
 function portal_scope_fields(array $people,array $departments,?string $personId=null,array $ids=[]): void { ?>
-<div class="field"><label>Cadastro pessoal vinculado<select class="select" name="person_id"><option value="">Sem vínculo pessoal</option><?php foreach($people as $p):?><option value="<?=e($p['id'])?>" data-member-name="<?=e($p['name'])?>" data-member-email="<?=e((string)(($p['login_email']??'')?:($p['email']??'')))?>" data-member-login="<?=!empty($p['linked_user_id'])?'1':'0'?>" <?=$personId===$p['id']?'selected':''?>><?=e($p['name'])?></option><?php endforeach?></select></label><small>Usado no portal pessoal e também para reconhecer líderes de grupos/células.</small></div>
-<div class="field"><label>Departamentos autorizados (para líderes)<select class="select" name="department_ids[]" multiple size="4"><?php foreach($departments as $d):?><option value="<?=e($d['id'])?>" <?=in_array($d['id'],$ids,true)?'selected':''?>><?=e($d['name'])?></option><?php endforeach?></select></label><small>Escolha os departamentos que o líder poderá administrar.</small></div>
+<div class="field full"><label>Membro já cadastrado nesta igreja
+  <select class="select" name="person_id" aria-label="Selecionar membro da lista">
+    <option value="">Escolher membro da lista…</option>
+    <?php foreach($people as $p):?>
+    <option value="<?=e($p['id'])?>" data-member-name="<?=e($p['name'])?>" data-member-email="<?=e((string)(($p['login_email']??'')?:($p['email']??'')))?>" data-member-login="<?=!empty($p['linked_user_id'])?'1':'0'?>" <?=$personId===$p['id']?'selected':''?>><?=e($p['name'])?></option>
+    <?php endforeach?>
+  </select>
+</label><small>Selecione a pessoa uma vez. O sistema usa o mesmo cadastro e, caso já exista login, mantém a senha.</small></div>
+<div class="field full" data-user-department-field><label>Departamentos do líder
+  <select class="select" name="department_ids[]" multiple size="4"><?php foreach($departments as $d):?><option value="<?=e($d['id'])?>" <?=in_array($d['id'],$ids,true)?'selected':''?>><?=e($d['name'])?></option><?php endforeach?></select>
+</label><small>Somente para Líder de Departamento: selecione um ou mais departamentos. Não concede a Tesouraria Geral.</small></div>
 <?php }
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
     try{
         verify_csrf();
         $action=(string)($_POST['action']??'');
+
+        if($action==='reset_password'){
+            $email=(new ChurchStaffCredentialService($pdo))->reset(
+                $auth,$cid,
+                trim((string)($_POST['membership_id']??'')),
+                (string)$user['id'],
+                (string)($_POST['new_password']??''),
+                (string)($_POST['confirm_password']??''),
+                (string)($_POST['acknowledge_reset']??'')==='1'
+            );
+            flash('success','Senha redefinida com segurança. O usuário pode entrar com o e-mail '.
+                $email.' e a nova senha cadastrada. O cargo e os dados do membro foram mantidos.');
+            redirect('/users.php');
+        }
 
         if($action==='create'){
             $personId=trim((string)($_POST['person_id']??''));
@@ -114,6 +167,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             try{
                 $q=$pdo->prepare('SELECT id,full_name,active FROM users WHERE email=? LIMIT 1');
                 $q->execute([$email]);$existing=$q->fetch(PDO::FETCH_ASSOC);
+                // Previously a typed "senha inicial" was silently discarded
+                // when the email already existed, making new staff unable to
+                // log in with the password they believed had been created.
+                ChurchStaffCredentialService::preventIgnoredPassword((bool)$existing,$password);
                 if($linked && (!$existing||(string)$linked['user_id']!==(string)$existing['id'])){
                     throw new RuntimeException('O cadastro já possui outro login. Confira o e-mail e solicite correção antes de mudar a função.');
                 }
@@ -183,8 +240,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             }
 
             flash('success',$upgraded
-              ?'Acesso existente atualizado. A liderança foi vinculada ao departamento escolhido, sem criar outro login ou trocar a senha.'
-              :'Acesso criado e vínculos salvos. O líder já pode entrar no departamento autorizado com este login.');
+              ?'Perfil e acesso existentes atualizados. Nenhuma senha foi substituída; utilize a senha anterior ou a opção Redefinir senha ao lado do usuário.'
+              :($existing
+                ?'Cargo vinculado ao login que já existia. A senha anterior permanece; se a pessoa não souber, use Redefinir senha na listagem.'
+                :'Login novo criado com a senha inicial informada. A pessoa já pode entrar com o e-mail cadastrado.'));
             redirect('/users.php');
         }
 
@@ -258,8 +317,8 @@ View::header('Usuários e permissões',$auth,'users.php');
       $role=!empty($r['is_owner'])?'owner':(string)($r['church_role']??'admin');
       $editable=empty($r['is_owner'])&&((string)$r['user_id']!==(string)$user['id']||$isMaster)&&($isMaster||$currentRole==='owner'||in_array($role,$allowed,true));
   ?><tr>
-    <td><strong><?=e($r['full_name']?:$r['email'])?></strong><div class="muted" style="font-size:10px"><?=e($r['email'])?></div></td>
-    <td><span class="badge ok"><?=e($roleLabels[$role]??ucfirst($role))?></span></td>
+    <td><strong><?=e($r['full_name']?:$r['email'])?></strong><div class="muted" style="font-size:10px"><?=e($r['email'])?></div><?php if(!empty($r['person_id'])):?><div class="muted">Vinculado ao cadastro de membro</div><?php endif?></td>
+    <td><span class="badge ok"><?=e($roleLabels[$role]??ucfirst($role))?></span><div class="muted" style="font-size:10px;max-width:260px"><?=e($roleDetailsForUser($role))?></div></td>
     <td><?=!empty($r['active'])?'Ativo':'Inativo'?></td>
     <td>
       <?php if($editable):?>
@@ -269,6 +328,30 @@ View::header('Usuários e permissões',$auth,'users.php');
           <details><summary>Vínculo pessoal e departamentos</summary><?php portal_scope_fields($portalPeople,$portalDepartments,$r['person_id'],$portalScopes[$r['user_id']]??[]);?></details>
           <button class="btn btn-light">Salvar acesso</button>
         </form>
+        <?php if(!$auth->isSuperAdmin((string)$r['user_id'])):?>
+        <details class="im-staff-password-reset" style="margin:8px 0">
+          <summary class="btn btn-light" style="cursor:pointer;padding:8px 12px">Redefinir senha de acesso</summary>
+          <form method="post" action="/users.php" autocomplete="off"
+                onsubmit="return confirm('Confirmar nova senha para este usuário? A senha anterior deixará de funcionar.');"
+                style="margin-top:9px;padding:12px;border:1px solid var(--border,#ccd8e4);border-radius:12px;max-width:380px">
+            <?=csrf_field()?>
+            <input type="hidden" name="action" value="reset_password">
+            <input type="hidden" name="membership_id" value="<?=e($r['membership_id'])?>">
+            <p class="muted">Login: <strong><?=e($r['email'])?></strong>. O cadastro do membro e as permissões serão mantidos. Apenas a senha será alterada.</p>
+            <label>Nova senha (mínimo de 8 caracteres)
+              <input class="input" type="password" name="new_password" minlength="8" required autocomplete="new-password">
+            </label>
+            <label>Confirmar nova senha
+              <input class="input" type="password" name="confirm_password" minlength="8" required autocomplete="new-password">
+            </label>
+            <label style="display:flex;align-items:start;gap:8px;margin:9px 0">
+              <input type="checkbox" name="acknowledge_reset" value="1" required>
+              <span>Confirmo a redefinição da senha deste login.</span>
+            </label>
+            <button class="btn btn-primary" type="submit">Salvar nova senha</button>
+          </form>
+        </details>
+        <?php endif?>
         <form method="post" onsubmit="return confirm('Remover o acesso deste usuário à igreja?')"><?=csrf_field()?><input type="hidden" name="action" value="remove"><input type="hidden" name="membership_id" value="<?=e($r['membership_id'])?>"><button class="btn btn-danger">Remover</button></form>
       </div>
       <?php else:?><span class="muted">Protegido</span><?php endif?>
@@ -277,22 +360,30 @@ View::header('Usuários e permissões',$auth,'users.php');
   </tbody></table></div>
 </section>
 
-<section data-registry-form="users" class="card card-pad">
-  <h2 style="font-size:17px">Novo usuário desta igreja</h2>
-  <p class="muted">Cria um acesso interno somente para <strong><?=e($church['name'])?></strong>. Pastor, administrador, secretaria e tesouraria não criam uma nova igreja aqui.</p>
+<section data-registry-form="users" id="definir-cargo-acesso" class="card card-pad">
+  <h2 style="font-size:18px">Definir cargo e acesso de um membro</h2>
+  <p class="muted">Selecione alguém da lista de <strong><?=e($church['name'])?></strong> e escolha um cargo principal. Não é necessário cadastrar novamente a pessoa nem criar outra igreja. <strong>Se o e-mail já tinha login, a senha inicial não substitui a senha anterior.</strong> Para quem esqueceu, use o botão Redefinir senha de acesso na lista de usuários.</p>
   <?php if($isMaster):?><div class="alert alert-info">Você está em modo suporte. Para cadastrar outra igreja como novo cliente, use o <a href="/master.php">Painel Master → Nova igreja / cliente</a>.</div><?php endif?>
+  <?php if($memberFromList!=='' && !$selectedPerson):?><div class="alert alert-error">O membro indicado no atalho não está ativo nesta igreja. Escolha uma pessoa da lista.</div><?php endif?>
   <form method="post" data-user-create-from-member="1"><?=csrf_field()?><input type="hidden" name="action" value="create">
     <div class="form-grid">
-      <div class="field full"><label>Nome *</label><input class="input" name="full_name" required></div>
-      <div class="field full"><label>E-mail *</label><input class="input" type="email" name="email" required></div>
-      <div class="field full"><label>Perfil *</label><select class="select" name="church_role"><?php foreach($allowed as $v):?><option value="<?=e($v)?>"><?=e($roleLabels[$v])?></option><?php endforeach?></select></div>
-      <?php portal_scope_fields($portalPeople,$portalDepartments);?>
-      <div class="field full"><small class="muted" data-user-member-help>Escolha o cadastro do membro acima para usar seu nome e e-mail automaticamente.</small></div>
-      <div class="field full"><label>Senha inicial</label><input class="input" type="password" name="password" minlength="8"><small class="muted" data-user-password-help>Obrigatória apenas para uma conta nova. Se já existe login, a senha atual não será alterada.</small></div>
+      <?php portal_scope_fields($portalPeople,$portalDepartments,$selectedPerson?(string)$selectedPerson['id']:null); ?>
+      <div class="field full"><label>Cargo principal e nível de acesso *
+        <select class="select" name="church_role" required>
+          <option value="">Selecione o cargo…</option>
+          <?php foreach($allowed as $v):?><option value="<?=e($v)?>" data-role-description="<?=e($roleDetailsForUser($v))?>" <?=$selectedRole===$v?'selected':''?>><?=e($roleLabels[$v])?></option><?php endforeach?>
+        </select>
+      </label><div class="alert alert-info" data-user-role-preview role="status" aria-live="polite" style="margin:7px 0">Selecione o cargo para ver quais módulos ele poderá acessar.</div></div>
+      <div class="field full"><small class="muted" data-user-member-help>Escolha o membro acima: o nome e o e-mail serão reaproveitados. Se ele já tem login, a senha não será alterada.</small></div>
+      <div class="field full"><label>Nome do membro * <input class="input" name="full_name" value="<?=e($selectedName)?>" required <?=$selectedPerson?'readonly':''?>></label></div>
+      <div class="field full"><label>E-mail para entrar no sistema *
+        <input class="input" type="email" name="email" value="<?=e($selectedEmail)?>" required <?=($selectedPerson&&$selectedEmail!=='')?'readonly':''?>>
+      </label><small class="muted">Se o membro não possui e-mail, informe um para ativar o login. Não precisa preencher o nome outra vez.</small></div>
+      <div class="field full"><label>Senha inicial (somente login novo) <input class="input" type="password" name="password" minlength="8" autocomplete="new-password"></label><small class="muted" data-user-password-help>Obrigatória apenas para criar uma conta nova. Se o e-mail já existir, deixe em branco: redefina a senha na lista de usuários após vincular o membro.</small></div>
     </div>
-    <button class="btn btn-primary" type="submit" style="width:100%;margin-top:14px">Criar ou atualizar acesso nesta igreja</button>
+    <button class="btn btn-primary" type="submit" style="width:100%;margin-top:14px">Salvar cargo e liberar acesso</button>
   </form>
 </section>
 </div>
-<script src="/assets/users-member-autofill.js?v=3720" defer></script>
+<script src="/assets/users-member-autofill.js?v=3.7.71" defer></script>
 <?php View::footer();?>
