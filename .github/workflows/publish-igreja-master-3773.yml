@@ -1,0 +1,137 @@
+name: Publish Igreja Master 3.7.73 Master-only Administrator
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3773.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-roles-and-publish:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mastertest
+          MYSQL_DATABASE: im_role_hierarchy_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring,pdo_mysql
+          coverage: none
+      - name: Check role hierarchy, PHP and direct POST protection
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.73
+          php -l "$root/public/users.php"
+          php -l "$root/public/lib/Auth.php"
+          php -l "$root/public/lib/ChurchRoleAssignmentPolicy.php"
+          php -l "$root/public/lib/ChurchStaffCredentialService.php"
+          php -l "$root/tests/church-role-hierarchy-mysql.php"
+          test "$(cat "$root/public/VERSION")" = "3.7.73"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.73/public')
+          users=(root/'users.php').read_text()
+          policy=(root/'lib/ChurchRoleAssignmentPolicy.php').read_text()
+          auth=(root/'lib/Auth.php').read_text()
+          credential=(root/'lib/ChurchStaffCredentialService.php').read_text()
+          assert "'pastor','secretary','treasurer','accountant'" in policy
+          assert "'owner','pastor'" in policy
+          assert "if(!in_array($targetRole,self::assignable($actorRole,$isMaster),true))" in policy
+          assert "if($isMaster)return true" in policy
+          assert "'admin'" not in policy.split("public const CHURCH_ROLES = [",1)[1].split("];",1)[0]
+          assert "ChurchRoleAssignmentPolicy::assignable" in users
+          assert users.count("ChurchRoleAssignmentPolicy::assertAssignable") == 2
+          assert users.count("ChurchRoleAssignmentPolicy::mayManageExisting") == 4
+          assert "Administrador (legado" in users
+          assert "Administrador é reservado ao Master" in users
+          assert "$auth->requireAbility('manage_users')" in users
+          assert "verify_csrf()" in users
+          assert "SELECT cm.*,u.email FROM church_members cm" in users
+          assert "WHERE cm.id=? AND cm.church_id=?" in users
+          assert "if($role==='admin' && $ability==='manage_users')return false;" in auth
+          assert "Somente o Master pode redefinir a senha" in credential
+          assert "$auth->isSuperAdmin($targetId)" in credential
+          assert "platform_audit_logs" in users and "platform_audit_logs" in credential
+          print('PASS static: Master cannot delegate a church administrator, pastor can appoint pastor/down, existing legacy roles protected')
+          PY
+      - name: MySQL integration for actual Auth permissions and legacy accounts
+        shell: bash
+        run: |
+          set -euo pipefail
+          php adminigreja-updates/staging/3.7.73/tests/church-role-hierarchy-mysql.php
+      - name: Package and publish role hierarchy 3.7.73
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,base64,io,hashlib,tarfile
+          root=Path('adminigreja-updates')
+          latest=root/'latest.json'
+          previous=json.loads(latest.read_text())
+          if previous['version']=='3.7.73':
+              print('Already published')
+              raise SystemExit(0)
+          assert previous['version']=='3.7.72','Unexpected prior version '+previous['version']
+          stage=root/'staging/3.7.73'
+          paths=[
+              'public/users.php',
+              'public/lib/Auth.php',
+              'public/lib/ChurchRoleAssignmentPolicy.php',
+              'public/lib/ChurchStaffCredentialService.php',
+              'public/VERSION'
+          ]
+          data={p:(stage/p).read_bytes() for p in paths}
+          output=Path('/tmp/igreja-master-3773.tar.gz')
+          with tarfile.open(output,'w:gz') as ar:
+              for p in paths:ar.add(stage/p,arcname=p,recursive=False)
+          archive=output.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(archive),mode='r:gz') as ar:
+              for p in paths:assert ar.extractfile(p).read()==data[p]
+          payload=base64.b64encode(archive)
+          parts=[]
+          for i in range(0,len(payload),60000):
+              name=f'releases/v3.7.73.{len(parts)+1:02d}.b64.txt'
+              (root/name).write_bytes(payload[i:i+60000]);parts.append(name)
+          release={
+              'version':'3.7.73','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(archive).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+              'notes':[
+                  'Corrige hierarquia: o único Administrador Master é a função de plataforma super_admin, não um cargo criável dentro da igreja.',
+                  'Pastor e responsável pela igreja podem agora nomear outro Pastor, Secretária, Tesoureiro Geral, Contador e cargos inferiores.',
+                  'Retira a opção Administrador das listas de criação e edição de usuários em todas as igrejas, inclusive em modo suporte; o Master pode apenas revisar contas antigas.',
+                  'O servidor bloqueia POST direto que tente conceder os perfis admin, super_admin ou owner, independentemente do formulário.',
+                  'Acessos antigos com perfil Administrador de igreja ficam visíveis como legados para revisão pelo Master; não são removidos automaticamente.',
+                  'Contas admin legadas não podem mais gerenciar outros usuários nem ter sua senha redefinida por pastor ou responsável sem intervenção Master.',
+                  'Permissões e dados de outros perfis e igrejas são preservados; reset de senhas, login e vínculos de membros continuam disponíveis.',
+                  'Validação em MySQL com autenticação real: Pastor nomeia Pastor e inferiores, Master continua exclusivo, perfis antigos protegidos e sem elevação indireta.',
+                  'Nenhum usuário teve seu cargo alterado ou excluído durante a publicação; após instalar, revisar contas legadas com o Master.'
+              ]
+          }
+          latest.write_text(json.dumps(release,indent=2,ensure_ascii=False)+'\n')
+          print('3.7.73 package validated SHA256',release['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.73.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.73 platform-Master role isolation"
+          git pull --rebase origin main
+          git push origin HEAD:main
