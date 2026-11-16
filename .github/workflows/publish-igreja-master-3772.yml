@@ -1,0 +1,134 @@
+name: Publish Igreja Master 3.7.72 Staff Login Repair
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3772.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mastertest
+          MYSQL_DATABASE: im_staff_login_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql,mbstring
+          coverage: none
+      - name: Validate staff login, password-reset and scoped role permissions
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.72
+          php -l "$stage/public/lib/ChurchStaffCredentialService.php"
+          php -l "$stage/public/users.php"
+          php -l "$stage/public/login.php"
+          php -l "$stage/public/lib/Auth.php"
+          php -l "$stage/tests/church-staff-login-mysql.php"
+          test "$(cat "$stage/public/VERSION")" = "3.7.72"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.72/public')
+          users=(root/'users.php').read_text()
+          service=(root/'lib/ChurchStaffCredentialService.php').read_text()
+          login=(root/'login.php').read_text()
+          assert "$auth->requireAbility('manage_users')" in users
+          assert "if($action==='reset_password')" in users
+          assert "ChurchStaffCredentialService::preventIgnoredPassword((bool)$existing,$password)" in users
+          assert 'name="new_password"' in users and 'name="confirm_password"' in users
+          assert 'name="acknowledge_reset"' in users
+          assert 'name="action" value="reset_password"' in users
+          assert "verify_csrf()" in users
+          assert 'e-mail já possui login' in service
+          assert "UPDATE users SET password_hash=? WHERE id=? AND active=1" in service
+          assert "SELECT COUNT(*) FROM church_members WHERE user_id=? AND church_id<>?" in service
+          assert "cm.id=? AND cm.church_id=? LIMIT 1 FOR UPDATE" in service
+          assert "'church_staff_password_reset'" in service
+          assert "password_hash($newPassword,PASSWORD_DEFAULT)" in service
+          assert "hash_equals($newPassword,$confirmPassword)" in service
+          assert "$auth->can('manage_users')" in service
+          assert "$auth->isSuperAdmin($targetId)" in service
+          assert "if(!empty($membership['is_owner'])" in service
+          assert "if(!$this->can($ability))" in (root/'lib/Auth.php').read_text()
+          assert "Redefinir senha de acesso" in login
+          assert '$auth->login($email, $password)' in login
+          print('PASS static: login reused accounts explained, permission-gated resets, password confirmation, tenant isolation, audit')
+          PY
+      - name: Test MySQL login for new and existing church staff
+        shell: bash
+        run: |
+          set -euo pipefail
+          php adminigreja-updates/staging/3.7.72/tests/church-staff-login-mysql.php
+      - name: Publish tested incremental 3.7.72 release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import io,tarfile,json,base64,hashlib
+          root=Path('adminigreja-updates')
+          last=json.loads((root/'latest.json').read_text())
+          if last['version']=='3.7.72':
+              print('Version already published');raise SystemExit(0)
+          assert last['version']=='3.7.71', 'Unexpected previous version '+last['version']
+          stage=root/'staging/3.7.72'
+          paths=[
+              'public/users.php',
+              'public/login.php',
+              'public/lib/ChurchStaffCredentialService.php',
+              'public/VERSION'
+          ]
+          blobs={p:(stage/p).read_bytes() for p in paths}
+          out=Path('/tmp/igreja-master-3772.tar.gz')
+          with tarfile.open(out,'w:gz') as archive:
+              for p in paths:archive.add(stage/p,arcname=p,recursive=False)
+          raw=out.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as archive:
+              for p in paths:assert archive.extractfile(p).read()==blobs[p]
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              p=f'releases/v3.7.72.{len(parts)+1:02d}.b64.txt'
+              (root/p).write_bytes(encoded[i:i+60000]);parts.append(p)
+          manifest={
+              'version':'3.7.72','min_php':'8.1','encoding':'base64','parts':parts,
+              'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(blobs[p]).hexdigest()} for p in paths],
+              'notes':[
+                'Corrige criação de acesso de Tesoureiro Geral, Contador, Secretária e demais cargos quando o e-mail já tinha login existente: senha inicial nunca mais é ignorada silenciosamente.',
+                'Se o e-mail já existe e for informada uma nova senha na vinculação, o cadastro avisa claramente que é preciso reutilizar o login e redefinir a senha autorizadamente.',
+                'Novo botão Redefinir senha de acesso em Usuários e permissões, restrito ao responsável, pastor, administrador autorizado ou Master em modo suporte.',
+                'A redefinição exige senha e confirmação, verifica perfil, membro, igreja, proprietário protegido e bloqueia alteração de contas compartilhadas com outras igrejas.',
+                'A função altera somente o hash seguro da senha e mantém o e-mail, cadastro do membro, cargo e todas as permissões existentes.',
+                'Tela de login orienta quem não consegue entrar sobre como solicitar redefinição ao responsável pela igreja.',
+                'Testes MySQL cobrem login real com Auth para Tesoureiro Geral, Contador e Secretaria; alteração, senha antiga inválida, senha nova válida, isolamento e auditoria sem senhas.',
+                'A atualização não redefine senhas de ninguém automaticamente. Responsável deve abrir o login vinculado à igreja e definir nova senha quando necessário.'
+              ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n')
+          print('Built verified 3.7.72 archive',manifest['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.72.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.72 staff login and authorized password reset"
+          git pull --rebase origin main
+          git push origin HEAD:main
