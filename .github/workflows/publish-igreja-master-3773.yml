@@ -65,7 +65,7 @@ jobs:
           assert "SELECT cm.*,u.email FROM church_members cm" in users
           assert "WHERE cm.id=? AND cm.church_id=?" in users
           assert "if($role==='admin' && $ability==='manage_users')return false;" in auth
-          assert "Somente o Master pode redefinir a senha" in credential
+          assert "somente o Master pode redefinir a senha" in credential
           assert "$auth->isSuperAdmin($targetId)" in credential
           assert "platform_audit_logs" in users and "platform_audit_logs" in credential
           print('PASS static: Master cannot delegate a church administrator, pastor can appoint pastor/down, existing legacy roles protected')
