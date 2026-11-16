@@ -1,0 +1,42 @@
+name: Inspect Igreja Master Login Source 3.7.72
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-igreja-login-3772.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract original login and recovery routes for investigation
+        run: |
+          python3 - <<'PY'
+          import json,base64,tarfile,io
+          from pathlib import Path
+          bundle=json.loads(Path('adminigreja-updates/staging/v3.7.29-full-bundle.json').read_text())
+          tar=tarfile.open(fileobj=io.BytesIO(base64.b64decode(bundle['base64'])),mode='r:gz')
+          prefixes=['public/login.php','public/forgot-password.php','public/reset-password.php',
+            'public/lib/Auth.php','public/bootstrap.php','public/assets/users-member-autofill.js',
+            'public/users.php']
+          dst=Path('adminigreja-updates/staging/3.7.72/public')
+          for name in prefixes:
+            if name not in tar.getnames():
+              print('NOT_IN_BASE',name)
+              continue
+            path=dst/name.removeprefix('public/')
+            path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_bytes(tar.extractfile(name).read())
+            print('STAGED',name,'bytes',path.stat().st_size)
+          (dst/'VERSION').write_text('3.7.72\n')
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/staging/3.7.72
+          git diff --cached --quiet && exit 0
+          git commit -m "Stage existing login and password recovery code to investigate church staff sign-in"
+          git pull --rebase origin main
+          git push origin HEAD:main
