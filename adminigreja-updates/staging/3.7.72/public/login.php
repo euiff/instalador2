@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    <button type="submit">Entrar</button>
   </form>
   <p class="im-login-note">A logo e as cores da sua igreja serão carregadas após identificar seu acesso.</p>
+  <p class="im-login-note" style="margin-top:10px">Não conseguiu entrar? Se o seu e-mail já tinha um login, a senha inicial usada para atribuir um novo cargo não substitui a senha antiga. Peça ao pastor ou responsável pela igreja que abra <strong>Pessoas → Usuários e permissões → Redefinir senha de acesso</strong>. Nunca envie sua senha pelo WhatsApp.</p>
  </main>
 </div>
 <script>
