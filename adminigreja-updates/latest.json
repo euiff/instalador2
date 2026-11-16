@@ -1,37 +1,42 @@
 {
-  "version": "3.7.72",
+  "version": "3.7.73",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.72.01.b64.txt"
+    "releases/v3.7.73.01.b64.txt"
   ],
-  "sha256": "71a8f4f7af7b6c30e6563d6301d1844a879b6288cfda7defff4c665db459786f",
+  "sha256": "f7856e5c170d4783592f63855ec9f222f4e719be352b67a66a799fe2023d4b8c",
   "files": [
     {
       "path": "public/users.php",
-      "sha256": "ea635300399a3712b04a1e497649b31d33a1def0655c167d0ebe57a02b4605eb"
+      "sha256": "9ec0b15a98d96479107c3ff059d514e0517d73956071036f5553518e8aa2d02d"
     },
     {
-      "path": "public/login.php",
-      "sha256": "becde589ca05714adb31863ddbfaa58db8f23cf22b0afc73023b0ba267ec6746"
+      "path": "public/lib/Auth.php",
+      "sha256": "ca59270ee53e6ab5082587fe38aecc97f2628d191e136af2281f1c6825a77277"
+    },
+    {
+      "path": "public/lib/ChurchRoleAssignmentPolicy.php",
+      "sha256": "f6c35cc4ce0ebdcfb5010ddbeea3e62b42025ac657585a7286e2b0dc00d66597"
     },
     {
       "path": "public/lib/ChurchStaffCredentialService.php",
-      "sha256": "6298dc84facd0f7d30f0016dc137a4a7e87e49d2a45a3eb470fd1e22ec40b935"
+      "sha256": "4876c07bfc52d6350565b7e69af6f49b8b810237de24c381921ce562e68f1b0a"
     },
     {
       "path": "public/VERSION",
-      "sha256": "50472b7c6d3f67ce2c46206f2fbd4204f9c1708e51137f53162c488939b5e657"
+      "sha256": "acef258bd6f54eaeb1af2460d5a20582bcd83f01c767802c95432c68e0a3390a"
     }
   ],
   "notes": [
-    "Corrige criação de acesso de Tesoureiro Geral, Contador, Secretária e demais cargos quando o e-mail já tinha login existente: senha inicial nunca mais é ignorada silenciosamente.",
-    "Se o e-mail já existe e for informada uma nova senha na vinculação, o cadastro avisa claramente que é preciso reutilizar o login e redefinir a senha autorizadamente.",
-    "Novo botão Redefinir senha de acesso em Usuários e permissões, restrito ao responsável, pastor, administrador autorizado ou Master em modo suporte.",
-    "A redefinição exige senha e confirmação, verifica perfil, membro, igreja, proprietário protegido e bloqueia alteração de contas compartilhadas com outras igrejas.",
-    "A função altera somente o hash seguro da senha e mantém o e-mail, cadastro do membro, cargo e todas as permissões existentes.",
-    "Tela de login orienta quem não consegue entrar sobre como solicitar redefinição ao responsável pela igreja.",
-    "Testes MySQL cobrem login real com Auth para Tesoureiro Geral, Contador e Secretaria; alteração, senha antiga inválida, senha nova válida, isolamento e auditoria sem senhas.",
-    "A atualização não redefine senhas de ninguém automaticamente. Responsável deve abrir o login vinculado à igreja e definir nova senha quando necessário."
+    "Corrige hierarquia: o único Administrador Master é a função de plataforma super_admin, não um cargo criável dentro da igreja.",
+    "Pastor e responsável pela igreja podem agora nomear outro Pastor, Secretária, Tesoureiro Geral, Contador e cargos inferiores.",
+    "Retira a opção Administrador das listas de criação e edição de usuários em todas as igrejas, inclusive em modo suporte; o Master pode apenas revisar contas antigas.",
+    "O servidor bloqueia POST direto que tente conceder os perfis admin, super_admin ou owner, independentemente do formulário.",
+    "Acessos antigos com perfil Administrador de igreja ficam visíveis como legados para revisão pelo Master; não são removidos automaticamente.",
+    "Contas admin legadas não podem mais gerenciar outros usuários nem ter sua senha redefinida por pastor ou responsável sem intervenção Master.",
+    "Permissões e dados de outros perfis e igrejas são preservados; reset de senhas, login e vínculos de membros continuam disponíveis.",
+    "Validação em MySQL com autenticação real: Pastor nomeia Pastor e inferiores, Master continua exclusivo, perfis antigos protegidos e sem elevação indireta.",
+    "Nenhum usuário teve seu cargo alterado ou excluído durante a publicação; após instalar, revisar contas legadas com o Master."
   ]
 }
