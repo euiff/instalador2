@@ -58,7 +58,7 @@ jobs:
           trap 'kill $server_pid || true' EXIT
           sleep 2
           cd /tmp/im-ocr-browser-tests
-          node <<'JS'
+          timeout --signal=TERM --kill-after=10s 150s node <<'JS'
           const {chromium}=require('playwright');
           const fs=require('node:fs');
           const PDFDocument=require('pdfkit');
