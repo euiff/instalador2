@@ -1,0 +1,141 @@
+name: Publish Igreja Master 3.7.76 Robust Local Pix OCR
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3776.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Pix OCR, fiscal receipt fallback and safe UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.76
+          php -l "$stage/public/finance.php"
+          php -l "$stage/public/lib/FinanceFiscalScan.php"
+          php -l "$stage/public/lib/FinancePixProofReader.php"
+          php -l "$stage/tests/finance-pix-sicoob.php"
+          node --check "$stage/public/assets/finance-ocr-3752.js"
+          node --check "$stage/public/assets/finance-local-ocr-3774.js"
+          php "$stage/tests/finance-pix-sicoob.php"
+          php adminigreja-updates/staging/3.7.74/tests/finance-local-ocr-parser.php
+          node adminigreja-updates/staging/3.7.74/tests/finance-local-ocr-flow.cjs
+          test "$(cat "$stage/public/VERSION")" = "3.7.76"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.76/public')
+          parser=(root/'lib/FinancePixProofReader.php').read_text()
+          fiscal=(root/'lib/FinanceFiscalScan.php').read_text()
+          local=(root/'assets/finance-local-ocr-3774.js').read_text()
+          client=(root/'assets/finance-ocr-3752.js').read_text()
+          page=(root/'finance.php').read_text()
+          assert "FinancePixProofReader::extract($text)" in fiscal
+          assert "if($pix!==null)return $pix;" in fiscal
+          assert "TRANSFERID[AO]" in parser
+          assert "CONFERENCIA" in parser
+          assert "FinanceFiscalScan::isPixE2E" in parser
+          assert "£" in parser
+          assert "'direction'=>$direction" in parser
+          assert "'issuer'=>$counterparty" in parser
+          assert "'receiver'=>$receiver" in parser and "'payer'=>$payer" in parser
+          assert "'issuer_tax_id'=>null" in parser
+          assert "'category'=>null" in parser
+          assert "'payment_method'=>'PIX manual'" in parser
+          assert "recognizeRobust" in local
+          assert "enhanceDark" in local
+          assert "isDark" in local
+          assert "worker.recognize(crop)" in local
+          assert "ocr.recognize(canvas)" not in local
+          assert "const pdfjs=await import(ROOT+'pdf.mjs')" in local
+          assert "'https://' not in local" in 'true' or "https://" not in local
+          assert "data.direction==='income'||data.direction==='expense'" in client
+          assert "data.payer" in client and "data.receiver" in client
+          assert "data.payment_time" in client
+          assert "data.bank_reference" in client
+          assert "finance-local-ocr-3774.js?v=3.7.76" in page
+          assert "finance-ocr-3752.js?v=3.7.76" in page
+          assert "finance-ledger-filters-3775.js?v=3.7.75" in page
+          assert 'data-extra-attachments' in page
+          assert "ChurchFinanceExclusionUi::render" in page
+          assert "MasterSupportFinanceUi::exclusionForm" in page
+          print('PASS self-hosted OCR, Pix direction, parties, E2E, masked CNPJ, duplication and previous financial controls.')
+          PY
+      - name: Publish verified incremental version 3.7.76
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,io,json,tarfile
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.76':
+              print('Already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.75','Expected previous release 3.7.75, got '+current['version']
+          staging=root/'staging/3.7.76'
+          paths=[
+              'public/finance.php',
+              'public/lib/FinanceFiscalScan.php',
+              'public/lib/FinancePixProofReader.php',
+              'public/assets/finance-local-ocr-3774.js',
+              'public/assets/finance-ocr-3752.js',
+              'public/VERSION'
+          ]
+          data={p:(staging/p).read_bytes() for p in paths}
+          target=Path('/tmp/igreja-master-3776.tar.gz')
+          with tarfile.open(target,'w:gz') as archive:
+              for p in paths: archive.add(staging/p,arcname=p,recursive=False)
+          packed=target.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(packed),mode='r:gz') as archive:
+              for p in paths: assert archive.extractfile(p).read()==data[p],p
+          encoded=base64.b64encode(packed)
+          parts=[]
+          for start in range(0,len(encoded),60000):
+              name=f'releases/v3.7.76.{len(parts)+1:02d}.b64.txt'
+              (root/name).write_bytes(encoded[start:start+60000])
+              parts.append(name)
+          manifest={
+              'version':'3.7.76','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(packed).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(data[p]).hexdigest()} for p in paths],
+              'notes':[
+                  'Leitura própria de comprovantes Pix Sicoob, PDFs escaneados e imagens de fundo escuro aprimorada sem gastar créditos de IA.',
+                  'Reconhecimento de valor isolado R$ 2.172,03, inclusive quando OCR lê RS; identifica data real Transferido em e hora do Pix, não a hora posterior de geração do PDF.',
+                  'O sistema diferencia Pix enviado (saída) de Pix recebido (entrada) e reconhece separadamente pagador e recebedor; não confunde com a marca do banco.',
+                  'Recuperação cautelosa da primeira letra E do EndToEnd ID quando o OCR lê £ e há um rótulo de ID da transação; usuário deve conferir os 32 caracteres.',
+                  'Leitor local com contraste invertido para PDF/foto escuros e leitura adicional do rodapé para ID bancário, mantendo o arquivo original e anexos extras.',
+                  'CNPJ mascarado não é preenchido como se fosse completo; quando o ID bancário não é confiável, gera identificador próprio ARQ do arquivo para detectar cópias iguais.',
+                  'Mostra em conferência pagador, recebedor, hora do pagamento, nome do favorecido, valor, data e referência da transação.',
+                  'Continua exigindo confirmação do usuário e escolha de categoria contábil; não inventa documentos ou lançamentos.',
+                  'Mantém leitura gratuita padrão, IA externa opcional, proteção de duplicações, permissões, gráficos financeiros e estrutura da versão 3.7.75.',
+                  'Testes automáticos para exemplo anonimizado do PDF do Sicoob fornecido, incluindo E2E, valor, horário, partes, Pix recebido e NFC-e.',
+                  'Atualização publicada no canal Master; precisa ser aplicada na hospedagem para funcionar em celulares e computadores.'
+              ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Validated version',manifest['version'],'size',len(packed),'sha256',manifest['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.76.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.76 improved local Pix PDF/photo OCR"
+          git pull --rebase origin main
+          git push origin HEAD:main
