@@ -111,7 +111,7 @@ final class FinanceFiscalScan
 
         $number=null;
         foreach($lines as $line){
-            if(preg_match('/(?:N[º°o]\s*|N[úu]mero\s*(?:da\s*)?(?:NFC-?E|NF-?E|NOTA|CUPOM)?\s*[:#.]?\s*|(?:NFC-?E|CUPOM|NOTA)\s*N[º°o.]?\s*)(\d{2,12})\b/iu',$line,$m)){
+            if(preg_match('/(?:N[º°o]\s*|N[úu]mero\s*(?:da\s*)?(?:NFC-?E|NF-?E|NOTA|CUPOM)?\s*[:#.]?\s*|(?:NFC-?E|CUPOM|NOTA)\s*N[º°o.]?\s*[:#.]?\s*)(\d{2,12})\b/iu',$line,$m)){
                 $number=ltrim($m[1],'0')?:'0';break;
             }
         }
@@ -138,9 +138,9 @@ final class FinanceFiscalScan
 
         $amount=null;
         $patterns=[
-            '/(?:VALOR\s+(?:TOTAL\s+(?:DA\s+)?(?:NOTA|NFC-?E|CUPOM)?|A\s+PAGAR)|TOTAL\s+(?:A\s+PAGAR|DA\s+NOTA|R\$|GERAL)|TOTAL\s+DO\s+CUPOM|TOTAL\s*[:=])\s*(?:R\$\s*)?([\d.,]{2,18})/iu',
+            '/(?:VALOR\s+(?:TOTAL\s+(?:DA\s+)?(?:NOTA|NFC-?E|CUPOM)?|A\s+PAGAR)|TOTAL\s+(?:A\s+PAGAR|DA\s+NOTA|R\$|GERAL)|TOTAL\s+DO\s+CUPOM|TOTAL\s*[:=])\s*[:=\-]?\s*(?:R\$\s*)?([\d.,]{2,18})/iu',
             '/(?:VALOR\s+TOTAL|TOTAL\s+GERAL|TOTAL\s+PAGO|TOTAL\s+DA\s+COMPRA)\D{0,15}([\d.,]{2,18})/iu',
-            '/(?:VALOR\s+(?:DA\s+)?(?:TRANSFER[ÊE]NCIA|TRANSA[ÇC][ÃA]O|OPERA[ÇC][ÃA]O|PIX)|VALOR\s+(?:RECEBIDO|ENVIADO|TRANSFERIDO|PAGO)|VALOR\s*[:=])\s*(?:R\$\s*)?([\d.,]{2,18})/iu'
+            '/(?:VALOR\s+(?:DA\s+)?(?:TRANSFER[ÊE]NCIA|TRANSA[ÇC][ÃA]O|OPERA[ÇC][ÃA]O|PIX)|VALOR\s+(?:RECEBIDO|ENVIADO|TRANSFERIDO|PAGO)|VALOR\s*[:=])\s*[:=\-]?\s*(?:R\$\s*)?([\d.,]{2,18})/iu'
         ];
         foreach($patterns as $regex){
             if(preg_match_all($regex,$text,$matches) && !empty($matches[1])){
