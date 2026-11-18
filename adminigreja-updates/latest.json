@@ -1,42 +1,286 @@
 {
-  "version": "3.7.73",
+  "version": "3.7.74",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.73.01.b64.txt"
+    "releases/v3.7.74.001.b64.txt",
+    "releases/v3.7.74.002.b64.txt",
+    "releases/v3.7.74.003.b64.txt",
+    "releases/v3.7.74.004.b64.txt",
+    "releases/v3.7.74.005.b64.txt",
+    "releases/v3.7.74.006.b64.txt",
+    "releases/v3.7.74.007.b64.txt",
+    "releases/v3.7.74.008.b64.txt",
+    "releases/v3.7.74.009.b64.txt",
+    "releases/v3.7.74.010.b64.txt",
+    "releases/v3.7.74.011.b64.txt",
+    "releases/v3.7.74.012.b64.txt",
+    "releases/v3.7.74.013.b64.txt",
+    "releases/v3.7.74.014.b64.txt",
+    "releases/v3.7.74.015.b64.txt",
+    "releases/v3.7.74.016.b64.txt",
+    "releases/v3.7.74.017.b64.txt",
+    "releases/v3.7.74.018.b64.txt",
+    "releases/v3.7.74.019.b64.txt",
+    "releases/v3.7.74.020.b64.txt",
+    "releases/v3.7.74.021.b64.txt",
+    "releases/v3.7.74.022.b64.txt",
+    "releases/v3.7.74.023.b64.txt",
+    "releases/v3.7.74.024.b64.txt",
+    "releases/v3.7.74.025.b64.txt",
+    "releases/v3.7.74.026.b64.txt",
+    "releases/v3.7.74.027.b64.txt",
+    "releases/v3.7.74.028.b64.txt",
+    "releases/v3.7.74.029.b64.txt",
+    "releases/v3.7.74.030.b64.txt",
+    "releases/v3.7.74.031.b64.txt",
+    "releases/v3.7.74.032.b64.txt",
+    "releases/v3.7.74.033.b64.txt",
+    "releases/v3.7.74.034.b64.txt",
+    "releases/v3.7.74.035.b64.txt",
+    "releases/v3.7.74.036.b64.txt",
+    "releases/v3.7.74.037.b64.txt",
+    "releases/v3.7.74.038.b64.txt",
+    "releases/v3.7.74.039.b64.txt",
+    "releases/v3.7.74.040.b64.txt",
+    "releases/v3.7.74.041.b64.txt",
+    "releases/v3.7.74.042.b64.txt",
+    "releases/v3.7.74.043.b64.txt",
+    "releases/v3.7.74.044.b64.txt",
+    "releases/v3.7.74.045.b64.txt",
+    "releases/v3.7.74.046.b64.txt",
+    "releases/v3.7.74.047.b64.txt",
+    "releases/v3.7.74.048.b64.txt",
+    "releases/v3.7.74.049.b64.txt",
+    "releases/v3.7.74.050.b64.txt",
+    "releases/v3.7.74.051.b64.txt",
+    "releases/v3.7.74.052.b64.txt",
+    "releases/v3.7.74.053.b64.txt",
+    "releases/v3.7.74.054.b64.txt",
+    "releases/v3.7.74.055.b64.txt",
+    "releases/v3.7.74.056.b64.txt",
+    "releases/v3.7.74.057.b64.txt",
+    "releases/v3.7.74.058.b64.txt",
+    "releases/v3.7.74.059.b64.txt",
+    "releases/v3.7.74.060.b64.txt",
+    "releases/v3.7.74.061.b64.txt",
+    "releases/v3.7.74.062.b64.txt",
+    "releases/v3.7.74.063.b64.txt",
+    "releases/v3.7.74.064.b64.txt",
+    "releases/v3.7.74.065.b64.txt",
+    "releases/v3.7.74.066.b64.txt",
+    "releases/v3.7.74.067.b64.txt",
+    "releases/v3.7.74.068.b64.txt",
+    "releases/v3.7.74.069.b64.txt",
+    "releases/v3.7.74.070.b64.txt",
+    "releases/v3.7.74.071.b64.txt",
+    "releases/v3.7.74.072.b64.txt",
+    "releases/v3.7.74.073.b64.txt",
+    "releases/v3.7.74.074.b64.txt",
+    "releases/v3.7.74.075.b64.txt",
+    "releases/v3.7.74.076.b64.txt",
+    "releases/v3.7.74.077.b64.txt",
+    "releases/v3.7.74.078.b64.txt",
+    "releases/v3.7.74.079.b64.txt",
+    "releases/v3.7.74.080.b64.txt",
+    "releases/v3.7.74.081.b64.txt",
+    "releases/v3.7.74.082.b64.txt",
+    "releases/v3.7.74.083.b64.txt",
+    "releases/v3.7.74.084.b64.txt",
+    "releases/v3.7.74.085.b64.txt",
+    "releases/v3.7.74.086.b64.txt",
+    "releases/v3.7.74.087.b64.txt",
+    "releases/v3.7.74.088.b64.txt",
+    "releases/v3.7.74.089.b64.txt",
+    "releases/v3.7.74.090.b64.txt",
+    "releases/v3.7.74.091.b64.txt",
+    "releases/v3.7.74.092.b64.txt",
+    "releases/v3.7.74.093.b64.txt",
+    "releases/v3.7.74.094.b64.txt",
+    "releases/v3.7.74.095.b64.txt",
+    "releases/v3.7.74.096.b64.txt",
+    "releases/v3.7.74.097.b64.txt",
+    "releases/v3.7.74.098.b64.txt",
+    "releases/v3.7.74.099.b64.txt",
+    "releases/v3.7.74.100.b64.txt",
+    "releases/v3.7.74.101.b64.txt",
+    "releases/v3.7.74.102.b64.txt",
+    "releases/v3.7.74.103.b64.txt",
+    "releases/v3.7.74.104.b64.txt",
+    "releases/v3.7.74.105.b64.txt",
+    "releases/v3.7.74.106.b64.txt",
+    "releases/v3.7.74.107.b64.txt",
+    "releases/v3.7.74.108.b64.txt",
+    "releases/v3.7.74.109.b64.txt",
+    "releases/v3.7.74.110.b64.txt",
+    "releases/v3.7.74.111.b64.txt",
+    "releases/v3.7.74.112.b64.txt",
+    "releases/v3.7.74.113.b64.txt",
+    "releases/v3.7.74.114.b64.txt",
+    "releases/v3.7.74.115.b64.txt",
+    "releases/v3.7.74.116.b64.txt",
+    "releases/v3.7.74.117.b64.txt",
+    "releases/v3.7.74.118.b64.txt",
+    "releases/v3.7.74.119.b64.txt",
+    "releases/v3.7.74.120.b64.txt",
+    "releases/v3.7.74.121.b64.txt",
+    "releases/v3.7.74.122.b64.txt",
+    "releases/v3.7.74.123.b64.txt",
+    "releases/v3.7.74.124.b64.txt",
+    "releases/v3.7.74.125.b64.txt",
+    "releases/v3.7.74.126.b64.txt",
+    "releases/v3.7.74.127.b64.txt",
+    "releases/v3.7.74.128.b64.txt",
+    "releases/v3.7.74.129.b64.txt",
+    "releases/v3.7.74.130.b64.txt",
+    "releases/v3.7.74.131.b64.txt",
+    "releases/v3.7.74.132.b64.txt",
+    "releases/v3.7.74.133.b64.txt",
+    "releases/v3.7.74.134.b64.txt",
+    "releases/v3.7.74.135.b64.txt",
+    "releases/v3.7.74.136.b64.txt",
+    "releases/v3.7.74.137.b64.txt",
+    "releases/v3.7.74.138.b64.txt",
+    "releases/v3.7.74.139.b64.txt"
   ],
-  "sha256": "f7856e5c170d4783592f63855ec9f222f4e719be352b67a66a799fe2023d4b8c",
+  "sha256": "d3ab59c55432a69d1676e81053bdfb9279b28ab9f8d0d7874fadd9e798b6105b",
   "files": [
     {
-      "path": "public/users.php",
-      "sha256": "9ec0b15a98d96479107c3ff059d514e0517d73956071036f5553518e8aa2d02d"
+      "path": "public/finance.php",
+      "sha256": "828a0e3698435d43a550b7cccd48509a193e40851bf2fa7bbfd5c9018119ce63"
     },
     {
-      "path": "public/lib/Auth.php",
-      "sha256": "ca59270ee53e6ab5082587fe38aecc97f2628d191e136af2281f1c6825a77277"
+      "path": "public/finance-scan.php",
+      "sha256": "2d31be316219826e32d94fc7b6d5c6e77bca99d48eea18b78fe9f9236f6cfe58"
     },
     {
-      "path": "public/lib/ChurchRoleAssignmentPolicy.php",
-      "sha256": "f6c35cc4ce0ebdcfb5010ddbeea3e62b42025ac657585a7286e2b0dc00d66597"
+      "path": "public/lib/FinanceFiscalScan.php",
+      "sha256": "3dc8f64b841bc5e48c02faeaa9b0c096c8b674df6bd1c6af6cdf65ebb0dcf9ee"
     },
     {
-      "path": "public/lib/ChurchStaffCredentialService.php",
-      "sha256": "4876c07bfc52d6350565b7e69af6f49b8b810237de24c381921ce562e68f1b0a"
+      "path": "public/assets/finance-local-ocr-3774.js",
+      "sha256": "9465c37de1e27435f167c1bc78d6cd8b15ac4e7a46f2e6fb536c21839591ce74"
+    },
+    {
+      "path": "public/assets/finance-ocr-3752.js",
+      "sha256": "b7fe1763bf3fc8474d62e13e545079e6ff3877ee05fe7622343e26a924664cf4"
     },
     {
       "path": "public/VERSION",
-      "sha256": "acef258bd6f54eaeb1af2460d5a20582bcd83f01c767802c95432c68e0a3390a"
+      "sha256": "bc8231e4ad8e51a45f0f97c1ae69fcc39c3a9dc7ccdf2a72642d2cecc75e313e"
+    },
+    {
+      "path": "public/assets/local-ocr/.htaccess",
+      "sha256": "d00c431389faa9b1b96c5b2cb4db4e6bdf1521b3e48e9cdc202f3334774003fe"
+    },
+    {
+      "path": "public/assets/local-ocr/README.txt",
+      "sha256": "4ffeef2777d2cc1aa2cece775006d45ba92190339fbc574f43615b6a547042a4"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-lstm.js",
+      "sha256": "6510efc4e8b45c5465df30679b9911ffe0071cd2ee982fa064e6f5136ef2de85"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-lstm.wasm",
+      "sha256": "66b17df6e20c5329a17ffa9c202a47eaa3e32500b253d4c7f38e7f2bc01457c3"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-lstm.wasm.js",
+      "sha256": "eef5f8b2f8e20e150680b20adaec4a60babafee3adbe8a94583c81fee46e8680"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-relaxedsimd-lstm.js",
+      "sha256": "a37ac78b707e8d5d3d2e532cc3c4e69b04d127ea44a608f1e7de17640402aa5c"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-relaxedsimd-lstm.wasm",
+      "sha256": "7985c92d4c64e7267d24cadffe1b2a1da6bf8aa55fdcaf953fe94fe122a24545"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-relaxedsimd-lstm.wasm.js",
+      "sha256": "861a536cf9ef8e63cb644d57bab39c388f37f7d6b6f60024b741c5f6b39a59b3"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-relaxedsimd.js",
+      "sha256": "716be037611f21b568347421f582f1e1a6456b6d5c3a7c2406c8a2a6c0136427"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-relaxedsimd.wasm",
+      "sha256": "45f8c9b516df326b6ae6b493ed3a6289df5cbd10490e7b6ff8bf5b12ea42d1da"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-relaxedsimd.wasm.js",
+      "sha256": "843074aa5bad1cc6421b74a86201768ced9f244795e4d81435435a61a40ce535"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-simd-lstm.js",
+      "sha256": "e48e2f02ddae3716c8dd24bf41cd290d4efa96892d689cdc4013c2545d63f469"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-simd-lstm.wasm",
+      "sha256": "34e8d50cac216427d86bf397d610fdd9f49492539bbcdfbfccc4eda20c810bea"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-simd-lstm.wasm.js",
+      "sha256": "c58b46a4c796c0b8afccf77591d5b875b6896b45d402bbce8caa6f5362447b38"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-simd.js",
+      "sha256": "da428fd7989ba749855ea16718a83b23e7ce04016fe31866ad2735813efc7133"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-simd.wasm",
+      "sha256": "7d237a13edfeb0fa2f104744fccde0a00e0c076c3e23b7a8fc7af75ec9af2c3e"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core-simd.wasm.js",
+      "sha256": "6b61ef4e911b5cf57e656bbfe983d6e2b3711a02dd164154ddda064566e8e09d"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core.js",
+      "sha256": "a824c1b99a19e122d87e4467fe16aabb56c495d6cc9a08bc58cb8a7342636b43"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core.wasm",
+      "sha256": "c7f5ace62ac0ad065e71e9c6725f1d7cdf82e7eda8fba532cbb9563964da7098"
+    },
+    {
+      "path": "public/assets/local-ocr/core/tesseract-core.wasm.js",
+      "sha256": "0bc6ce3e5fbbd0cd89706cf2fd70960e3372f4f01ee24265b26990808aaeb286"
+    },
+    {
+      "path": "public/assets/local-ocr/lang/por.traineddata.gz",
+      "sha256": "fa0f18462c8f65e025119940f1577462beca8990f2674e66fb1029994bffa020"
+    },
+    {
+      "path": "public/assets/local-ocr/pdf.mjs",
+      "sha256": "a209a2124baa35cbb9015b809926f1bcec9dd1c247296290e205dd9d76cb9128"
+    },
+    {
+      "path": "public/assets/local-ocr/pdf.worker.mjs",
+      "sha256": "7c237f83fa56bce645d8af51d183c9c56ba7b2d2928ff42754dc7020bea36323"
+    },
+    {
+      "path": "public/assets/local-ocr/tesseract.min.js",
+      "sha256": "000c27d9cd0def655f77b36c72a389c0ab13793aa31cb4d7aab56d09c0afbc7e"
+    },
+    {
+      "path": "public/assets/local-ocr/worker.min.js",
+      "sha256": "576b7df7e3393e137e51849357c9adb53fe7ac1bb69bfa06cf3d61520f182c6d"
     }
   ],
   "notes": [
-    "Corrige hierarquia: o único Administrador Master é a função de plataforma super_admin, não um cargo criável dentro da igreja.",
-    "Pastor e responsável pela igreja podem agora nomear outro Pastor, Secretária, Tesoureiro Geral, Contador e cargos inferiores.",
-    "Retira a opção Administrador das listas de criação e edição de usuários em todas as igrejas, inclusive em modo suporte; o Master pode apenas revisar contas antigas.",
-    "O servidor bloqueia POST direto que tente conceder os perfis admin, super_admin ou owner, independentemente do formulário.",
-    "Acessos antigos com perfil Administrador de igreja ficam visíveis como legados para revisão pelo Master; não são removidos automaticamente.",
-    "Contas admin legadas não podem mais gerenciar outros usuários nem ter sua senha redefinida por pastor ou responsável sem intervenção Master.",
-    "Permissões e dados de outros perfis e igrejas são preservados; reset de senhas, login e vínculos de membros continuam disponíveis.",
-    "Validação em MySQL com autenticação real: Pastor nomeia Pastor e inferiores, Master continua exclusivo, perfis antigos protegidos e sem elevação indireta.",
-    "Nenhum usuário teve seu cargo alterado ou excluído durante a publicação; após instalar, revisar contas legadas com o Master."
+    "Novidade: leitura automática de notas, cupons e comprovantes sem consumo de créditos de IA; o próprio navegador usa OCR open source.",
+    "Inclui motor Tesseract.js/WebAssembly, PDF.js e idioma português hospedados dentro do Igreja Master, sem API de terceiros e sem cobrança por leitura.",
+    "PDFs com texto são lidos diretamente; fotos e PDFs escaneados são reconhecidos localmente no celular ou computador.",
+    "Texto reconhecido é analisado pelo PHP da própria igreja para identificar valor, data, CNPJ, emitente, chave fiscal, ID Pix e duplicidade.",
+    "Arquivo original permanece anexado ao lançamento e o sistema preserva a opção de vários anexos adicionais, sem criar outros lançamentos.",
+    "IA externa fica disponível somente por botão opcional e pode consumir os créditos do provedor configurado pelo Master.",
+    "A leitura não garante reconhecimento perfeito de documentos desfocados, manuscritos, imagens HEIC, PDFs protegidos por senha ou com muitas páginas.",
+    "Leitor local limita processamento às quatro primeiras páginas de PDFs; dados contábeis sempre exigem conferência antes de registrar.",
+    "Nenhuma chave de API da OpenAI foi inserida; ChatGPT não fornece chave privada compartilhável nem cota ilimitada gratuita.",
+    "Testes de PHP, JavaScript, parsing de Pix/bancos/NFC-e e comportamento padrão sem API, além de validação SHA-256 do pacote.",
+    "Atualização publicada no canal Master; precisa instalar na hospedagem para funcionar nos celulares e computadores."
   ]
 }
