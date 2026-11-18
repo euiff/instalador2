@@ -765,6 +765,7 @@ View::header('Tesouraria',$auth,'finance.php');
 
 <nav class="im-finance-section-nav" aria-label="Áreas da Tesouraria">
   <a href="#finance-movements" aria-current="page">Movimentações</a>
+  <a href="/finance-control.php">Resumo financeiro</a>
   <a href="#new-finance-entry">Novo lançamento</a>
   <a href="#finance-receipts">Recibos</a>
   <a href="#finance-payables">Compromissos e contas a pagar</a>
