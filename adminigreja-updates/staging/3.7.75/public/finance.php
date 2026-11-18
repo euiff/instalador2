@@ -802,12 +802,20 @@ View::header('Tesouraria',$auth,'finance.php');
          <div class="im-tithe-member">Favorecido: <?=e($r['counterparty'])?></div>
        <?php endif?>
        <div class="im-tithe-item-foot"><span><?=e($r['account_name']?:'Conta não informada')?></span><span><?=e($r['status']==='posted'?'Ativo':'Estornado')?></span></div>
-       <a class="btn btn-light" href="/finance-entry-edit.php?id=<?=e($r['id'])?>">Editar / Anexar comprovante</a>
-       <?php if($masterFinanceSupport && in_array($r['status'],['posted','reversed'],true)):?>
-         <?php MasterSupportFinanceUi::exclusionForm($r); ?>
-       <?php elseif($churchFinanceCanExclude && in_array($r['status'],['posted','reversed'],true)):?>
-         <?php ChurchFinanceExclusionUi::render($r); ?>
-       <?php endif?>
+       <details class="im-finance-mobile-actions">
+         <summary class="btn btn-light">Ações do lançamento</summary>
+         <div class="im-finance-mobile-actions-inner">
+           <a class="btn btn-primary" href="/finance-entry-edit.php?id=<?=e($r['id'])?>">Editar / Anexar comprovante</a>
+           <?php if($r['direction']==='expense'):?>
+             <a class="btn btn-light" href="/expense-receipt.php?entry=<?=e($r['id'])?>"><?=e(!empty($r['expense_receipt_id'])?'Ver recibo':'Gerar recibo')?></a>
+           <?php endif?>
+           <?php if($masterFinanceSupport && in_array($r['status'],['posted','reversed'],true)):?>
+             <?php MasterSupportFinanceUi::exclusionForm($r); ?>
+           <?php elseif($churchFinanceCanExclude && in_array($r['status'],['posted','reversed'],true)):?>
+             <?php ChurchFinanceExclusionUi::render($r); ?>
+           <?php endif?>
+         </div>
+       </details>
     </article>
     <?php endforeach?>
   </div>
@@ -879,6 +887,11 @@ View::header('Tesouraria',$auth,'finance.php');
 .im-finance-filters label{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:12px;font-weight:650}
 .im-finance-filters input,.im-finance-filters select{width:100%;min-width:0;box-sizing:border-box}
 .im-finance-filter-count{margin:4px 0 12px}
+.im-finance-mobile-actions summary{list-style:none;cursor:pointer;margin-top:10px}
+.im-finance-mobile-actions summary::-webkit-details-marker{display:none}
+.im-finance-mobile-actions-inner{display:flex;flex-wrap:wrap;align-items:flex-start;gap:7px;margin-top:9px}
+.im-finance-mobile-actions-inner a{max-width:100%;white-space:normal}
+@media(max-width:650px){.im-finance-mobile-actions-inner{flex-direction:column;align-items:stretch}}
 @media(max-width:1050px){.im-finance-filters{grid-template-columns:repeat(3,minmax(150px,1fr))}}
 @media(max-width:650px){.im-finance-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.im-finance-filters label:first-child{grid-column:1/-1}.im-finance-filters button{grid-column:1/-1}.im-finance-section-nav{margin:10px -3px 4px}.im-finance-section-nav a{padding:9px 11px}}
 </style>
