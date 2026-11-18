@@ -1,0 +1,143 @@
+name: Publish Igreja Master 3.7.75 Video Finance Dashboard
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3775.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate-publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate original finance behavior and new dashboard
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=adminigreja-updates/staging/3.7.75
+          php -l "$base/public/finance.php"
+          node --check "$base/public/assets/finance-ledger-filters-3775.js"
+          node --check "$base/tests/finance-ledger-filters.cjs"
+          node "$base/tests/finance-ledger-filters.cjs"
+          test "$(cat "$base/public/VERSION")" = "3.7.75"
+          python3 - <<'PY'
+          from pathlib import Path
+          d=Path('adminigreja-updates/staging/3.7.75/public')
+          p=(d/'finance.php').read_text()
+          filters=(d/'assets/finance-ledger-filters-3775.js').read_text()
+          # Keep all four accounting cards seen in the video.
+          for label in ['Saldo inicial','Entradas','Saídas','Saldo final']:
+              assert f'class="stat-label">{label}' in p,label
+          # Wide table and mobile cards for the SAME historical ledger.
+          assert 'class="grid two-col im-finance-main-layout"' in p
+          assert '.im-finance-main-layout{display:flex;flex-direction:column;' in p
+          assert 'data-finance-view="mobile"' in p
+          assert 'data-finance-view="desktop"' in p
+          assert 'data-finance-entry-id=' in p
+          assert 'data-finance-filter="search"' in p
+          assert 'data-finance-filter="type"' in p
+          assert 'data-finance-filter="category"' in p
+          assert 'data-finance-filter="account"' in p
+          assert 'data-finance-filter="status"' in p
+          assert 'data-finance-filter-empty' in p
+          assert 'data-finance-filter-reset' in p
+          assert 'href="#finance-movements"' in p
+          assert 'href="/finance-control.php"' in p
+          assert 'href="/finance-control.php?view=receivables"' in p
+          assert 'href="/finance-control.php?view=report"' in p
+          assert 'href="/registers.php?kind=finance_category"' in p
+          assert 'id="finance-receipts"' in p
+          assert 'id="finance-payables"' in p
+          assert 'id="finance-accounts"' in p
+          assert 'data-finance-mobile-actions' not in p or 'im-finance-mobile-actions' in p
+          assert 'im-finance-mobile-actions' in p
+          assert 'ChurchFinanceExclusionUi::render($r)' in p
+          assert 'MasterSupportFinanceUi::exclusionForm($r)' in p
+          assert 'Editar / Anexar comprovante' in p
+          assert "href=\"/expense-receipt.php?entry=" in p
+          # Absolutely no deletion or mutation of financial data in this UX patch.
+          assert 'DROP TABLE' not in p
+          assert '/assets/finance-local-ocr-3774.js?v=3.7.74' in p
+          assert '/assets/finance-ocr-3752.js?v=3.7.74' in p
+          assert '/assets/finance-ledger-filters-3775.js?v=3.7.75' in p
+          assert 'finance-manual-extras-3758.js' in p
+          assert 'data-extra-attachments' in p
+          assert "fetch(" not in filters, 'Filtering must stay local'
+          assert 'row.hidden=!visible' in filters
+          assert 'card.hidden=!visible' in filters
+          print('PASS: finance video-inspired UX, ledger and mobile parity, preserved audit, attachments, OCR and permissions')
+          PY
+      - name: Publish verified incremental 3.7.75 Master update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,base64,hashlib,io,tarfile
+          root=Path('adminigreja-updates')
+          latest=root/'latest.json'
+          previous=json.loads(latest.read_text())
+          if previous['version']=='3.7.75':
+              print('Already published')
+              raise SystemExit(0)
+          assert previous['version']=='3.7.74', 'Unexpected previous version '+previous['version']
+          stage=root/'staging/3.7.75'
+          paths=[
+              'public/finance.php',
+              'public/assets/finance-ledger-filters-3775.js',
+              'public/VERSION'
+          ]
+          blobs={p:(stage/p).read_bytes() for p in paths}
+          target=Path('/tmp/igreja-master-3775.tar.gz')
+          with tarfile.open(target,'w:gz') as ar:
+              for p in paths:ar.add(stage/p,arcname=p,recursive=False)
+          data=target.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as ar:
+              for p in paths:assert ar.extractfile(p).read()==blobs[p],p
+          raw=base64.b64encode(data)
+          parts=[]
+          for i in range(0,len(raw),60000):
+              part=f'releases/v3.7.75.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(raw[i:i+60000])
+              parts.append(part)
+          manifest={
+              'version':'3.7.75','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(data).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(blobs[p]).hexdigest()} for p in paths],
+              'notes':[
+                'Melhorias visuais inspiradas pelo vídeo de 48 segundos da Tesouraria: indicadores, seções e consulta de movimentações mais clara.',
+                'Tabela de movimentações ocupa toda a largura disponível, sem ficar apertada ao lado do formulário de novo lançamento.',
+                'Abas rápidas: Movimentações, Resumo financeiro, Novo lançamento, Recibos, Compromissos/Contas a pagar, Contas a receber, Bancos/Caixas, Relatórios e Categorias.',
+                'Busca por descrição, contribuinte, fornecedor, categoria, banco/caixa e referência de documento.',
+                'Filtros locais por entrada/saída, categoria, caixa/conta e status ativo/estornado, com contagem e botão Limpar filtros.',
+                'No celular, ações de cada lançamento ficam recolhidas: editar, anexar comprovantes, recibo e exclusão com permissão de pastor/tesoureiro ou Master.',
+                'Identificação do membro contribuinte e do favorecido permanece na tabela, com status e documentos.',
+                'Preserva quatro indicadores, contas e departamentos separados, anexos extras, OCR próprio da versão 3.7.74, recibos, relatórios e controles de segurança.',
+                'Os filtros operam apenas nos até 500 lançamentos carregados no período; não alteram movimentações, saldos nem banco de dados.',
+                'Testes automáticos de sintaxe PHP e JS, filtros sincronizados no celular/computador e preservação das permissões.',
+                'Nenhuma conta ou lançamento foi criado, excluído ou alterado ao publicar esta atualização.',
+                'Publicação no canal Master; precisa ser instalada na hospedagem para visualização no sistema real.'
+              ]
+          }
+          latest.write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n')
+          print('RELEASE',manifest['version'],'SHA256',manifest['sha256'],'parts',parts)
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.75.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.75 video-inspired financial dashboard"
+          git pull --rebase origin main
+          git push origin HEAD:main
