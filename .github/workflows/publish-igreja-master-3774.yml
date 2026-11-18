@@ -1,0 +1,188 @@
+name: Publish Igreja Master 3.7.74 Local OCR without AI Credits
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3774.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build-test-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring
+          coverage: none
+      - name: Fetch and self-host open source OCR engine and Portuguese language
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.74/public/assets/local-ocr
+          mkdir -p "$stage"/{core,lang}
+          work="$(mktemp -d)"
+          cd "$work"
+          npm init -y >/dev/null
+          npm install --no-save --ignore-scripts --no-audit --no-fund tesseract.js@7.0.0 pdfjs-dist@4.10.38
+          cp node_modules/tesseract.js/dist/tesseract.min.js "$GITHUB_WORKSPACE/$stage/tesseract.min.js"
+          cp node_modules/tesseract.js/dist/worker.min.js "$GITHUB_WORKSPACE/$stage/worker.min.js"
+          cp node_modules/pdfjs-dist/build/pdf.mjs "$GITHUB_WORKSPACE/$stage/pdf.mjs"
+          cp node_modules/pdfjs-dist/build/pdf.worker.mjs "$GITHUB_WORKSPACE/$stage/pdf.worker.mjs"
+          python3 - <<'PY'
+          import os,shutil
+          from pathlib import Path
+          src=Path('node_modules/tesseract.js-core')
+          dest=Path(os.environ['GITHUB_WORKSPACE'])/'adminigreja-updates/staging/3.7.74/public/assets/local-ocr/core'
+          found=list(src.glob('tesseract-core*.js'))+list(src.glob('tesseract-core*.wasm'))
+          if not found or not any(f.suffix=='.wasm' for f in found):
+              raise RuntimeError('OCR WASM engine files missing')
+          for file in found:
+              shutil.copyfile(file,dest/file.name)
+              print('SELF-HOST CORE',file.name,file.stat().st_size)
+          PY
+          curl -fL --retry 3 --connect-timeout 25 --max-time 120 \
+            https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/main/por.traineddata \
+            -o por.traineddata
+          gzip -n -9 por.traineddata
+          cp por.traineddata.gz "$GITHUB_WORKSPACE/$stage/lang/por.traineddata.gz"
+          cd "$GITHUB_WORKSPACE"
+          test -s "$stage/tesseract.min.js"
+          test -s "$stage/worker.min.js"
+          test -s "$stage/pdf.mjs"
+          test -s "$stage/pdf.worker.mjs"
+          test -s "$stage/lang/por.traineddata.gz"
+          test "$(find "$stage/core" -name '*.wasm' | wc -l)" -ge 2
+          du -ah "$stage" | sort -h | tail -18
+          echo "OCR_ENGINE_PATH=$stage" >> "$GITHUB_ENV"
+      - name: Validate OCR parser, frontend, attachments and no-credit default
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.74
+          php -l "$root/public/finance.php"
+          php -l "$root/public/finance-scan.php"
+          php -l "$root/public/lib/FinanceFiscalScan.php"
+          php -l "$root/tests/finance-local-ocr-parser.php"
+          node --check "$root/public/assets/finance-local-ocr-3774.js"
+          node --check "$root/public/assets/finance-ocr-3752.js"
+          node --check "$root/tests/finance-local-ocr-flow.cjs"
+          php "$root/tests/finance-local-ocr-parser.php"
+          node "$root/tests/finance-local-ocr-flow.cjs"
+          test "$(cat "$root/public/VERSION")" = "3.7.74"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('adminigreja-updates/staging/3.7.74/public')
+          entry=(p/'finance.php').read_text()
+          api=(p/'finance-scan.php').read_text()
+          js=(p/'assets/finance-ocr-3752.js').read_text()
+          own=(p/'assets/finance-local-ocr-3774.js').read_text()
+          assert '/assets/finance-local-ocr-3774.js?v=3.7.74' in entry
+          assert '/assets/finance-ocr-3752.js?v=3.7.74' in entry
+          assert 'data-fiscal-precise' in entry
+          assert 'data-extra-attachments' in entry
+          assert 'finance-manual-extras-3758.js' in entry
+          assert 'data-finance-attachment="1"' in entry
+          assert 'name="document_file"' in entry
+          assert "mode==='precise'?readViaAI(file,mode,sequence):readLocally(file,sequence)" in js
+          assert "start('local')" in js and "start('fast')" not in js
+          assert "scan.append('action','scan')" in js
+          assert "scan.append('ocr_text'" in js
+          assert "scan.append('file_hash'" in js
+          assert "engine'=>$action==='scan'?'local_ocr'" in api
+          assert "FinanceFiscalScan::fileReference($fileHash)" in api
+          assert "window.IgrejaLocalOCR={extract,isPDF,sha256}" in own
+          assert "pdfjs.getDocument" in own
+          assert "page.getTextContent()" in own
+          assert "ocr.recognize(canvas)" in own
+          assert "T.createWorker('por',1" in own
+          assert "const pdfjs=await import(ROOT+'pdf.mjs')" in own
+          assert 'https://' not in own and 'cdn.' not in own
+          print('PASS static no-credit local OCR default, PDF text/scanned pages, duplicates, attachments and optional paid AI')
+          PY
+      - name: Build and publish validated self-hosted OCR release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import io,json,base64,hashlib,tarfile
+          root=Path('adminigreja-updates')
+          previous=json.loads((root/'latest.json').read_text())
+          if previous['version']=='3.7.74':
+              print('Already published');raise SystemExit(0)
+          assert previous['version']=='3.7.73','Unexpected previous version '+previous['version']
+          staged=root/'staging/3.7.74'
+          ordinary=[
+              'public/finance.php',
+              'public/finance-scan.php',
+              'public/lib/FinanceFiscalScan.php',
+              'public/assets/finance-local-ocr-3774.js',
+              'public/assets/finance-ocr-3752.js',
+              'public/VERSION',
+          ]
+          assets=sorted((staged/'public/assets/local-ocr').rglob('*'))
+          vendor=[str(p.relative_to(staged)) for p in assets if p.is_file()]
+          paths=ordinary+vendor
+          assert len(vendor)>=12,'Missing self-hosted OCR assets'
+          required=[
+              'public/assets/local-ocr/tesseract.min.js',
+              'public/assets/local-ocr/worker.min.js',
+              'public/assets/local-ocr/pdf.mjs',
+              'public/assets/local-ocr/pdf.worker.mjs',
+              'public/assets/local-ocr/lang/por.traineddata.gz',
+          ]
+          assert all(p in paths for p in required)
+          blobs={p:(staged/p).read_bytes() for p in paths}
+          assert all(blobs[p] for p in paths)
+          target=Path('/tmp/igreja-master-3774.tar.gz')
+          with tarfile.open(target,mode='w:gz',compresslevel=6) as ar:
+              for p in paths:ar.add(staged/p,arcname=p,recursive=False)
+          output=target.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(output),mode='r:gz') as ar:
+              for p in paths:
+                  assert ar.extractfile(p).read()==blobs[p],p
+          chunks=base64.b64encode(output)
+          parts=[]
+          for offset in range(0,len(chunks),180000):
+              name=f'releases/v3.7.74.{len(parts)+1:03d}.b64.txt'
+              (root/name).write_bytes(chunks[offset:offset+180000])
+              parts.append(name)
+          release={
+              'version':'3.7.74','min_php':'8.1','encoding':'base64','parts':parts,
+              'sha256':hashlib.sha256(output).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(blobs[p]).hexdigest()} for p in paths],
+              'notes':[
+                'Novidade: leitura automática de notas, cupons e comprovantes sem consumo de créditos de IA; o próprio navegador usa OCR open source.',
+                'Inclui motor Tesseract.js/WebAssembly, PDF.js e idioma português hospedados dentro do Igreja Master, sem API de terceiros e sem cobrança por leitura.',
+                'PDFs com texto são lidos diretamente; fotos e PDFs escaneados são reconhecidos localmente no celular ou computador.',
+                'Texto reconhecido é analisado pelo PHP da própria igreja para identificar valor, data, CNPJ, emitente, chave fiscal, ID Pix e duplicidade.',
+                'Arquivo original permanece anexado ao lançamento e o sistema preserva a opção de vários anexos adicionais, sem criar outros lançamentos.',
+                'IA externa fica disponível somente por botão opcional e pode consumir os créditos do provedor configurado pelo Master.',
+                'A leitura não garante reconhecimento perfeito de documentos desfocados, manuscritos, imagens HEIC, PDFs protegidos por senha ou com muitas páginas.',
+                'Leitor local limita processamento às quatro primeiras páginas de PDFs; dados contábeis sempre exigem conferência antes de registrar.',
+                'Nenhuma chave de API da OpenAI foi inserida; ChatGPT não fornece chave privada compartilhável nem cota ilimitada gratuita.',
+                'Testes de PHP, JavaScript, parsing de Pix/bancos/NFC-e e comportamento padrão sem API, além de validação SHA-256 do pacote.',
+                'Atualização publicada no canal Master; precisa instalar na hospedagem para funcionar nos celulares e computadores.'
+              ]
+          }
+          (root/'latest.json').write_text(json.dumps(release,ensure_ascii=False,indent=2)+'\n')
+          print('PUBLISHED VERSION',release['version'])
+          print('ASSETS',len(vendor),'RELEASE_BYTES',len(output),'BASE64_PARTS',len(parts))
+          print('SHA256',release['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.74.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.74 self-hosted no-credit photo/PDF OCR"
+          git pull --rebase origin main
+          git push origin HEAD:main
