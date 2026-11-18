@@ -1,0 +1,133 @@
+name: Verify Igreja Master 3.7.74 OCR in Real Chromium
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-igreja-ocr-3774-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-ocr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconstruct the exact channel release using verified base64 and SHA256
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,io,json,tarfile,hashlib
+          root=Path('adminigreja-updates')
+          man=json.loads((root/'latest.json').read_text())
+          assert man['version']=='3.7.74','Release is not 3.7.74'
+          data=base64.b64decode(b''.join((root/p).read_bytes() for p in man['parts']),validate=True)
+          assert hashlib.sha256(data).hexdigest()==man['sha256'],'Payload sha256 mismatch'
+          dst=Path('/tmp/igreja-ocr-browser/public')
+          dst.mkdir(parents=True,exist_ok=True)
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as ar:
+              for item in ar:
+                  assert item.name.startswith('public/'),'Unexpected path'
+                  if not item.isfile():continue
+                  path=dst/item.name.removeprefix('public/')
+                  path.parent.mkdir(parents=True,exist_ok=True)
+                  path.write_bytes(ar.extractfile(item).read())
+          (dst/'test.html').write_text('<!DOCTYPE html><meta charset="utf-8"><h1>OCR test</h1><script defer src="/assets/finance-local-ocr-3774.js"></script>')
+          assert (dst/'assets/local-ocr/lang/por.traineddata.gz').stat().st_size>400000
+          print('PASS rebuilt signed release, local OCR libraries and Portuguese traineddata')
+          PY
+      - name: Install browser and PDF test generator
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/im-ocr-browser-tests
+          cd /tmp/im-ocr-browser-tests
+          npm init -y >/dev/null
+          npm install --no-save --no-audit --no-fund playwright@1.56.1 pdfkit@0.17.2
+          npx playwright install chromium
+      - name: Validate actual PNG OCR and PDF text extraction with no external API
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8774 --bind 127.0.0.1 --directory /tmp/igreja-ocr-browser/public >/tmp/igreja-ocr-browser-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid || true' EXIT
+          sleep 2
+          cd /tmp/im-ocr-browser-tests
+          node <<'JS'
+          const {chromium}=require('playwright');
+          const fs=require('node:fs');
+          const PDFDocument=require('pdfkit');
+          const path='/tmp/igreja-ocr-browser/public/sample.pdf';
+          const doc=new PDFDocument({autoFirstPage:true});
+          doc.pipe(fs.createWriteStream(path));
+          doc.fontSize(25).text('RECIBO DE TESTE',70,100);
+          doc.fontSize(18).text('VALOR TOTAL R$ 87,90',70,180);
+          doc.fontSize(18).text('DATA 18/11/2026',70,230);
+          doc.end();
+          async function run(){
+            await new Promise((resolve,reject)=>{
+              const timer=setInterval(()=>{
+                try{
+                  if(fs.statSync(path).size>1000){clearInterval(timer);resolve()}
+                }catch{}
+              },150);
+              setTimeout(()=>{clearInterval(timer);reject(new Error('PDF not generated'))},10000);
+            });
+            const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+            const page=await browser.newPage({baseURL:'http://127.0.0.1:8774'});
+            const externals=[];
+            page.on('console',msg=>{if(msg.type()==='error')console.error('BROWSER JS ERROR:',msg.text())});
+            page.on('pageerror',error=>console.error('BROWSER UNCAUGHT:',error.message));
+            await page.route('**/*',route=>{
+              const url=route.request().url();
+              if(!url.startsWith('http://127.0.0.1:8774/')){
+                externals.push(url);return route.abort();
+              }
+              return route.continue();
+            });
+            await page.goto('/test.html');
+            await page.waitForFunction(()=>Boolean(window.IgrejaLocalOCR?.extract));
+            const results=await Promise.race([
+              page.evaluate(async()=>{
+                const out={};
+                const p=await fetch('/sample.pdf');
+                out.pdf=await window.IgrejaLocalOCR.extract(
+                  new File([await p.blob()],'sample.pdf',{type:'application/pdf'}),
+                  {onStatus:()=>{}}
+                );
+                const canvas=document.createElement('canvas');
+                canvas.width=1700;canvas.height=600;
+                const context=canvas.getContext('2d');
+                context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);
+                context.fillStyle='#111';context.font='bold 78px Arial';
+                context.fillText('CUPOM FISCAL TESTE',45,150);
+                context.fillText('VALOR TOTAL R$ 87,90',45,310);
+                context.fillText('DATA 18/11/2026',45,460);
+                const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+                out.image=await window.IgrejaLocalOCR.extract(
+                  new File([blob],'cupom.png',{type:'image/png'}),
+                  {onStatus:()=>{}}
+                );
+                return out;
+              }),
+              new Promise((_,reject)=>setTimeout(()=>reject(new Error('Local browser OCR > 120 seconds')),120000))
+            ]);
+            if(results.pdf.source!=='pdf_text')throw Error('PDF text layer not used: '+results.pdf.source);
+            if(!/RECIBO DE TESTE/i.test(results.pdf.text))throw Error('PDF text not extracted');
+            if(!/87,90/.test(results.pdf.text))throw Error('PDF amount not extracted');
+            if(results.image.source!=='image_ocr')throw Error('Local image did not use OCR');
+            if(!/VALOR|TOTAL/i.test(results.image.text))throw Error('OCR failed to identify receipt value label: '+results.image.text);
+            if(!/87[,.]90/.test(results.image.text))throw Error('OCR failed to read BRL value: '+results.image.text);
+            if(externals.length)throw Error('Requests outside local Igreja Master server: '+externals.join(','));
+            console.log('PASS REAL CHROMIUM PDF TEXT:',results.pdf.text.slice(0,160));
+            console.log('PASS REAL CHROMIUM PORTUGUESE OCR:',results.image.text.slice(0,220));
+            console.log('PASS NO EXTERNAL OCR API REQUESTS:',externals.length);
+            await browser.close();
+          }
+          run().catch(e=>{console.error(e);process.exitCode=1});
+          JS
