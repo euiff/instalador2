@@ -63,8 +63,9 @@
  }
  async function fromPDF(file,options){
    status(options,'Abrindo o PDF no próprio aparelho...');
-   const pdfjs=await loadScript(ROOT+'pdf.min.js','pdfjsLib');
-   pdfjs.GlobalWorkerOptions.workerSrc=ROOT+'pdf.worker.min.js';
+   // PDF.js is an ESM build hosted by our own domain (no CDN/API).
+   const pdfjs=await import(ROOT+'pdf.mjs');
+   pdfjs.GlobalWorkerOptions.workerSrc=ROOT+'pdf.worker.mjs';
    const buffer=await file.arrayBuffer();
    const loading=pdfjs.getDocument({data:new Uint8Array(buffer),isEvalSupported:false});
    let pdf,ocr=null,allText=[],warnings=[];
