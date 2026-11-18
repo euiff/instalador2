@@ -1,37 +1,48 @@
 {
-  "version": "3.7.75",
+  "version": "3.7.76",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.75.01.b64.txt"
+    "releases/v3.7.76.01.b64.txt"
   ],
-  "sha256": "daa15b3c333e24c62044044e6325333514173ebea3f69b7b646d3dfffd6abdbb",
+  "sha256": "62c0b02a8bca097bbc73d5da3c385960c5a6490c190c81e2384572909ec32f27",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "5888d81e32d659f429deb993283e1819f1e9897d16128d19ae0f69f8536c3f66"
+      "sha256": "257e20d5273253f0a6e842f2f8b30a781657286d60d6db322e84e7c499e18156"
     },
     {
-      "path": "public/assets/finance-ledger-filters-3775.js",
-      "sha256": "9a9de69a582cf0f54f3a1c3d4b5493ec8e53ff11c41e55a84b34bead997273e6"
+      "path": "public/lib/FinanceFiscalScan.php",
+      "sha256": "e54a41dd5dfb9c5d4738bf7846d67bd87d744d3766605fa45c4cc702e15796bd"
+    },
+    {
+      "path": "public/lib/FinancePixProofReader.php",
+      "sha256": "9a394546f72101d8b12ea98823c6ec63a789613f56b2e77468bc82ccc65e4f4d"
+    },
+    {
+      "path": "public/assets/finance-local-ocr-3774.js",
+      "sha256": "b4e917fd90a3a873ce3281191911237988383e6f1e9845b5dd914d3e231a0584"
+    },
+    {
+      "path": "public/assets/finance-ocr-3752.js",
+      "sha256": "1fbf062e21c4c9dcbd60f99142371dce354e04bae9ce987298ebb89a390d6f63"
     },
     {
       "path": "public/VERSION",
-      "sha256": "abd967c7a376b71c8ae90b0ef19b9c6742490e4df2dcfb4c31ba67a8830983fe"
+      "sha256": "fb48a514178dd9994a527d9bf0e9309dc5b5ce9a999211138029e1585252969d"
     }
   ],
   "notes": [
-    "Melhorias visuais inspiradas pelo vídeo de 48 segundos da Tesouraria: indicadores, seções e consulta de movimentações mais clara.",
-    "Tabela de movimentações ocupa toda a largura disponível, sem ficar apertada ao lado do formulário de novo lançamento.",
-    "Abas rápidas: Movimentações, Resumo financeiro, Novo lançamento, Recibos, Compromissos/Contas a pagar, Contas a receber, Bancos/Caixas, Relatórios e Categorias.",
-    "Busca por descrição, contribuinte, fornecedor, categoria, banco/caixa e referência de documento.",
-    "Filtros locais por entrada/saída, categoria, caixa/conta e status ativo/estornado, com contagem e botão Limpar filtros.",
-    "No celular, ações de cada lançamento ficam recolhidas: editar, anexar comprovantes, recibo e exclusão com permissão de pastor/tesoureiro ou Master.",
-    "Identificação do membro contribuinte e do favorecido permanece na tabela, com status e documentos.",
-    "Preserva quatro indicadores, contas e departamentos separados, anexos extras, OCR próprio da versão 3.7.74, recibos, relatórios e controles de segurança.",
-    "Os filtros operam apenas nos até 500 lançamentos carregados no período; não alteram movimentações, saldos nem banco de dados.",
-    "Testes automáticos de sintaxe PHP e JS, filtros sincronizados no celular/computador e preservação das permissões.",
-    "Nenhuma conta ou lançamento foi criado, excluído ou alterado ao publicar esta atualização.",
-    "Publicação no canal Master; precisa ser instalada na hospedagem para visualização no sistema real."
+    "Leitura própria de comprovantes Pix Sicoob, PDFs escaneados e imagens de fundo escuro aprimorada sem gastar créditos de IA.",
+    "Reconhecimento de valor isolado R$ 2.172,03, inclusive quando OCR lê RS; identifica data real Transferido em e hora do Pix, não a hora posterior de geração do PDF.",
+    "O sistema diferencia Pix enviado (saída) de Pix recebido (entrada) e reconhece separadamente pagador e recebedor; não confunde com a marca do banco.",
+    "Recuperação cautelosa da primeira letra E do EndToEnd ID quando o OCR lê £ e há um rótulo de ID da transação; usuário deve conferir os 32 caracteres.",
+    "Leitor local com contraste invertido para PDF/foto escuros e leitura adicional do rodapé para ID bancário, mantendo o arquivo original e anexos extras.",
+    "CNPJ mascarado não é preenchido como se fosse completo; quando o ID bancário não é confiável, gera identificador próprio ARQ do arquivo para detectar cópias iguais.",
+    "Mostra em conferência pagador, recebedor, hora do pagamento, nome do favorecido, valor, data e referência da transação.",
+    "Continua exigindo confirmação do usuário e escolha de categoria contábil; não inventa documentos ou lançamentos.",
+    "Mantém leitura gratuita padrão, IA externa opcional, proteção de duplicações, permissões, gráficos financeiros e estrutura da versão 3.7.75.",
+    "Testes automáticos para exemplo anonimizado do PDF do Sicoob fornecido, incluindo E2E, valor, horário, partes, Pix recebido e NFC-e.",
+    "Atualização publicada no canal Master; precisa ser aplicada na hospedagem para funcionar em celulares e computadores."
   ]
 }
