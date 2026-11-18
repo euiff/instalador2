@@ -76,6 +76,7 @@ jobs:
           node --check "$root/public/assets/finance-ocr-3752.js"
           node --check "$root/tests/finance-local-ocr-flow.cjs"
           php "$root/tests/finance-local-ocr-parser.php"
+          # Regression also exercises real Pix/transfer values with colons after their labels.
           node "$root/tests/finance-local-ocr-flow.cjs"
           test "$(cat "$root/public/VERSION")" = "3.7.74"
           python3 - <<'PY'
