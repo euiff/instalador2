@@ -1,0 +1,8 @@
+<IfModule mod_mime.c>
+AddType application/wasm .wasm
+AddType text/javascript .mjs .js
+AddType application/octet-stream .gz
+</IfModule>
+<IfModule mod_headers.c>
+Header set X-Content-Type-Options "nosniff"
+</IfModule>
