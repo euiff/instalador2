@@ -1,0 +1,136 @@
+name: Publish Igreja Master 3.7.77 Church Pix Direction Suggestions
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3777.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring,iconv
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Pix direction against the authenticated church
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.77
+          for php in "$root/public/finance.php" "$root/public/finance-scan.php" \
+            "$root/public/lib/FinanceChurchPartyDirection.php" \
+            "$root/public/lib/FinanceVisionReader.php" \
+            "$root/tests/church-direction-suggestions.php"; do php -l "$php"; done
+          node --check "$root/public/assets/finance-ocr-3752.js"
+          node --check "$root/tests/finance-church-direction-ui.cjs"
+          php "$root/tests/church-direction-suggestions.php"
+          node "$root/tests/finance-church-direction-ui.cjs"
+          test "$(cat "$root/public/VERSION")" = "3.7.77"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('adminigreja-updates/staging/3.7.77/public')
+          api=(p/'finance-scan.php').read_text()
+          policy=(p/'lib/FinanceChurchPartyDirection.php').read_text()
+          ai=(p/'lib/FinanceVisionReader.php').read_text()
+          ui=(p/'assets/finance-ocr-3752.js').read_text()
+          form=(p/'finance.php').read_text()
+          assert api.count("FinanceChurchPartyDirection::apply(")==2
+          assert api.count("(string)$church['name']")==2
+          assert "$church=$auth->currentChurch();" in api
+          assert "$auth->requireAbility('finance');" in api
+          assert "verify_csrf();" in api
+          assert "[$cid]" not in api or "church['id']" in api
+          assert "'document_type']??null)!=='proof'" in policy
+          assert "count($name)<2||count($other)<2" in policy
+          assert "'direction_source']='church_is_payer'" in policy
+          assert "'direction_source']='church_is_receiver'" in policy
+          assert "'direction_source']='both_parties_church'" in policy
+          assert "'suggested_direction']='expense'" in policy
+          assert "'suggested_direction']='income'" in policy
+          assert "direction_review_required" in policy
+          assert "'payer','receiver'" in ai
+          assert "'payer'=>$payer,'receiver'=>$receiver" in ai
+          assert 'name="direction" id="finance-entry-direction" required' in form
+          assert "finance-ocr-3752.js?v=3.7.77" in form
+          assert "finance-local-ocr-3774.js?v=3.7.76" in form
+          assert "finance-ledger-filters-3775.js?v=3.7.75" in form
+          assert "data-extra-attachments" in form
+          assert "ChurchFinanceExclusionUi::render" in form
+          assert "MasterSupportFinanceUi::exclusionForm" in form
+          assert "data.suggested_direction||data.direction" in ui
+          assert "Sugestão de lançamento:" in ui
+          assert "Nenhum valor foi lançado automaticamente" in ui
+          assert "both_parties_church" in ui
+          print('PASS: role-based suggested Entrada/Saída anchored in the current logged-in church and existing features retained.')
+          PY
+      - name: Publish signed 3.7.77 incremental release after tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import io,json,tarfile,base64,hashlib
+          root=Path('adminigreja-updates')
+          current=json.loads((root/'latest.json').read_text())
+          if current['version']=='3.7.77':
+              print('Already published');raise SystemExit(0)
+          assert current['version']=='3.7.76','Unexpected channel version '+current['version']
+          stage=root/'staging/3.7.77'
+          paths=[
+            'public/finance.php',
+            'public/finance-scan.php',
+            'public/lib/FinanceChurchPartyDirection.php',
+            'public/lib/FinanceVisionReader.php',
+            'public/assets/finance-ocr-3752.js',
+            'public/VERSION'
+          ]
+          contents={p:(stage/p).read_bytes() for p in paths}
+          tar=Path('/tmp/igreja-master-3777.tar.gz')
+          with tarfile.open(tar,'w:gz') as a:
+              for p in paths:a.add(stage/p,arcname=p,recursive=False)
+          raw=tar.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as a:
+              for p in paths:assert a.extractfile(p).read()==contents[p],p
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              part=f'releases/v3.7.77.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[i:i+60000]);parts.append(part)
+          manifest={
+              'version':'3.7.77','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(contents[p]).hexdigest()} for p in paths],
+              'notes':[
+                  'Leitor de comprovantes Pix compara o nome do Pagador e Recebedor com a igreja selecionada e autenticada no sistema.',
+                  'Quando a própria igreja é pagadora, sugere SAÍDA e seleciona Saída no formulário. Quando a igreja recebe, sugere ENTRADA.',
+                  'Exemplo da Igreja de Deus - Campo Belo: pagador Igreja de Deus no Brasil - Campo Belo, Catalão-GO é sugerido como saída, mesmo com recebedor do mesmo ministério.',
+                  'A sugestão mostra o motivo e os nomes lidos para o Pastor ou Tesoureiro conferir antes de clicar em Registrar lançamento.',
+                  'Nomes genéricos como Igreja de Deus no Brasil não bastam para identificar uma congregação específica; nomes parciais geram aviso para conferência.',
+                  'Pix entre contas da mesma igreja exige escolha manual e alerta para evitar contabilização dobrada.',
+                  'A verificação usa o contexto seguro da igreja autenticada e não um nome informado pelo navegador, respeitando a separação entre igrejas.',
+                  'Disponível tanto na leitura própria gratuita quanto na IA externa opcional; a IA agora extrai pagador e recebedor individualmente.',
+                  'Não modifica valores, contas, categorias ou lançamentos existentes. Mantém leitura gratuita, documentos adicionais, segurança e relatórios.',
+                  'Teste automático PHP e JavaScript confirma Pix enviado e recebido, igreja correta, outras congregações, ambiguidades e seleção no formulário.',
+                  'Versão publicada no canal Master. Instale na hospedagem antes de testar com outro comprovante.'
+              ]
+          }
+          (root/'latest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          print('Validated 3.7.77 SHA256',manifest['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.77.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.77 payer/receiver based entry and expense suggestions"
+          git pull --rebase origin main
+          git push origin HEAD:main
