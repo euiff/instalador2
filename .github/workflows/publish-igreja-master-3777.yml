@@ -33,6 +33,8 @@ jobs:
             "$root/tests/church-direction-suggestions.php"; do php -l "$php"; done
           node --check "$root/public/assets/finance-ocr-3752.js"
           node --check "$root/tests/finance-church-direction-ui.cjs"
+          php -l "$root/public/lib/FinanceFiscalScan.php"
+          php -l "$root/public/lib/FinancePixProofReader.php"
           php "$root/tests/church-direction-suggestions.php"
           node "$root/tests/finance-church-direction-ui.cjs"
           test "$(cat "$root/public/VERSION")" = "3.7.77"
