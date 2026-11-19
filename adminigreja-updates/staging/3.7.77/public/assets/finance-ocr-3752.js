@@ -87,6 +87,8 @@
    // Fill description last: assistant may regenerate it while other fields change.
    if(data.description)setField('description',data.description);
 
+   const suggestedDirection=data.suggested_direction==='expense'?'SAÍDA':
+     (data.suggested_direction==='income'?'ENTRADA':null);
    const details=[
      [data.document_type==='proof'?'Pagador/recebedor':'Estabelecimento',data.issuer],
      ['Pagador do Pix',data.payer],
@@ -110,8 +112,6 @@
      !data.category?'categoria contábil':null
    ].filter(Boolean);
    const warnings=Array.isArray(data.warnings)?data.warnings:[];
-   const suggestedDirection=data.suggested_direction==='expense'?'SAÍDA':
-     (data.suggested_direction==='income'?'ENTRADA':null);
    const directionReview=data.direction_reason
      ?'<p style="border-left:4px solid #146da1;padding:10px;background:#edf6fc;border-radius:5px"><strong>'+
         (suggestedDirection?'Sugestão de lançamento: '+suggestedDirection:
