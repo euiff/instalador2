@@ -1,48 +1,48 @@
 {
-  "version": "3.7.76",
+  "version": "3.7.77",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.76.01.b64.txt"
+    "releases/v3.7.77.01.b64.txt"
   ],
-  "sha256": "62c0b02a8bca097bbc73d5da3c385960c5a6490c190c81e2384572909ec32f27",
+  "sha256": "f3ec174ae7e54a195c962eb4d4ad3011f2dc7e5a410edbf8130838d08f26a30e",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "257e20d5273253f0a6e842f2f8b30a781657286d60d6db322e84e7c499e18156"
+      "sha256": "e3a6bd53335abec3075a85c90a680f09ba6fd5bdfbf198026f724ce65211a6a3"
     },
     {
-      "path": "public/lib/FinanceFiscalScan.php",
-      "sha256": "e54a41dd5dfb9c5d4738bf7846d67bd87d744d3766605fa45c4cc702e15796bd"
+      "path": "public/finance-scan.php",
+      "sha256": "31558bf1600bab4649d86091d09c92a26db03793aae093d051d6a8e2953c1d35"
     },
     {
-      "path": "public/lib/FinancePixProofReader.php",
-      "sha256": "9a394546f72101d8b12ea98823c6ec63a789613f56b2e77468bc82ccc65e4f4d"
+      "path": "public/lib/FinanceChurchPartyDirection.php",
+      "sha256": "fc5427319cfda6d8ccebe784a270df5f66fc2c19300c7663f9210934a2df7b70"
     },
     {
-      "path": "public/assets/finance-local-ocr-3774.js",
-      "sha256": "b4e917fd90a3a873ce3281191911237988383e6f1e9845b5dd914d3e231a0584"
+      "path": "public/lib/FinanceVisionReader.php",
+      "sha256": "27b73a72ce6c0f3dd0373d00cbe243991e263ec0f58847d70b8c216dae079b9e"
     },
     {
       "path": "public/assets/finance-ocr-3752.js",
-      "sha256": "1fbf062e21c4c9dcbd60f99142371dce354e04bae9ce987298ebb89a390d6f63"
+      "sha256": "2905416bb0ba11661303ab7a9b22db6b1a64fc68f0adc2acc1960bfd122416c9"
     },
     {
       "path": "public/VERSION",
-      "sha256": "fb48a514178dd9994a527d9bf0e9309dc5b5ce9a999211138029e1585252969d"
+      "sha256": "7e966dc5b3cfb0517ffb590b8bbbac04ff50c5c5cb7dc686f5c9987d84fc9b2d"
     }
   ],
   "notes": [
-    "Leitura própria de comprovantes Pix Sicoob, PDFs escaneados e imagens de fundo escuro aprimorada sem gastar créditos de IA.",
-    "Reconhecimento de valor isolado R$ 2.172,03, inclusive quando OCR lê RS; identifica data real Transferido em e hora do Pix, não a hora posterior de geração do PDF.",
-    "O sistema diferencia Pix enviado (saída) de Pix recebido (entrada) e reconhece separadamente pagador e recebedor; não confunde com a marca do banco.",
-    "Recuperação cautelosa da primeira letra E do EndToEnd ID quando o OCR lê £ e há um rótulo de ID da transação; usuário deve conferir os 32 caracteres.",
-    "Leitor local com contraste invertido para PDF/foto escuros e leitura adicional do rodapé para ID bancário, mantendo o arquivo original e anexos extras.",
-    "CNPJ mascarado não é preenchido como se fosse completo; quando o ID bancário não é confiável, gera identificador próprio ARQ do arquivo para detectar cópias iguais.",
-    "Mostra em conferência pagador, recebedor, hora do pagamento, nome do favorecido, valor, data e referência da transação.",
-    "Continua exigindo confirmação do usuário e escolha de categoria contábil; não inventa documentos ou lançamentos.",
-    "Mantém leitura gratuita padrão, IA externa opcional, proteção de duplicações, permissões, gráficos financeiros e estrutura da versão 3.7.75.",
-    "Testes automáticos para exemplo anonimizado do PDF do Sicoob fornecido, incluindo E2E, valor, horário, partes, Pix recebido e NFC-e.",
-    "Atualização publicada no canal Master; precisa ser aplicada na hospedagem para funcionar em celulares e computadores."
+    "Leitor de comprovantes Pix compara o nome do Pagador e Recebedor com a igreja selecionada e autenticada no sistema.",
+    "Quando a própria igreja é pagadora, sugere SAÍDA e seleciona Saída no formulário. Quando a igreja recebe, sugere ENTRADA.",
+    "Exemplo da Igreja de Deus - Campo Belo: pagador Igreja de Deus no Brasil - Campo Belo, Catalão-GO é sugerido como saída, mesmo com recebedor do mesmo ministério.",
+    "A sugestão mostra o motivo e os nomes lidos para o Pastor ou Tesoureiro conferir antes de clicar em Registrar lançamento.",
+    "Nomes genéricos como Igreja de Deus no Brasil não bastam para identificar uma congregação específica; nomes parciais geram aviso para conferência.",
+    "Pix entre contas da mesma igreja exige escolha manual e alerta para evitar contabilização dobrada.",
+    "A verificação usa o contexto seguro da igreja autenticada e não um nome informado pelo navegador, respeitando a separação entre igrejas.",
+    "Disponível tanto na leitura própria gratuita quanto na IA externa opcional; a IA agora extrai pagador e recebedor individualmente.",
+    "Não modifica valores, contas, categorias ou lançamentos existentes. Mantém leitura gratuita, documentos adicionais, segurança e relatórios.",
+    "Teste automático PHP e JavaScript confirma Pix enviado e recebido, igreja correta, outras congregações, ambiguidades e seleção no formulário.",
+    "Versão publicada no canal Master. Instale na hospedagem antes de testar com outro comprovante."
   ]
 }
