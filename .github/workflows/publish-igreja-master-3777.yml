@@ -37,6 +37,7 @@ jobs:
           php -l "$root/public/lib/FinancePixProofReader.php"
           php "$root/tests/church-direction-suggestions.php"
           node "$root/tests/finance-church-direction-ui.cjs"
+          # Regression prints precise UI error when a client-side mock fails.
           test "$(cat "$root/public/VERSION")" = "3.7.77"
           python3 - <<'PY'
           from pathlib import Path
