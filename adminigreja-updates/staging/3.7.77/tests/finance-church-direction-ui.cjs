@@ -87,7 +87,7 @@ function harness({ocrFailure=null,responseFields=null}={}){
   const h=harness();
   await h.select(original);
   assert.equal(h.readCalls.length,1,'automatic scanning runs locally');
-  assert.equal(h.requests.length,2,'one local text parse + one duplicate check');
+  assert.equal(h.requests.length,2,'one local text parse + one duplicate check. UI STATUS: '+h.status.textContent+' | REVIEW: '+h.review.innerHTML.slice(0,170));
   assert.equal(h.requests[0].options.body.get('action'),'scan','default is local parse');
   assert(!h.requests.some(x=>x.options.body.get('action')==='scan_file'),
     'no external IA request is ever triggered automatically');
