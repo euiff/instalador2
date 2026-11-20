@@ -25,7 +25,7 @@ function ensurePart(needle,description){assert(php.includes(needle),description)
   'data-finance-preview-name=',
   '<iframe title="Documento financeiro protegido"',
   '/assets/finance-document-preview-3778.js?v=3.7.78',
-  '.im-finance-mobile-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))',
+  '.im-finance-mobile-tools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))',
   '#finance-movements>.table-wrap{display:none!important}',
   'display:grid!important;grid-template-columns:minmax(0,1fr)!important',
   '#finance-movements .im-finance-mobile-tools .im-finance-delete',
