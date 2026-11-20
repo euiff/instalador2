@@ -842,7 +842,7 @@ View::header('Tesouraria',$auth,'finance.php');
          <?php if($entryDocs): $firstDocument=$entryDocs[0]; ?>
            <button type="button" class="btn btn-light im-finance-action im-finance-view"
              data-finance-preview="/finance-document.php?id=<?=e($firstDocument['id'])?>"
-             data-finance-preview-name="<?=e($firstDocument['original_name'])?>">👁 Visualizar nota</button>
+             data-finance-preview-name="<?=e($firstDocument['original_name'])?>">👁 Visualizar documento</button>
          <?php else: ?>
            <span class="im-finance-action im-finance-no-document" title="Ainda não há documento vinculado a este lançamento">Sem documento</span>
          <?php endif?>
