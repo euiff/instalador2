@@ -982,7 +982,7 @@ View::header('Tesouraria',$auth,'finance.php');
 .im-finance-filter-count{margin:4px 0 12px}
 /* Celular: ficha completa com ações SEMPRE visíveis na primeira tela da movimentação. */
 #finance-movements .im-finance-mobile-list{display:none}
-#finance-movements .im-finance-mobile-card{box-sizing:border-box;min-width:0;max-width:100%;padding:13px;border:1px solid #c8dbe8;border-radius:16px;background:var(--card-bg,#fff);box-shadow:0 2px 8px #174a7010;overflow:visible}
+#finance-movements .im-finance-mobile-card{box-sizing:border-box;width:100%!important;min-width:0;max-width:100%;padding:13px;border:1px solid #c8dbe8;border-radius:16px;background:var(--card-bg,#fff);box-shadow:0 2px 8px #174a7010;overflow:visible}
 #finance-movements .im-finance-mobile-card-main{min-width:0;display:flex;flex-direction:column;gap:6px}
 #finance-movements .im-finance-mobile-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px}
 #finance-movements .im-finance-mobile-date{font-weight:650;color:var(--text,#203c55)}
@@ -998,7 +998,7 @@ View::header('Tesouraria',$auth,'finance.php');
 #finance-movements .im-finance-mobile-details{display:flex;flex-direction:column;gap:3px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
 #finance-movements .im-finance-mobile-details strong{font-weight:700}
 #finance-movements .im-finance-mobile-reference{word-break:break-all}
-#finance-movements .im-finance-mobile-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:11px;width:100%;align-items:stretch}
+#finance-movements .im-finance-mobile-tools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:11px;width:100%!important;min-width:0;align-items:stretch;justify-items:stretch}
 #finance-movements .im-finance-mobile-tools .im-finance-action{display:flex;align-items:center;justify-content:center;gap:5px;min-height:44px;min-width:0;width:100%;max-width:100%;box-sizing:border-box;padding:9px 7px;font-weight:650;font-size:12px;text-align:center;white-space:normal;line-height:1.2;text-decoration:none;overflow-wrap:anywhere;cursor:pointer}
 #finance-movements .im-finance-mobile-tools .im-finance-view{background:#e5f2fc;color:#124e7d;border:1px solid #a5c6e1}
 #finance-movements .im-finance-no-document{background:#f2f5f7;color:#667788;border:1px solid #e0e6eb;border-radius:10px;font-size:11px}
@@ -1022,7 +1022,7 @@ View::header('Tesouraria',$auth,'finance.php');
 .im-finance-desktop-documents button{display:block;max-width:260px;white-space:normal;overflow-wrap:anywhere;text-align:left;margin:5px 0}
 @media(max-width:900px){
   #finance-movements{width:100%;max-width:100%;min-width:0;overflow:visible;padding:12px!important}
-  #finance-movements .im-tithe-mobile.im-finance-mobile-list{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important;width:100%;min-width:0;max-width:100%}
+  #finance-movements .im-tithe-mobile.im-finance-mobile-list{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important;width:100%!important;min-width:0;max-width:100%;justify-items:stretch;align-items:stretch}
   #finance-movements>.table-wrap{display:none!important}
   #finance-movements .im-finance-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
   #finance-movements .im-finance-filters label:first-child{grid-column:1/-1}
