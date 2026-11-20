@@ -84,6 +84,7 @@ const html=[
              computedWidth:getComputedStyle(el).width,
              display:getComputedStyle(el).display}))};
        });
+       console.log('MOBILE_METRICS',width,JSON.stringify(metrics));
        assert(metrics.scrollWidth<=width+1,
          'horizontal PAGE scroll at '+width+': '+JSON.stringify(metrics));
        for(const button of metrics.buttons)
