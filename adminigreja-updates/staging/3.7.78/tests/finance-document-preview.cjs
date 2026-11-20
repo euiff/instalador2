@@ -45,7 +45,7 @@ assert(!php.includes('class="im-finance-mobile-actions"'),
    'Mobile per-entry actions must not be hidden behind old Details menu');
 assert(php.indexOf('Visualizar documento</button>')>php.indexOf('im-finance-mobile-card'),
    'Preview action must appear inside each mobile card');
-const mobileStart=php.indexOf('class="im-finance-mobile-card"');
+const mobileStart=php.indexOf('<article class="im-tithe-item im-finance-mobile-card"');
 const mobileEnd=php.indexOf('    </article>',mobileStart);
 assert(mobileStart>0 && mobileEnd>mobileStart,'mobile card markup found');
 const card=php.slice(mobileStart,mobileEnd);
