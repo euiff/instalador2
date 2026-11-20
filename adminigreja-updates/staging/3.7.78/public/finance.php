@@ -967,8 +967,10 @@ View::header('Tesouraria',$auth,'finance.php');
 
 <style>
 /* Acesso por abas, listagem espaçosa e pesquisa, conforme o vídeo de Tesouraria. */
-.im-finance-main-layout{display:flex;flex-direction:column;gap:18px}
-.im-finance-main-layout>section{width:100%;max-width:none;min-width:0;box-sizing:border-box}
+/* .grid.two-col from the legacy theme is more specific than a one-class
+   .im-finance-main-layout selector. Force a true single column at ALL widths. */
+.grid.two-col.im-finance-main-layout{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:18px;width:100%!important;min-width:0!important;max-width:100%!important}
+.grid.two-col.im-finance-main-layout>section{display:block;flex:0 0 auto;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box}
 .im-finance-movements .table-wrap{width:100%;overflow-x:auto}
 .im-finance-movements .table{min-width:960px}
 .im-finance-section-nav{display:flex;gap:8px;overflow-x:auto;padding:10px 2px;margin:14px 0 6px;scrollbar-width:thin}
