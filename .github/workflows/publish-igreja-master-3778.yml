@@ -1,0 +1,154 @@
+name: Publish Igreja Master 3.7.78 Mobile Ledger and Document Preview
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3778.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mastertest
+          MYSQL_DATABASE: im_finance_mobile_3778
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring,pdo_mysql
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: PHP lint, safe document lookup and mobile preview unit tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage=adminigreja-updates/staging/3.7.78
+          php -l "$stage/public/finance.php"
+          php -l "$stage/tests/finance-mobile-documents-mysql.php"
+          node --check "$stage/public/assets/finance-document-preview-3778.js"
+          node --check "$stage/tests/finance-document-preview.cjs"
+          node --check "$stage/tests/finance-mobile-viewport.cjs"
+          node "$stage/tests/finance-document-preview.cjs"
+          php "$stage/tests/finance-mobile-documents-mysql.php"
+          test "$(cat "$stage/public/VERSION")" = "3.7.78"
+          python3 - <<'PY'
+          from pathlib import Path
+          finance=Path('adminigreja-updates/staging/3.7.78/public/finance.php').read_text()
+          assert "SELECT id,entry_id,document_type,original_name,created_at" in finance
+          assert "WHERE church_id=? AND entry_id IN ($holders)" in finance
+          assert "array_merge([$cid],$entryIds)" in finance
+          assert "'/finance-document.php?id=" not in finance or 'data-finance-preview="/finance-document.php?id=' in finance
+          assert "data-finance-preview-name" in finance
+          assert "Visualizar documento" in finance
+          assert "Ver todos os" in finance
+          assert "Anexar arquivo" in finance
+          assert "Editar" in finance
+          assert "Gerar recibo" in finance
+          assert "ChurchFinanceExclusionUi::render" in finance
+          assert "MasterSupportFinanceUi::exclusionForm" in finance
+          assert "im-finance-mobile-tools" in finance
+          assert "im-finance-document-modal" in finance
+          assert "finance-document-preview-3778.js?v=3.7.78" in finance
+          assert "finance-ledger-filters-3775.js?v=3.7.75" in finance
+          assert "finance-local-ocr-3774.js?v=3.7.76" in finance
+          assert "finance-ocr-3752.js?v=3.7.77" in finance
+          assert "data-extra-attachments" in finance
+          assert "data-finance-row data-finance-view=\"mobile\"" in finance
+          assert "data-finance-row data-finance-view=\"desktop\"" in finance
+          assert "href=\"/finance-entry-edit.php?id=" in finance
+          assert "table-wrap{display:none!important}" in finance
+          assert "display:grid!important;grid-template-columns:minmax(0,1fr)!important" in finance
+          assert 'DROP TABLE' not in finance
+          print('PASS mobile first-screen actions, own-church documents, preserved OCR, no accounting or permission changes')
+          PY
+      - name: Real Chromium viewport QA at 320, 390, 768 and 1024 pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/finance-mobile-3778
+          cd /tmp/finance-mobile-3778
+          npm init -y >/dev/null
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+          cd "$GITHUB_WORKSPACE"
+          NODE_PATH=/tmp/finance-mobile-3778/node_modules \
+            timeout --signal=TERM --kill-after=10s 130s node \
+            adminigreja-updates/staging/3.7.78/tests/finance-mobile-viewport.cjs
+      - name: Publish validated incremental update 3.7.78
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,base64,hashlib,tarfile,io
+          root=Path('adminigreja-updates')
+          manifest_path=root/'latest.json'
+          current=json.loads(manifest_path.read_text())
+          if current['version']=='3.7.78':
+              print('Already published');raise SystemExit(0)
+          assert current['version']=='3.7.77', 'Unexpected previous version: '+current['version']
+          stage=root/'staging/3.7.78'
+          paths=[
+              'public/finance.php',
+              'public/assets/finance-document-preview-3778.js',
+              'public/VERSION'
+          ]
+          files={p:(stage/p).read_bytes() for p in paths}
+          archive=Path('/tmp/igreja-master-3778.tar.gz')
+          with tarfile.open(archive,mode='w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          binary=archive.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(binary),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p],p
+          encoded=base64.b64encode(binary)
+          parts=[]
+          for i in range(0,len(encoded),60000):
+              name=f'releases/v3.7.78.{len(parts)+1:02d}.b64.txt'
+              (root/name).write_bytes(encoded[i:i+60000])
+              parts.append(name)
+          release={
+              'version':'3.7.78','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(binary).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(files[p]).hexdigest()} for p in paths],
+              'notes':[
+                'TESOURARIA NO CELULAR: substitui a tabela larga por fichas de lançamento com largura 100%, sem arrastar a tela para achar os botões.',
+                'Em cada ficha, as ações Editar, Visualizar documento, Anexar arquivo e Recibo aparecem imediatamente, sem abrir Ações do lançamento.',
+                'Pastor, Tesoureiro e Master autorizado veem também Excluir lançamento diretamente na ficha, com confirmação, motivo e histórico preservados.',
+                'Visualizar documento abre nota, cupom ou comprovante num painel sobre a própria tela do celular, com opção Abrir em outra aba caso o Android não mostre PDFs internamente.',
+                'Se houver vários documentos, a ficha mostra Ver todos os documentos anexados; cada documento abre pelo endpoint autenticado finance-document.php.',
+                'Os anexos são consultados por lançamento e igreja selecionada, sem usar a lista limitada dos 80 arquivos mais recentes da Tesouraria.',
+                'Se não houver comprovante, a ficha mostra Sem documento e oferece Anexar arquivo, sem criar link inválido.',
+                'No computador permanece a tabela completa, com novo atalho Ver documento na coluna Documentos.',
+                'Mantidos busca, filtros, OCR local gratuito, IA opcional, documentos extras, recibos e regras de acesso de cada igreja.',
+                'Testes de PHP, JavaScript, banco MySQL e navegador Chromium em 320, 390, 768 e 1024 pixels, verificando que botões estão visíveis sem rolagem horizontal.',
+                'Atualização publicada no canal do Master. Instale-a na hospedagem para ver a interface no sistema real. Nenhum lançamento foi alterado.'
+              ]
+          }
+          manifest_path.write_text(json.dumps(release,ensure_ascii=False,indent=2)+'\n')
+          print('VALIDATED 3.7.78 SHA256',release['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.78.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.78 mobile-first entry actions and protected document preview"
+          git pull --rebase origin main
+          git push origin HEAD:main
