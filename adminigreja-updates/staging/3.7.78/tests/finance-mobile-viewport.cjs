@@ -75,9 +75,14 @@ const html=[
        const metrics=await page.evaluate(()=>{
          const buttons=[...document.querySelectorAll('.im-finance-mobile-tools .im-finance-action')];
          return {scrollWidth:document.documentElement.scrollWidth,viewport:innerWidth,
+           toolWidth:document.querySelector('.im-finance-mobile-tools')?.getBoundingClientRect().width,
+           toolDisplay:getComputedStyle(document.querySelector('.im-finance-mobile-tools')).display,
+           cardWidth:document.querySelector('.im-finance-mobile-card')?.getBoundingClientRect().width,
            buttons:buttons.map(el=>({label:el.textContent.trim(),
              x1:el.getBoundingClientRect().left,x2:el.getBoundingClientRect().right,
-             width:el.getBoundingClientRect().width}))};
+             width:el.getBoundingClientRect().width,
+             computedWidth:getComputedStyle(el).width,
+             display:getComputedStyle(el).display}))};
        });
        assert(metrics.scrollWidth<=width+1,
          'horizontal PAGE scroll at '+width+': '+JSON.stringify(metrics));
