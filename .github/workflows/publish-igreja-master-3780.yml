@@ -1,0 +1,104 @@
+name: Publish Igreja Master 3.7.80 Finance Editing and Ledger Columns
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3780.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Validate edited PHP files and finance structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.80/public
+          php -l "$root/finance.php"
+          php -l "$root/finance-entry-edit.php"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.80/public')
+          edit=(root/'finance-entry-edit.php').read_text()
+          finance=(root/'finance.php').read_text()
+          assert (root/'VERSION').read_text().strip()=='3.7.80'
+          for required in ['name="direction"','name="transaction_date"','name="amount"','name="member_id"','name="contributor"','name="category"','finance_closings','finance_reconciliations','FinancePeriodGuard::assertOpen','FOR UPDATE','finance_entry_details_edited',"#finance-movements"]:
+              assert required in edit,required
+          assert 'INSERT INTO platform_audit_logs' in edit
+          assert 'WHERE church_id=? AND id=?' in edit
+          assert 'data-direction' in edit
+          assert 'SELECT id,name FROM members WHERE church_id=?' in edit
+          assert '<th>Docs.</th><th>Ações</th><th>Data</th>' in finance
+          assert finance.count('<th>Docs.</th><th>Ações</th><th>Data</th>')==1
+          assert 'FinanceEntryPresentation::classify($r)' in finance
+          assert 'ChurchFinanceExclusionUi::render' in finance
+          assert 'MasterSupportFinanceUi::exclusionForm' in finance
+          assert 'finance-document-preview-3778.js?v=3.7.78' in finance
+          assert 'finance-ocr-3752.js?v=3.7.77' in finance
+          assert 'finance-ledger-filters-3775.js?v=3.7.75' in finance
+          assert 'DROP TABLE' not in edit and 'DROP TABLE' not in finance
+          print('PASS: finance PHP syntax, category selection, protected edits, audit, Docs/Ações first, previous features retained')
+          PY
+      - name: Publish incremental release to Master update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,io,json,tarfile
+          root=Path('adminigreja-updates')
+          manifest=root/'latest.json'
+          current=json.loads(manifest.read_text())
+          if current['version']=='3.7.80':
+              print('3.7.80 already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.79', 'Unexpected predecessor '+str(current['version'])
+          staged=root/'staging/3.7.80'
+          paths=['public/finance.php','public/finance-entry-edit.php','public/VERSION']
+          files={p:(staged/p).read_bytes() for p in paths}
+          output=io.BytesIO()
+          with tarfile.open(fileobj=output,mode='w:gz') as tar:
+              for p in paths:tar.add(staged/p,arcname=p,recursive=False)
+          binary=output.getvalue()
+          with tarfile.open(fileobj=io.BytesIO(binary),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p]
+          encoded=base64.b64encode(binary)
+          parts=[]
+          for start in range(0,len(encoded),60000):
+              p=f'releases/v3.7.80.{len(parts)+1:02d}.b64.txt'
+              (root/p).write_bytes(encoded[start:start+60000])
+              parts.append(p)
+          release={
+              'version':'3.7.80','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(binary).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(data).hexdigest()} for p,data in files.items()],
+              'notes':[
+                  'Edição de lançamentos: Tipo Entrada/Saída, data, valor em reais, contribuinte ou membro cadastrado e categoria contábil por lista.',
+                  'Categorias verificadas no servidor e limitadas às cadastradas pela igreja e à direção da movimentação.',
+                  'Mudanças monetárias bloqueadas em lançamentos agrupados e em períodos fechados ou conciliados.',
+                  'Atualizações com transação e auditoria; anexos existentes permanecem associados ao lançamento.',
+                  'Após salvar dados, retorna à tela Financeiro, seção Movimentações, no período atualizado.',
+                  'Na tabela de computador, colunas Documentos e Ações movidas para primeira e segunda posições.',
+                  'Mantidas visualizações mobile e melhorias das versões anteriores. Nenhum dado de igreja foi apagado.',
+                  'Arquivos PHP validados por sintaxe no GitHub Actions; testar fluxos reais na hospedagem após instalar.'
+              ]}
+          manifest.write_text(json.dumps(release,ensure_ascii=False,indent=2)+'\n')
+          print('Prepared 3.7.80:',len(paths),'files',len(parts),'parts',release['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.80.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.80 editable finance and ledgers"
+          git pull --rebase origin main
+          git push origin HEAD:main
