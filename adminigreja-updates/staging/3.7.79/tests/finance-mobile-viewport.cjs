@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const src=fs.readFileSync(path.join(__dirname,'../public/finance.php'),'utf8');
-const preview=fs.readFileSync(path.join(__dirname,'../public/assets/finance-document-preview-3778.js'),'utf8');
+const preview=fs.readFileSync(path.join(__dirname,'../../3.7.78/public/assets/finance-document-preview-3778.js'),'utf8');
 const css=[...src.matchAll(/<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/gi)].map(m=>m[1]).join('\n');
 assert(css.includes('im-finance-mobile-tools'));
 const uuid='12345678-1234-1234-1234-123456789012';
