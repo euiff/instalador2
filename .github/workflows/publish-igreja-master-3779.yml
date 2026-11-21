@@ -1,0 +1,163 @@
+name: Publish Igreja Master 3.7.79 Global Mobile UX and Finance Labels
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3779.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: PHP and JS checks for registered finance categories and global responsiveness
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.79
+          php -l "$root/public/lib/View.php"
+          php -l "$root/public/lib/FinanceEntryPresentation.php"
+          php -l "$root/public/finance.php"
+          php -l "$root/tests/finance-mobile-category.php"
+          php "$root/tests/finance-mobile-category.php"
+          node --check "$root/public/assets/mobile-responsive-3779.js"
+          node --check "$root/tests/mobile-global-responsive.cjs"
+          node --check "$root/tests/finance-mobile-viewport.cjs"
+          test "$(cat "$root/public/VERSION")" = "3.7.79"
+          python3 - <<'PY'
+          from pathlib import Path
+          d=Path('adminigreja-updates/staging/3.7.79/public')
+          view=(d/'lib/View.php').read_text()
+          css=(d/'assets/mobile-responsive-3779.css').read_text()
+          js=(d/'assets/mobile-responsive-3779.js').read_text()
+          page=(d/'finance.php').read_text()
+          label=(d/'lib/FinanceEntryPresentation.php').read_text()
+          assert '/assets/mobile-responsive-3779.css?v=3.7.79' in view
+          assert '/assets/mobile-responsive-3779.js?v=3.7.79' in view
+          assert 'igreja-master-global-3731.css' in view
+          assert 'management-3711.css' in view
+          assert 'finance-upload-snapshot-3741.js' in view
+          assert 'app-ui-state' in view
+          assert 'calendar' in js and 'schedule-grid' in js
+          assert 'aria-label' in js and 'data-im-mobile-label' in js
+          assert "querySelectorAll(selector).forEach(transform)" in js
+          assert "MutationObserver" in js
+          assert 'fetch(' not in js, 'responsive script must not access network'
+          assert 'im-mobile-card-table' in css
+          assert 'grid-template-columns:minmax(0,1fr)' in css
+          assert '@media print' in css
+          assert 'FinanceEntryPresentation::classify($r)' in page
+          assert "'type'=>'DÍZIMO'" in label
+          assert "'type'=>'OFERTA'" in label
+          assert "'type'=>'SAÍDA'" in label
+          assert "'category_label'=>'Tipo da saída'" in label
+          assert "'member_linked'=>$member!==''" in label
+          assert 'im-finance-entry-identity' in page
+          assert 'im-finance-mobile-doc-count' in page
+          assert 'im-finance-view{background:#0b64a6!important' in page
+          assert 'Visualizar documento' in page
+          assert 'ChurchFinanceExclusionUi::render' in page
+          assert 'MasterSupportFinanceUi::exclusionForm' in page
+          assert "finance-document-preview-3778.js?v=3.7.78" in page
+          assert "finance-ocr-3752.js?v=3.7.77" in page
+          assert "finance-local-ocr-3774.js?v=3.7.76" in page
+          assert "finance-ledger-filters-3775.js?v=3.7.75" in page
+          assert "data-extra-attachments" in page
+          assert 'DROP TABLE' not in page
+          print('PASS global View loads phone UI on all authenticated pages, known categories are prominent, permissions and previous OCR preserved.')
+          PY
+      - name: Chromium viewport tests for generic pages AND financial phone cards
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/im-mobile-3779
+          cd /tmp/im-mobile-3779
+          npm init -y >/dev/null
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+          cd "$GITHUB_WORKSPACE"
+          NODE_PATH=/tmp/im-mobile-3779/node_modules \
+             timeout --signal=TERM --kill-after=10s 140s node \
+             adminigreja-updates/staging/3.7.79/tests/mobile-global-responsive.cjs
+          NODE_PATH=/tmp/im-mobile-3779/node_modules \
+             timeout --signal=TERM --kill-after=10s 140s node \
+             adminigreja-updates/staging/3.7.79/tests/finance-mobile-viewport.cjs
+      - name: Publish SHA256 checked incremental release v3.7.79
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,io,json,hashlib,tarfile
+          base=Path('adminigreja-updates')
+          manifest=base/'latest.json'
+          current=json.loads(manifest.read_text())
+          if current['version']=='3.7.79':
+              print('3.7.79 already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.78','Unexpected current version '+current['version']
+          staged=base/'staging/3.7.79'
+          paths=[
+              'public/lib/View.php',
+              'public/lib/FinanceEntryPresentation.php',
+              'public/assets/mobile-responsive-3779.css',
+              'public/assets/mobile-responsive-3779.js',
+              'public/finance.php',
+              'public/VERSION'
+          ]
+          files={p:(staged/p).read_bytes() for p in paths}
+          target=Path('/tmp/igreja-master-3779.tar.gz')
+          with tarfile.open(target,'w:gz') as archive:
+              for p in paths:archive.add(staged/p,arcname=p,recursive=False)
+          binary=target.read_bytes()
+          with tarfile.open(fileobj=io.BytesIO(binary),mode='r:gz') as archive:
+              for p in paths:assert archive.extractfile(p).read()==files[p],p
+          b64=base64.b64encode(binary)
+          parts=[]
+          for start in range(0,len(b64),60000):
+              name=f'releases/v3.7.79.{len(parts)+1:02d}.b64.txt'
+              (base/name).write_bytes(b64[start:start+60000])
+              parts.append(name)
+          release={
+              'version':'3.7.79','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(binary).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(data).hexdigest()} for p,data in files.items()],
+              'notes':[
+                  'Novo padrão global de visualização no celular, aplicado pelo cabeçalho compartilhado View.php às páginas internas do Igreja Master.',
+                  'Tabelas comuns de membros, usuários, relatórios e cadastros se reorganizam como fichas com rótulos visíveis e botões de ação acessíveis, sem arrastar a página para os lados.',
+                  'Formulários e painéis de duas ou mais colunas se organizam em coluna única no celular. A versão de computador mantém tabelas completas.',
+                  'Grades de calendário, matrizes e tabelas com células mescladas preservam sua estrutura e, quando necessário, rolam somente dentro do quadro, não na página inteira.',
+                  'No Financeiro, os lançamentos mostram em destaque DÍZIMO, OFERTA ou SAÍDA conforme a categoria e direção gravadas de verdade.',
+                  'Nas saídas, a ficha destaca o tipo específico de despesa cadastrado, como Combustível, Material de limpeza ou Manutenção.',
+                  'Quando o lançamento é dízimo, identifica o dizimista e indica se o membro está vinculado ou se o nome foi informado sem vínculo.',
+                  'Notas e comprovantes ficam mais fáceis de localizar: quantidade de documentos destacada na ficha e botão Visualizar documento azul de alto contraste.',
+                  'Mantidos os botões diretos do celular: Editar, Visualizar, Anexar, Recibo e Excluir para perfis autorizados.',
+                  'Nenhuma categoria é inventada a partir da leitura OCR: visualização baseada em categoria real cadastrada.',
+                  'Preserva lançamentos, saldos, arquivos, proteção dos dados de cada igreja, permissões e OCR da versão anterior.',
+                  'Testes automatizados de sintaxe PHP/JavaScript, classificação dos tipos e Chromium nas larguras 320, 390, 768 e 1024 pixels.',
+                  'Publicado no canal Master. Instale na hospedagem para atualizar as páginas reais.'
+              ]
+          }
+          manifest.write_text(json.dumps(release,ensure_ascii=False,indent=2)+'\n')
+          print('PUBLISHED 3.7.79, files:',len(paths),'base64 parts:',len(parts),'sha256:',release['sha256'])
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.79.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish 3.7.79 system-wide mobile cards and clear financial tithe/offer/expense labels"
+          git pull --rebase origin main
+          git push origin HEAD:main
