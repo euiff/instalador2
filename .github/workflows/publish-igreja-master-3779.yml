@@ -92,6 +92,7 @@ jobs:
           NODE_PATH=/tmp/im-mobile-3779/node_modules \
              timeout --signal=TERM --kill-after=10s 140s node \
              adminigreja-updates/staging/3.7.79/tests/mobile-global-responsive.cjs
+          # The finance preview JS is intentionally reused from the installed 3.7.78 stage.
           NODE_PATH=/tmp/im-mobile-3779/node_modules \
              timeout --signal=TERM --kill-after=10s 140s node \
              adminigreja-updates/staging/3.7.79/tests/finance-mobile-viewport.cjs
