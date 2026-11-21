@@ -78,7 +78,7 @@ if(($_SERVER['REQUEST_METHOD']??'')==='POST'){
                     ||(string)($current['document_number']??'')!==(string)($_POST['original_document_number']??'')
                     ||(string)$current['direction']!==(string)($_POST['original_direction']??'')
                     ||(string)$current['transaction_date']!==(string)($_POST['original_date']??'')
-                    ||number_format((float)$current['amount'],2,'.','')!==(string)($_POST['original_amount']??'')
+                    ||number_format((float)$current['amount'],2,'.','')!==(string)($_POST['original_amount']??''))
                     throw new RuntimeException('Alguém já alterou o lançamento. Atualize a página e confira antes de salvar.');
                 $oldAccountId=$current['account_id']?:null;
                 $changedMoney=$direction!==$current['direction']||$newDate!==$current['transaction_date']
