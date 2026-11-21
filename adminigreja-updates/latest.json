@@ -1,50 +1,33 @@
 {
-  "version": "3.7.79",
+  "version": "3.7.80",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.79.01.b64.txt"
+    "releases/v3.7.80.01.b64.txt"
   ],
-  "sha256": "9f8050af8c703ec739805f39cff6c81439fa7a88c6d0099acfb1feaeddc5edc7",
+  "sha256": "55501a114fa297627124e9f9a776071740bc1448abf405c83ff998271c55f9f4",
   "files": [
     {
-      "path": "public/lib/View.php",
-      "sha256": "32e373d9760e3a00cf9437b7aae41ab1d4d98177dc4dedd297c2da9682770ba0"
-    },
-    {
-      "path": "public/lib/FinanceEntryPresentation.php",
-      "sha256": "c62b2c6d07b684425ee8c8eab1dfe2852f769cc2c028bb475106bd70bedc11ce"
-    },
-    {
-      "path": "public/assets/mobile-responsive-3779.css",
-      "sha256": "8916ed7c2474f9b50b456c59a5a6db7d7ad12a4d4efa2ac021248888e9655d9c"
-    },
-    {
-      "path": "public/assets/mobile-responsive-3779.js",
-      "sha256": "0cadf0602507818d5e8bc9023a75999daaacfb691a7e272c0fa5b2286377577e"
-    },
-    {
       "path": "public/finance.php",
-      "sha256": "669fcd57a6ce7c454dc204e3a4e289fb5eb37af4e16cbecf76169736c15aa3bf"
+      "sha256": "37c9a1b6d20b59b23ed999ca835ac949671409fee574403f9ca2e3178b77d586"
+    },
+    {
+      "path": "public/finance-entry-edit.php",
+      "sha256": "d5d5add6c63fa8fd81d29e4c41e5e419c19c21ca18822a54a72c3341ae2a167c"
     },
     {
       "path": "public/VERSION",
-      "sha256": "3d3cc669007ff82be4ca79cc613147f7821cb113ccbdfc1b2fa1c621f6a5674a"
+      "sha256": "8f4589a98244bf5d1b7e818e0ad1561f718274fc2a969b87562ba96bd5f24270"
     }
   ],
   "notes": [
-    "Novo padrão global de visualização no celular, aplicado pelo cabeçalho compartilhado View.php às páginas internas do Igreja Master.",
-    "Tabelas comuns de membros, usuários, relatórios e cadastros se reorganizam como fichas com rótulos visíveis e botões de ação acessíveis, sem arrastar a página para os lados.",
-    "Formulários e painéis de duas ou mais colunas se organizam em coluna única no celular. A versão de computador mantém tabelas completas.",
-    "Grades de calendário, matrizes e tabelas com células mescladas preservam sua estrutura e, quando necessário, rolam somente dentro do quadro, não na página inteira.",
-    "No Financeiro, os lançamentos mostram em destaque DÍZIMO, OFERTA ou SAÍDA conforme a categoria e direção gravadas de verdade.",
-    "Nas saídas, a ficha destaca o tipo específico de despesa cadastrado, como Combustível, Material de limpeza ou Manutenção.",
-    "Quando o lançamento é dízimo, identifica o dizimista e indica se o membro está vinculado ou se o nome foi informado sem vínculo.",
-    "Notas e comprovantes ficam mais fáceis de localizar: quantidade de documentos destacada na ficha e botão Visualizar documento azul de alto contraste.",
-    "Mantidos os botões diretos do celular: Editar, Visualizar, Anexar, Recibo e Excluir para perfis autorizados.",
-    "Nenhuma categoria é inventada a partir da leitura OCR: visualização baseada em categoria real cadastrada.",
-    "Preserva lançamentos, saldos, arquivos, proteção dos dados de cada igreja, permissões e OCR da versão anterior.",
-    "Testes automatizados de sintaxe PHP/JavaScript, classificação dos tipos e Chromium nas larguras 320, 390, 768 e 1024 pixels.",
-    "Publicado no canal Master. Instale na hospedagem para atualizar as páginas reais."
+    "Edição de lançamentos: Tipo Entrada/Saída, data, valor em reais, contribuinte ou membro cadastrado e categoria contábil por lista.",
+    "Categorias verificadas no servidor e limitadas às cadastradas pela igreja e à direção da movimentação.",
+    "Mudanças monetárias bloqueadas em lançamentos agrupados e em períodos fechados ou conciliados.",
+    "Atualizações com transação e auditoria; anexos existentes permanecem associados ao lançamento.",
+    "Após salvar dados, retorna à tela Financeiro, seção Movimentações, no período atualizado.",
+    "Na tabela de computador, colunas Documentos e Ações movidas para primeira e segunda posições.",
+    "Mantidas visualizações mobile e melhorias das versões anteriores. Nenhum dado de igreja foi apagado.",
+    "Arquivos PHP validados por sintaxe no GitHub Actions; testar fluxos reais na hospedagem após instalar."
   ]
 }
