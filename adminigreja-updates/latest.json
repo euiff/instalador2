@@ -1,33 +1,32 @@
 {
-  "version": "3.7.83",
+  "version": "3.7.84",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.83.01.b64.txt"
+    "releases/v3.7.84.01.b64.txt"
   ],
-  "sha256": "7a510cdea60b2ec9dd3a0ab4897e951a01c4c46189f8521d6629b914f42bf832",
+  "sha256": "7922b5775a96128ec483eb24cf311c6e333ef5c38e7c4555abe1baf7165eddc5",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "231d88f040dacd3cdc0f21b88323952d751cda69ffee94a580e9a5db7fe0eac4"
+      "sha256": "7d3d2bc170a6ede57f97e8bc8d2c48a713173a682379b275e87e9a4bef9b19b4"
     },
     {
       "path": "public/finance-entry-edit.php",
-      "sha256": "467f732eb1c3216f2242338969d20d5f4e57bf85e4dcb8cf45793d20dca004ea"
+      "sha256": "1bbcf8655f66ebc554c4fd0899f715aba872e2b44649dc54c5df1eb0ac5efbb1"
     },
     {
       "path": "public/VERSION",
-      "sha256": "b8d8e8098518c7d53ebde5bf8c5cb4b041c229670afef5f0b03e1ea89bfc6e54"
+      "sha256": "0efbf207301b5c126c49d7a75d1db7a7fcd7a06346c0cd95c8639abb5d10efac"
     }
   ],
   "notes": [
-    "Botões Editar e Anexar lançamento unificados no computador, celular e tablet, cada um abrindo sua seção correta.",
-    "Removidos formulários antigos duplicados da tabela de Ações para evitar caminhos divergentes ou confusos.",
-    "Tela de edição possui atalhos diretos para Editar dados, Anexar documento, Ver documentos e Voltar às movimentações.",
-    "Após anexar arquivo, o sistema volta para a lista de documentos daquele lançamento, com confirmação do envio.",
-    "Após salvar dados, volta à listagem do período correspondente ao lançamento alterado.",
-    "Correção da coluna vazia da tabela para mostrar a mensagem Nenhuma movimentação com alinhamento adequado.",
-    "Preservados visualizador com zoom e download opcional, permissões, anexos, dados e proteção de períodos financeiros.",
-    "PHP lint e conferência automática de caminhos, botões e âncoras concluídos; validar acesso autenticado na hospedagem."
+    "Botões Editar e Anexar arquivo agora abrem por finance.php?edit_entry=ID, usando a rota já operacional do Financeiro.",
+    "O mesmo arquivo de edição é renderizado internamente sem depender de acesso direto à URL finance-entry-edit.php.",
+    "Corrigidos endereços dos botões no celular e computador, com âncoras específicas para edição e anexos.",
+    "Formulários de edição e upload enviam para a rota financeira principal, mantendo CSRF, permissões e isolamento por igreja.",
+    "Após anexar, o envio retorna à seção Documentos já anexados, com confirmação em JSON para o Android.",
+    "Visualizador com zoom, documentos existentes, registros e proteções financeiras preservados.",
+    "Teste automatizado de sintaxe PHP e conferência de todos os links/ânncoras corrigidos. Validar no login real após instalar."
   ]
 }
