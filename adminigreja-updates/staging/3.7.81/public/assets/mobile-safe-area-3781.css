@@ -1,0 +1,36 @@
+/* Igreja Master 3.7.81 — barra Android/tablet e navegação mobile.
+   Respeita os recortes do aparelho sem exigir rolagem lateral. */
+@media screen and (max-width: 900px){
+ html{scroll-padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+ body{max-width:100%;overflow-x:hidden}
+ .page-wrap{min-width:0;max-width:100%}
+ .content,#main-content{
+   min-width:0;max-width:100%;box-sizing:border-box;
+   padding-bottom:calc(130px + env(safe-area-inset-bottom,0px))!important;
+ }
+ .im-mobile-nav{
+   box-sizing:border-box!important;
+   bottom:0!important;
+   padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;
+   min-height:calc(62px + env(safe-area-inset-bottom,0px))!important;
+ }
+ .content :is(.btn,a.btn,button,summary){scroll-margin-bottom:calc(125px + env(safe-area-inset-bottom,0px))}
+ .content :is(.table-wrap,.table-responsive){max-width:100%!important}
+ .content .im-finance-mobile-list{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))!important}
+ .content .im-finance-mobile-tools{box-sizing:border-box;max-width:100%}
+ .content .im-finance-mobile-tools :is(a,button,summary){
+   min-height:44px;max-width:100%;box-sizing:border-box;
+   white-space:normal!important;overflow-wrap:anywhere;text-align:center
+ }
+ .content .im-finance-document-modal[open]{
+   box-sizing:border-box;
+   padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))!important;
+ }
+}
+@media screen and (max-width:420px){
+ .content .im-finance-mobile-tools{grid-template-columns:minmax(0,1fr)!important}
+}
+@media print{
+ .content,#main-content{padding-bottom:0!important}
+ .im-mobile-nav{display:none!important}
+}
