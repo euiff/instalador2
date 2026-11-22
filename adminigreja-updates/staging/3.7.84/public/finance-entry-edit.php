@@ -158,7 +158,7 @@ if(($_SERVER['REQUEST_METHOD']??'')==='POST'){
             echo json_encode(['ok'=>true,'message'=>'Documento anexado e registrado.','entry_id'=>$id,'view_url'=>'/finance.php?edit_entry='.rawurlencode($id).'#entry-documents'],JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR);
             exit;
         }
-        redirect($action==='details'?'/finance.php?from='.rawurlencode(substr($newDate,0,7).'-01').'&to='.rawurlencode(date('Y-m-t',strtotime($newDate))).'#finance-movements'':'/finance.php?edit_entry='.rawurlencode($id).'#entry-documents');
+        redirect($action==='details'?'/finance.php?from='.rawurlencode(substr($newDate,0,7).'-01').'&to='.rawurlencode(date('Y-m-t',strtotime($newDate))).'#finance-movements':'/finance.php?edit_entry='.rawurlencode($id).'#entry-documents');
     }catch(Throwable $e){
         error_log('Igreja Master finance-entry-edit failed: '.get_class($e).': '.$e->getMessage());
         $error=$e instanceof PDOException ? 'Não foi possível gravar o documento no banco de dados. Consulte o log da hospedagem.' : $e->getMessage();
