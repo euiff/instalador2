@@ -1,0 +1,116 @@
+name: Publish Igreja Master 3.7.83 Finance Actions and Navigation Repair
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3783.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Lint finance pages and audit action routes, forms and anchors
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.83/public
+          php -l "$root/finance.php"
+          php -l "$root/finance-entry-edit.php"
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('adminigreja-updates/staging/3.7.83/public')
+          finance=(root/'finance.php').read_text()
+          edit=(root/'finance-entry-edit.php').read_text()
+          assert (root/'VERSION').read_text().strip()=='3.7.83'
+          # Mobile and desktop should share the same edit and attachment page, but distinct anchors.
+          assert 'finance-entry-edit.php?id=<?=rawurlencode((string)$r[\'id\'])?>#edit-details' in finance
+          assert 'finance-entry-edit.php?id=<?=rawurlencode((string)$r[\'id\'])?>#attach-documents' in finance
+          for dest in ('edit-details','attach-documents','entry-documents'):
+              assert f'id="{dest}"' in edit, f'Broken anchor #{dest}'
+          assert 'href="#edit-details"' in edit and 'href="#attach-documents"' in edit
+          assert 'href="#entry-documents"' in edit
+          assert "'view_url'=>'/finance-entry-edit.php?id='.rawurlencode($id).'#entry-documents'" in edit
+          assert "redirect($action==='details'?'/finance.php?from='" in edit
+          assert "date('Y-m-t',strtotime($newDate))" in edit
+          # No duplicate/legacy inline edit or upload actions in the desktop table.
+          assert 'name="action" value="edit_entry_details"' not in finance
+          assert '<summary class="btn btn-light">Ações do lançamento</summary>' in finance
+          assert '<th>Docs.</th><th>Ações</th><th>Data</th>' in finance
+          assert '<td colspan="11"><div class="empty">' in finance
+          assert 'name="action" value="attach"' in edit
+          assert 'enctype="multipart/form-data"' in edit
+          assert 'data-finance-attachment="1"' in edit
+          assert 'finance-document-preview-3782.js?v=3.7.82' in finance
+          assert 'finance-document-preview-3782.js?v=3.7.82' in edit
+          assert 'FinancePeriodGuard::assertOpen' in edit
+          assert "WHERE church_id=? AND id=? AND status='posted'" in edit
+          assert 'DROP TABLE' not in finance and 'DROP TABLE' not in edit
+          # Verify the changed URLs refer to a staged PHP route, not a made-up action name.
+          for href in set(re.findall(r'href="/(finance-entry-edit\.php)',finance)):
+              assert (root/href).is_file(), href
+          print('PASS: edit/attach routes, forms, post-attachment return, section anchors, ledger buttons and PHP lint')
+          PY
+      - name: Publish checked patch to Master update channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,io,json,hashlib,tarfile
+          base=Path('adminigreja-updates')
+          manifest=base/'latest.json'
+          current=json.loads(manifest.read_text())
+          if current['version']=='3.7.83':
+              print('Already published 3.7.83')
+              raise SystemExit(0)
+          assert current['version']=='3.7.82','Unexpected predecessor '+str(current['version'])
+          stage=base/'staging/3.7.83'
+          paths=['public/finance.php','public/finance-entry-edit.php','public/VERSION']
+          files={p:(stage/p).read_bytes() for p in paths}
+          output=io.BytesIO()
+          with tarfile.open(fileobj=output,mode='w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          raw=output.getvalue()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p]
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for offset in range(0,len(encoded),60000):
+              part=f'releases/v3.7.83.{len(parts)+1:02d}.b64.txt'
+              (base/part).write_bytes(encoded[offset:offset+60000])
+              parts.append(part)
+          update={
+              'version':'3.7.83','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(contents).hexdigest()} for p,contents in files.items()],
+              'notes':[
+                  'Botões Editar e Anexar lançamento unificados no computador, celular e tablet, cada um abrindo sua seção correta.',
+                  'Removidos formulários antigos duplicados da tabela de Ações para evitar caminhos divergentes ou confusos.',
+                  'Tela de edição possui atalhos diretos para Editar dados, Anexar documento, Ver documentos e Voltar às movimentações.',
+                  'Após anexar arquivo, o sistema volta para a lista de documentos daquele lançamento, com confirmação do envio.',
+                  'Após salvar dados, volta à listagem do período correspondente ao lançamento alterado.',
+                  'Correção da coluna vazia da tabela para mostrar a mensagem Nenhuma movimentação com alinhamento adequado.',
+                  'Preservados visualizador com zoom e download opcional, permissões, anexos, dados e proteção de períodos financeiros.',
+                  'PHP lint e conferência automática de caminhos, botões e âncoras concluídos; validar acesso autenticado na hospedagem.'
+              ]}
+          manifest.write_text(json.dumps(update,ensure_ascii=False,indent=2)+'\n')
+          print('Prepared 3.7.83',len(paths),'files',len(parts),'parts')
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.83.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.83 financial action route repairs"
+          git pull --rebase origin main
+          git push origin HEAD:main
