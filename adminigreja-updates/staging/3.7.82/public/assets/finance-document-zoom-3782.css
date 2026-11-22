@@ -1,0 +1,29 @@
+/* Igreja Master 3.7.82 - zoom acessivel em PDFs e fotos no visualizador */
+.im-finance-zoom-controls{
+ display:flex;align-items:center;justify-content:center;gap:10px;
+ flex:0 0 auto;flex-wrap:wrap;box-sizing:border-box;
+ padding:7px 12px;background:#eaf3fa;border-bottom:1px solid #bdd4e7;
+ position:relative;z-index:1;
+}
+.im-finance-zoom-controls button{
+ display:inline-flex;align-items:center;justify-content:center;
+ padding:6px 12px;min-width:44px;min-height:42px;border-radius:9px;
+ border:1px solid #9abbd4;background:#fff;color:#123b60;
+ font-size:17px;font-weight:750;cursor:pointer;
+}
+.im-finance-zoom-controls button:last-child{font-size:13px}
+.im-finance-zoom-controls button:focus-visible{outline:3px solid #176ab4;outline-offset:2px}
+.im-finance-zoom-controls output{font-size:13px;min-width:46px;text-align:center;color:#173f60;font-weight:750}
+.im-finance-document-modal-body{
+ overflow:auto!important;overscroll-behavior:contain;
+ touch-action:pan-x pan-y;
+}
+.im-finance-preview-pages{max-width:none!important;overflow:visible!important;flex-shrink:0!important}
+.im-finance-preview-pages canvas,.im-finance-preview-pages img{
+ max-width:100%!important;box-sizing:border-box;
+}
+@media screen and (max-width:900px){
+ .im-finance-zoom-controls{gap:6px;padding:6px 8px}
+ .im-finance-zoom-controls button{min-height:44px}
+}
+@media print{.im-finance-zoom-controls{display:none!important}}
