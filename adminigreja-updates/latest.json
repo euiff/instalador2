@@ -1,11 +1,11 @@
 {
-  "version": "3.7.85",
+  "version": "3.7.86",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.85.01.b64.txt"
+    "releases/v3.7.86.01.b64.txt"
   ],
-  "sha256": "dfe59f0b6aff0c4b3636568106afd83aed1377650156f92e30c926df1e7f3ac5",
+  "sha256": "8a9fb8771ce84dbf74b6f20ae8a103a15416f2214f87f0871b6445550bcddebf",
   "files": [
     {
       "path": "public/finance.php",
@@ -13,19 +13,18 @@
     },
     {
       "path": "public/finance-entry-edit.php",
-      "sha256": "84ab6be135af7223b402be6beb1663747cae7a7c37623860bad5e2c837e91669"
+      "sha256": "9baeb1aeb25a2edd2089a4950fab3b2bd8d6c946c2f5a88038f6fb461fd2a31f"
     },
     {
       "path": "public/VERSION",
-      "sha256": "e0e5eac2e7b8d4c5ede352237123a881e2d2022db3cb81c5089e435bbfb0fe09"
+      "sha256": "7d580a8e39884fabe88018088be97571e1cada37dfb726908a6e47ef2ecf3582"
     }
   ],
   "notes": [
-    "Tratamento de HTTP 500 na tela Editar/Anexar: falhas inesperadas são registradas com identificador FIN- e exibidas sem detalhes sensíveis.",
-    "O perfil Master em modo suporte pode visualizar a classe da exceção, arquivo e linha para diagnóstico sem precisar expor senhas ou SQL.",
-    "Consultas opcionais de itens agrupados, documentos e contas agora têm tratamento de falhas de banco, evitando bloquear toda a tela quando há incompatibilidade de esquema.",
-    "Os arquivos e valores existentes não são alterados por esta atualização.",
-    "Os botões Editar e Anexar continuam pelo finance.php, com as seções apropriadas, documentos e leitor com zoom preservados.",
-    "Esta atualização visa recuperar o carregamento e identificar a causa real restante; um teste autenticado na hospedagem é necessário para confirmar a correção completa."
+    "Corrigida a inicialização da tela Editar/Anexar que falhava na linha 17 ao carregar RegistryService, conforme diagnóstico Master FIN-60134147.",
+    "Tela de edição carrega a mesma cadeia de serviços usada pelo Financeiro funcionando, inclusive FinanceOperations antes do serviço de categorias.",
+    "Mantidos os atalhos Editar e Anexar, controles de permissão, CSRF, validação por igreja, anexos e visualização com zoom.",
+    "Mantida a página de diagnóstico restrita ao Master para eventual erro restante.",
+    "Verificação automatizada de sintaxe PHP e ordem das dependências aprovada; confirmar execução no servidor autenticado após instalar."
   ]
 }
