@@ -1,0 +1,115 @@
+name: Publish Igreja Master 3.7.82 Pinch Zoom Finance Documents
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3782.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify PHP, zoom JavaScript and preserved document viewer
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.82/public
+          php -l "$root/finance.php"
+          php -l "$root/finance-entry-edit.php"
+          php -l "$root/lib/View.php"
+          node --check "$root/assets/finance-document-preview-3782.js"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('adminigreja-updates/staging/3.7.82/public')
+          js=(p/'assets/finance-document-preview-3782.js').read_text()
+          css=(p/'assets/finance-document-zoom-3782.css').read_text()
+          finance=(p/'finance.php').read_text()
+          edit=(p/'finance-entry-edit.php').read_text()
+          view=(p/'lib/View.php').read_text()
+          assert (p/'VERSION').read_text().strip()=='3.7.82'
+          for key in ['touchstart','touchmove','touchend','e.touches.length===2','pinch.zoom*distance','e.preventDefault()','dblclick','data-im-zoom-in','data-im-zoom-out','data-im-zoom-reset','setZoom(','resetZoom()','window.pdfjsLib','page.render(','credentials:']:
+              assert key in js,key
+          assert 'max-width' in css and 'touch-action' in css
+          assert 'min-height:44px' in css
+          assert 'finance-document-zoom-3782.css?v=3.7.82' in view
+          assert 'finance-document-preview-3782.js?v=3.7.82' in finance
+          assert 'finance-document-preview-3782.js?v=3.7.82' in edit
+          assert 'data-finance-preview' in finance and 'data-finance-preview' in edit
+          assert 'data-im-preview-download' in finance and 'data-im-preview-download' in edit
+          assert 'finance-ocr-3752.js?v=3.7.77' in finance
+          assert '<th>Docs.</th><th>Ações</th><th>Data</th>' in finance
+          assert 'DROP TABLE' not in finance and 'DROP TABLE' not in edit
+          print('PASS: PDF/image zoom gesture + toolbar, prior finance viewer and edits preserved')
+          PY
+      - name: Publish incremental update 3.7.82
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import io,tarfile,base64,hashlib,json
+          base=Path('adminigreja-updates')
+          manifest=base/'latest.json'
+          current=json.loads(manifest.read_text())
+          if current['version']=='3.7.82':
+              print('Already published 3.7.82')
+              raise SystemExit(0)
+          assert current['version']=='3.7.81','Unexpected predecessor: '+str(current['version'])
+          stage=base/'staging/3.7.82'
+          paths=[
+            'public/finance.php',
+            'public/finance-entry-edit.php',
+            'public/lib/View.php',
+            'public/assets/finance-document-preview-3782.js',
+            'public/assets/finance-document-zoom-3782.css',
+            'public/VERSION'
+          ]
+          files={p:(stage/p).read_bytes() for p in paths}
+          buf=io.BytesIO()
+          with tarfile.open(fileobj=buf,mode='w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          raw=buf.getvalue()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p]
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for offset in range(0,len(encoded),60000):
+              path=f'releases/v3.7.82.{len(parts)+1:02d}.b64.txt'
+              (base/path).write_bytes(encoded[offset:offset+60000])
+              parts.append(path)
+          update={
+            'version':'3.7.82','min_php':'8.1','encoding':'base64',
+            'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+            'files':[{'path':p,'sha256':hashlib.sha256(content).hexdigest()} for p,content in files.items()],
+            'notes':[
+              'Ao visualizar imagens e PDFs financeiros, use dois dedos para ampliar ou diminuir o documento sem sair da tela.',
+              'Zoom por botões +, − e Ajustar (100%), além de toque duplo e Ctrl+rolagem no computador.',
+              'Ampliação de até 500%, com arraste horizontal e vertical para ler detalhes do comprovante.',
+              'Páginas de PDF com renderização de maior resolução para melhorar a leitura quando ampliadas.',
+              'Mantida a visualização dentro do Igreja Master sem baixar automaticamente; download continua opcional.',
+              'Preservadas a visualização em movimentações e edição, as áreas seguras da navegação Android, permissões e lançamentos.',
+              'Sintaxe PHP/JavaScript validada pelo GitHub Actions; verificar gesto em aparelhos reais após instalar.'
+            ]}
+          manifest.write_text(json.dumps(update,ensure_ascii=False,indent=2)+'\n')
+          print('Prepared',update['version'],'files',len(paths),'parts',len(parts))
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.82.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.82 pinch zoom in PDF and image previews"
+          git pull --rebase origin main
+          git push origin HEAD:main
