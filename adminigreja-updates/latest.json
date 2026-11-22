@@ -1,45 +1,33 @@
 {
-  "version": "3.7.82",
+  "version": "3.7.83",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.82.01.b64.txt",
-    "releases/v3.7.82.02.b64.txt"
+    "releases/v3.7.83.01.b64.txt"
   ],
-  "sha256": "8423088175a4e2b3ebec3f3d67d31ea2995573a289b74df7d0ca50449423628c",
+  "sha256": "7a510cdea60b2ec9dd3a0ab4897e951a01c4c46189f8521d6629b914f42bf832",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "3401573e87c9df3df526f6596c5cd4d00fc5c217766ea22d977df5be2d77972f"
+      "sha256": "231d88f040dacd3cdc0f21b88323952d751cda69ffee94a580e9a5db7fe0eac4"
     },
     {
       "path": "public/finance-entry-edit.php",
-      "sha256": "677d1c6cf104193c9a2aaef502973ef4d5d0e622e86d10b31aa6237a00358ebc"
-    },
-    {
-      "path": "public/lib/View.php",
-      "sha256": "fe78365d2bce073acf954e6ae204605cf52e922c360ce092585cbbf09ae78771"
-    },
-    {
-      "path": "public/assets/finance-document-preview-3782.js",
-      "sha256": "1cc66b991b806941634ab19cf580aec14cec865214e34e3009987ff5641d4cf4"
-    },
-    {
-      "path": "public/assets/finance-document-zoom-3782.css",
-      "sha256": "b5c6e52995fe4bb59f9ec89d3cc2a23adfa5156a77a41cd60a3866f2462b10e7"
+      "sha256": "467f732eb1c3216f2242338969d20d5f4e57bf85e4dcb8cf45793d20dca004ea"
     },
     {
       "path": "public/VERSION",
-      "sha256": "66e8672f94fb92e352c1168e48f58c7d6e79990ecaf0beafb041e618dc369ad0"
+      "sha256": "b8d8e8098518c7d53ebde5bf8c5cb4b041c229670afef5f0b03e1ea89bfc6e54"
     }
   ],
   "notes": [
-    "Ao visualizar imagens e PDFs financeiros, use dois dedos para ampliar ou diminuir o documento sem sair da tela.",
-    "Zoom por botões +, − e Ajustar (100%), além de toque duplo e Ctrl+rolagem no computador.",
-    "Ampliação de até 500%, com arraste horizontal e vertical para ler detalhes do comprovante.",
-    "Páginas de PDF com renderização de maior resolução para melhorar a leitura quando ampliadas.",
-    "Mantida a visualização dentro do Igreja Master sem baixar automaticamente; download continua opcional.",
-    "Preservadas a visualização em movimentações e edição, as áreas seguras da navegação Android, permissões e lançamentos.",
-    "Sintaxe PHP/JavaScript validada pelo GitHub Actions; verificar gesto em aparelhos reais após instalar."
+    "Botões Editar e Anexar lançamento unificados no computador, celular e tablet, cada um abrindo sua seção correta.",
+    "Removidos formulários antigos duplicados da tabela de Ações para evitar caminhos divergentes ou confusos.",
+    "Tela de edição possui atalhos diretos para Editar dados, Anexar documento, Ver documentos e Voltar às movimentações.",
+    "Após anexar arquivo, o sistema volta para a lista de documentos daquele lançamento, com confirmação do envio.",
+    "Após salvar dados, volta à listagem do período correspondente ao lançamento alterado.",
+    "Correção da coluna vazia da tabela para mostrar a mensagem Nenhuma movimentação com alinhamento adequado.",
+    "Preservados visualizador com zoom e download opcional, permissões, anexos, dados e proteção de períodos financeiros.",
+    "PHP lint e conferência automática de caminhos, botões e âncoras concluídos; validar acesso autenticado na hospedagem."
   ]
 }
