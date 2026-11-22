@@ -1,0 +1,112 @@
+name: Publish Igreja Master 3.7.86 Fix Finance Editor Registry Initialization
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3786.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Validate PHP syntax and dependency initialization order
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.86/public
+          php -l "$root/finance.php"
+          php -l "$root/finance-entry-edit.php"
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('adminigreja-updates/staging/3.7.86/public')
+          f=(root/'finance.php').read_text()
+          e=(root/'finance-entry-edit.php').read_text()
+          assert (root/'VERSION').read_text().strip()=='3.7.86'
+          # Reproduce exactly the dependency initialization sequence that has been
+          # running successfully in the ledger, before registry categories are loaded.
+          required=[
+              "require_once __DIR__.'/lib/FinanceOperations.php';",
+              "require_once __DIR__.'/lib/FinanceFiscalScan.php';",
+              "require_once __DIR__.'/lib/FinanceManualAttachments.php';",
+              "require_once __DIR__.'/lib/MasterSingleFinanceEntry.php';",
+              "require_once __DIR__.'/lib/GeneralTreasuryAccountScope.php';"
+          ]
+          for item in required:
+              assert item in f and item in e,item
+          ops='$financeOps=new FinanceOperations($pdo,$auth,$cid);'
+          registry='$registry=new RegistryService($pdo,$auth,$cid);'
+          assert e.index(ops)<e.index(registry)
+          assert e.index("require_once __DIR__.'/lib/FinanceOperations.php';")<e.index(ops)
+          assert f.index('$financeOps=new FinanceOperations(')<f.index('$financeRegistry=new RegistryService(')
+          assert e.count('new RegistryService(')==1
+          assert "WHERE e.church_id=? AND e.id=? LIMIT 1" in e
+          assert "verify_csrf()" in e
+          assert "FinancePeriodGuard::assertOpen" in e
+          assert 'data-finance-preview' in e
+          assert "id=\"edit-details\"" in e and "id=\"attach-documents\"" in e
+          assert "'/finance.php?edit_entry='.rawurlencode($id)" in e
+          assert 'catch(Throwable $error)' in f
+          assert '<th>Docs.</th><th>Ações</th><th>Data</th>' in f
+          assert 'DROP TABLE' not in f and 'DROP TABLE' not in e
+          print('PASS: PHP lint, RegistryService dependency init order, edit and attach paths preserved')
+          PY
+      - name: Publish verified update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,io,json,hashlib,tarfile
+          root=Path('adminigreja-updates')
+          m=root/'latest.json'
+          last=json.loads(m.read_text())
+          if last['version']=='3.7.86':
+              print('Already published')
+              raise SystemExit(0)
+          assert last['version']=='3.7.85','Unexpected previous release '+str(last['version'])
+          stage=root/'staging/3.7.86'
+          paths=['public/finance.php','public/finance-entry-edit.php','public/VERSION']
+          files={p:(stage/p).read_bytes() for p in paths}
+          archive=io.BytesIO()
+          with tarfile.open(fileobj=archive,mode='w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          payload=archive.getvalue()
+          with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p]
+          encoded=base64.b64encode(payload)
+          parts=[]
+          for start in range(0,len(encoded),60000):
+              part=f'releases/v3.7.86.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[start:start+60000])
+              parts.append(part)
+          update={
+              'version':'3.7.86','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(payload).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(data).hexdigest()} for p,data in files.items()],
+              'notes':[
+                  'Corrigida a inicialização da tela Editar/Anexar que falhava na linha 17 ao carregar RegistryService, conforme diagnóstico Master FIN-60134147.',
+                  'Tela de edição carrega a mesma cadeia de serviços usada pelo Financeiro funcionando, inclusive FinanceOperations antes do serviço de categorias.',
+                  'Mantidos os atalhos Editar e Anexar, controles de permissão, CSRF, validação por igreja, anexos e visualização com zoom.',
+                  'Mantida a página de diagnóstico restrita ao Master para eventual erro restante.',
+                  'Verificação automatizada de sintaxe PHP e ordem das dependências aprovada; confirmar execução no servidor autenticado após instalar.'
+              ]}
+          m.write_text(json.dumps(update,ensure_ascii=False,indent=2)+'\n')
+          print('Prepared 3.7.86 files',len(paths),'parts',len(parts))
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.86.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.86 finance editor registry initialization fix"
+          git pull --rebase origin main
+          git push origin HEAD:main
