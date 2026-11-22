@@ -43,8 +43,8 @@ function script(src){
  });
 }
 async function drawPdf(bytes,token){
- const pdfjs=await script('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
- pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ const pdfjs=await script('/assets/vendor/pdfjs/pdf.min.js');
+ pdfjs.GlobalWorkerOptions.workerSrc='/assets/vendor/pdfjs/pdf.worker.min.js';
  if(token!==serial)return;
  const pdf=await pdfjs.getDocument({data:bytes.slice(),useSystemFonts:true}).promise;
  if(token!==serial){await pdf.destroy();return;}
