@@ -1,33 +1,62 @@
 {
-  "version": "3.7.80",
+  "version": "3.7.81",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.80.01.b64.txt"
+    "releases/v3.7.81.01.b64.txt",
+    "releases/v3.7.81.02.b64.txt",
+    "releases/v3.7.81.03.b64.txt",
+    "releases/v3.7.81.04.b64.txt",
+    "releases/v3.7.81.05.b64.txt",
+    "releases/v3.7.81.06.b64.txt",
+    "releases/v3.7.81.07.b64.txt",
+    "releases/v3.7.81.08.b64.txt",
+    "releases/v3.7.81.09.b64.txt",
+    "releases/v3.7.81.10.b64.txt"
   ],
-  "sha256": "55501a114fa297627124e9f9a776071740bc1448abf405c83ff998271c55f9f4",
+  "sha256": "34016a0c516477580fd53b3ca18ab61589ddf00f030b9f12b1409a7f155c9b99",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "37c9a1b6d20b59b23ed999ca835ac949671409fee574403f9ca2e3178b77d586"
+      "sha256": "da1e0e355bd71135557104394b0290810ffab839395a4f30273045508c75fc5f"
     },
     {
       "path": "public/finance-entry-edit.php",
-      "sha256": "d5d5add6c63fa8fd81d29e4c41e5e419c19c21ca18822a54a72c3341ae2a167c"
+      "sha256": "3dd80057a3cc6c2fd8cbec53e5fd56c5323d5e399dd2e87d1b8b89d57a055fff"
+    },
+    {
+      "path": "public/lib/View.php",
+      "sha256": "c8d3efae0af9bbed331ce95c358a660b8a7ec7d95e640c56f9c63e99284f6d94"
+    },
+    {
+      "path": "public/assets/mobile-safe-area-3781.css",
+      "sha256": "35f127882995650603101344be17d4d48d5c0dde5daaa04b871892dbc26301a7"
+    },
+    {
+      "path": "public/assets/finance-document-preview-3781.js",
+      "sha256": "eb6a4c5105360a97b62e112e64615a6cb291b7831046422560c2679d7eeceaeb"
+    },
+    {
+      "path": "public/assets/vendor/pdfjs/pdf.min.js",
+      "sha256": "5b5799e6f8c680663207ac5b42ee14eed2a406fa7af48f50c154f0c0b1566946"
+    },
+    {
+      "path": "public/assets/vendor/pdfjs/pdf.worker.min.js",
+      "sha256": "feabdf309770ed24bba31a5467836cdc8cf639c705af27d52b585b041bb8527b"
     },
     {
       "path": "public/VERSION",
-      "sha256": "8f4589a98244bf5d1b7e818e0ad1561f718274fc2a969b87562ba96bd5f24270"
+      "sha256": "be2ee3f435d1e69af03c803aa5dedcd276ea6e70ad1f54b0b831ad40a38629d7"
     }
   ],
   "notes": [
-    "Edição de lançamentos: Tipo Entrada/Saída, data, valor em reais, contribuinte ou membro cadastrado e categoria contábil por lista.",
-    "Categorias verificadas no servidor e limitadas às cadastradas pela igreja e à direção da movimentação.",
-    "Mudanças monetárias bloqueadas em lançamentos agrupados e em períodos fechados ou conciliados.",
-    "Atualizações com transação e auditoria; anexos existentes permanecem associados ao lançamento.",
-    "Após salvar dados, retorna à tela Financeiro, seção Movimentações, no período atualizado.",
-    "Na tabela de computador, colunas Documentos e Ações movidas para primeira e segunda posições.",
-    "Mantidas visualizações mobile e melhorias das versões anteriores. Nenhum dado de igreja foi apagado.",
-    "Arquivos PHP validados por sintaxe no GitHub Actions; testar fluxos reais na hospedagem após instalar."
+    "Documentos financeiros: visualizar PDFs e imagens diretamente na tela, sem download automático de finance-document.php.",
+    "PDFs são renderizados como páginas roláveis no leitor PDF.js incluído no próprio sistema; não exige aplicativo de PDF no Android.",
+    "Botão Baixar fica separado e opcional, visível somente depois de carregar e validar o documento.",
+    "Exibição funciona também na tela Editar lançamento e na listagem de movimentações da Tesouraria.",
+    "Barra inferior e botões no celular/tablet respeitam áreas seguras e reservam espaço acima da navegação do Android.",
+    "Visualização somente com sessão ativa e permissão de documento existente, sem tornar os comprovantes públicos.",
+    "Mantidas as alterações financeiras e o layout da 3.7.80, demais formulários, anexos, permissões e dados.",
+    "Testes automatizados de sintaxe PHP/JS; testar documentos reais no Android e tablet após instalar."
   ]
 }
