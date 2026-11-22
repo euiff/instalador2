@@ -1,0 +1,111 @@
+name: Publish Igreja Master 3.7.84 Stable Finance Editor Route
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3784.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Verify PHP router and all edit/attach buttons
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.84/public
+          php -l "$root/finance.php"
+          php -l "$root/finance-entry-edit.php"
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('adminigreja-updates/staging/3.7.84/public')
+          f=(root/'finance.php').read_text()
+          e=(root/'finance-entry-edit.php').read_text()
+          assert (root/'VERSION').read_text().strip()=='3.7.84'
+          assert f.startswith("<?php\n// Rota interna")
+          dispatch=f.index("require __DIR__.'/finance-entry-edit.php';")
+          bootstrap=f.index("require __DIR__.'/bootstrap.php';")
+          assert dispatch<bootstrap
+          assert "isset($_GET['edit_entry'])" in f
+          assert f.count("/finance.php?edit_entry=<?=rawurlencode((string)$r['id'])?>")==4
+          assert "/finance-entry-edit.php?id=<?=rawurlencode((string)$r['id'])?>" not in f
+          assert "$_GET['edit_entry']??$_GET['id']" in e
+          assert 'action="/finance.php?edit_entry=<?=rawurlencode($id)?>#edit-details"' in e
+          assert 'action="/finance.php?edit_entry=<?=rawurlencode($id)?>#attach-documents"' in e
+          assert "'view_url'=>'/finance.php?edit_entry='.rawurlencode($id).'#entry-documents'" in e
+          assert "'/finance.php?edit_entry='.rawurlencode($id).'#entry-documents'" in e
+          for dest in ('edit-details','attach-documents','entry-documents'):
+              assert f'id="{dest}"' in e
+          assert 'FinancePeriodGuard::assertOpen' in e
+          assert 'verify_csrf()' in e
+          assert 'SELECT e.*,a.name account_name' in e
+          assert "WHERE e.church_id=? AND e.id=? LIMIT 1" in e
+          assert 'finance-document-preview-3782.js?v=3.7.82' in f
+          assert 'finance-document-preview-3782.js?v=3.7.82' in e
+          assert '<th>Docs.</th><th>Ações</th><th>Data</th>' in f
+          assert 'DROP TABLE' not in f and 'DROP TABLE' not in e
+          print('PASS: PHP lint, financial route dispatch, mobile/desktop links, CSRF, tenant isolation, form actions, previous viewer')
+          PY
+      - name: Publish verified incremental release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,io,json,hashlib,tarfile
+          root=Path('adminigreja-updates')
+          manifest=root/'latest.json'
+          current=json.loads(manifest.read_text())
+          if current['version']=='3.7.84':
+              print('Already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.83','Unexpected predecessor '+str(current['version'])
+          stage=root/'staging/3.7.84'
+          paths=['public/finance.php','public/finance-entry-edit.php','public/VERSION']
+          contents={p:(stage/p).read_bytes() for p in paths}
+          out=io.BytesIO()
+          with tarfile.open(fileobj=out,mode='w:gz') as archive:
+              for p in paths:archive.add(stage/p,arcname=p,recursive=False)
+          raw=out.getvalue()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as archive:
+              for p in paths:assert archive.extractfile(p).read()==contents[p]
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for pos in range(0,len(encoded),60000):
+              dest=f'releases/v3.7.84.{len(parts)+1:02d}.b64.txt'
+              (root/dest).write_bytes(encoded[pos:pos+60000])
+              parts.append(dest)
+          release={
+              'version':'3.7.84','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(data).hexdigest()} for p,data in contents.items()],
+              'notes':[
+                  'Botões Editar e Anexar arquivo agora abrem por finance.php?edit_entry=ID, usando a rota já operacional do Financeiro.',
+                  'O mesmo arquivo de edição é renderizado internamente sem depender de acesso direto à URL finance-entry-edit.php.',
+                  'Corrigidos endereços dos botões no celular e computador, com âncoras específicas para edição e anexos.',
+                  'Formulários de edição e upload enviam para a rota financeira principal, mantendo CSRF, permissões e isolamento por igreja.',
+                  'Após anexar, o envio retorna à seção Documentos já anexados, com confirmação em JSON para o Android.',
+                  'Visualizador com zoom, documentos existentes, registros e proteções financeiras preservados.',
+                  'Teste automatizado de sintaxe PHP e conferência de todos os links/ânncoras corrigidos. Validar no login real após instalar.'
+              ]}
+          manifest.write_text(json.dumps(release,ensure_ascii=False,indent=2)+'\n')
+          print('Prepared 3.7.84, files',len(paths),'parts',len(parts))
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.84.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.84 stable finance editor links"
+          git pull --rebase origin main
+          git push origin HEAD:main
