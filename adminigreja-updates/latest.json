@@ -1,62 +1,45 @@
 {
-  "version": "3.7.81",
+  "version": "3.7.82",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.81.01.b64.txt",
-    "releases/v3.7.81.02.b64.txt",
-    "releases/v3.7.81.03.b64.txt",
-    "releases/v3.7.81.04.b64.txt",
-    "releases/v3.7.81.05.b64.txt",
-    "releases/v3.7.81.06.b64.txt",
-    "releases/v3.7.81.07.b64.txt",
-    "releases/v3.7.81.08.b64.txt",
-    "releases/v3.7.81.09.b64.txt",
-    "releases/v3.7.81.10.b64.txt"
+    "releases/v3.7.82.01.b64.txt",
+    "releases/v3.7.82.02.b64.txt"
   ],
-  "sha256": "34016a0c516477580fd53b3ca18ab61589ddf00f030b9f12b1409a7f155c9b99",
+  "sha256": "8423088175a4e2b3ebec3f3d67d31ea2995573a289b74df7d0ca50449423628c",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "da1e0e355bd71135557104394b0290810ffab839395a4f30273045508c75fc5f"
+      "sha256": "3401573e87c9df3df526f6596c5cd4d00fc5c217766ea22d977df5be2d77972f"
     },
     {
       "path": "public/finance-entry-edit.php",
-      "sha256": "3dd80057a3cc6c2fd8cbec53e5fd56c5323d5e399dd2e87d1b8b89d57a055fff"
+      "sha256": "677d1c6cf104193c9a2aaef502973ef4d5d0e622e86d10b31aa6237a00358ebc"
     },
     {
       "path": "public/lib/View.php",
-      "sha256": "c8d3efae0af9bbed331ce95c358a660b8a7ec7d95e640c56f9c63e99284f6d94"
+      "sha256": "fe78365d2bce073acf954e6ae204605cf52e922c360ce092585cbbf09ae78771"
     },
     {
-      "path": "public/assets/mobile-safe-area-3781.css",
-      "sha256": "35f127882995650603101344be17d4d48d5c0dde5daaa04b871892dbc26301a7"
+      "path": "public/assets/finance-document-preview-3782.js",
+      "sha256": "1cc66b991b806941634ab19cf580aec14cec865214e34e3009987ff5641d4cf4"
     },
     {
-      "path": "public/assets/finance-document-preview-3781.js",
-      "sha256": "eb6a4c5105360a97b62e112e64615a6cb291b7831046422560c2679d7eeceaeb"
-    },
-    {
-      "path": "public/assets/vendor/pdfjs/pdf.min.js",
-      "sha256": "5b5799e6f8c680663207ac5b42ee14eed2a406fa7af48f50c154f0c0b1566946"
-    },
-    {
-      "path": "public/assets/vendor/pdfjs/pdf.worker.min.js",
-      "sha256": "feabdf309770ed24bba31a5467836cdc8cf639c705af27d52b585b041bb8527b"
+      "path": "public/assets/finance-document-zoom-3782.css",
+      "sha256": "b5c6e52995fe4bb59f9ec89d3cc2a23adfa5156a77a41cd60a3866f2462b10e7"
     },
     {
       "path": "public/VERSION",
-      "sha256": "be2ee3f435d1e69af03c803aa5dedcd276ea6e70ad1f54b0b831ad40a38629d7"
+      "sha256": "66e8672f94fb92e352c1168e48f58c7d6e79990ecaf0beafb041e618dc369ad0"
     }
   ],
   "notes": [
-    "Documentos financeiros: visualizar PDFs e imagens diretamente na tela, sem download automático de finance-document.php.",
-    "PDFs são renderizados como páginas roláveis no leitor PDF.js incluído no próprio sistema; não exige aplicativo de PDF no Android.",
-    "Botão Baixar fica separado e opcional, visível somente depois de carregar e validar o documento.",
-    "Exibição funciona também na tela Editar lançamento e na listagem de movimentações da Tesouraria.",
-    "Barra inferior e botões no celular/tablet respeitam áreas seguras e reservam espaço acima da navegação do Android.",
-    "Visualização somente com sessão ativa e permissão de documento existente, sem tornar os comprovantes públicos.",
-    "Mantidas as alterações financeiras e o layout da 3.7.80, demais formulários, anexos, permissões e dados.",
-    "Testes automatizados de sintaxe PHP/JS; testar documentos reais no Android e tablet após instalar."
+    "Ao visualizar imagens e PDFs financeiros, use dois dedos para ampliar ou diminuir o documento sem sair da tela.",
+    "Zoom por botões +, − e Ajustar (100%), além de toque duplo e Ctrl+rolagem no computador.",
+    "Ampliação de até 500%, com arraste horizontal e vertical para ler detalhes do comprovante.",
+    "Páginas de PDF com renderização de maior resolução para melhorar a leitura quando ampliadas.",
+    "Mantida a visualização dentro do Igreja Master sem baixar automaticamente; download continua opcional.",
+    "Preservadas a visualização em movimentações e edição, as áreas seguras da navegação Android, permissões e lançamentos.",
+    "Sintaxe PHP/JavaScript validada pelo GitHub Actions; verificar gesto em aparelhos reais após instalar."
   ]
 }
