@@ -10,7 +10,11 @@ if(isset($_GET['edit_entry']) && trim((string)$_GET['edit_entry'])!==''){
         error_log('Igreja Master '.$reference.' edit route exception: '.get_class($error).': '.$error->getMessage().' in '.$error->getFile().':'.$error->getLine());
         if(!headers_sent())http_response_code(500);
         // Never expose SQL, paths, tokens or other internal exception details.
-        echo '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Erro na edição</title></head><body style="font-family:system-ui;padding:24px;max-width:650px;margin:auto"><h1>Não foi possível abrir este lançamento</h1><p>Identificador do erro: <strong>'.htmlspecialchars($reference,ENT_QUOTES,'UTF-8').'</strong></p><p>O lançamento e os documentos não foram alterados.</p><p><a href="/finance.php#finance-movements">Voltar às movimentações</a></p></body></html>';
+        $technical='';
+        if(isset($auth) && $auth instanceof Auth && $auth->isSuperAdmin() && $auth->isMasterSupportMode()){
+            $technical='<p>Diagnóstico Master: '.htmlspecialchars(get_class($error),ENT_QUOTES,'UTF-8').' em '.htmlspecialchars(basename($error->getFile()),ENT_QUOTES,'UTF-8').', linha '.(int)$error->getLine().'.</p>';
+        }
+        echo '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Erro na edição</title></head><body style="font-family:system-ui;padding:24px;max-width:650px;margin:auto"><h1>Não foi possível abrir este lançamento</h1><p>Identificador do erro: <strong>'.htmlspecialchars($reference,ENT_QUOTES,'UTF-8').'</strong></p>'.$technical.'<p>O lançamento e os documentos não foram alterados.</p><p><a href="/finance.php#finance-movements">Voltar às movimentações</a></p></body></html>';
     }
     exit;
 }
