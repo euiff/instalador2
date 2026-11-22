@@ -1,32 +1,31 @@
 {
-  "version": "3.7.84",
+  "version": "3.7.85",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.84.01.b64.txt"
+    "releases/v3.7.85.01.b64.txt"
   ],
-  "sha256": "7922b5775a96128ec483eb24cf311c6e333ef5c38e7c4555abe1baf7165eddc5",
+  "sha256": "dfe59f0b6aff0c4b3636568106afd83aed1377650156f92e30c926df1e7f3ac5",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "7d3d2bc170a6ede57f97e8bc8d2c48a713173a682379b275e87e9a4bef9b19b4"
+      "sha256": "f67f86c5f3872b50aa5443842ed38981a76ba39aa1cc8e92e519a5f9397c4029"
     },
     {
       "path": "public/finance-entry-edit.php",
-      "sha256": "1bbcf8655f66ebc554c4fd0899f715aba872e2b44649dc54c5df1eb0ac5efbb1"
+      "sha256": "84ab6be135af7223b402be6beb1663747cae7a7c37623860bad5e2c837e91669"
     },
     {
       "path": "public/VERSION",
-      "sha256": "0efbf207301b5c126c49d7a75d1db7a7fcd7a06346c0cd95c8639abb5d10efac"
+      "sha256": "e0e5eac2e7b8d4c5ede352237123a881e2d2022db3cb81c5089e435bbfb0fe09"
     }
   ],
   "notes": [
-    "Botões Editar e Anexar arquivo agora abrem por finance.php?edit_entry=ID, usando a rota já operacional do Financeiro.",
-    "O mesmo arquivo de edição é renderizado internamente sem depender de acesso direto à URL finance-entry-edit.php.",
-    "Corrigidos endereços dos botões no celular e computador, com âncoras específicas para edição e anexos.",
-    "Formulários de edição e upload enviam para a rota financeira principal, mantendo CSRF, permissões e isolamento por igreja.",
-    "Após anexar, o envio retorna à seção Documentos já anexados, com confirmação em JSON para o Android.",
-    "Visualizador com zoom, documentos existentes, registros e proteções financeiras preservados.",
-    "Teste automatizado de sintaxe PHP e conferência de todos os links/ânncoras corrigidos. Validar no login real após instalar."
+    "Tratamento de HTTP 500 na tela Editar/Anexar: falhas inesperadas são registradas com identificador FIN- e exibidas sem detalhes sensíveis.",
+    "O perfil Master em modo suporte pode visualizar a classe da exceção, arquivo e linha para diagnóstico sem precisar expor senhas ou SQL.",
+    "Consultas opcionais de itens agrupados, documentos e contas agora têm tratamento de falhas de banco, evitando bloquear toda a tela quando há incompatibilidade de esquema.",
+    "Os arquivos e valores existentes não são alterados por esta atualização.",
+    "Os botões Editar e Anexar continuam pelo finance.php, com as seções apropriadas, documentos e leitor com zoom preservados.",
+    "Esta atualização visa recuperar o carregamento e identificar a causa real restante; um teste autenticado na hospedagem é necessário para confirmar a correção completa."
   ]
 }
