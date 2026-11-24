@@ -1,30 +1,36 @@
 {
-  "version": "3.7.86",
+  "version": "3.7.87",
   "min_php": "8.1",
   "encoding": "base64",
   "parts": [
-    "releases/v3.7.86.01.b64.txt"
+    "releases/v3.7.87.01.b64.txt"
   ],
-  "sha256": "8a9fb8771ce84dbf74b6f20ae8a103a15416f2214f87f0871b6445550bcddebf",
+  "sha256": "e76a82ea43c53f7b8ef79fc555d5435b1cce0969538940f27271df347fcfbb76",
   "files": [
     {
       "path": "public/finance.php",
-      "sha256": "f67f86c5f3872b50aa5443842ed38981a76ba39aa1cc8e92e519a5f9397c4029"
+      "sha256": "a98dde1fdcaae820bda1fed2e7fbd666e138c28fcec0d8ef259f54075fe9a4c0"
     },
     {
       "path": "public/finance-entry-edit.php",
-      "sha256": "9baeb1aeb25a2edd2089a4950fab3b2bd8d6c946c2f5a88038f6fb461fd2a31f"
+      "sha256": "c6b587762e271f7965e2cfa33573d1be8d977cf1c17c39137f32f8bc1c9ac8ee"
+    },
+    {
+      "path": "public/lib/FinanceEntryPresentation.php",
+      "sha256": "67e0bae0048c2046f351a3e71d7d0430a65c4c09d65d47bf6bf074e34c29f726"
     },
     {
       "path": "public/VERSION",
-      "sha256": "7d580a8e39884fabe88018088be97571e1cada37dfb726908a6e47ef2ecf3582"
+      "sha256": "1b98f87125b4ae50f6c5959a1e820286a271657179281ea7be216329c45f61d2"
     }
   ],
   "notes": [
-    "Corrigida a inicialização da tela Editar/Anexar que falhava na linha 17 ao carregar RegistryService, conforme diagnóstico Master FIN-60134147.",
-    "Tela de edição carrega a mesma cadeia de serviços usada pelo Financeiro funcionando, inclusive FinanceOperations antes do serviço de categorias.",
-    "Mantidos os atalhos Editar e Anexar, controles de permissão, CSRF, validação por igreja, anexos e visualização com zoom.",
-    "Mantida a página de diagnóstico restrita ao Master para eventual erro restante.",
-    "Verificação automatizada de sintaxe PHP e ordem das dependências aprovada; confirmar execução no servidor autenticado após instalar."
+    "Agora é possível vincular um membro cadastrado também a lançamentos de SAÍDA, pelo cadastro financeiro e pela edição.",
+    "Membro na saída é identificado como favorecido/beneficiário, não como dízimo nem como oferta.",
+    "Entradas continuam identificando o contribuinte e os dízimos sem mudança de classificação.",
+    "O nome pode continuar sendo digitado manualmente quando nenhum membro for selecionado.",
+    "O membro deve pertencer à igreja atual; mantidas permissões, auditoria, proteções de período e isolamento entre igrejas.",
+    "Sem alteração de valores, saldos, anexos ou registros antigos nesta atualização.",
+    "Testes PHP e de classificação de entradas/saídas passaram; verificar no servidor após instalar."
   ]
 }
