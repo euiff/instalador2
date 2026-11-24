@@ -1,0 +1,116 @@
+name: Publish Igreja Master 3.7.87 Member on Expense
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-igreja-master-3787.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Check PHP syntax and expense member associations
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=adminigreja-updates/staging/3.7.87/public
+          php -l "$root/finance.php"
+          php -l "$root/finance-entry-edit.php"
+          php -l "$root/lib/FinanceEntryPresentation.php"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('adminigreja-updates/staging/3.7.87/public')
+          finance=(p/'finance.php').read_text()
+          edit=(p/'finance-entry-edit.php').read_text()
+          labels=(p/'lib/FinanceEntryPresentation.php').read_text()
+          assert (p/'VERSION').read_text().strip()=='3.7.87'
+          assert "if($memberId&&$direction!=='income')throw" not in finance
+          assert 'Membro vinculado (contribuinte na entrada ou favorecido na saída' in finance
+          assert "Somente entradas podem ter membro contribuinte." not in edit
+          assert "Membro favorecido / Beneficiário (opcional)" in edit
+          assert "if($typedContributor!==''&&$memberId===null)$counterparty=$typedContributor;" in edit
+          assert "SELECT id FROM members WHERE church_id=? AND id=? AND active=1" in edit
+          assert "SELECT id FROM members WHERE church_id=? AND id=?" in finance
+          assert "'person_label'=>$member!==''?'Membro favorecido':'Favorecido'" in labels
+          assert "'member_linked'=>$member!==''" in labels
+          assert "if($direction==='expense')" in labels
+          assert "if($isTithe)" in labels
+          assert "WHERE church_id=? AND id=? AND status='posted'" in edit
+          assert "FinancePeriodGuard::assertOpen" in edit
+          assert 'verify_csrf()' in edit
+          assert 'finance-document-preview-3782.js?v=3.7.82' in finance
+          assert "WHERE e.church_id=? AND e.id=? LIMIT 1" in edit
+          assert '<th>Docs.</th><th>Ações</th><th>Data</th>' in finance
+          assert 'DROP TABLE' not in finance and 'DROP TABLE' not in edit
+          print('PASS: finance PHP syntax, member on expenses and income, tenant validation, visual labels, no balance change')
+          PY
+          php -r '
+            require "adminigreja-updates/staging/3.7.87/public/lib/FinanceEntryPresentation.php";
+            $expense=FinanceEntryPresentation::classify(["direction"=>"expense","category"=>"Energia","member_name"=>"Maria Silva","counterparty"=>""]);
+            if($expense["type"]!=="SAÍDA" || $expense["person_label"]!=="Membro favorecido" || $expense["person"]!=="Maria Silva")exit(1);
+            $income=FinanceEntryPresentation::classify(["direction"=>"income","category"=>"Dízimos","member_name"=>"Maria Silva","counterparty"=>""]);
+            if($income["type"]!=="DÍZIMO" || $income["person_label"]!=="Dizimista")exit(1);
+            echo "PASS: expense beneficiary and income tithe classification\n";
+          '
+      - name: Publish incremental update 3.7.87
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,io,json,hashlib,tarfile
+          root=Path('adminigreja-updates')
+          manifest=root/'latest.json'
+          current=json.loads(manifest.read_text())
+          if current['version']=='3.7.87':
+              print('3.7.87 already published')
+              raise SystemExit(0)
+          assert current['version']=='3.7.86','Unexpected predecessor '+str(current['version'])
+          stage=root/'staging/3.7.87'
+          paths=['public/finance.php','public/finance-entry-edit.php','public/lib/FinanceEntryPresentation.php','public/VERSION']
+          files={p:(stage/p).read_bytes() for p in paths}
+          out=io.BytesIO()
+          with tarfile.open(fileobj=out,mode='w:gz') as tar:
+              for p in paths:tar.add(stage/p,arcname=p,recursive=False)
+          raw=out.getvalue()
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tar:
+              for p in paths:assert tar.extractfile(p).read()==files[p]
+          encoded=base64.b64encode(raw)
+          parts=[]
+          for offset in range(0,len(encoded),60000):
+              part=f'releases/v3.7.87.{len(parts)+1:02d}.b64.txt'
+              (root/part).write_bytes(encoded[offset:offset+60000])
+              parts.append(part)
+          update={
+              'version':'3.7.87','min_php':'8.1','encoding':'base64',
+              'parts':parts,'sha256':hashlib.sha256(raw).hexdigest(),
+              'files':[{'path':p,'sha256':hashlib.sha256(contents).hexdigest()} for p,contents in files.items()],
+              'notes':[
+                  'Agora é possível vincular um membro cadastrado também a lançamentos de SAÍDA, pelo cadastro financeiro e pela edição.',
+                  'Membro na saída é identificado como favorecido/beneficiário, não como dízimo nem como oferta.',
+                  'Entradas continuam identificando o contribuinte e os dízimos sem mudança de classificação.',
+                  'O nome pode continuar sendo digitado manualmente quando nenhum membro for selecionado.',
+                  'O membro deve pertencer à igreja atual; mantidas permissões, auditoria, proteções de período e isolamento entre igrejas.',
+                  'Sem alteração de valores, saldos, anexos ou registros antigos nesta atualização.',
+                  'Testes PHP e de classificação de entradas/saídas passaram; verificar no servidor após instalar.'
+              ]}
+          manifest.write_text(json.dumps(update,ensure_ascii=False,indent=2)+'\n')
+          print('Prepared 3.7.87',len(paths),'files',len(parts),'parts')
+          PY
+          git config user.name "Igreja Master Update Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add adminigreja-updates/latest.json adminigreja-updates/releases/v3.7.87.*.b64.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Igreja Master 3.7.87 expense beneficiary member support"
+          git pull --rebase origin main
+          git push origin HEAD:main
